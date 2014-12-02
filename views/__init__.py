@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import sys
-import logging
-
-
-from tornado.web import RequestHandler, HTTPError
+from tornado.web import RequestHandler
 from mako import exceptions
 
 

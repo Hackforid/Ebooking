@@ -31,6 +31,7 @@ class Application(tornado.web.Application):
             cookie_secret='you never know me',
             autoreload=True,
             gzip=True,
+            debug=True,
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )
 
