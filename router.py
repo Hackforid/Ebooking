@@ -1,8 +1,8 @@
 # -*- coding: utf8 -*-
 
-from views.room_type import GetRoomTypeByHotelsAPIHandler
+from views.login import LoginHandler
 
 
 handlers = [
-        (r"/hotels/?", GetRoomTypeByHotelsAPIHandler),
+        (r"/login/?", LoginHandler),
         ]
