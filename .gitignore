@@ -1,5 +1,4 @@
-/tmpdir
-/templates/*
+/tmp
 
 # Python
 *.py[cod]
