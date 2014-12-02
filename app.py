@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 import sys
 import os
@@ -21,7 +21,7 @@ from config import Config
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-define("port", default=9002, help="run on the given port", type=int)
+define("port", default=9501, help="run on the given port", type=int)
 
 class Application(tornado.web.Application):
 
@@ -33,7 +33,7 @@ class Application(tornado.web.Application):
             gzip=True,
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )
-                
+
         tornado.web.Application.__init__(self, handlers, **setting)
 
         # templates
