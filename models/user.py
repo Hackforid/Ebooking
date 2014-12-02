@@ -19,6 +19,7 @@ class UserModel(Base):
     mobile = Column(VARCHAR(50), nullable=False)
     email = Column(VARCHAR(50), nullable=False)
     authority = Column(BIGINT, nullable=False, default=0)
+    is_valid = Column('isValid', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
     @classmethod
@@ -36,3 +37,37 @@ class UserModel(Base):
         return session.query(UserModel)\
             .filter(UserModel.username == username, UserModel.password == password, UserModel.is_delete != 1)\
             .first()
+
+    @classmethod
+    def get_users_by_merchant_id(cls, session, merchant_id):
+        return session.query(UserModel)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete != 1)\
+            .first()
+
+    @classmethod
+    def update_user(cls, session, merchant_id, username, department, mobile, email, authority, is_valid):
+        update_value = {}
+        if department:
+            update_value[UserModel.department] = department
+        if mobile:
+            update_value[UserModel.mobile] = mobile
+        if email:
+            update_value[UserModel.email] = email
+        if authority:
+            update_value[UserModel.authority] = authority
+        if is_valid:
+            update_value[UserModel.is_valid] = is_valid
+        session.query(UserModel)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.is_delete == 0)\
+            .update(update_value)
+        session.commit()
+
+    @classmethod
+    def add_user(cls, session, merchant_id, username, password, re_password, department, mobile, email, authority):
+        user = UserModel(merchant_id=merchant_id, username=username, password=password, department=department,
+                         mobile=mobile, email=email, authority=authority)
+        session.add(user)
+        session.commit()
+        return user
+
+

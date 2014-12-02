@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 
-from tornado.escape import json_encode, json_decode
-from tornado.util import ObjectDict
-
-from views.base import BtwBaseHandler
+from base import BtwBaseHandler
 from models.user import UserModel
 
-from tools.auth import auth_login, auth_permission
+class UserManageHandler(BtwBaseHandler):
 
-
-class Login
-
+    def get(self, merchant_id):
+        '''
+        users = UserModel.get_users_by_merchant_id(merchant_id)
+        '''
+        return self.render("userManage.html", users=None)
