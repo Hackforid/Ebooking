@@ -1,0 +1,106 @@
+<%inherit file="base.html" />
+<%def name="right_content()">
+<!--导航条--> 
+<div class="notice" id="notice"><h2>已合作酒店</h2></div>
+<!--导航条end-->  
+
+<!--主体内容-->  
+<div class="main"
+    ng-app="hotelCoopedApp"
+    ><div class="p15">
+
+        <!--已合作酒店开始-->  
+        <div class="main-mod main-coop">
+
+
+            <div class="search-div">
+                <div class="content">
+                    <div class="divone"><div class="c">
+                            <label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t"/></label>
+                            <label><strong>城市：</strong><input name="" type="text" value="" class="input-t"/></label>
+                            <label><strong>星级：</strong><select name="" class="input-s"  >
+                                    <option value="0">不限</option>
+                                    <option value="1">经济型</option>
+                                    <option value="2">五星级</option>
+                            </select></label>
+                            <label><strong>状态：</strong><select name="" class="input-s"  >
+                                    <option value="0">不限</option>
+                                    <option value="1">正常</option>
+                                    <option value="2">暂停</option>
+                            </select></label>
+                            <label><input name="" type="button" value="搜索" />
+                                <input name="" type="button" value="重置" class="btn-bai btn-s" /></label>
+
+                    </div></div>
+
+
+
+                </div>
+            </div>
+
+            <div class="willcoop-div">
+                <div class="content"><div class="p15">
+
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
+                            <thead><tr>
+                                    <th width="30%">酒店名称</th>
+                                    <th width="10%">星级</th>
+                                    <th width="10%">城市</th>
+                                    <th width="10%">商圈</th>
+                                    <th width="10%">类型</th>
+                                    <th width="10%">状态</th>
+                                    <th width="20%">维护</th>
+                            </tr></thead>
+                        </table>
+
+
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow"
+                            ng-controller="hotelCoopedContentCtrl">
+                            <tr ng-repeat="hotel in hotels">
+                                <td width="30%"><a href="javascript:void(0)" class="hotel-btn">{{hotel.name}}</a></td>
+                                <td width="10%">{{hotel.star}}</td>
+                                <td width="10%">{{getCityName(hotel.city_id)}}</td>
+                                <td width="10%">{{hotel.district_name}}</td>
+                                <td width="10%">系统确认</td>
+                                <td width="10%">正常</td>
+                                <td class="action" width="20%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" /></td>
+                            </tr>
+
+                        </table>
+                        <!--页码-->
+                        <div class="page">
+                            <span class="disabled"> &lt;  上一页</span>
+                            <span class="current">1</span>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            ...<a href="#">20</a>
+                            <a href="#">21</a>
+                            <a href="#">下一页  &gt; </a>
+                            <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
+                                    <option value="1">10</option>
+                                    <option value="2">20</option>
+                                    <option value="3">30</option>
+                                    <option value="4">40</option>
+                            </select></span>
+                        </div>
+                        <!--页码end-->     
+
+
+
+
+                </div></div>
+            </div>
+
+        </div>
+        <!--已合作酒店结束-->  
+
+</div></div>
+<!--主体内容end--> 
+
+
+</%def>
+
+<%def name="end()">
+    <script src="${static_url('js/hotelCooped.js')}"></script>
+</%def>
