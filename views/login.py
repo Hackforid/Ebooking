@@ -22,9 +22,9 @@ class LoginHandler(BtwBaseHandler):
 
         if user:
             self.set_secure_cookie("username", user.username, expires_days=0.02)
-            self.set_secure_cookie("merchant_id", user.merchant_id, expires_days=0.02)
+            self.set_secure_cookie("merchant_id", str(user.merchant_id), expires_days=0.02)
             self.finish_json(result={
                 'user':user.todict()
                 })
         else:
-            self.finish_json(errcode=100, errmsg="帐号或密码错误")
+            self.finish_json(errcode=100, errmsg=u"帐号或密码错误")

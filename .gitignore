@@ -1,11 +1,10 @@
-/tmpdir
-/templates/*
+/tmp
 
 # Python
 *.py[cod]
 
 # Editor
-*.sw[op]
+*.sw[opn]
 
 .DS_Store
 ._.DS_Store
