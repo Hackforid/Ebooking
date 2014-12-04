@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from tornado.util import ObjectDict 
 
 from models import Base
-from sqlalchemy import Column
+from sqlalchemy import Column, DateTime
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
 
 
@@ -22,6 +23,8 @@ class UserModel(Base):
     mobile = Column(VARCHAR(50), nullable=False)
     email = Column(VARCHAR(50), nullable=False)
     authority = Column(BIGINT, nullable=False, default=0)
+    valid_begin_date = Column('validBeginDate', DATETIME, nullable=False)
+    valid_end_date = Column('validEndDate', DATETIME, nullable=False)
     is_valid = Column('isValid', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
@@ -45,7 +48,7 @@ class UserModel(Base):
     def get_users_by_merchant_id(cls, session, merchant_id):
         return session.query(UserModel)\
             .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete != 1)\
-            .first()
+            .all()
 
     @classmethod
     def update_user(cls, session, merchant_id, username, department, mobile, email, authority, is_valid):
@@ -83,5 +86,8 @@ class UserModel(Base):
             mobile=self.mobile,
             email=self.email,
             authority=self.authority,
+            is_valid=self.is_valid,
+            valid_begin_date=self.valid_begin_date.strftime('%Y-%m-%d'),
+            valid_end_date=self.valid_end_date.strftime('%Y-%m-%d'),
             is_delete=self.is_delete,
                 )
