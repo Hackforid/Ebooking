@@ -1,0 +1,104 @@
+<%inherit file="base.html" />
+
+<!--右侧部分--> 
+<%def name="right_content()">
+	<!--导航条--> 
+	<div class="notice" id="notice"><h2>可合作酒店</h2></div>
+	<!--导航条end-->  
+
+	<!--主体内容-->  
+	<div class="main"
+        ng-app="hotelWillCoopApp"
+        ><div class="p15">
+
+			<!--可合作酒店开始-->  
+			<div class="main-mod main-wcoop">
+
+
+				<div class="search-div">
+					<div class="content">
+						<div class="divone"><div class="c">
+								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t"/></label>
+								<label><strong>城市：</strong><input name="" type="text" value="" class="input-t"/></label>
+								<label><strong>星级：</strong><select name="" class="input-s"  >
+										<option value="0">不限</option>
+										<option value="1">经济型</option>
+										<option value="2">五星级</option>
+								</select></label>
+
+								<label>
+									<input name="" type="button" value="搜索" /> <input name="" type="button" value="重置" class="btn-bai btn-s" />
+								</label>
+
+
+						</div></div>
+				    </div>
+                </div>
+
+				<div class="willcoop-div">
+					<div class="content"><div class="p15">
+
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
+								<thead><tr>
+										<th width="10%"><input name="input2" type="checkbox" value="" />全选</th>
+										<th width="25%">酒店名称</th>
+										<th width="10%">城市</th>
+										<th width="20%">地址</th>
+										<th width="10%">电话</th>
+										<th width="10%">状态</th>
+										<th width="15%">操作</th>
+								</tr></thead>
+							</table> 
+
+
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow"
+                                ng-controller="hotelWillCoopContentCtrl">
+								<tr ng-repeat="hotel in hotels">
+									<td width="10%"><input name="" type="checkbox" value="" /></td>
+                                    <td width="25%">{{hotel.name}}</td>
+                                    <td width="10%">{{getCityName(hotel.city_id)}}</td>
+                                    <td width="20%">{{hotel.address}}</td>
+                                    <td width="10%">{{hotel.phone}}</td>
+									<td width="10%">可申请合作</td>
+									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel)"/></td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="btn-div">
+								<input name="input" type="button" value="将选择酒店全部申请合作" class="btn-s btn-bai" id="choose-all" />
+							</div>
+
+							<!--页码-->
+							<div class="page"
+                                ng-controller="hotelWillCoopPageIndicatorCtrl"
+                                >
+								<span class="disabled"> &lt;  上一页</span>
+								<span class="current">1</span>
+								<a href="#">2</a>
+								<a href="#">3</a>
+								<a href="#">4</a>
+								...<a href="#">20</a>
+								<a href="#">21</a>
+								<a href="#">下一页  &gt; </a>
+                                <span>共230条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+										<option value="10">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+										<option value="40">40</option>
+								</select></span>
+							</div>
+							<!--页码end-->     
+					</div></div>
+				</div>
+
+			</div>
+			<!--可合作酒店结束-->  
+
+	</div></div>
+	<!--主体内容end--> 
+
+</%def>
+
+<%def name="end()">
+<script src="${static_url('js/hotelWillCoop.js')}"></script>
+</%def>
