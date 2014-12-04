@@ -17,4 +17,4 @@ handlers = [
         (r"/api/hotel/willcoop/?", HotelWillCoopAPIHandler),
         (r"/api/hotel/coop/(?P<hotel_id>\d+)/?", HotelCoopAPIHandler),
         (r"/api/hotel/cooped/?", HotelCoopedAPIHandler),
-        (r"/userManage/(?P<merchant_id>\d+)/?", UserManageHandler)]
+        (r"/userManage/?", UserManageHandler)]

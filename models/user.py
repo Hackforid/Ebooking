@@ -51,22 +51,24 @@ class UserModel(Base):
             .all()
 
     @classmethod
-    def update_user(cls, session, merchant_id, username, department, mobile, email, authority, is_valid):
-        update_value = {}
-        if department:
-            update_value[UserModel.department] = department
-        if mobile:
-            update_value[UserModel.mobile] = mobile
-        if email:
-            update_value[UserModel.email] = email
-        if authority:
-            update_value[UserModel.authority] = authority
-        if is_valid:
-            update_value[UserModel.is_valid] = is_valid
-        session.query(UserModel)\
-            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.is_delete == 0)\
-            .update(update_value)
-        session.commit()
+    def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, valid_begin_date,
+                    valid_end_date, is_valid):
+        user = cls.get_user_by_merchantid_username(session, merchant_id, username)
+        if user:
+            if password:
+                user.password = password
+            if department:
+                user.department = department
+            if mobile:
+                user.mobile = mobile
+            if email:
+                user.email = email
+
+            user.authority=authority
+            user.valid_begin_date = valid_begin_date
+            user.valid_end_date = valid_end_date
+            user.is_valid = is_valid
+            session.commit()
 
     @classmethod
     def add_user(cls, session, merchant_id, username, password, re_password, department, mobile, email, authority):
