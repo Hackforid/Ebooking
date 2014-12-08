@@ -1,13 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from tornado.escape import json_encode, json_decode
-from tornado.util import ObjectDict
-
-from views.base import BtwBaseHandler
+from base import BtwBaseHandler
 from models.user import UserModel
+from tornado.escape import json_encode
+from tools.auth import auth_login
+from tools.auth import auth_permission
+from constants import PERMISSIONS
 
-from tools.auth import auth_login, auth_permission
+class UserManageHandler(BtwBaseHandler):
+
+    @auth_login()
+    @auth_permission(PERMISSIONS.user_manage | PERMISSIONS.admin)
+    def get(self):
+        users = UserModel.get_users_by_merchant_id(self.db, self.current_user.merchant_id)
+        return self.render("userManage.html", users=json_encode([user.todict() for user in users]))
 
 
-class Login
+
+
+
+
+
+
 

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from tornado.util import ObjectDict 
 
 from models import Base
-from sqlalchemy import Column
+from sqlalchemy import Column, DateTime
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
 
 
@@ -22,6 +23,7 @@ class UserModel(Base):
     mobile = Column(VARCHAR(50), nullable=False)
     email = Column(VARCHAR(50), nullable=False)
     authority = Column(BIGINT, nullable=False, default=0)
+    is_valid = Column('isValid', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
     @classmethod
@@ -37,8 +39,44 @@ class UserModel(Base):
     @classmethod
     def get_user_by_merchantid_username_and_password(cls, session, merchant_id, username, password):
         return session.query(UserModel)\
-            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password, UserModel.is_delete != 1)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password,
+                    UserModel.is_delete == 0)\
             .first()
+
+    @classmethod
+    def get_users_by_merchant_id(cls, session, merchant_id):
+        return session.query(UserModel)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete != 1)\
+            .all()
+
+    @classmethod
+    def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, is_valid):
+        user = cls.get_user_by_merchantid_username(session, merchant_id, username)
+        if user:
+            if password:
+                user.password = password
+            user.department = department
+            user.mobile = mobile
+            if email:
+                user.email = email
+            user.authority=authority
+            user.is_valid = is_valid
+            session.commit()
+
+    @classmethod
+    def update_password(cls, session, merchant_id, username, password):
+        user = cls.get_user_by_merchantid_username(session, merchant_id, username)
+        if user:
+            user.password = password
+            session.commit()
+
+    @classmethod
+    def add_user(cls, session, merchant_id, username, password, department, mobile, authority, is_valid):
+        user = UserModel(merchant_id=merchant_id, username=username, nickname='', password=password, department=department,
+                         mobile=mobile, email='', authority=authority, is_valid=is_valid)
+        session.add(user)
+        session.commit()
+        return user
 
     def todict(self):
         return ObjectDict(
@@ -50,5 +88,6 @@ class UserModel(Base):
             mobile=self.mobile,
             email=self.email,
             authority=self.authority,
+            is_valid=self.is_valid,
             is_delete=self.is_delete,
                 )

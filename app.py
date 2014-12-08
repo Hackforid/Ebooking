@@ -32,6 +32,7 @@ class Application(tornado.web.Application):
             autoreload=True,
             gzip=True,
             debug=True,
+            login_url='/login/',
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )
 
