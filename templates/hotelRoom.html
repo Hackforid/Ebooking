@@ -1,0 +1,865 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商旅分销管理系统</title>
+<link href="style/default.css" rel="stylesheet" type="text/css" >
+<link href="style/mod.css" rel="stylesheet" type="text/css" >
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery.Placeholder.js"></script> <!--placeholder属性兼容--> 
+<script src="js/datechoose.js"></script><!--日期选择控件js--> 
+<script src="js/common.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){  
+ 
+//单元格浮层，静态可用,动态可重新编写
+$(".room-table01 td.action1 span").click( function() {
+   $(this).after("<div class='div1'><input name='' type='button' value='修改房量' class='btn-number' /></div>").show(0, function() {
+	    $(".btn-number").click( function() {
+			$("#openDiv1").show();
+	     });
+	   });
+});
+ 
+
+$(".room-table01 td").mouseout( function() {
+   $(this).children("div").delay(1000).hide(0, function() { $(this).children("div").remove();});
+});
+ 
+ 
+$("#openDiv1 .action input.sure-more").click( function() {
+	 $("#openDiv2").show();
+});
+
+$("#openDiv2 .action input.btn-no").click( function() {
+	 $("#openDiv2").hide();
+	 $("#openDiv1 .input-t").val("");
+});
+
+$("#openDiv1 .action input.btn,#openDiv2 .action input.btn").click( function() {
+	 $(".messageDiv").hide();
+});
+
+
+//房型操作显示隐藏，静态可用,动态可重新 
+ $(".roomhead h1").click( function() {
+    $(this).parent().find(".eachroom").css("display","block");
+}); 
+ $(".roomhead input.btn-s").click( function() {
+    $(".roomhead .eachroom").css("display","none");
+}); 
+
+
+//房型介绍弹窗
+
+$(".eachroom a.a-blue,#roomtype-list a.a-blue").click( function() {
+    $("#cool-roomtype").fadeIn(500);
+});
+$("#cool-roomtype .close").click( function() {
+    $("#cool-roomtype").fadeOut(500);
+});
+
+
+//增加合作房型浮层，静态可用,动态可重新编写
+ $("#openBtn").click( function() {
+    $("#roomtype-list").fadeIn(500);
+}); 
+$("#roomtype-list .action input").click( function() {
+    $("#roomtype-list").fadeOut(500);
+});
+
+});
+</script>   
+</head>
+<body>
+
+<div class="wrapper">
+   
+   
+ <!--页头部分-->   
+        <div class="header"><div class="auto">
+        
+        <!--顶部用户信息-->  
+       <div class="admin-info">
+           <div class="fl">
+           <img src="image/bg-admin.png" width="80" height="80" class="img3"/>
+           <img src="image/admin-head.jpg" class="img-head"/>
+           </div>
+        <div class="fr">
+              欢迎回来！<br />
+           <strong>张三丰</strong>
+          </div>
+      </div>
+      
+      <div class="person-menu">
+      <ul>
+          <li class="icon-admin"><a href="userManage.html" target="_blank">用户管理</a></li>
+          <li class="icon-password"><a href="modifyPwd.html" target="_blank">修改密码</a></li>
+     </ul>
+      </div>
+      
+         <div class="left">
+        <img src="image/logo-sys.png" width="250" height="50" alt="旅行社分销管理系统" class="img1"/>
+       </div>
+       
+       <div class="right">
+          <ul class="right-menu">
+          <li class="icon-out"><a href="javascript:void(0)" id="out-btn">退出系统</a></li>
+           <li class="icon-contact"><a alt="在线QQ联系我们" title="在线QQ联系我们" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1816777547&site=qq&menu=yes">在线客服</a></li>  
+           <li class="icon-guide"><a href="javascript:void(0)" id="guide-btn">新手引导</a></li>            
+          </ul>
+       </div>
+             
+       </div></div>
+      <!--页头部分end-->  
+   
+   
+ <!--左侧部分-->  
+    <div class="main-left">
+
+       <!--左侧菜单-->   
+       <div class="left-menu">
+           <dl class="menu1">
+               <dt><u class="icon-dt"></u>订单管理</dt>
+               <dd><a href="orderWaiting.html"><u class="icon1"></u>待确认订单<b class="has-order">·</b></a></dd>
+               <dd><a href="orderSearch.html"><u class="icon2"></u>订单查询</a></dd>
+ 
+           </dl>
+           
+           <dl class="menu2">       
+               <dt><u class="icon-dt"></u>合作酒店管理</dt>
+               <dd class="active"><a href="hotelCoop.html"><u class="icon4"></u>已合作酒店</a></dd>
+               <dd><a href="hotelWillCoop.html"><u class="icon5"></u>可合作酒店</a></dd>                
+            </dl>
+            
+           <dl class="menu3">      
+               <dt><u class="icon-dt"></u>数据统计</dt>
+               <dd><a href="orderAnalyse.html"><u class="icon3"></u>订单统计</a></dd>
+               <dd><a href="dateAnalyse.html"><u class="icon3"></u>收益统计</a></dd>
+           </dl>
+       </div>
+       <!--左侧菜单end-->
+  </div>
+  <!--左侧部分end--> 
+  
+   
+    <!--右侧部分-->   
+    <div class="main-right">
+       <!--导航条--> 
+       <div class="notice" id="notice"><h2>当前酒店：北京饭店</h2></div>
+         <!--导航条end-->  
+         
+        <!--主体内容-->  
+          <div class="main"><div class="p15">
+             
+             <!--已合作酒店开始-->  
+             <div class="main-rchoose" > 
+                    <ul class="menu-title">
+                   <li><a href="hotelRoom.html" class="active">房量房态</a></li>
+                    <li><a href="hotelPrice.html">房价金额</a></li>
+                    </ul>
+ 
+             </div>
+             
+            <div class="main-room"><div class="content">
+               <div class="p15">
+               
+                 <div class="choosem">                 
+                     <div class="left">选择操作月份： <select name="" class="input-s"  >
+                       <option value="1">10月</option>
+                       <option value="2">11月</option>
+                       <option value="3">12月</option>
+ 
+                     </select></div>
+ 
+                  </div>
+                 
+               
+                 
+                     
+                <div class="form form1">
+                    <div class="roomhead"><h1>标准间--剩余房量</h1><span></span>
+                     <div class="eachroom" style=" display:none;">
+                           <label>房型名称：豪华间<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+                           <label>自定义房型名称：<input type="text"  value="特价" class="input-t"  />
+                           <span style="padding:0 5px">豪华间</span><input type="text"  value="_豪华大床房↑" class="input-t"  /></label>
+                           <label>是否开启超售：<input name="" type="radio" value="" /></label>
+                           <label>是否生效：<input name="" type="radio" value="" /></label>
+                                               
+                         <label><input name="" type="button" value="保存" class="btn-s"  />
+                         <input name="" type="button" value="取消" class="btn-s btn-bai"  /></label>
+                       </div>
+                  </div>
+ 
+ 
+ 
+ <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
+ <thead><tr>
+    <th class="table-title">日期</th>
+    <th>1<br />
+      三</th>
+    <th>2<br />
+      四</th>
+    <th>3<br />
+      五</th>
+    <th ><strong class="today">今<br />
+      天</strong></th>
+    <th ><strong>5<br />
+      日</strong></th>
+    <th>6<br />
+      一<br /></th>
+    <th>7<br />
+      二</th>
+    <th>8<br />
+      三</th>
+    <th>9<br />
+      四</th>
+    <th>10<br />
+      五</th>
+    <th><strong>11<br />
+      六</strong></th>
+    <th><strong>12<br />
+      日</strong></th>
+    <th>13<br />
+      一<br /></th>
+    <th>14<br />
+      二</th>
+    <th>15<br />
+      三</th>
+    <th>16<br />
+      四</th>
+    <th>17<br />
+      五</th>
+    <th><strong>18<br />
+      六</strong></th>
+    <th><strong>19<br />
+      日</strong></th>
+    <th>20<br />
+      一<br /></th>
+    <th>21<br />
+      二</th>
+    <th>22<br />
+      一<br /></th>
+    <th>23<br />
+      二</th>
+    <th>24<br />
+      三</th>
+    <th>25<br />
+      四</th>
+    <th>26<br />
+      五</th>
+    <th><strong>27<br />
+      六</strong></th>
+    <th><strong>28<br />
+      日</strong></th>
+    <th>29<br />
+      一<br /></th>
+    <th>30<br />
+      二</th>
+    <th>31<br />
+      一<br /></th>
+    </tr>
+ </thead>
+  <tbody>
+  <tr>
+    <td class="table-title">自动确认房量</td>
+    <td class="stop"><span>--</span></td>
+    <td class="stop"><span>--</span></td>
+    <td class="stop"><span>--</span></td>
+    <td class="action1 man-close"><span>0</span></td>
+    <td class="action1 man-close"><span>0</span></td>
+    <td class="action1"><span>90</span></td>
+    <td class="action1"><span>95</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1 man-close"><span>0</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>90</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+     <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+     <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    <td class="action1"><span>100</span></td>
+    </tr>
+  <tr>
+    <td class="table-title">手工确认房量</td>
+    <td class="stop"><span>--</span></td>
+    <td class="stop"><span>--</span></td>
+    <td class="stop"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1 man-close"><span>0</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>5</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    <td class="action1"><span>--</span></td>
+    </tr>
+  </tbody>
+  </table>             
+   </div>
+                
+                
+                
+                <div class="form form2">
+                     <div class="roomhead"><h1>豪华间--剩余房量</h1><span></span>
+                     
+                         <div class="eachroom" style=" display:none;">
+                           <label>房型名称：豪华间<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+                           <label>自定义房型名称：<input type="text"  value="特价" class="input-t"  />
+                           <span style="padding:0 5px">豪华间</span><input type="text"  value="_豪华大床房↑" class="input-t"  /></label>
+                           <label>是否开启超售：<input name="" type="radio" value="" /></label>
+                           <label>是否生效：<input name="" type="radio" value="" /></label>
+                                               
+                         <label><input name="" type="button" value="保存" class="btn-s"  />
+                         <input name="" type="button" value="取消" class="btn-s btn-bai"  /></label>
+                       </div>
+
+                  </div>
+ 
+                   
+                   
+                   <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
+                     <thead>
+                       <tr>
+                         <th class="table-title">日期</th>
+                         <th>1<br />
+                           三</th>
+                         <th>2<br />
+                           四</th>
+                         <th>3<br />
+                           五</th>
+                         <th ><strong class="today">今<br />
+                           天</strong></th>
+                         <th ><strong>5<br />
+                           日</strong></th>
+                         <th>6<br />
+                           一<br /></th>
+                         <th>7<br />
+                           二</th>
+                         <th>8<br />
+                           三</th>
+                         <th>9<br />
+                           四</th>
+                         <th>10<br />
+                           五</th>
+                         <th><strong>11<br />
+                           六</strong></th>
+                         <th><strong>12<br />
+                           日</strong></th>
+                         <th>13<br />
+                           一<br /></th>
+                         <th>14<br />
+                           二</th>
+                         <th>15<br />
+                           三</th>
+                         <th>16<br />
+                           四</th>
+                         <th>17<br />
+                           五</th>
+                         <th><strong>18<br />
+                           六</strong></th>
+                         <th><strong>19<br />
+                           日</strong></th>
+                         <th>20<br />
+                           一<br /></th>
+                         <th>21<br />
+                           二</th>
+                         <th>22<br />
+                           一<br /></th>
+                         <th>23<br />
+                           二</th>
+                         <th>24<br />
+                           三</th>
+                         <th>25<br />
+                           四</th>
+                         <th>26<br />
+                           五</th>
+                         <th><strong>27<br />
+                           六</strong></th>
+                         <th><strong>28<br />
+                           日</strong></th>
+                         <th>29<br />
+                           一<br /></th>
+                         <th>30<br />
+                           二</th>
+                         <th>31<br />
+                           一<br /></th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td class="table-title">自动确认房量</td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>90</span></td>
+                         <td class="action1"><span>95</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                       </tr>
+                       <tr>
+                         <td class="table-title">手工确认房量</td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>5</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                </div>   
+                
+                
+                 <div class="form form2">
+                     <div class="roomhead"><h1>豪华间--剩余房量</h1><span></span>
+                     
+                         <div class="eachroom" style=" display:none;">
+                           <label>房型名称：豪华间<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+                           <label>自定义房型名称：<input type="text"  value="特价" class="input-t"  />
+                           <span style="padding:0 5px">豪华间</span><input type="text"  value="_豪华大床房↑" class="input-t"  /></label>
+                           <label>是否开启超售：<input name="" type="radio" value="" /></label>
+                           <label>是否生效：<input name="" type="radio" value="" /></label>
+                                               
+                         <label><input name="" type="button" value="保存" class="btn-s"  />
+                         <input name="" type="button" value="取消" class="btn-s btn-bai"  /></label>
+                       </div>
+
+                  </div>
+ 
+                   
+                   
+                   <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
+                     <thead>
+                       <tr>
+                         <th class="table-title">日期</th>
+                         <th>1<br />
+                           三</th>
+                         <th>2<br />
+                           四</th>
+                         <th>3<br />
+                           五</th>
+                         <th ><strong class="today">今<br />
+                           天</strong></th>
+                         <th ><strong>5<br />
+                           日</strong></th>
+                         <th>6<br />
+                           一<br /></th>
+                         <th>7<br />
+                           二</th>
+                         <th>8<br />
+                           三</th>
+                         <th>9<br />
+                           四</th>
+                         <th>10<br />
+                           五</th>
+                         <th><strong>11<br />
+                           六</strong></th>
+                         <th><strong>12<br />
+                           日</strong></th>
+                         <th>13<br />
+                           一<br /></th>
+                         <th>14<br />
+                           二</th>
+                         <th>15<br />
+                           三</th>
+                         <th>16<br />
+                           四</th>
+                         <th>17<br />
+                           五</th>
+                         <th><strong>18<br />
+                           六</strong></th>
+                         <th><strong>19<br />
+                           日</strong></th>
+                         <th>20<br />
+                           一<br /></th>
+                         <th>21<br />
+                           二</th>
+                         <th>22<br />
+                           一<br /></th>
+                         <th>23<br />
+                           二</th>
+                         <th>24<br />
+                           三</th>
+                         <th>25<br />
+                           四</th>
+                         <th>26<br />
+                           五</th>
+                         <th><strong>27<br />
+                           六</strong></th>
+                         <th><strong>28<br />
+                           日</strong></th>
+                         <th>29<br />
+                           一<br /></th>
+                         <th>30<br />
+                           二</th>
+                         <th>31<br />
+                           一<br /></th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td class="table-title">自动确认房量</td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>90</span></td>
+                         <td class="action1"><span>95</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                         <td class="action1"><span>100</span></td>
+                       </tr>
+                       <tr>
+                         <td class="table-title">手工确认房量</td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="stop"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1 man-close"><span>0</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>5</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                         <td class="action1"><span>--</span></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                </div>  
+                
+                <div class="form"><input name="" type="button" value="增加可合作房型" class="" style="width:150px" id="openBtn" /></div>
+                     
+    <div class="room-tips">
+                    标识说明：<span>剩余可售房量</span><span>不可操作</span><span>关闭</span>
+                    <p>（单击单元格进行修改房量操作。房量数设置为0即为关闭）</p>
+                 </div>
+                
+                
+                 </div>
+            </div></div>
+            <!--已合作酒店结束-->  
+
+         </div></div>
+         <!--主体内容end--> 
+ 
+ 
+    
+    </div>
+    <!--右侧部分end--> 
+    
+
+</div>
+
+
+
+<!--修改房量弹窗浮层-->     
+<div class="messageDiv" id="openDiv1" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail piliang-room">
+       <div class="head"><h1>修改手工（或自动）房量</h1></div>
+       <div class="con">
+           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80">房型：</td>
+    <td>豪华房</td>
+  </tr>
+  <tr>
+    <td>日期：</td>
+    <td><input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="2014-10-04" class="input-time" / > 至 
+                     <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="2014-10-04" class="input-time" /></td>
+  </tr>
+  <tr>
+    <td>房量调整：</td>
+    <td><input name="" type="text" class="input-t" value="5" placeholder="输入数字" /></td>
+  </tr>
+</table>
+          <p class="action" style=" text-align:center">
+          <input name="" type="button" value="设置为0" class="sure-more btn-bai" />
+          <input name="" type="button" value="加(5)房量" class="sure-more" />
+           <input name="" type="button" value="减(5)房量" class="sure-more" />
+          <input name="" type="button" value="取消" class="btn btn-bai"  />
+          </p>
+       </div>
+   </div> 
+</div>   
+<!--修改房量弹窗浮层end-->   
+ 
+ 
+<!--房量修改再次确认浮层-->    
+<div class="messageDiv" id="openDiv2" style=" display:none;" >
+   <div class="messageBlack"></div>
+   <div class="detail" style="width:300px;margin-left:-150px;" >
+       <div class="con">
+           <p class="f16" style=" text-align:center;padding:30px 0;">是否确认修改？</p>
+
+          <p class="action" style=" text-align:center">
+          <input name="" type="button" value="确认" class="btn" />
+          <input name="" type="button" value="取消" class="btn-no btn-bai"  />
+          </p>
+       </div>
+   </div> 
+</div>   
+<!--房量修改再次确认浮层end-->  
+
+ 
+
+ 
+ 
+ 
+<!--可合作房型弹窗浮层-->     
+<div class="messageDiv" id="roomtype-list" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail detail-roomlist">
+       <div class="head"><h1>房型列表</h1></div>
+       <div class="con">
+       
+          <div class="cm">
+          <h2>您已合作的房型：</h2>
+          <p>标准间，大床房</p>
+          
+          <h2>选择你想要合作的房型：<span><a class="a-blue" href="http://wpa.qq.com/msgrd?v=3&uin=1816777547&site=qq&menu=yes" target="_blank">没有您要合作的房型？联系客服</a></span></h2>
+    <div class="list"><label><input name="" type="checkbox" value="" />海景房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华单人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华双人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value="" />海景房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华单人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华双人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value="" />海景房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华单人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华双人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value="" />海景房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华单人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+             <label><input name="" type="checkbox" value=""/>豪华双人房<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+     </div>
+         </div>
+          <p class="action" style=" text-align:center; ">
+         
+           <input name="" type="button" value="确认" />
+          <input name="" type="button" value="取消" class="btn-bai"  />
+          </p>
+         
+       </div>
+   </div> 
+</div>   
+<!--可合作房型弹窗浮层end-->    
+
+<!--房型概述弹窗浮层-->     
+<div class="messageDiv" id="cool-roomtype" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail detail-roomtype">
+       <div class="head"><h1>房型概述</h1></div>
+       <p id="closeDiv" class="close" href="#">X</p>
+       <div class="con"><div class="cm">
+           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="90"><strong>房型名称：</strong></td>
+    <td>豪华房</td>
+  </tr>
+  <tr>
+    <td><strong>房间大小：</strong></td>
+    <td>15-20平方米</td>
+  </tr>
+  <tr>
+    <td><strong>床型：</strong></td>
+    <td>大床、双床、三床、四床</td>
+  </tr>
+  <tr>
+    <td><strong>床尺寸：</strong></td>
+    <td>200cm*180cm</td>
+  </tr>
+  <tr>
+    <td><strong>楼层：</strong></td>
+    <td>1层</td>
+  </tr>
+  <tr>
+    <td><strong>入住人数：</strong></td>
+    <td>2人</td>
+  </tr>
+  <tr>
+    <td><strong>设施：</strong></td>
+    <td>wi-fi、宽带、有线电视、洗漱用品、24小时热水、空调</td>
+  </tr>
+  <tr>
+    <td><strong>描述：</strong></td>
+    <td>标准间……</td>
+  </tr>
+ 
+</table>
+
+       </div></div>
+   </div> 
+</div>   
+<!--房型概述弹窗浮层end-->   
+ 
+   
+ <!--新手引导浮层-->     
+<div class="messageDiv" id="guide-div" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail guide-div">
+       <div class="head"><h1>新手引导</h1></div>
+        <p id="closeDiv" class="close" href="#">X</p>
+     <div class="con">
+       <p class="f16" style=" text-align:center;padding:30px 0;">如果你是首次登录的用户，请按以下步骤操作：</p>
+        <p  style=" text-align:center">
+
+        <img src="image/contral-step.jpg" width="331" height="264" />          
+        </p>
+       </div>
+   </div> 
+</div>   
+ 
+</div>   
+ <!--新手引导浮层结束-->  
+ 
+
+ <!--退出登录浮层-->     
+<div class="messageDiv" id="out-div" style=" display:none">
+  <div class="messageBlack"></div>
+   <div class="detail">
+       <div class="head"><h1>提示</h1></div>       
+       <div class="con">
+           <p class="f16" style=" text-align:center;padding:30px 0;">你确认要退出吗？</p>
+          <p class="action" style=" text-align:center">
+          <input name="确定" type="button" value="确定" id="sure-out" />
+          <input name="取消" type="button" value="取消" class="btn-bai" id="no-out" />
+          </p>
+       </div>
+   </div> 
+</div>   
+ <!--退出登录弹窗浮层结束-->  
+               
+</body>
+</html>

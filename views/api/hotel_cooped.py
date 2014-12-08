@@ -8,8 +8,13 @@ from config import API
 from tools.auth import auth_login
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
-from models.cooperate_hotel import CooperateHotelModel as CooperateHotel
 from exception.json_exception import JsonException
+
+from tasks import celery_app
+from tasks.models.cooperate_hotel import CooperateHotelModel as CooperateHotel
+
+import tcelery
+tcelery.setup_nonblocking_producer()
 
 class HotelCoopedAPIHandler(BtwBaseHandler):
 
@@ -35,7 +40,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, star):
-        cooped_hotel_ids = self.get_cooped_hotel_ids(merchant_id)
+        cooped_hotel_ids = yield self.get_cooped_hotel_ids(merchant_id)
         hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_hotel_ids, start, limit)
         if hotels is not None and total is not None:
             yield self.mege_district(hotels)
@@ -43,9 +48,10 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         else:
             raise gen.Return((None, None))
 
+    @gen.coroutine
     def get_cooped_hotel_ids(self, merchant_id):
-        cooped_hotels = CooperateHotel.get_by_merchant_id(self.db, merchant_id)
-        return [hotel.hotel_id for hotel in cooped_hotels]
+        cooped_hotels = yield gen.Task(CooperateHotel.get_by_merchant_id.apply_async, args=[merchant_id])
+        raise gen.Return([hotel.hotel_id for hotel in cooped_hotels.result])
 
     @gen.coroutine
     def fetch_hotels(self, name, city_id, star, within_ids, start, limit):
