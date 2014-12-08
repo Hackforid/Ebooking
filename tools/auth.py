@@ -20,7 +20,7 @@ def auth_permission(permissions, json=False):
     def _decorator(fn):
         def _(self, *args, **kwargs):
 
-            if self.current_user.permission & permissions:
+            if self.current_user.authority & permissions:
                 return fn(self, *args, **kwargs)
             else:
                 if json:
