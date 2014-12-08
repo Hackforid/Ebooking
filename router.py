@@ -8,6 +8,7 @@ from views.api.city import CityAPIHandler
 from views.api.hotel_will_coop import HotelWillCoopAPIHandler
 from views.api.hotel_coop import HotelCoopAPIHandler
 from views.api.hotel_cooped import HotelCoopedAPIHandler
+from views.api.user import UserManageAPIHandler
 
 handlers = [
         (r"/login/?", LoginHandler),
@@ -17,4 +18,6 @@ handlers = [
         (r"/api/hotel/willcoop/?", HotelWillCoopAPIHandler),
         (r"/api/hotel/coop/(?P<hotel_id>\d+)/?", HotelCoopAPIHandler),
         (r"/api/hotel/cooped/?", HotelCoopedAPIHandler),
-        (r"/userManage/?", UserManageHandler)]
+        (r"/userManage/?", UserManageHandler),
+        (r"/api/userManage/?", UserManageAPIHandler)
+]

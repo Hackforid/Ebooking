@@ -23,8 +23,6 @@ class UserModel(Base):
     mobile = Column(VARCHAR(50), nullable=False)
     email = Column(VARCHAR(50), nullable=False)
     authority = Column(BIGINT, nullable=False, default=0)
-    valid_begin_date = Column('validBeginDate', DATETIME, nullable=False)
-    valid_end_date = Column('validEndDate', DATETIME, nullable=False)
     is_valid = Column('isValid', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
@@ -41,7 +39,8 @@ class UserModel(Base):
     @classmethod
     def get_user_by_merchantid_username_and_password(cls, session, merchant_id, username, password):
         return session.query(UserModel)\
-            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password, UserModel.is_delete != 1)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password,
+                    UserModel.is_delete == 0)\
             .first()
 
     @classmethod
@@ -51,29 +50,23 @@ class UserModel(Base):
             .all()
 
     @classmethod
-    def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, valid_begin_date,
-                    valid_end_date, is_valid):
+    def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, is_valid):
         user = cls.get_user_by_merchantid_username(session, merchant_id, username)
         if user:
             if password:
                 user.password = password
-            if department:
-                user.department = department
-            if mobile:
-                user.mobile = mobile
+            user.department = department
+            user.mobile = mobile
             if email:
                 user.email = email
-
             user.authority=authority
-            user.valid_begin_date = valid_begin_date
-            user.valid_end_date = valid_end_date
             user.is_valid = is_valid
             session.commit()
 
     @classmethod
-    def add_user(cls, session, merchant_id, username, password, re_password, department, mobile, email, authority):
-        user = UserModel(merchant_id=merchant_id, username=username, password=password, department=department,
-                         mobile=mobile, email=email, authority=authority)
+    def add_user(cls, session, merchant_id, username, password, department, mobile, authority, is_valid):
+        user = UserModel(merchant_id=merchant_id, username=username, nickname='', password=password, department=department,
+                         mobile=mobile, email='', authority=authority, is_valid=is_valid)
         session.add(user)
         session.commit()
         return user
@@ -89,7 +82,5 @@ class UserModel(Base):
             email=self.email,
             authority=self.authority,
             is_valid=self.is_valid,
-            valid_begin_date=self.valid_begin_date.strftime('%Y-%m-%d'),
-            valid_end_date=self.valid_end_date.strftime('%Y-%m-%d'),
             is_delete=self.is_delete,
                 )
