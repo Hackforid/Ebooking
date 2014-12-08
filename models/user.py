@@ -64,6 +64,13 @@ class UserModel(Base):
             session.commit()
 
     @classmethod
+    def update_password(cls, session, merchant_id, username, password):
+        user = cls.get_user_by_merchantid_username(session, merchant_id, username)
+        if user:
+            user.password = password
+            session.commit()
+
+    @classmethod
     def add_user(cls, session, merchant_id, username, password, department, mobile, authority, is_valid):
         user = UserModel(merchant_id=merchant_id, username=username, nickname='', password=password, department=department,
                          mobile=mobile, email='', authority=authority, is_valid=is_valid)
