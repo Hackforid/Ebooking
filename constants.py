@@ -12,7 +12,6 @@ PERMISSIONS = ObjectDict({
     'pricing'                  : (1<<6),
     'order_statistics'         : (1<<7),
     'income_statistics'        : (1<<8),
-    'user_manage'              : (1<<9),
-    'update_password'          : (1<<10)
+    'update_password'          : (1<<9)
 })
 
