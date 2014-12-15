@@ -1,47 +1,27 @@
-# IceFrog
-## API
-所有API基于**RESTful**设计  
-请设置``content_type``为 ``application/json``  
-参数为json格式，置于content_body中  
+# EBooking
 
-response为标准Betterwood json格式  
-``{errcode: 0, errmsg: '', result: T}``
- 
+## 部署
+**依赖：**  
+python2.7  
+python-dev  
+MySQL  
+rabbitmq-server  
 
-**通过provider_id添加Hotel**
+**Install**  
+1.Python lib  
+``sudo pip install -r requirements.txt``  
 
-``
-api/privider/{provider_id}/
-``
+2.Step Celery  
+as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html#broker-rabbitmq  
 
-*POST:*  
-    {hotel_id: {1, 2, 3}}  
-    
+``sudo pip install rabbitmq-server``  
+``sudo rabbitmqctl add_user admin admin``  
+``sudo rabbitmqctl add_vhost ebooking``  
+``sudo rabbitmqctl set_permissions -p ebooking admin ".*" ".*" ".*"``  
 
-**通过provider_id删除Hotel**
-``api/provider/{provider_id}/``
 
-*DELETE:*
-    request: {hotel_id: {1, 2, 3}}
-    response: {errcode: 0}
+##Run
+``celery -A tasks.celery_app worker  -l debug``  
+``python app.py``
 
-**查询Hotel**
-``api/provider/{provider_id}/hotel/``
-
-*GET:*
-    request: {hotel_id: {1, 2, 3}}
-    response: {errcode: 0, errmsg: '', result: undefine}
-    
-**查询RoomType**    
-``api/provider/{provider_id}/hotel/{hotel_id}/roomtype/``
-
-*GET:**
-    request: {roomtype_id: {1, 2, 3}}
-    response: {errcode: 0, errmsg: '', result: undefine}
-
-## SQL design 
-username: root  
-password: root  
-host:     192.168.10.15  
-database: ebooking-admin  
 
