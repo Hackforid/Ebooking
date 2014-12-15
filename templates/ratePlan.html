@@ -1,0 +1,251 @@
+<%inherit file="base.html" />
+<%def name="right_content()">
+<div
+    ng-app="ratePlanApp"
+    ng-controller="ratePlanCtrl"
+    >
+    <!--导航条--> 
+    <div class="notice" id="notice"><h2>当前酒店：{{hotel.name}}</h2></div>
+    <!--导航条end-->  
+
+    <!--主体内容-->  
+    <div class="main"><div class="p15">
+
+            <!--已合作酒店开始-->  
+            <div class="main-rchoose" > 
+                <ul class="menu-title">
+                    <li><a href="/hotel/cooped/${hotel_id}/inventory/" >房量房态</a></li>
+                    <li><a href="/hotel/cooped/${hotel_id}/rateplan/" class="active">房价金额</a></li>
+                </ul>
+
+            </div>
+
+            <div class="main-room main-price"><div class="content">
+                    <div class="p15">
+
+                        <div class="choosem">                 
+                            <div class="left">选择房型：
+                                <select name="" class="input-s"
+                                    ng-model="currentRoomType"
+                                    ng-options="roomtype.name for roomtype in roomtypes">
+                                </select>
+
+                                选择月份： <select name="" class="input-s"  >
+                                    <option value="1">10月</option>
+                                    <option value="2">11月</option>
+                                    <option value="3">12月</option> 
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="form form1"
+                            ng-repeat="rateplan in rateplans"
+                            >
+                            <div class="roomhead"><h1>{{rateplan.name}}</h1><span></span>
+                                <div class="eachroom" style=" display:none;">
+                                    <label>名称：常规价格</label>
+                                    <label>早餐数：<select name="" class="input-s"  >
+                                            <option value="1">无早餐</option>
+                                            <option value="2">一份早餐</option>
+                                            <option value="3">两份早餐</option>
+                                            <option value="4">按人头早餐</option>
+                                        </select>
+                                    </label>
+                                    <label>取消时：<select name="" class="input-s"  >
+                                            <option value="1">不扣任何费用</option>
+                                            <option value="2">扣首晚房费</option>
+                                            <option value="3">扣全部房费</option>
+
+                                        </select>
+                                    </label>
+
+
+                                    <label><input name="" type="button" value="保存" class="btn-s"  />
+                                        <input name="" type="button" value="取消" class="btn-s btn-bai"  /></label>
+                                </div>
+                            </div>
+
+
+
+                            <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
+                                <thead><tr>
+                                        <th class="table-title">日期</th>
+                                        <th>1<br />
+                                            三</th>
+                                        <th>2<br />
+                                            四</th>
+                                        <th>3<br />
+                                            五</th>
+                                        <th ><strong class="today">今<br />
+                                                天</strong></th>
+                                        <th ><strong>5<br />
+                                                日</strong></th>
+                                        <th>6<br />
+                                            一<br /></th>
+                                        <th>7<br />
+                                            二</th>
+                                        <th>8<br />
+                                            三</th>
+                                        <th>9<br />
+                                            四</th>
+                                        <th>10<br />
+                                            五</th>
+                                        <th><strong>11<br />
+                                                六</strong></th>
+                                        <th><strong>12<br />
+                                                日</strong></th>
+                                        <th>13<br />
+                                            一<br /></th>
+                                        <th>14<br />
+                                            二</th>
+                                        <th>15<br />
+                                            三</th>
+                                        <th>16<br />
+                                            四</th>
+                                        <th>17<br />
+                                            五</th>
+                                        <th><strong>18<br />
+                                                六</strong></th>
+                                        <th><strong>19<br />
+                                                日</strong></th>
+                                        <th>20<br />
+                                            一<br /></th>
+                                        <th>21<br />
+                                            二</th>
+                                        <th>22<br />
+                                            一<br /></th>
+                                        <th>23<br />
+                                            二</th>
+                                        <th>24<br />
+                                            三</th>
+                                        <th>25<br />
+                                            四</th>
+                                        <th>26<br />
+                                            五</th>
+                                        <th><strong>27<br />
+                                                六</strong></th>
+                                        <th><strong>28<br />
+                                                日</strong></th>
+                                        <th>29<br />
+                                            一<br /></th>
+                                        <th>30<br />
+                                            二</th>
+                                        <th>31<br />
+                                            一<br /></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="table-title">预付底价</td>
+                                        <td class="stop"><span>--</span></td>
+                                        <td class="stop"><span>--</span></td>
+                                        <td class="stop"><span>--</span></td>
+                                        <td class="action5"><span>80</span></td>
+                                        <td class="action5"><span>20</span></td>
+                                        <td class="action5"><span>90</span></td>
+                                        <td class="action5"><span>95</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>80</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>90</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                        <td class="action5"><span>100</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>             
+                        </div>
+
+                        <div class="form"><input name="" type="button" value="增加价格类别" class="" style="width:150px" id="openBtn" ng-click="newRatePlanDialog.open()" /></div>
+
+
+                        <div class="price-tips">
+                            标识说明：（单击单元格可修改房价）<span>可售房价</span><span>不可操作</span> 
+
+                        </div>
+
+
+                    </div>
+            </div></div>
+            <!--已合作酒店结束-->  
+
+    </div></div>
+    <!--主体内容end--> 
+
+
+<!--增加价格类别浮层-->    
+<div class="messageDiv" id="newRatePlanDialog" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail piliang-room" style="width:300px;margin-left:-150px;">
+       <div class="head"><h1>增加价格类别</h1></div>
+       <div class="con">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="100">名　称：</td>
+    <td><input type="text"  value="" class="input-t" ng-model="newRatePlanDialog.name"  /></td>
+  </tr>
+  <tr>
+    <td >早餐数：</td>
+    <td><select name="" class="input-s"  ng-model="newRatePlanDialog.mealType">
+                       <option value="0">无早餐</option>
+                       <option value="1">一份早餐</option>
+                       <option value="2">两份早餐</option>
+                       <option value="100">按人头早餐</option>
+                     </select></td>
+  </tr>
+  <tr>
+    <td>取消时：</td>
+    <td><select name="" class="input-s" ng-model="newRatePlanDialog.punishType" >
+                       <option value="0">不扣任何费用</option>
+                       <option value="1">扣首晚房费</option>
+                       <option value="2">扣全部房费</option>
+                       <option value="3">扣定额</option>
+                       <option value="4">扣全额房费百分比</option>
+                     </select></td>
+  </tr>
+</table>
+<p>{{newRatePlanDialog.errmsg}}</p>
+          
+          <p class="action" style=" text-align:center">
+              <input name="" type="button" value="保存"  ng-click="newRatePlanDialog.save()"/>
+          <input name="" type="button" value="取消" class="btn-bai" ng-click="newRatePlanDialog.close()"  />
+          </p>
+ 
+       </div>
+   </div> 
+</div>   
+ <!--增加价格类别弹窗浮层end-->  
+
+
+</div>
+</%def>
+
+<%def name="end()">
+    <script>
+        var hotelId = ${hotel_id};
+    </script>
+    <script src="${static_url('js/roomtype.js')}"></script>
+</%def>
+
