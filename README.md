@@ -20,7 +20,7 @@ as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html
 ``sudo rabbitmqctl set_permissions -p ebooking admin ".*" ".*" ".*"``  
 
 
-##Run
+##Run  
 ``celery -A tasks.celery_app worker  -l debug``  
 ``python app.py``
 
