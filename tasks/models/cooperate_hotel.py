@@ -2,7 +2,7 @@
 
 from tornado.util import ObjectDict 
 
-from models import Base
+from tasks.models import Base
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
 

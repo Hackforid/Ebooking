@@ -26,6 +26,7 @@ hotelWillCoopApp.controller('hotelCoopedContentCtrl',
 
 		$http.get(url)
 			.success(function(resp) {
+				console.log(resp);
 				if (resp.errcode == 0) {
 					$scope.hotels = resp.result.hotels;
 				} else {
@@ -55,6 +56,11 @@ hotelWillCoopApp.controller('hotelCoopedContentCtrl',
 		}
 
 		return '';
+	}
+
+
+	$scope.redictToInventoryPage = function(hotel) {
+		window.location.href = ("/hotel/cooped/" + hotel.id + "/inventory/");
 	}
 }])
 

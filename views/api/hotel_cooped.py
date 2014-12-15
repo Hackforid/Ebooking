@@ -43,7 +43,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         cooped_hotel_ids = yield self.get_cooped_hotel_ids(merchant_id)
         hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_hotel_ids, start, limit)
         if hotels is not None and total is not None:
-            yield self.mege_district(hotels)
+            yield self.merge_district(hotels)
             raise gen.Return((hotels, total))
         else:
             raise gen.Return((None, None))
@@ -73,7 +73,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise gen.Return((None, None))
 
     @gen.coroutine
-    def mege_district(self, hotels):
+    def merge_district(self, hotels):
         district_ids = [hotel['district_id'] for hotel in hotels]
         district_ids = {}.fromkeys(district_ids).keys()
 

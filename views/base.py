@@ -3,12 +3,14 @@
 import sys
 import traceback
 
-from tornado.escape import json_encode, json_decode
+from tornado.escape import json_decode
 from tornado.util import ObjectDict
 
 from views import BaseHandler
 from models.user import UserModel
 from exception.json_exception import JsonException, JsonDecodeError
+
+from tools.json import json_encode
 
 
 class BtwBaseHandler(BaseHandler):
@@ -24,8 +26,10 @@ class BtwBaseHandler(BaseHandler):
         username = self.get_secure_cookie('username')
         merchant_id = self.get_secure_cookie('merchant_id')
         if username and merchant_id:
-            self.set_secure_cookie('username', username, expires_days=0.02)
-            self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
+            #self.set_secure_cookie('username', username, expires_days=0.02)
+            #self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
+            self.set_secure_cookie('username', username)
+            self.set_secure_cookie('merchant_id', merchant_id)
         self.current_user = UserModel.get_user_by_merchantid_username(self.db, merchant_id, username)
         return self.current_user
 
