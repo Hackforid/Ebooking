@@ -4,3 +4,4 @@ mako
 mysql-connector-python
 celery
 tornado-celery
+python-dateutil
