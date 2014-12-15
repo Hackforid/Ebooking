@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from views.base import BtwBaseHandler
 from tools.auth import auth_login
+from tools.auth import auth_permission
 from tools.request_tools import get_and_valid_arguments
 from models.user import UserModel
+from constants import PERMISSIONS
 
 class PasswordAPIHandler(BtwBaseHandler):
 
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.update_password, json=True)
     def put(self):
         args = self.get_json_arguments()
         old_password, password, re_password = get_and_valid_arguments(args, 'old_password', 'password', 're_password')

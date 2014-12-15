@@ -18,15 +18,15 @@
                 user.auths={};
                 user.auth_all=false;
                 auth = user.authority;
-                for(var j=0;j<=10;j++) {
+                for(var j=0;j<10;j++) {
                     user.auths[j] = false;
                 }
-                for(var j=0;j<=10;j++) {
+                for(var j=0;j<10;j++) {
                     if((auth & (1<<j))>0) {
                         user.auths[j] = true;
                     }
                 }
-                if(auth == 2047 || auth == 2046) {
+                if(auth == 1023 || auth == 1022) {
                     user.auth_all=true;
                 }
             }
@@ -95,7 +95,7 @@
             submit['mobile'] = $scope.selectUser.mobile;
             submit['email'] = $scope.selectUser.email;
             submit['authority']=0;
-            for(var i=0;i<=10;i++) {
+            for(var i=0;i<10;i++) {
                 if($scope.selectUser.auths[i]) {
                     submit['authority'] += (1<<i);
                 }
@@ -147,7 +147,7 @@
             $scope.addUser.merchant_id = $scope.users[0].merchant_id;
             $scope.addUser.auths = {};
             $scope.addUser.is_valid = 1;
-            for(var i=1;i<=10;i++) {
+            for(var i=1;i<10;i++) {
                 $scope.addUser.auths[i] = false;
             }
             $scope.addUser.auths[0] = false;
@@ -156,7 +156,7 @@
             $scope.addBadUsername = false;
             $scope.addBadPassword = false;
             $scope.addBadDepartment = false;
-            $scope.addBadmobile = false;
+            $scope.addBadMobile = false;
         }
         initAddUser();
 
@@ -202,7 +202,7 @@
             submit['department'] = $scope.addUser.department;
             submit['mobile'] = $scope.addUser.mobile;
             submit['authority'] = 0;
-            for(var i=1; i<=10; i++) {
+            for(var i=1; i<10; i++) {
                 if ($scope.addUser.auths[i]) {
                     submit['authority'] += (1<<i);
                 }
@@ -236,7 +236,7 @@
 
 
         $scope.selectAllAuth = function(user) {
-            for(var i=1;i<=10;i++) {
+            for(var i=1;i<10;i++) {
                 if(!user.auth_all) {
                     user.auths[i] = true;
                 } else {
@@ -246,12 +246,12 @@
         };
 
         $scope.changeAuth = function (user, id) {
-            if(id<1 || id>10) {
+            if(id<1 || id>9) {
                 user.auths[id] = !user.auths[id];
                 return;
             }
             user.authority ^= (1<<id);
-            if(user.authority == 2047 || user.authority == 2046) {
+            if(user.authority == 1023 || user.authority == 1022) {
                 user.auth_all = true;
             } else {
                 user.auth_all = false;

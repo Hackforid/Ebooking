@@ -40,13 +40,13 @@ class UserModel(Base):
     def get_user_by_merchantid_username_and_password(cls, session, merchant_id, username, password):
         return session.query(UserModel)\
             .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password,
-                    UserModel.is_delete == 0)\
+                    UserModel.is_delete == 0, UserModel.is_valid == 1)\
             .first()
 
     @classmethod
     def get_users_by_merchant_id(cls, session, merchant_id):
         return session.query(UserModel)\
-            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete != 1)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete == 0)\
             .all()
 
     @classmethod
