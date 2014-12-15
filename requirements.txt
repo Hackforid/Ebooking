@@ -1,0 +1,6 @@
+tornado
+sqlalchemy
+mako
+mysql-connector-python
+celery
+tornado-celery
