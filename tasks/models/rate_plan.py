@@ -42,6 +42,14 @@ class RatePlanModel(Base):
 
     @staticmethod
     @app.task(base=SqlAlchemyTask, bind=True)
+    def get_by_id(task_self, id):
+        return task_self.session.query(RatePlanModel)\
+                .filter(RatePlanModel.id == id)\
+                .filter(RatePlanModel.is_delete == 0)\
+                .first()
+
+    @staticmethod
+    @app.task(base=SqlAlchemyTask, bind=True)
     def new_rate_plan(task_self, merchant_id, hotel_id, roomtype_id, name, meal_type, punish_type):
         from tasks.models.room_rate import RoomRateModel
         rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, name=name, punish_type=punish_type)

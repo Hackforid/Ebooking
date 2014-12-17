@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from tornado.util import ObjectDict 
+from tornado.util import ObjectDict
 
 from tasks.models import Base
 from sqlalchemy import Column
@@ -26,26 +26,26 @@ class CooperateHotelModel(Base):
     @app.task(base=SqlAlchemyTask, bind=True)
     def get_by_id(task_self, id):
         return task_self.session.query(CooperateHotelModel)\
-                .filter(CooperateHotelModel.id == id)\
-                .filter(CooperateHotelModel.is_delete == 0)\
-                .first()
+            .filter(CooperateHotelModel.id == id)\
+            .filter(CooperateHotelModel.is_delete == 0)\
+            .first()
 
     @staticmethod
     @app.task(base=SqlAlchemyTask, bind=True)
     def get_by_merchant_id(task_self, merchant_id):
         return task_self.session.query(CooperateHotelModel)\
-                .filter(CooperateHotelModel.merchant_id == merchant_id)\
-                .filter(CooperateHotelModel.is_delete == 0)\
-                .all()
+            .filter(CooperateHotelModel.merchant_id == merchant_id)\
+            .filter(CooperateHotelModel.is_delete == 0)\
+            .all()
 
     @staticmethod
     @app.task(base=SqlAlchemyTask, bind=True)
     def get_by_merchant_id_and_hotel_id(task_self, merchant_id, hotel_id):
         return task_self.session.query(CooperateHotelModel)\
-                .filter(CooperateHotelModel.merchant_id == merchant_id)\
-                .filter(CooperateHotelModel.hotel_id == hotel_id)\
-                .filter(CooperateHotelModel.is_delete == 0)\
-                .first()
+            .filter(CooperateHotelModel.merchant_id == merchant_id)\
+            .filter(CooperateHotelModel.hotel_id == hotel_id)\
+            .filter(CooperateHotelModel.is_delete == 0)\
+            .first()
 
     @staticmethod
     @app.task(base=SqlAlchemyTask, bind=True)
@@ -61,7 +61,8 @@ class CooperateHotelModel(Base):
     @staticmethod
     @app.task(base=SqlAlchemyTask, bind=True)
     def delete_hotel_cooprate(task_self, merchant_id, hotel_id):
-        coop = CooperateHotelModel.get_by_merchant_id_and_hotel_id(task_self, merchant_id, hotel_id)
+        coop = CooperateHotelModel.get_by_merchant_id_and_hotel_id(
+            task_self, merchant_id, hotel_id)
         if coop:
             coop.is_delete = 1
             task_self.session.commit()
@@ -69,9 +70,8 @@ class CooperateHotelModel(Base):
 
     def todict(self):
         return ObjectDict(
-                id=self.id,
-                merchant_id=self.merchant_id,
-                hotel_id=self.hotel_id,
-                is_online=self.is_online,
-                )
-
+            id=self.id,
+            merchant_id=self.merchant_id,
+            hotel_id=self.hotel_id,
+            is_online=self.is_online,
+        )
