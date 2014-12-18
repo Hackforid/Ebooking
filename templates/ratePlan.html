@@ -30,10 +30,11 @@
                                     ng-options="roomtype.name for roomtype in roomtypes">
                                 </select>
 
-                                选择月份： <select name="" class="input-s"  >
-                                    <option value="1">10月</option>
+                                选择月份： <select name="" class="input-s" ng-model="monthvalue" >
+                                <option  value={{$index+1}}  ng-repeat="i in months">{{i.month}}月</option>
+                                   <!-- <option value="1">10月</option>
                                     <option value="2">11月</option>
-                                    <option value="3">12月</option> 
+                                    <option value="3">12月</option> --> 
                                 </select>
 
                             </div>
@@ -46,8 +47,8 @@
                         <div class="form form1"
                             ng-repeat="rateplan in rateplans"
                             >
-                            <div class="roomhead"><h1>{{rateplan.name}}</h1><span></span>
-                                <div class="eachroom" style=" display:none;">
+                            <div class="roomhead" ><h1 ng-click="eachshow($index);">{{rateplan.name}}</h1><span></span>
+                                <div class="eachroom" style="display:none">
                                     <label>名称：常规价格</label>
                                     <label>早餐数：<select name="" class="input-s"  >
                                             <option value="1">无早餐</option>
@@ -66,7 +67,7 @@
 
 
                                     <label><input name="" type="button" value="保存" class="btn-s"  />
-                                        <input name="" type="button" value="取消" class="btn-s btn-bai"  /></label>
+                                        <input name="" type="button" value="取消" ng-click="eachhide($index);" class="btn-s btn-bai"  /></label>
                                 </div>
                             </div>
 
@@ -75,104 +76,15 @@
                             <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
                                 <thead><tr>
                                         <th class="table-title">日期</th>
-                                        <th>1<br />
-                                            三</th>
-                                        <th>2<br />
-                                            四</th>
-                                        <th>3<br />
-                                            五</th>
-                                        <th ><strong class="today">今<br />
-                                                天</strong></th>
-                                        <th ><strong>5<br />
-                                                日</strong></th>
-                                        <th>6<br />
-                                            一<br /></th>
-                                        <th>7<br />
-                                            二</th>
-                                        <th>8<br />
-                                            三</th>
-                                        <th>9<br />
-                                            四</th>
-                                        <th>10<br />
-                                            五</th>
-                                        <th><strong>11<br />
-                                                六</strong></th>
-                                        <th><strong>12<br />
-                                                日</strong></th>
-                                        <th>13<br />
-                                            一<br /></th>
-                                        <th>14<br />
-                                            二</th>
-                                        <th>15<br />
-                                            三</th>
-                                        <th>16<br />
-                                            四</th>
-                                        <th>17<br />
-                                            五</th>
-                                        <th><strong>18<br />
-                                                六</strong></th>
-                                        <th><strong>19<br />
-                                                日</strong></th>
-                                        <th>20<br />
-                                            一<br /></th>
-                                        <th>21<br />
-                                            二</th>
-                                        <th>22<br />
-                                            一<br /></th>
-                                        <th>23<br />
-                                            二</th>
-                                        <th>24<br />
-                                            三</th>
-                                        <th>25<br />
-                                            四</th>
-                                        <th>26<br />
-                                            五</th>
-                                        <th><strong>27<br />
-                                                六</strong></th>
-                                        <th><strong>28<br />
-                                                日</strong></th>
-                                        <th>29<br />
-                                            一<br /></th>
-                                        <th>30<br />
-                                            二</th>
-                                        <th>31<br />
-                                            一<br /></th>
+                                        <th id={{"dayth"+monthvalue+""+day.day}} ng-repeat="day in dayWeekSum" ng-style="day.textcolor">{{day.day}}<br/>{{day.weekday}}</th>
+                                     
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="table-title">预付底价</td>
-                                        <td class="stop"><span>--</span></td>
-                                        <td class="stop"><span>--</span></td>
-                                        <td class="stop"><span>--</span></td>
-                                        <td class="action5"><span>80</span></td>
-                                        <td class="action5"><span>20</span></td>
-                                        <td class="action5"><span>90</span></td>
-                                        <td class="action5"><span>95</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>80</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>90</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
-                                        <td class="action5"><span>100</span></td>
+                                    <td class="table-title">预付底价</td>
+                                    <td class={{dayprice.classstyle}} ng-repeat="dayprice in dayPriceSum[rateplan.id]">
+                                    <span id={{rateplan.id+""+$index}} ng-click=addChangeP((rateplan.id+""+$index),(dayprice.classstyle));>{{dayprice.dayprice}}</span></td>          
                                     </tr>
                                 </tbody>
                             </table>             
@@ -193,6 +105,48 @@
 
     </div></div>
     <!--主体内容end--> 
+
+
+
+    <!--修改房量弹窗浮层-->     
+<div class="messageDiv" id="openDiv1" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail piliang-room">
+       <div class="head"><h1>修改房价</h1></div>
+       <div class="con">
+           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80">房型：</td>
+    <td>豪华房</td>
+  </tr>
+  <tr>
+    <td >价格类别：</td>
+    <td>常规价格-预付</td>
+  </tr>
+  <tr>
+    <td>日期：</td>
+    <td><input type="text" name="time1" id="time1" onclick="" value="2014-10-04" class="input-time" / > 至 
+                     <input type="text" name="time2" id="time2" onclick="" value="2014-10-04" class="input-time" /></td>
+  </tr>
+  <tr>
+    <td>底价：</td>
+    <td><input name="" type="text" class="input-t" value="90" placeholder="输入正整数" /></td>
+  </tr>
+</table>
+          <p class="action" style=" text-align:center">
+          <input name="" type="button" value="保存" class="btn"  />
+          <input name="" type="button" value="取消" class="btn btn-bai" ng-click="roomRatePlanDialog.close()" />
+          </p>
+       </div>
+   </div> 
+</div>   
+<!--修改房量弹窗浮层end--> 
+
+
+
+
+
+
 
 
 <!--增加价格类别浮层-->    
