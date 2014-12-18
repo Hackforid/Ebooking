@@ -10,8 +10,7 @@ from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
-from tasks import celery_app
-from tasks.models.cooperate_hotel import CooperateHotelModel as CooperateHotel
+from tasks.models.cooperate_hotel import get_by_merchant_id
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -50,7 +49,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_cooped_hotel_ids(self, merchant_id):
-        cooped_hotels = yield gen.Task(CooperateHotel.get_by_merchant_id.apply_async, args=[merchant_id])
+        cooped_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
         raise gen.Return([hotel.hotel_id for hotel in cooped_hotels.result])
 
     @gen.coroutine

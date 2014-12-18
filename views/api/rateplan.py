@@ -4,16 +4,12 @@ from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
-from config import API
 from tools.auth import auth_login
-from tools.url import add_get_params
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
-from tasks import celery_app
-from tasks.models.room_rate import RoomRateModel
-from tasks.models.rate_plan import RatePlanModel
+import tasks.models.rate_plan as RatePlanModel
 
 
 import tcelery
@@ -54,3 +50,5 @@ class RatePlanAPIHandler(BtwBaseHandler):
                 ))
         else:
             raise JsonException(errcode="1002", errmsg="not found")
+
+
