@@ -5,7 +5,7 @@ from tornado import gen
 
 from tools.auth import auth_login
 from views.base import BtwBaseHandler
-from tasks.models.cooperate_hotel import CooperateHotelModel as CooperateHotel
+import tasks.models.cooperate_hotel as CooperateHotel
 from exception.json_exception import JsonException
 
 class HotelCoopAPIHandler(BtwBaseHandler):
@@ -16,6 +16,8 @@ class HotelCoopAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         coop_task = yield gen.Task(CooperateHotel.get_by_merchant_id_and_hotel_id.apply_async, args=[merchant_id, hotel_id])
         coop = coop_task.result
+        print '==' * 20
+        print coop
 
         if coop:
             raise JsonException(1000, "已经合作")

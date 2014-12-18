@@ -9,7 +9,8 @@ app = Celery("celery_app",
         broker="amqp://admin:admin@localhost:5672/ebooking",
         backend ="amqp://admin:admin@localhost:5672/ebooking",
         include=['tasks.test', 'tasks.models.cooperate_hotel', 'tasks.models.cooperate_roomtype',
-            'tasks.models.inventory', 'tasks.models.rate_plan', 'tasks.models.room_rate',],
+            'tasks.models.inventory', 'tasks.models.rate_plan', 'tasks.models.room_rate',
+            'tasks.order.valid_submit_order'],
         )
 
 

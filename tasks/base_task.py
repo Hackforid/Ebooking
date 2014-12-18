@@ -11,12 +11,12 @@ class SqlAlchemyTask(celery.Task):
     _session = None
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        self.session.remove()
+        print 'after_return'
+        db_session.remove()
+
 
     @property
     def session(self):
-        if self._session is None:
-            self._session = scoped_session(db_session)
-
-        return self._session
+        print 'get db session'
+        return db_session
 
