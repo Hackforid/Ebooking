@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import datetime
+from datetime import datetime, timedelta
 
 from tornado.util import ObjectDict
 
@@ -72,6 +72,20 @@ class RoomRateModel(Base):
     ts_update = Column("tsUpdate", TIMESTAMP)
 
     @classmethod
+    def get_by_id(cls, session, id):
+        return session.query(RoomRateModel)\
+                .filter(RoomRateModel.id == id)\
+                .filter(RoomRateModel.is_delete == 0)\
+                .first()
+
+    @classmethod
+    def get_by_rateplan(cls, session, rate_plan_id):
+        return session.query(RoomRateModel)\
+                .filter(RoomRateModel.rate_plan_id == rate_plan_id)\
+                .filter(RoomRateModel.is_delete == 0)\
+                .first()
+
+    @classmethod
     def new_roomrate(cls, session, hotel_id, roomtype_id, rate_plan_id, commit=True):
         room = RoomRateModel(hotel_id=hotel_id,
                              roomtype_id=roomtype_id, rate_plan_id=rate_plan_id)
@@ -80,6 +94,54 @@ class RoomRateModel(Base):
             session.commit()
 
         return room
+
+    @classmethod
+    def set_price(cls, session, id, price, start_date, end_date):
+        roomrate = cls.get_by_id(session, id)
+
+
+        year0, year1 = start_date.year, end_date.year
+        if year0 == year1:
+            roomrate.change_price_in_ayear(price, start_date, end_date)
+        else:
+            roomrate.change_price_in_ayear(price, start_date, datetime(year0, 12, 31))
+            roomrate.change_price_in_ayear(price, datetime(year1, 1, 1), end_date)
+
+        session.commit()
+        return roomrate
+
+    def change_price_in_ayear(self, price, start_date, end_date):
+        month0, month1 = start_date.month, end_date.month
+        if month0 == month1:
+            day0, day1 = start_date.day, end_date.day
+            self.change_price(price, month0, start_date, end_date)
+        else:
+            for month in range(month0, month1 + 1):
+                if month == month0:
+                    self.change_price(price, month, start_date.day, 31)
+                elif month == month1:
+                    self.change_price(price, month, 1, end_date.day)
+                else:
+                    self.change_price(price, month, 1, 31)
+
+
+
+
+    def change_price(self, price, month, start_day, end_day):
+        month_key = 'month{}'.format(month)
+        prices = getattr(self, month_key)
+        setattr(self, month_key, self.get_updated_price(prices, price, start_day, end_day))
+
+
+    def get_updated_price(self, prices, price, start, end):
+        prices = prices.split('|')
+        price = str(price)
+        for i in range(start.day, end.day+1):
+            prices[i-1] = price
+
+        return '|'.join(prices)
+
+
 
     def todict(self):
         return ObjectDict(
