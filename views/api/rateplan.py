@@ -8,6 +8,7 @@ from tools.auth import auth_login
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
+from exception.celery_exception import CeleryException
 
 import tasks.models.rate_plan as RatePlanModel
 
@@ -50,5 +51,37 @@ class RatePlanAPIHandler(BtwBaseHandler):
                 ))
         else:
             raise JsonException(errcode="1002", errmsg="not found")
+
+
+class RatePlanModifyAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def put(self, hotel_id, roomtype_id, rateplan_id):
+        args = self.get_json_arguments()
+        name, meal_num, punish_type = get_and_valid_arguments(args,
+                'name', 'meal_num', 'punish_type')
+
+        self.valid_arguments(name, meal_num, punish_type)
+
+        task = yield gen.Task(RatePlanModel.modify_rateplan.apply_async,
+                args=[rateplan_id, name, meal_num, punish_type])
+        result = task.result
+        if isinstance(result, CeleryException):
+            raise JsonException(errcode=result.errcode, errmsg=result.errmsg)
+        else:
+            self.finish_json(result=dict(
+                rateplan=result[0].todict(),
+                roomrate=result[1].todict(),
+                ))
+
+
+    def valid_arguments(self, name, meal_num, punish_type):
+        if not name:
+            raise JsonException(errcode=2001, errmsg="illege name")
+        if meal_num < 0:
+            raise JsonException(errcode=2001, errmsg="illege meal_num")
+        if punish_type not in [0, 1, 2, 3, 4]:
+            raise JsonException(errcode=2001, errmsg="illege punishtype")
 
 

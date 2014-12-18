@@ -38,14 +38,30 @@ class RatePlanModel(Base):
     ts_update = Column("tsUpdate", TIMESTAMP)
 
     @classmethod
-    def get_by_id(task_self, id):
-        return task_self.session.query(RatePlanModel)\
+    def get_by_id(cls, session, id):
+        return session.query(RatePlanModel)\
                 .filter(RatePlanModel.id == id)\
                 .filter(RatePlanModel.is_delete == 0)\
                 .first()
 
     @classmethod
+    def get_by_merchant_hotel_room_name(cls, session, merchant_id, hotel_id, roomtype_id, name):
+        return session.query(RatePlanModel)\
+                .filter(RatePlanModel.merchant_id == merchant_id,
+                        RatePlanModel.hotel_id == hotel_id,
+                        RatePlanModel.roomtype_id == roomtype_id,
+                        RatePlanModel.name == name)\
+                .filter(RatePlanModel.is_delete == 0)\
+                .first()
+
+
+    @classmethod
     def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, name, meal_type, punish_type):
+        rate_plan = cls.get_by_merchant_hotel_room_name(session, merchant_id, hotel_id, roomtype_id, name)
+        if rate_plan:
+            return None, None
+
+
         from models.room_rate import RoomRateModel
         rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, name=name, punish_type=punish_type)
         session.add(rateplan)
