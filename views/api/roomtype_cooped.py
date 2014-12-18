@@ -14,10 +14,9 @@ from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
-from tasks import celery_app
-from tasks.models.cooperate_roomtype import CooperateRoomTypeModel as CooperateRoom
-from tasks.models.cooperate_hotel import CooperateHotelModel
-from tasks.models.inventory import InventoryModel
+import tasks.models.cooperate_roomtype as CooperateRoom
+import tasks.models.cooperate_hotel as CooperateHotelModel
+import tasks.models.inventory as InventoryModel
 
 import tcelery
 tcelery.setup_nonblocking_producer()

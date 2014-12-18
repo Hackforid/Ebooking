@@ -8,7 +8,7 @@ from config import API
 from tools.auth import auth_login
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
-from tasks.models.cooperate_hotel import CooperateHotelModel as CooperateHotel
+from tasks.models.cooperate_hotel import get_by_merchant_id
 from exception.json_exception import JsonException
 
 class HotelWillCoopAPIHandler(BtwBaseHandler):
@@ -44,7 +44,7 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_cooped_hotel_ids(self, merchant_id):
-        cooped_hotels_task = yield gen.Task(CooperateHotel.get_by_merchant_id.apply_async, args=[merchant_id])
+        cooped_hotels_task = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
         cooped_hotels = cooped_hotels_task.result
         raise gen.Return([hotel.hotel_id for hotel in cooped_hotels])
 
