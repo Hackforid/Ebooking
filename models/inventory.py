@@ -152,12 +152,25 @@ class InventoryModel(Base):
         price_reserved, price_manual = value.split('|')
         if price_type == 0:
             price_reserved = int(price_reserved) + val
+            price_reserved = price_reserved if price_reserved >= 0 else 0
         else:
             price_manual = int(price_manual) + val
+            price_manual = price_manual if price_manual >= 0 else 0
 
         value = "{}|{}".format(price_reserved, price_manual)
         setattr(self, day_key, value)
 
+    def set_val_by_day(self, day, price_type, val):
+        day_key = 'day' + str(day)
+        value = getattr(self, day_key)
+        price_reserved, price_manual = value.split('|')
+        if price_type == 0:
+            price_reserved = val
+        else:
+            price_manual = val
+
+        value = "{}|{}".format(price_reserved, price_manual)
+        setattr(self, day_key, value)
 
     def todict(self):
         return ObjectDict(

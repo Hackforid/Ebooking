@@ -21,7 +21,8 @@ as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html
 
 
 ##Run  
-``celery -A tasks.celery_app worker  -l debug``  
+``celery -A tasks.celery_app worker  -l debug -n worker1``  
+``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER``  
 ``python app.py``
 
 
