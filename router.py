@@ -14,7 +14,7 @@ from views.api.user import UserManageAPIHandler
 from views.password import PasswordHandler
 from views.api.password import PasswordAPIHandler
 from views.api.hotel import HotelAPIHandler
-from views.api.roomtype_cooped import RoomTypeCoopedAPIHandler
+from views.api.roomtype_cooped import RoomTypeCoopedAPIHandler, RoomTypeCoopedModifyAPIHandler
 from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
 from views.api.submit_order import SubmitOrderAPIHandler
 from views.api.roomrate import RoomRateAPIHandler
@@ -36,6 +36,7 @@ handlers = [
         (r"/api/hotel/willcoop/?", HotelWillCoopAPIHandler),
         (r"/api/hotel/coop/(?P<hotel_id>\d+)/?", HotelCoopAPIHandler),
         (r"/api/hotel/cooped/?", HotelCoopedAPIHandler),
+        (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/cooped/?", RoomTypeCoopedModifyAPIHandler),
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/?", RoomTypeCoopedAPIHandler),
 

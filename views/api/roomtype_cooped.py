@@ -12,6 +12,7 @@ from tools.url import add_get_params
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
+from exception.celery_exception import CeleryException
 
 import tasks.models.cooperate_roomtype as CooperateRoom
 import tasks.models.cooperate_hotel as CooperateHotelModel
@@ -42,11 +43,21 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
                 args=[self.current_user.merchant_id, hotel_id, year, month])).result
             self.merge_inventory(cooped, inventorys)
 
+        self.merge_cooped_info(cooped, cooped_roomtypes.result)
+
         self.finish_json(result=dict(
             hotel=hotel,
             cooped_roomtypes=cooped,
             will_coop_roomtypes=will_coop,
             ))
+
+    def merge_cooped_info(self, rooms, coops):
+        for coop in coops:
+            for room in rooms:
+                if room['id'] == coop.roomtype_id:
+                    room['is_online'] = coop.is_online
+                    room['coop_id'] = coop.id
+                    break
 
     def merge_inventory(self, coop_rooms, inventorys):
         if not inventorys:
@@ -119,3 +130,27 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         self.finish_json(result=dict(
             cooped_roomtypes=[coop.todict() for coop in coops],
             ))
+
+
+class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def put(self, hotel_id, roomtype_id):
+        merchant_id = self.current_user.merchant_id
+        args = self.get_json_arguments()
+        is_online, = get_and_valid_arguments(args,
+                "is_online")
+
+        if is_online not in [0, 1]:
+            raise JsonException(errcode=1000, errmsg="wrong arg: is_online")
+
+        task = yield gen.Task(CooperateRoom.modify_cooped_roomtype.apply_async,
+                args=[merchant_id, hotel_id, roomtype_id, is_online])
+        result = task.result
+        if isinstance(result, CeleryException):
+            raise JsonException(errcode=1002, errmsg=result.errmsg)
+        else:
+            self.finish_json(result=dict(
+                cooped_roomtype=result.todict(),
+                ))
