@@ -50,7 +50,10 @@ class RatePlanAPIHandler(BtwBaseHandler):
                 roomrates = [roomrate.todict() for roomrate in roomrates],
                 ))
         else:
-            raise JsonException(errcode="1002", errmsg="not found")
+            self.finish_json(result=dict(
+                rateplans=[],
+                roomrates=[],
+                ))
 
 
 class RatePlanModifyAPIHandler(BtwBaseHandler):
