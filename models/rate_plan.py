@@ -57,10 +57,6 @@ class RatePlanModel(Base):
 
     @classmethod
     def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, name, meal_type, punish_type):
-        rate_plan = cls.get_by_merchant_hotel_room_name(session, merchant_id, hotel_id, roomtype_id, name)
-        if rate_plan:
-            return None, None
-
 
         from models.room_rate import RoomRateModel
         rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, name=name, punish_type=punish_type)
