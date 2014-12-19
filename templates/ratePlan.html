@@ -48,20 +48,24 @@
                             ng-repeat="rateplan in rateplans"
                             >
                             <div class="roomhead" ><h1 ng-click="roomHeadPlanDialog.eachshow($index);">{{rateplan.name}}</h1><span></span>
+                          
                                 <div class="eachroom" style="display:none">
+
                                     <label>名称：<input id={{"roomheadinput"+$index}} value={{rateplan.name}} > </label>
                                     <label>早餐数：<select id={{"roomheadmeal"+$index}} name="" class="input-s"  >
-                                            <option value="1">无早餐</option>
-                                            <option value="2">一份早餐</option>
-                                            <option value="3">两份早餐</option>
-                                            <option value="4">按人头早餐</option>
+                                            <option value="0">无早餐</option>
+                                            <option value="1">一份早餐</option>
+                                            <option value="2">两份早餐</option>
+                                            <option value="100">按人头早餐</option>                                                                                                      
                                         </select>
                                     </label>
-                                    <label>取消时：<select id={{"roomheadpunish"+$index}} name="" class="input-s"  >
-                                            <option value="1">不扣任何费用</option>
-                                            <option value="2">扣首晚房费</option>
-                                            <option value="3">扣全部房费</option>
-
+                                    <label>取消时：<select id={{"roomheadpunish"+$index}} ng-model="rateplan.punish_type" 
+                                    name="" class="input-s"  >                                                                                
+                                             <option value="0">不扣任何费用</option>
+                                            <option value="1">扣首晚房费</option>
+                                            <option value="2">扣全部房费</option>
+                                            <option value="3">扣定额</option>
+                                            <option value="4">扣全额房费百分比</option>
                                         </select>
                                     </label>
 
@@ -124,15 +128,15 @@
   </tr>
   <tr>
     <td>日期：</td>
-    <td><input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" readonly="readonly" value="" class="input-time" / > 至 
-                     <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" readonly="readonly" value="" class="input-time" /></td>
+    <td><input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="2014-10-04" readonly="readonly" value="" class="input-time" / > 至 
+                     <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="2014-10-04" readonly="readonly" value="" class="input-time" /></td>
   </tr>
   <tr>
     <td>底价：</td>
     <td><input id="lowprice" name="" type="text" class="input-t" value="" placeholder="输入正整数" /></td>
   </tr>
 </table>
-<p>{{roomRatePlanDialog.errmsg}}</p>
+<p style="padding-left:32px">{{roomRatePlanDialog.errmsg}}</p>
           <p class="action" style=" text-align:center">
           <input name="" type="button" value="保存" class="btn" ng-click="roomRatePlanDialog.save()" />
           <input name="" type="button" value="取消" class="btn btn-bai" ng-click="roomRatePlanDialog.close()" />

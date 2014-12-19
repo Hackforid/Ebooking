@@ -71,8 +71,9 @@
 			http.post(url, params)
 				.success(function(resp) {
 					console.log(resp);
-					if (resp.errcode == 0) {} else {
+					if (resp.errcode == 0) {document.location.reload();} else {
 						this.errmsg = resp.errmsg;
+						
 					}
 				})
 				.error(function() {
@@ -92,10 +93,13 @@
 		this.eachhide = function(index) {
 
 			$("div.eachroom").eq(index).css("display", "none");
+
 		}
 		this.eachshow = function(index) {
 
 			$("div.eachroom").eq(index).css("display", "block");
+			var tempmealsum=scope.roomrates[index].meal1.split("|",1);
+			$("#roomheadmeal"+index).val(tempmealsum[0]);
 
 		}
 		this.save = function(index){
@@ -115,8 +119,9 @@
 			http.put(url, params)
 				.success(function(resp) {
 					console.log(resp);
-					if (resp.errcode == 0) {} else {
+					if (resp.errcode == 0) {document.location.reload();} else {
 						this.errmsg = resp.errmsg;
+
 					}
 				})
 				.error(function() {
@@ -150,13 +155,34 @@
 			var time2 = $("#time2").val();
 			var price = parseInt($("#lowprice").val());
 
-			if (time2 < time1) {
-				this.errmsg = '开始日期大于结束日期';
-			}
+			var day = new Date();
+			var month = day.getMonth() + 1;
+			var year = day.getFullYear();
+			var date=day.getDate();
+			var startday=year+"-"+month+"-"+date;
+
+			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetyday = new Date(ninetytime);
+			var ninetymonth = ninetyday.getMonth() + 1;
+			var ninetydate= ninetyday.getDate();
+			var ninetyyear=ninetyday.getFullYear();
+			var endday=ninetyyear+"-"+ninetymonth+"-"+ninetydate;
+			
 			if (time2 == null || time1 == null || time2 == "" || time1 == "") {
 				console.log("null");
 				this.errmsg = '日期为空';
+				return;
 			}
+			else if (time2 < time1) {
+				this.errmsg = '开始日期大于结束日期';
+				return;
+			}
+			else if(time2>endday || time1<startday)
+			{
+				this.errmsg = '日期超出范围';
+				return;
+			}
+
 
 			console.log(url);
 			var params = {
@@ -171,6 +197,13 @@
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
+						document.location.reload();
+						/*可以不刷新页面优化*/
+						/*scope.roomrates[0]=resp.result.roomrate;
+						scope.dayWeekSum = [];
+						console.log(scope.roomrates)
+						scope.dateCheck(1);*/
+
 					} else {
 						this.errmsg = resp.errmsg;
 					}
@@ -202,12 +235,14 @@
 		$scope.dayWeekSum = [];
 		$scope.dayPriceSum = {};
 		$scope.currentrateid = "";
+		//$scope.currentrateindex = "";
 
 		$scope.addChangeP = function addChangeP(d,m,c) {
-console.log(m);
+
 			if (c == "action5") {
 				//console.log(m);
 				$scope.currentrateid = m;
+				//$scope.currentrateindex=i;
 
 
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
@@ -302,9 +337,9 @@ console.log(m);
 					}
 					console.log($scope.roomrates);
 
-					$scope.roomrates[0].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
+					//$scope.roomrates[0].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 
-					dateCheck($scope.monthvalue);
+					$scope.dateCheck($scope.monthvalue);
 				})
 				.error(function() {})
 		});
@@ -312,12 +347,12 @@ console.log(m);
 		$scope.$watch('monthvalue', function() {
 			//$scope.dayPriceSum = {};
 			$scope.dayWeekSum = [];
-			dateCheck($scope.monthvalue);
+			$scope.dateCheck($scope.monthvalue);
 
 		});
 
 
-		function dateCheck(monthvalue) {
+		$scope.dateCheck=function dateCheck(monthvalue) {
 			if (typeof($scope.roomrates) === "object" && !($scope.roomrates instanceof Array)) {
 				return;
 			}
@@ -367,7 +402,7 @@ console.log(m);
 
 				dayprice = $scope.roomrates[i]["month" + month].split("|", tempdaysum);
 
-				console.log($scope.roomrates[i].id);
+				//console.log($scope.roomrates[i].id);
 
 				if (monthvalue == 1) {
 					//console.log(daynum);
