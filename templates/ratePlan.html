@@ -83,7 +83,7 @@
                                 <tbody>
                                     <tr>
                                     <td class="table-title">预付底价</td>
-                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+""+$index}} ng-click=addChangeP((rateplan.id+""+$index),(v.classstyle));>{{v.dayprice }}</span></td>          
+                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),(v.classstyle));>{{v.dayprice }}</span></td>          
                                     </tr>
                                 </tbody>
                             </table>             
@@ -132,6 +132,7 @@
     <td><input id="lowprice" name="" type="text" class="input-t" value="" placeholder="输入正整数" /></td>
   </tr>
 </table>
+<p>{{roomRatePlanDialog.errmsg}}</p>
           <p class="action" style=" text-align:center">
           <input name="" type="button" value="保存" class="btn" ng-click="roomRatePlanDialog.save()" />
           <input name="" type="button" value="取消" class="btn btn-bai" ng-click="roomRatePlanDialog.close()" />
