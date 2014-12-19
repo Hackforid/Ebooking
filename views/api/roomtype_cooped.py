@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from tornado import gen
@@ -26,9 +26,13 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
     @gen.coroutine
     @auth_login(json=True)
     def get(self, hotel_id):
-        m = int(self.get_query_argument('m', 0))
+        today = datetime.today()
+        year = self.get_query_argument('year', today.year)
+        month = self.get_query_argument('month', today.month)
+        year, month = int(year), int(month)
         simple = self.get_query_argument('simple', 0)
-        year, month = self.get_inventory_month(m)
+
+        self.valid_date(year, month)
 
         hotel, roomtypes = yield self.get_all_roomtype(hotel_id)
         cooped_roomtypes = yield gen.Task(CooperateRoom.get_by_merchant_id_and_hotel_id.apply_async, args=[self.current_user.merchant_id, hotel_id])
@@ -56,13 +60,14 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
 
 
-    def get_inventory_month(self, m):
-        if m < 0 or m > 2:
+    def valid_date(self, year, month):
+        date = datetime(year, month, 1)
+        today = datetime.today()
+
+        min_date = datetime(today.year, today.month, 1)
+        max_date = min_date + timedelta(days=90)
+        if date < min_date or date > max_date:
             raise JsonException(errcode=1003, errmsg="query date out of range")
-        today = datetime.date.today()
-        delta = relativedelta(months=m)
-        day = today + delta
-        return day.year, day.month
 
 
     @gen.coroutine
@@ -87,7 +92,6 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
         return cooped, will_coop
 
-    
     @gen.coroutine
     @auth_login(json=True)
     def post(self, hotel_id):
@@ -116,7 +120,3 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         self.finish_json(result=dict(
             cooped_roomtypes=[coop.todict() for coop in coops],
             ))
-
-
-
-        

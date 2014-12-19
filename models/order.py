@@ -1,53 +1,129 @@
 # -*- coding: utf-8 -*-
 
-import json
 
-class SubmitOrder(object):
+from tornado.util import ObjectDict 
 
-    def __init__(self, req_json):
-       o = json.loads(req_json)
-       self.id = o.get('id', 0)
-       self.city_id = o.get('cityId', 0)
-       self.city_name = o.get('cityName', '')
-       self.hotel_id = o.get('hotelId', 0)
-       self.hotel_name = o.get('hotel_name', '')
-       self.room_type_id = o.get('roomTypeId', 0)
-       self.room_type_name = o.get('roomTypeName', '')
-       self.rate_plan_id = o.get('ratePlanId', 0)
-       self.rate_plan_name = o.get('ratePlanName', '')
-       self.ota_id = o.get('otaId', 0)
-       self.ota_order_id = o.get('otaOrderId', 0)
-       self.ota_msg_desc = o.get('ota_msg_desc', '')
-       self.currency_type = o.get('currencyType', 0)
-       self.total_price = o.get('totalPrice', 0)
-       self.price = o.get('price', 0)
-       self.base_price = o.get('basePrice', 0)
-       self.room_quantity = o.get('roomQuantity', 0)
-       self.pay_type = o.get('payType', 0)
-       self.bed_type = o.get('bedType', 0)
-       self.bed_type_name = o.get('bedTypeName', '')
-       self.checkin_date = o.get('checkInDate', '2014-12-24')
-       self.checkout_date = o.get('checkOutDate', '2014-12-25')
-       self.last_arrive_time = o.get('lastArriveTime', '18:00:00')
-       self.contact_name = o.get('contactName', '')
-       self.contact_mobile = o.get('contactMobile', '')
-       self.contact_email = o.get('contactEmail', '')
-       self.customer_quantity = o.get('customerQuantity', 0)
-       self.customer_info = o.get('customerInfo', '')
-       self.customer_remark = o.get('customerRemark', '')
-       self.breakfast = o.get('breakfast', '')
-       self.chain_id = o.get('chain_id', 0)
-       self.chain_hotel_id = o.get('chainHotelId', 0)
-       self.chain_roomtype_id = o.get('chainRoomTypeId', 0)
-       self.chain_rateplan_id = o.get('chainRatePlanId', 0)
-       self.chain_order_id = o.get('chainOrderId', 0)
-       self.chain_total_price = o.get('chainTotalPrice', 0)
-       self.confirmation_no = o.get('confirmationNo', 0)
-       self.guarantee_info = o.get('guaranteeInfo', '')
-       self.status = o.get('status', 0)
-       self.status_msg = o.get('statusMsg', '')
-       self.extra = o.get('extra', '')
-       self.create_time = o.get('create_time', '2014-12-16 18:00:00')
-       self.update_time = o.get('updateTime', '2014-12-16 18:00:00')
-       self.merchant_id = 0
+from tasks.models import Base
+from sqlalchemy import Column
+from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATE, TIME, TEXT, TIMESTAMP, BIGINT, TINYINT
 
+class OrderModel(Base):
+
+    __tablename__ = 'order'
+    __table_args__ = {
+        'mysql_charset': 'utf8', 'mysql_engine': 'InnoDB'}
+
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
+    main_order_id = Column('mainOrderId', INTEGER, nullable=False)
+    merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
+    hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
+    hotel_name = Column("hotelName", VARCHAR(50), nullable=False)
+    room_type_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    room_type_name = Column("roomTypeName", VARCHAR(50), nullable=False)
+    rate_plan_id = Column("ratePlanId", INTEGER, nullable=False, default=0)
+    rate_plan_name = Column("ratePlanName", VARCHAR(50), nullable=False)
+    room_num = Column("roomNum", INTEGER, nullable=False, default=0)
+    currency_type = Column("currencyType", VARCHAR(10), nullable=False, default="CNY")
+    pay_type = Column("payType", INTEGER, nullable=False, default=0)
+    bed_type = Column("bedType", INTEGER, nullable=False, default=0)
+    checkin_date = Column("checkInDate", DATE, nullable=False)
+    checkout_date = Column("checkOutDate", DATE, nullable=False)
+    arrival_time = Column("arrivalTime", TIME, nullable=False, default="18:00:00")
+    contact_name = Column("contactName", VARCHAR(30), nullable=False)
+    contact_mobile = Column("contactMobile", VARCHAR(50), nullable=False)
+    contact_email = Column("contactEmail", VARCHAR(50), nullable=False)
+    customer_num = Column("customerNum", INTEGER, nullable=False, default=0)
+    customer_info = Column("customerInfo", TEXT, nullable=False)
+    customer_remark = Column("customerRemark", TEXT, nullable=False)
+    breakfast = Column(VARCHAR(100), nullable=False)
+    guarantee_info = Column("guaranteeInfo", TEXT, nullable=False)
+    status = Column(INTEGER, nullable=False)
+    total_price = Column("totalPrice", INTEGER, nullable=False)
+    everyday_price = Column("everydayPrice", VARCHAR(200), nullable=False)
+    extra = Column(TEXT, nullable=False)
+    create_time = Column("createTime", TIMESTAMP)
+    update_time = Column("updateTime", TIMESTAMP)
+
+    @classmethod
+    def get_by_id(cls, session, id):
+        order = session.query(OrderModel)\
+                .filter(OrderModel.id == id)\
+                .first()
+        return order
+
+    @classmethod
+    def get_by_main_order_id(cls, session, main_order_id):
+        order = session.query(OrderModel)\
+                .filter(OrderModel.main_order_id==main_order_id)\
+                .first()
+        return order
+    
+    @classmethod
+    def new_order(cls, session, submit_order):
+        order = OrderModel(
+                main_order_id=submit_order.id,
+                merchant_id=submit_order.merchant_id,
+                hotel_id=submit_order.hotel_id,
+                hotel_name=submit_order.hotel_name,
+                room_type_id=submit_order.room_type_id,
+                room_type_name=submit_order.room_type_name,
+                rate_plan_id=submit_order.rate_plan_id,
+                rate_plan_name=submit_order.rate_plan_name,
+                room_num=submit_order.room_quantity,
+                currency_type=submit_order.currency_type,
+                pay_type=submit_order.pay_type,
+                bed_type=submit_order.bed_type,
+                checkin_date=submit_order.checkin_date,
+                checkout_date=submit_order.checkout_date,
+                arrival_time=submit_order.last_arrive_time,
+                contact_name=submit_order.contact_name,
+                contact_email=submit_order.contact_email,
+                contact_mobile=submit_order.contact_mobile,
+                customer_num=submit_order.customer_quantity,
+                customer_info=submit_order.customer_info,
+                customer_remark=submit_order.customer_remark,
+                breakfast=submit_order.breakfast,
+                guarantee_info=submit_order.guarantee_info,
+                status=0,
+                total_price=submit_order.chain_total_price,
+                everyday_price=submit_order.base_price,
+                extra=submit_order.extra
+                )
+        session.add(order)
+        session.commit()
+
+        return order
+
+
+
+    def todict(self):
+        return ObjectDict(
+                id=self.id,
+                main_order_id=self.main_order_id,
+                hotel_id=self.hotel_id,
+                hotel_name=self.hotel_name,
+                room_type_id=self.room_type_id,
+                room_type_name=self.room_type_name,
+                rate_plan_id=self.rate_plan_id,
+                rate_plan_name=self.rate_plan_name,
+                room_num=self.room_num,
+                currency_type=self.currency_type,
+                pay_type=self.pay_type,
+                bed_type=self.bed_type,
+                checkin_date=self.checkin_date,
+                checkout_date=self.checkout_date,
+                arrival_time=self.arrival_time,
+                contact_name=self.contact_name,
+                contact_email=self.contact_email,
+                contact_mobile=self.contact_mobile,
+                customer_info=self.customer_info,
+                customer_num=self.customer_num,
+                customer_remark=self.customer_remark,
+                breakfast=self.breakfast,
+                guarantee_info=self.guarantee_info,
+                status=self.status,
+                total_price=self.total_price,
+                everyday_price=self.everyday_price,
+                extra=self.extra,
+                create_time=self.create_time,
+                )

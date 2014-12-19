@@ -3,11 +3,13 @@
 import datetime
 
 from tasks.celery_app import app
+from tasks.base_task import SqlAlchemyTask
 
 from tasks.models.inventory import InventoryModel
-from tasks.models.order import OrderModel
+from models.order import OrderModel
+from constants import QUEUE_ORDER
 
-def get_stay_days(start_date, end_date):
+def get_stay_days(checkin_date, checkout_date):
     date_format = "%Y-%m-%d"
     start_time = datetime.datetime.strptime(start_date, date_format)
     end_time = datetime.datetime.strptime(end_date, date_format)
@@ -69,20 +71,27 @@ def create_order_success(order):
 def create_order_fail(order):
     pass
 
+def get_order(session, order_id):
+    return OrderModel.get_by_id(session, order_id)
 
-@app.task
-def valid_order(order):
+
+@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER, ignore_result=True)
+def start_order(self, order_id):
+    print 'hello world'
+
+    session = self.session
+    order = get_order(session, order_id)
+    print isinstance(order.checkin_date, datetime.date)
+
+
+
     
-    if not valid_order(order):
-        # order fail
-        pass
+    #stay_days = get_stay_days(order['checkInDate'], order['checkOutDate'])
 
-    stay_days = get_stay_days(order['checkInDate'], order['checkOutDate'])
+    #if not valid_inventory(order, stay_days):
+        #pass
 
-    if not valid_inventory(order, stay_days):
-        pass
-
-    create_order(order)
+    #create_order(order)
 
 
 
