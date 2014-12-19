@@ -56,14 +56,14 @@ class RatePlanModel(Base):
 
 
     @classmethod
-    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, name, meal_type, punish_type):
+    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type):
 
         from models.room_rate import RoomRateModel
         rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, name=name, punish_type=punish_type)
         session.add(rateplan)
         session.commit()
 
-        roomrate = RoomRateModel.new_roomrate(session, hotel_id, roomtype_id, rateplan.id)
+        roomrate = RoomRateModel.new_roomrate(session, hotel_id, roomtype_id, rateplan.id, meal_num)
         return rateplan, roomrate
 
     @classmethod
