@@ -82,6 +82,54 @@
 
 	}
 
+
+	var RoomHeadPlanDialog= function (scope, http) {
+		this.scope = scope;
+		this.http = http;
+
+		this.errmsg = '';
+
+		this.eachhide = function(index) {
+
+			$("div.eachroom").eq(index).css("display", "none");
+		}
+		this.eachshow = function(index) {
+
+			$("div.eachroom").eq(index).css("display", "block");
+
+		}
+		this.save = function(index){
+			this.errmsg = '';
+			//console.log(this.name + this.mealType + this.punishType);
+			console.log(scope.rateplans);
+			
+
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/rateplan/'+ scope.rateplans[index].id;
+			console.log(url);
+			var params = {				
+				"name":($("#roomheadinput"+index).val()),
+				"meal_num":parseInt($("#roomheadmeal"+index).val()),
+				"punish_type":parseInt($("#roomheadpunish"+index).val())
+			};
+			console.log(params);
+			http.put(url, params)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {} else {
+						this.errmsg = resp.errmsg;
+					}
+				})
+				.error(function() {
+					this.errmsg = '网络错误';
+				})
+
+
+
+
+		};
+
+	}
+
 	var RoomRatePlanDialog = function(scope, http) {
 		this.scope = scope;
 		this.http = http;
@@ -97,7 +145,7 @@
 		}
 		this.save = function() {
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/roomrate/' + scope.currentid;
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/roomrate/' + scope.currentrateid;
 			var time1 = $("#time1").val();
 			var time2 = $("#time2").val();
 			var price = parseInt($("#lowprice").val());
@@ -145,6 +193,7 @@
 		$scope.hotel = {};
 		$scope.newRatePlanDialog = new NewRatePlanDialog($scope, $http);
 		$scope.roomRatePlanDialog = new RoomRatePlanDialog($scope, $http);
+		$scope.roomHeadPlanDialog = new RoomHeadPlanDialog($scope, $http);
 		$scope.currentRoomType = {};
 		$scope.rateplans = {};
 		$scope.roomrates = {};
@@ -152,13 +201,13 @@
 		$scope.months = {};
 		$scope.dayWeekSum = [];
 		$scope.dayPriceSum = {};
-		$scope.currentid = "";
+		$scope.currentrateid = "";
 
-		$scope.addChangeP = function addChangeP(d, c) {
-
+		$scope.addChangeP = function addChangeP(d,m,c) {
+console.log(m);
 			if (c == "action5") {
-				var temp = d.split("-", 1);
-				$scope.currentid = temp[0];
+				//console.log(m);
+				$scope.currentrateid = m;
 
 
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
@@ -179,15 +228,7 @@
 		}
 
 
-		$scope.eachhide = function(index) {
-
-			$("div.eachroom").eq(index).css("display", "none");
-		}
-		$scope.eachshow = function(index) {
-
-			$("div.eachroom").eq(index).css("display", "block");
-
-		}
+		
 
 		function loadRoomTypes(_hotelId) {
 			var url = "/api/hotel/" + _hotelId + "/roomtype/?simple=1";
@@ -326,6 +367,8 @@
 
 				dayprice = $scope.roomrates[i]["month" + month].split("|", tempdaysum);
 
+				console.log($scope.roomrates[i].id);
+
 				if (monthvalue == 1) {
 					//console.log(daynum);
 					for (var a = 0; a < daynum - 1; a++) {
@@ -353,6 +396,7 @@
 						classstyle = "action5";
 					}
 					temp = {
+						"roomrateid" :$scope.roomrates[i].id,
 						"classstyle": classstyle,
 						"dayprice": tempprice
 					};
@@ -394,7 +438,7 @@
 
 
 
-			//console.log($scope.dayPriceSum);
+			console.log($scope.dayPriceSum);
 			//console.log($scope.months);
 
 			//console.log($scope.currentRoomType );
