@@ -110,7 +110,8 @@ class RoomRateModel(Base):
     @classmethod
     def set_price(cls, session, id, price, start_date, end_date):
         roomrate = cls.get_by_id(session, id)
-
+        if not roomrate:
+            return
 
         year0, year1 = start_date.year, end_date.year
         if year0 == year1:
