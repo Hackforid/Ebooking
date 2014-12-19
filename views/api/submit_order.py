@@ -5,7 +5,7 @@ from tornado import gen
 
 from tools.auth import auth_login
 from views.base import BtwBaseHandler
-from tasks.order.valid_submit_order import deal_order
+from tasks.order.submit_order import deal_order
 
 from exception.json_exception import JsonException
 

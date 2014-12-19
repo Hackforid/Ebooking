@@ -86,14 +86,22 @@ class RoomRateModel(Base):
                 .first()
 
     @classmethod
-    def new_roomrate(cls, session, hotel_id, roomtype_id, rate_plan_id, commit=True):
+    def new_roomrate(cls, session, hotel_id, roomtype_id, rate_plan_id, meal_num, commit=True):
         room = RoomRateModel(hotel_id=hotel_id,
                              roomtype_id=roomtype_id, rate_plan_id=rate_plan_id)
+        room.set_meal_num(meal_num)
         session.add(room)
         if commit:
             session.commit()
 
         return room
+
+    def set_meal_num(self, meal_num):
+        meal_num = str(meal_num)
+        meal = str('|'.join([meal_num for i in range(0, 31)]))
+        for i in range(1, 13):
+            key = 'meal{}'.format(i)
+            setattr(self, key, meal)
 
     @classmethod
     def set_meal(cls, session, rate_plan_id, meal_num, commit=True):

@@ -43,6 +43,7 @@ class OrderModel(Base):
     extra = Column(TEXT, nullable=False)
     create_time = Column("createTime", TIMESTAMP)
     update_time = Column("updateTime", TIMESTAMP)
+    confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=0)
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -126,4 +127,5 @@ class OrderModel(Base):
                 everyday_price=self.everyday_price,
                 extra=self.extra,
                 create_time=self.create_time,
+                confirm_type=self.confirm_type,
                 )
