@@ -15,3 +15,6 @@ PERMISSIONS = ObjectDict({
     'update_password'          : (1<<9)
 })
 
+#Celery Queue
+QUEUE_DEFAULT = "DEFAULT"
+QUEUE_ORDER = "ORDER"
