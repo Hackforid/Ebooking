@@ -35,34 +35,45 @@ def get_stay_days(start_date, end_date):
 def valid_arguments(order):
     pass
 
+def combin_year_month(year, month):
+    return int("{}{:0>2d}".format(year, month))
 
 def valid_inventory(session, order):
+    print '# valid inventory for order ', order.id
     stay_days = get_stay_days(order.checkin_date, order.checkout_date)
     year_months = [(day.year, day.month) for day in stay_days]
     year_months = {}.fromkeys(year_months).keys()
 
-    inventories = InventoryModel.get_by_merchant_id_and_hotel_id_and_days(
+    inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, year_months)
+        order.hotel_id, order.room_type_id, year_months)
     
     if not inventories:
+        print "no inventory"
         return False
+
+    for inventory in inventories:
+        print inventory.todict()
 
 
     for day in stay_days:
         inventory = None
-        str_month = "%d|%d" % (day.year, day.month)
+        month = combin_year_month(day.year, day.month)
+        print '...finding', month
 
         for _inventory in inventories:
-            if _inventory.month == str_month:
+            if _inventory.month == month:
                 inventory = _inventory
                 break
         else:
+            print 'day', day, 'not found'
             return False
 
         if inventory.get_day(day.day, 0) < order.room_quantity:
+            print 'day', day, ' is not enough (inventory = '+inventory.get_day(day.day, 0) + ')'
             return False
     else:
+        print 'found'
         return True
 
 
@@ -71,7 +82,8 @@ def create_order(session, submit_order):
     if order:
         # callback 订单已存在
         print 'order exist'
-        return False
+        #return False
+        return order
 
     order = OrderModel.new_order(session, submit_order)
     if order:
@@ -120,4 +132,5 @@ def deal_order(self, order):
         return
 
 
+    # second valid in spec queue
     start_order.apply_async(args=[order.id])

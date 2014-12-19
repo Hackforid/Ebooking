@@ -10,49 +10,56 @@ from models.order import OrderModel
 from constants import QUEUE_ORDER
 
 def get_stay_days(checkin_date, checkout_date):
-    date_format = "%Y-%m-%d"
-    start_time = datetime.datetime.strptime(start_date, date_format)
-    end_time = datetime.datetime.strptime(end_date, date_format)
-
-    if start_time >= end_date:
-        return start_time, start_time
-
     aday = datetime.timedelta(days=1)
     days = []
-    while start_time < end_date:
-        days.append(start_time)
-        start_time = start_time + aday
+    while checkin_date < checkout_date:
+        days.append(checkin_date)
+        checkin_date= checkin_date + aday
 
     return days
 
-def valid_order(order):
-    pass
 
-def valid_inventory(order, stay_days):
+def combin_year_month(year, month):
+    return int("{}{:0>2d}".format(year, month))
+
+def valid_inventory(session, order):
+    print '# valid inventory for order ', order.id
+    stay_days = get_stay_days(order.checkin_date, order.checkout_date)
     year_months = [(day.year, day.month) for day in stay_days]
     year_months = {}.fromkeys(year_months).keys()
 
-    inventories = InventoryModel.get_by_merchant_id_and_hotel_id_and_days(order.merchant_id,
-            order.hotel_id, year_months)
-    if not inventories or len(inventories) != len(year_months):
+    inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
+        session, order.merchant_id,
+        order.hotel_id, order.room_type_id, year_months)
+    
+    if not inventories:
+        print "no inventory"
         return False
+
+    for inventory in inventories:
+        print inventory.todict()
+
 
     for day in stay_days:
         inventory = None
-        str_month = "%d|%d" % (day.year, day.month)
+        month = combin_year_month(day.year, day.month)
+        print '...finding', month
 
         for _inventory in inventories:
-            if _inventory.month == str_month:
+            if _inventory.month == month:
                 inventory = _inventory
                 break
         else:
+            print 'day', day, 'not found'
             return False
 
         if inventory.get_day(day.day, 0) < order.room_quantity:
+            print 'day', day, ' is not enough (inventory = '+inventory.get_day(day.day, 0) + ')'
             return False
     else:
-        order.merchant_id=inventories[0].merchant_id
+        print 'found'
         return True
+
 
 
 def create_order(order):
@@ -81,7 +88,15 @@ def start_order(self, order_id):
 
     session = self.session
     order = get_order(session, order_id)
-    print isinstance(order.checkin_date, datetime.date)
+    if not valid_inventory(session, order):
+        print 'more room please'
+        order.status = 200
+        session.commit()
+        return
+    else:
+        order.status = 100
+        session.commit()
+
 
 
 

@@ -97,6 +97,16 @@ class InventoryModel(Base):
                 .filter(InventoryModel.month == month)\
                 .filter(InventoryModel.is_delete == 0)\
                 .all()
+    @classmethod
+    def get_by_merchant_hotel_roomtype_dates(cls, session, merchant_id, hotel_id, roomtype_id, days):
+        months = [InventoryModel.combin_year_month(day[0], day[1]) for day in days]
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.merchant_id == merchant_id)\
+                .filter(InventoryModel.hotel_id == hotel_id)\
+                .filter(InventoryModel.roomtype_id == roomtype_id)\
+                .filter(InventoryModel.month.in_(months))\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
 
     @classmethod
     def insert_by_year(cls, session, merchant_id, hotel_id, roomtype_id, year):
@@ -132,9 +142,9 @@ class InventoryModel(Base):
     def get_day(self, day, type=0):
         if day < 1 or day > 31:
             return 0
-        day_key = 'day' + day
+        day_key = 'day' + str(day)
         value = getattr(self, day_key)
-        return int(value.splite('|')[type])
+        return int(value.split('|')[type])
 
     def set_val_by_day(self, day, price_type, val):
         day_key = 'day' + day
