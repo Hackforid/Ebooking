@@ -96,6 +96,18 @@ class RoomRateModel(Base):
         return room
 
     @classmethod
+    def set_meal(cls, session, rate_plan_id, meal_num, commit=True):
+        room = cls.get_by_rateplan(session, rate_plan_id)
+        meal_num = str(meal_num)
+        meal = str('|'.join([meal_num for i in range(0, 31)]))
+        for i in range(1, 13):
+            key = 'meal{}'.format(i)
+            setattr(room, key, meal)
+        if commit:
+            session.commit()
+        return room
+
+    @classmethod
     def set_price(cls, session, id, price, start_date, end_date):
         roomrate = cls.get_by_id(session, id)
 
@@ -161,6 +173,18 @@ class RoomRateModel(Base):
                 month10=self.month10,
                 month11=self.month11,
                 month12=self.month12,
+                meal1=self.meal1,
+                meal2=self.meal2,
+                meal3=self.meal3,
+                meal4=self.meal4,
+                meal5=self.meal5,
+                meal6=self.meal6,
+                meal7=self.meal7,
+                meal8=self.meal8,
+                meal9=self.meal9,
+                meal10=self.meal10,
+                meal11=self.meal11,
+                meal12=self.meal12,
                 is_online=self.is_online,
                 is_delete=self.is_delete,
                 ts_update=self.ts_update,
