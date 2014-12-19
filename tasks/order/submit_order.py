@@ -1,97 +1,137 @@
-# -*- coding: utf-8 -*-]
+# -*- coding: utf-8 -*-
+
 
 import datetime
 
 from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask
 
-from tasks.models.inventory import InventoryModel
+from models.cooperate_roomtype import CooperateRoomTypeModel
+from models.inventory import InventoryModel
+from models.rate_plan import RatePlanModel
 from models.order import OrderModel
-from constants import QUEUE_ORDER
+from tasks.base_task import SqlAlchemyTask
+from tasks.order.submit_order_in_queue import start_order
 
-def get_stay_days(checkin_date, checkout_date):
+from entity.order import SubmitOrder
+
+
+def get_stay_days(start_date, end_date):
     date_format = "%Y-%m-%d"
     start_time = datetime.datetime.strptime(start_date, date_format)
     end_time = datetime.datetime.strptime(end_date, date_format)
 
-    if start_time >= end_date:
+    if start_time >= end_time:
         return start_time, start_time
 
     aday = datetime.timedelta(days=1)
     days = []
-    while start_time < end_date:
+    while start_time < end_time:
         days.append(start_time)
         start_time = start_time + aday
 
     return days
 
-def valid_order(order):
+
+def valid_arguments(order):
     pass
 
-def valid_inventory(order, stay_days):
+def combin_year_month(year, month):
+    return int("{}{:0>2d}".format(year, month))
+
+def valid_inventory(session, order):
+    print '# valid inventory for order ', order.id
+    stay_days = get_stay_days(order.checkin_date, order.checkout_date)
     year_months = [(day.year, day.month) for day in stay_days]
     year_months = {}.fromkeys(year_months).keys()
 
-    inventories = InventoryModel.get_by_merchant_id_and_hotel_id_and_days(order.merchant_id,
-            order.hotel_id, year_months)
-    if not inventories or len(inventories) != len(year_months):
+    inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
+        session, order.merchant_id,
+        order.hotel_id, order.room_type_id, year_months)
+    
+    if not inventories:
+        print "no inventory"
         return False
+
+    for inventory in inventories:
+        print inventory.todict()
+
 
     for day in stay_days:
         inventory = None
-        str_month = "%d|%d" % (day.year, day.month)
+        month = combin_year_month(day.year, day.month)
+        print '...finding', month
 
         for _inventory in inventories:
-            if _inventory.month == str_month:
+            if _inventory.month == month:
                 inventory = _inventory
                 break
         else:
+            print 'day', day, 'not found'
             return False
 
-        if inventory.get_day(day.day, 0) < order.room_quantity:
+        if inventory.get_day(day.day, 1) < order.room_quantity:
+            print 'room not enough in {}'.format(day)
+            print 'remain {} need {}'.format(inventory.get_day(day.day, 1), order.room_quantity)
             return False
     else:
-        order.merchant_id=inventories[0].merchant_id
+        print 'found'
         return True
 
 
-def create_order(order):
-    order = OrderModel.get_by_main_order_id(order.id)
+def create_order(session, submit_order):
+    order = OrderModel.get_by_main_order_id(session, submit_order.id)
     if order:
-        return
-
-    order = OrderModel.new_order(order)
-    if order:
+        # callback 订单已存在
+        print 'order exist'
+        #return False
         return order
 
-def create_order_success(order):
-    pass
+    order = OrderModel.new_order(session, submit_order)
+    if order:
+        return order
+    else:
+        # callback 创建失败
+        pass
 
 
-def create_order_fail(order):
-    pass
+def get_rateplan(session, order):
+    rate_plan = RatePlanModel.get_by_id(session, order.rate_plan_id)
+    if not rate_plan:
+        # callback no rateplan
+        pass
+    return rate_plan
 
-def get_order(session, order_id):
-    return OrderModel.get_by_id(session, order_id)
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER, ignore_result=True)
-def start_order(self, order_id):
-    print 'hello world'
-
+@app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
+def deal_order(self, order):
+    print '==' * 20
+    print order
     session = self.session
-    order = get_order(session, order_id)
-    print isinstance(order.checkin_date, datetime.date)
+    submit_order = SubmitOrder(order)
+    print submit_order
+
+    if not valid_arguments(submit_order):
+        pass
+
+    rate_plan = get_rateplan(session, submit_order)
+    if not rate_plan:
+        print 'no rate plan'
+        return
+
+    submit_order.merchant_id = rate_plan.merchant_id
+    order = create_order(session, submit_order)
+    if not order:
+        print 'create order fail'
+        return
+
+    if not valid_inventory(session, submit_order):
+        # callback inventory fail
+        print 'more room please'
+        order.status = 200
+        session.commit()
+        return
 
 
-
-    
-    #stay_days = get_stay_days(order['checkInDate'], order['checkOutDate'])
-
-    #if not valid_inventory(order, stay_days):
-        #pass
-
-    #create_order(order)
-
-
-
+    # second valid in spec queue
+    start_order.apply_async(args=[order.id])
