@@ -40,7 +40,7 @@ class BtwBaseHandler(BaseHandler):
     def _handle_request_exception(self, e):
         self.db.rollback()
         if isinstance(e, JsonException):
-            self.log_exception(*sys.exc_info())
+            print e.tojson()
             self.finish_json(errcode=e.errcode, errmsg=e.errmsg)
         else:
             super(BtwBaseHandler, self)._handle_request_exception(e)
