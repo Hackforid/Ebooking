@@ -76,16 +76,15 @@ class RatePlanModel(Base):
                 .filter(RatePlanModel.is_delete == 0)\
                 .all()
         if rateplans:
-            roomrates = []
-            for rateplan in rateplans:
-                roomrate = session.query(RoomRateModel)\
-                        .filter(RoomRateModel.rate_plan_id == rateplan.id)\
-                        .filter(RoomRateModel.is_delete == 0)\
-                        .first()
-                if roomrate:
-                    roomrates.append(roomrate)
+            rateplan_ids = [rateplan.id for rateplan in rateplans]
+            roomrates = session.query(RoomRateModel)\
+                    .filter(RoomRateModel.rate_plan_id.in_(rateplan_ids))\
+                    .filter(RoomRateModel.is_delete == 0)\
+                    .all()
 
-        return rateplans, roomrates
+            return rateplans, roomrates
+        else:
+            return None, None
 
     def todict(self):
         return ObjectDict(
