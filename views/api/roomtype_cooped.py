@@ -32,12 +32,12 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         year, month = int(year), int(month)
         simple = self.get_query_argument('simple', 0)
 
-        self.valid_date(year, month)
 
         hotel, roomtypes = yield self.get_all_roomtype(hotel_id)
         cooped_roomtypes = yield gen.Task(CooperateRoom.get_by_merchant_id_and_hotel_id.apply_async, args=[self.current_user.merchant_id, hotel_id])
         cooped, will_coop = self.seperate_roomtype(roomtypes, cooped_roomtypes.result)
 
+        self.valid_date(year, month)
         if not simple:
             inventorys = (yield gen.Task(InventoryModel.get_by_merchant_id_and_hotel_id_and_date.apply_async,
                 args=[self.current_user.merchant_id, hotel_id, year, month])).result
