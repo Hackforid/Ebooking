@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from tornado import gen
 from tornado.escape import json_encode, json_decode, url_escape
@@ -9,6 +9,7 @@ from tools.auth import auth_login
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
+from exception.celery_exception import CeleryException
 
 import tasks.models.room_rate as  RoomRate
 
@@ -44,19 +45,19 @@ class RoomRateAPIHandler(BtwBaseHandler):
             start_date = datetime.strptime(str_start_date, time_format)
             end_date = datetime.strptime(str_end_date, time_format)
         except:
-            raise JsonException(errcode=2001, errmsg="invalid date")
+            raise JsonException(errcode=2001, errmsg="invalid date: date parse fail")
 
         if end_date < start_date:
-            raise JsonException(errcode=2001, errmsg="invalid date")
+            raise JsonException(errcode=2001, errmsg="invalid date: end date before start date")
 
-        min_date = datetime.today()
+        min_date = date.today()
         max_date = min_date + timedelta(days=90)
 
-        if start_date < min_date or start_date > max_date:
-            raise JsonException(errcode=2001, errmsg="invalid date")
+        if start_date.date() < min_date or start_date.date() > max_date:
+            raise JsonException(errcode=2001, errmsg="invalid date: start date out of range")
 
-        if end_date < min_date or end_date > max_date:
-            raise JsonException(errcode=2001, errmsg="invalid date")
+        if end_date.date() < min_date or end_date.date() > max_date:
+            raise JsonException(errcode=2001, errmsg="invalid date: end date out of range")
 
         return start_date, end_date
 
@@ -69,6 +70,8 @@ class RoomRateAPIHandler(BtwBaseHandler):
     def set_price(self, roomrate_id, price, start_date, end_date):
         task = yield gen.Task(RoomRate.set_price.apply_async,
                 args=[roomrate_id, price, start_date, end_date])
+        if isinstance(task.result, CeleryException):
+            raise JsonException(errmsg="修改失败", errcode=1001)
 
         raise gen.Return(task.result)
 
