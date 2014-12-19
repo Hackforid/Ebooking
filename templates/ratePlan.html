@@ -49,7 +49,7 @@
                             >
                             <div class="roomhead" ><h1 ng-click="eachshow($index);">{{rateplan.name}}</h1><span></span>
                                 <div class="eachroom" style="display:none">
-                                    <label>名称：{{rateplan.name}}</label>
+                                    <label>名称：常规价格</label>
                                     <label>早餐数：<select name="" class="input-s"  >
                                             <option value="1">无早餐</option>
                                             <option value="2">一份早餐</option>
@@ -83,8 +83,7 @@
                                 <tbody>
                                     <tr>
                                     <td class="table-title">预付底价</td>
-                                    <td class={{dayprice.classstyle}} ng-repeat="dayprice in dayPriceSum[rateplan.id]">
-                                    <span id={{rateplan.id+""+$index}} ng-click=addChangeP((rateplan.id+""+$index),(dayprice.classstyle));>{{dayprice.dayprice}}</span></td>          
+                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+""+$index}} ng-click=addChangeP((rateplan.id+""+$index),(v.classstyle));>{{v.dayprice }}</span></td>          
                                     </tr>
                                 </tbody>
                             </table>             
@@ -125,16 +124,16 @@
   </tr>
   <tr>
     <td>日期：</td>
-    <td><input type="text" name="time1" id="time1" onclick="" value="2014-10-04" class="input-time" / > 至 
-                     <input type="text" name="time2" id="time2" onclick="" value="2014-10-04" class="input-time" /></td>
+    <td><input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" readonly="readonly" value="" class="input-time" / > 至 
+                     <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" readonly="readonly" value="" class="input-time" /></td>
   </tr>
   <tr>
     <td>底价：</td>
-    <td><input name="" type="text" class="input-t" value="90" placeholder="输入正整数" /></td>
+    <td><input id="lowprice" name="" type="text" class="input-t" value="" placeholder="输入正整数" /></td>
   </tr>
 </table>
           <p class="action" style=" text-align:center">
-          <input name="" type="button" value="保存" class="btn"  />
+          <input name="" type="button" value="保存" class="btn" ng-click="roomRatePlanDialog.save()" />
           <input name="" type="button" value="取消" class="btn btn-bai" ng-click="roomRatePlanDialog.close()" />
           </p>
        </div>

@@ -2,6 +2,45 @@
 
 	var ratePlanApp = angular.module('ratePlanApp', []);
 
+	ratePlanApp.filter('orderObjectBy', function(){
+return function (input) {
+
+                var kv = [];
+
+                for (var k in input) {
+                    kv.push({
+                        k: k,
+                        v: input[k],
+                    });
+                }
+
+                kv.sort(function (a, b) {
+                    a = parseInt(a.k);
+                    b = parseInt(b.k);
+
+                    return a - b;
+                });
+
+                var array = [];
+
+                for (var k in kv) {
+                    array.push(kv[k].v);
+                }
+
+                return array;
+            }
+});
+
+
+
+
+
+
+
+
+
+
+
 	var NewRatePlanDialog = function(scope, http) {
 		this.scope = scope;
 		this.http = http;
@@ -45,9 +84,6 @@
 					if (resp.errcode == 0) {} else {
 						this.errmsg = resp.errmsg;
 					}
-
-					document.location.reload();
-
 				})
 				.error(function() {
 					this.errmsg = '网络错误';
@@ -68,6 +104,38 @@
 		this.close = function() {
 			console.log("44");
 			$("#openDiv1").fadeOut(500);
+		}
+		this.save = function() {
+
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/roomrate/';
+			var time1=$("#time1").val();
+			var time2=$("#time1").val();
+			var price=$("#lowprice").val();
+
+			if(time2>time1){this.errmsg = '网络错误';}
+
+			console.log(url);
+			var params = {
+				"start_date":time1,
+				"end_date":time2,
+				"price":price
+
+			};
+			console.log(params);
+			http.post(url, params)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {} else {
+						this.errmsg = resp.errmsg;
+					}
+				})
+				.error(function() {
+					this.errmsg = '网络错误';
+				})
+
+
+		
+			
 		}
 
 	}
@@ -199,27 +267,25 @@
 				.error(function() {})
 		});
 
-		$scope.$watch('monthvalue', function() {
+		/*$scope.$watch('monthvalue', function() {
+			$scope.dayPriceSum = {};
 			$scope.dayWeekSum = [];
 			dateCheck($scope.monthvalue);
 
-		});
+		});*/
 
 
-		function dateCheck(monthvalue) {
-
+		function dateCheck(monthvalue) {			
 			if (typeof($scope.roomrates) === "object" && !($scope.roomrates instanceof Array)) {
 				return;
 			}
-			console.log("这里");
 
 			var day = new Date();
 			var year = $scope.months[monthvalue - 1].year;
 			var month = $scope.months[monthvalue - 1].month;
 			day.setFullYear(year);
 			day.setMonth(month - 1);
-
-
+			
 			var ninetytime=new Date().getTime()+1000*60*60*24*90;
 			var ninetyday=new Date(ninetytime);
 			var ninetyyear=ninetyday.getFullYear(); 			
@@ -228,6 +294,7 @@
  			var ninetysum=new Date(ninetyyear, ninetymonth, 0).getDate();
 			var daynum;
 
+			
 			if (monthvalue == 1) {
 				daynum = day.getDate();
 			} else if (monthvalue == 4) {
@@ -237,32 +304,31 @@
 				daynum = new Date(year, month, 0).getDate();
 			}
 
+
+			
+
+
 			/*测试测试*/
-			$scope.roomrates[0].month1 = "33|33|-1|-1|80|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|100|-1|90|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1";
+			$scope.roomrates[0].month1 = "99|66|45|-1|33|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1";
 
-			$scope.roomrates[0].month12 = "-1|-1|-1|-1|80|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|100|-1|90|90|90|-1|33|-1|22|-1|-1|-1|-1|-1|90";
+			$scope.roomrates[0].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 
-			$scope.roomrates[1].month12 = "-1|-1|-1|-1|60|-1|60|-1|80|-1|-1|80|-1|-1|77|-1|100|-1|90|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1";
+			$scope.roomrates[1].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 
 			var weekDay = new Array("日", "一", "二", "三", "四", "五", "六");
 
 
 			for (var i = 0; i < ($scope.roomrates.length); i++) {
-				console.log("第几次循环"+i);
 				var dayprice = [];
 				var temptwo = {};
 				var tempdaysum=new Date(year, month, 0).getDate();
 				
 				dayprice = $scope.roomrates[i]["month" + month].split("|", tempdaysum);
-				console.log("第一次分割");
-				console.log(dayprice);
-
+				
 				if (monthvalue == 1) {
 					for (var  a= 0; a < daynum; a++) {
 						dayprice[a]="-1"
-					};
-					console.log("第二次");
-					console.log(dayprice);
+					};									
 					
 				}else if (monthvalue == 4){
 					for (var o = daynum; o < ninetysum; o++) {
@@ -270,7 +336,6 @@
 					};
 
 				} 
-
 
 
 
@@ -292,14 +357,14 @@
 						"classstyle": classstyle,
 						"dayprice": tempprice
 					};
+					//console.log("temp");console.log(temp);
 					temptwo[j] = temp;
 				}
 				var planid = $scope.roomrates[i].rate_plan_id;
 
 				$scope.dayPriceSum[planid] = temptwo;
 			}
-			console.log($scope.dayPriceSum);
-			daynum = new Date(year, month, 0).getDate();
+			
 
 			for (var i = 1; i <= daynum; i++) {
 				var temp;
@@ -327,6 +392,11 @@
 				$scope.dayWeekSum.push(temp);
 
 			}
+
+
+			
+			console.log($scope.dayPriceSum);
+			console.log($scope.months);
 
 
 		}
