@@ -35,7 +35,6 @@ def modify_inventory(self, merchant_id, hotel_id, roomtype_id, price_type, chang
         else:
             inventory.set_val_by_day(day.day, price_type, change_num)
     session.commit()
-    print 'modify end'
     return inventories
 
 

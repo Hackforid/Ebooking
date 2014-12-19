@@ -24,6 +24,13 @@ class CooperateRoomTypeModel(Base):
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
     @classmethod
+    def get_by_id(cls, session, id):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.id == id)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .first()
+
+    @classmethod
     def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):
         return session.query(CooperateRoomTypeModel)\
                 .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
@@ -31,6 +38,14 @@ class CooperateRoomTypeModel(Base):
                 .filter(CooperateRoomTypeModel.is_delete == 0)\
                 .all()
 
+    @classmethod
+    def get_by_merchant_hotel_room_id(cls, session, merchant_id, hotel_id, roomtype_id):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
+                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
+                .filter(CooperateRoomTypeModel.roomtype_id == roomtype_id)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .first()
 
     @classmethod
     def new_roomtype_coops(cls, session, merchant_id, hotel_id, roomtype_ids):

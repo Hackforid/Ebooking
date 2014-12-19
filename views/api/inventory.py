@@ -31,10 +31,8 @@ class InventoryAPIHandler(BtwBaseHandler):
         self.valid_args(price_type)
 
 
-        print 'afasdfasdfsadgasdgasdtgasd'
         change_task = yield gen.Task(Inventory.modify_inventory.apply_async,
                 args=[merchant_id, hotel_id, roomtype_id, price_type, change_num, start_date, end_date])
-        print 'afasdfasdfsadgasdgasdtgasd'
         inventories = change_task.result
         if inventories:
             print 'success'
