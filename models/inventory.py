@@ -146,10 +146,10 @@ class InventoryModel(Base):
         value = getattr(self, day_key)
         return int(value.split('|')[type])
 
-    def set_val_by_day(self, day, price_type, val):
-        day_key = 'day' + day
+    def add_val_by_day(self, day, price_type, val):
+        day_key = 'day' + str(day)
         value = getattr(self, day_key)
-        price_reserved, price_manual = value.splite('|')
+        price_reserved, price_manual = value.split('|')
         if price_type == 0:
             price_reserved = int(price_reserved) + val
         else:
