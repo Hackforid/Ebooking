@@ -57,6 +57,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
                 if room['id'] == coop.roomtype_id:
                     room['is_online'] = coop.is_online
                     room['coop_id'] = coop.id
+                    room['prefix_name'] = coop.prefix_name
+                    room['remark_name'] = coop.remark_name
                     break
 
     def merge_inventory(self, coop_rooms, inventorys):
@@ -139,14 +141,12 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
     def put(self, hotel_id, roomtype_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
-        is_online, = get_and_valid_arguments(args,
-                "is_online")
+        prefix_name, remark_name = get_and_valid_arguments(args,
+                "profix_name", "remark_name")
 
-        if is_online not in [0, 1]:
-            raise JsonException(errcode=1000, errmsg="wrong arg: is_online")
 
         task = yield gen.Task(CooperateRoom.modify_cooped_roomtype.apply_async,
-                args=[merchant_id, hotel_id, roomtype_id, is_online])
+                args=[merchant_id, hotel_id, roomtype_id, prefix_name, remark_name])
         result = task.result
         if isinstance(result, CeleryException):
             raise JsonException(errcode=1002, errmsg=result.errmsg)
