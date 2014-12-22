@@ -142,7 +142,7 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
         prefix_name, remark_name = get_and_valid_arguments(args,
-                "profix_name", "remark_name")
+                "prefix_name", "remark_name")
 
 
         task = yield gen.Task(CooperateRoom.modify_cooped_roomtype.apply_async,
