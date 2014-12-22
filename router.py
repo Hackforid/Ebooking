@@ -6,6 +6,7 @@ from views.hotel_will_coop import HotelWillCoopHandler
 from views.hotel_cooped import HotelCoopedHandler
 from views.hotel_inventory import HotelInventoryHandler
 from views.rateplan import RatePlanHandler
+from views.order import OrderWaitingHandler
 from views.api.city import CityAPIHandler
 from views.api.hotel_will_coop import HotelWillCoopAPIHandler
 from views.api.hotel_coop import HotelCoopAPIHandler
@@ -48,4 +49,7 @@ handlers = [
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/inventory/?", InventoryAPIHandler),
 
         (r"/api/hotel/submitorder/?", SubmitOrderAPIHandler),
+
+
+        (r"/order/waiting/?", OrderWaitingHandler),
 ]
