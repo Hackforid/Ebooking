@@ -22,6 +22,8 @@ class CooperateRoomTypeModel(Base):
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=0)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
+    prefix_name = Column('prefixName', VARCHAR(100))
+    remark_name = Column('remarkName', VARCHAR(100))
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -76,5 +78,7 @@ class CooperateRoomTypeModel(Base):
                 hotel_id = self.hotel_id,
                 roomtype_id = self.roomtype_id,
                 is_online = self.is_online,
+                prefix_name = self.prefix_name,
+                remark_name = self.remark_name,
                 )
 
