@@ -1,6 +1,11 @@
 <%inherit file="base.html" />
 <%def name="right_content()">
 
+<div
+    ng-app="orderWaitingApp"
+    ng-controller="orderWaitingCtrl"
+    >
+
     <!--导航条--> 
     <div class="notice" id="notice"><h2>待确认订单</h2></div>
     <!--导航条end-->  
@@ -192,7 +197,10 @@
 
 </div>
 <!--右侧部分end--> 
+</div>
+
 </%def>
 
 <%def name="end()">
+<script src="${static_url('js/orderWaiting.js')}"></script>
 </%def>
