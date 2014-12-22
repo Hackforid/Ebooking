@@ -4,6 +4,7 @@ from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
 from tools.auth import auth_login
+from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
@@ -55,9 +56,13 @@ class OrderOperateAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def delete(self, order_id):
         merchant_id = self.current_user.merchant_id
+        args = self.get_json_arguments()
+        reason, = get_and_valid_arguments(args, 'reason')
+        if not reason:
+            raise JsonException(200, 'invalid reason')
 
         task = yield gen.Task(CancelOrder.cancel_order_by_user.apply_async,
-                args=[merchant_id, order_id])
+                args=[merchant_id, order_id, reason])
         if task.status == 'SUCCESS':
             self.finish_json(result=dict(
                 order=task.result.todict(),

@@ -59,7 +59,7 @@ def cancel_order_before_user_confirm(self, order_id):
 
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
-def cancel_order_by_user(self, order_id):
+def cancel_order_by_user(self, order_id, reason):
     session = self.session
     order = get_order(session, order_id)
     if order.status not in [0, 100]:
@@ -78,6 +78,7 @@ def cancel_order_by_user(self, order_id):
         inventory.add_val_by_day(day.day, 1, order.room_num)
 
     order.status = 400
+    order.extra = reason
     session.commit()
 
     return order

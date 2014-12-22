@@ -23,7 +23,7 @@ def cancel_order_by_server(self, order_id):
         raise CeleryException(1000, 'illegal status')
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def cancel_order_by_user(self, merchant_id, order_id):
+def cancel_order_by_user(self, merchant_id, order_id, reason):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
 
@@ -32,7 +32,7 @@ def cancel_order_by_user(self, merchant_id, order_id):
     if order.status not in [0, 100]:
         raise CeleryException(1000, 'illegal status')
 
-    task = Cancel.cancel_order_by_user.delay(order_id)
+    task = Cancel.cancel_order_by_user.delay(order_id, reason)
     result = task.get()
     
     if task.status == 'SUCCESS':
