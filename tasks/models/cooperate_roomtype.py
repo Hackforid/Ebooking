@@ -22,7 +22,7 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
 
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, is_online):
+def modify_cooped_roomtype_online(self, merchant_id, hotel_id, roomtype_id, is_online):
     coop = CooperateRoomTypeModel.get_by_merchant_hotel_room_id(self.session,
             merchant_id, hotel_id, roomtype_id)
     if not coop:
@@ -33,3 +33,15 @@ def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, is_online):
 
     return coop
 
+@app.task(base=SqlAlchemyTask, bind=True)
+def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, prefix_name, remark_name):
+    coop = CooperateRoomTypeModel.get_by_merchant_hotel_room_id(self.session,
+            merchant_id, hotel_id, roomtype_id)
+    if not coop:
+        return CeleryException(404, 'coop not found')
+
+    coop.prefix_name = prefix_name
+    coop.remark_name = remark_name
+    self.session.commit()
+
+    return coop
