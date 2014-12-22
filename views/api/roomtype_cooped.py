@@ -55,6 +55,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         for coop in coops:
             for room in rooms:
                 if room['id'] == coop.roomtype_id:
+                    room['roomtype_id'] = room['id']
                     room['is_online'] = coop.is_online
                     room['coop_id'] = coop.id
                     room['prefix_name'] = coop.prefix_name

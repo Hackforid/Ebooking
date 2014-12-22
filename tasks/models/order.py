@@ -2,4 +2,13 @@
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from constants import QUEUE_ORDER
+
+from models.order import OrderModel
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def get_waiting_orders(self, merchant_id):
+    orders = OrderModel.get_waiting_orders(self.session, merchant_id)
+    print orders
+    return orders
 
