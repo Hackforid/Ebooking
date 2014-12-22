@@ -95,6 +95,12 @@ class OrderModel(Base):
 
         return order
 
+    @classmethod
+    def get_waiting_orders(cls, session, merchant_id):
+        orders = session.query(OrderModel)\
+                .filter(OrderModel.status == 100)\
+                .all()
+        return orders
 
 
     def todict(self):
