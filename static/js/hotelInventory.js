@@ -41,7 +41,7 @@
 		this.errmsg = '';
 
 		this.prefixName="";
-				this.remarkName="";
+		this.remarkName="";
 
 
 		this.eachhide = function(index) {
@@ -64,8 +64,8 @@
 
 
 			var params = {
-				"prefix_name":this.prefixName,
-				"remark_name":this.remarkName
+				"prefix_name":$("#prefixId-"+index).val(),
+				"remark_name":$("#remarkId-"+index).val()
 			}
 
 			console.log(url);console.log(params);
@@ -74,7 +74,7 @@
 					console.log(resp);
 					if (resp.errcode == 0) {
 
-
+						$("div.eachroom").eq(index).css("display", "none");
 
 					} else {
 						this.errmsg = resp.errmsg;
@@ -246,7 +246,7 @@
 		$scope.selecableMonths = [1, 2, 3];
 		$scope.monthvalue = 1;
 
-
+$scope.testone;
 		$scope.months = {};
 		$scope.roomNum = [];
 		$scope.roomNumAuto = [];
@@ -258,6 +258,17 @@
 		$scope.currentIndex;
 		$scope.currentPriceType;
 		$scope.currentId;
+		/*$scope.prefixName;
+		$scope.remarkName;
+		
+
+		$scope.test=function test (){
+			console.log("111");
+			console.log($scope.prefixName);
+			console.log($scope.remarkName);
+			console.log($scope.testone);
+
+		}*/
 
 
 
@@ -297,6 +308,8 @@
 				$scope.willCoop[i].isChecked = false;
 			}
 			$("#roomtype-list").fadeIn(500);
+
+			console.log($scope.willCoop);
 		}
 
 		$scope.saveNewRoomType = function() {
@@ -335,7 +348,7 @@
 					return;
 				}
 				$scope.roomNum = [];
-				$scope.dayWeekSum = [];
+				
 				loadHotelMsg(hotelId);
 			});
 		}
