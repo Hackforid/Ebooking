@@ -12,7 +12,57 @@ from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask
 from tasks.order.submit_order_in_queue import start_order
 
+from exception.celery_exception import CeleryException
+
 from entity.order import SubmitOrder
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def confirm_order_by_user(self, merchant_id, order_id):
+    session = self.session
+    order = OrderModel.get_by_id(session, order_id)
+    if order.merchant_id != merchant_id:
+        raise CeleryException(100, 'merchant not valid')
+    if order.status != 100:
+        raise CeleryException(200, 'illegal status')
+
+    # TODO ASK SERVER
+    order.confirm_by_user(session)
+    return order
+
+
+
+@app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
+def deal_order(self, order):
+    print '==' * 20
+    print order
+    session = self.session
+    submit_order = SubmitOrder(order)
+    print submit_order
+
+    if not valid_arguments(submit_order):
+        pass
+
+    rate_plan = get_rateplan(session, submit_order)
+    if not rate_plan:
+        print 'no rate plan'
+        return
+
+    submit_order.merchant_id = rate_plan.merchant_id
+    order = create_order(session, submit_order)
+    if not order:
+        print 'create order fail'
+        return
+
+    if not valid_inventory(session, submit_order):
+        # callback inventory fail
+        print 'more room please'
+        order.status = 200
+        session.commit()
+        return
+
+
+    # second valid in spec queue
+    start_order.apply_async(args=[order.id])
 
 
 def get_stay_days(start_date, end_date):
@@ -100,38 +150,3 @@ def get_rateplan(session, order):
         # callback no rateplan
         pass
     return rate_plan
-
-
-
-@app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
-def deal_order(self, order):
-    print '==' * 20
-    print order
-    session = self.session
-    submit_order = SubmitOrder(order)
-    print submit_order
-
-    if not valid_arguments(submit_order):
-        pass
-
-    rate_plan = get_rateplan(session, submit_order)
-    if not rate_plan:
-        print 'no rate plan'
-        return
-
-    submit_order.merchant_id = rate_plan.merchant_id
-    order = create_order(session, submit_order)
-    if not order:
-        print 'create order fail'
-        return
-
-    if not valid_inventory(session, submit_order):
-        # callback inventory fail
-        print 'more room please'
-        order.status = 200
-        session.commit()
-        return
-
-
-    # second valid in spec queue
-    start_order.apply_async(args=[order.id])

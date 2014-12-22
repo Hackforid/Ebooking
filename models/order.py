@@ -102,6 +102,11 @@ class OrderModel(Base):
                 .all()
         return orders
 
+    def confirm_by_user(self, session):
+        self.status = 300
+        session.commit()
+
+
 
     def todict(self):
         return ObjectDict(

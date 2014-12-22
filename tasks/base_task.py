@@ -14,6 +14,10 @@ class SqlAlchemyTask(celery.Task):
         print 'after_return'
         db_session.remove()
 
+    def on_failure(self, *args, **kwargs):
+        print 'on_failure'
+        db_session.rollback()
+
 
     @property
     def session(self):
