@@ -10,6 +10,7 @@ from exception.celery_exception import CeleryException
 
 from tasks.models import order as Order
 from tasks.order import submit_order as SubmitOrder
+from tasks.order import cancel_order as CancelOrder
 
 class OrderWaitingAPIHandler(BtwBaseHandler):
 
@@ -54,3 +55,15 @@ class OrderOperateAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def delete(self, order_id):
         merchant_id = self.current_user.merchant_id
+
+        task = yield gen.Task(CancelOrder.cancel_order_by_user.apply_async,
+                args=[merchant_id, order_id])
+        if task.status == 'SUCCESS':
+            self.finish_json(result=dict(
+                order=task.result.todict(),
+                ))
+        else:
+            if isinstance(task.result, CeleryException):
+                raise JsonException(1000, task.result.errmsg)
+            else:
+                raise JsonException(1000, 'network error')

@@ -54,5 +54,5 @@ handlers = [
 
         (r"/order/waiting/?", OrderWaitingHandler),
         (r"/api/order/waiting/?", OrderWaitingAPIHandler),
-        (r"/api/order/(?P<order_id>\d+)/confirm/?", OrderOperateAPIHandler),
+        (r"/api/order/(?P<order_id>\d+)/operate/?", OrderOperateAPIHandler),
 ]

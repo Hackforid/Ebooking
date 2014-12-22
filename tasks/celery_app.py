@@ -11,7 +11,8 @@ app = Celery("celery_app",
         include=['tasks.test', 'tasks.models.cooperate_hotel', 'tasks.models.cooperate_roomtype',
             'tasks.models.inventory', 'tasks.models.rate_plan', 'tasks.models.room_rate',
             'tasks.models.order',
-            'tasks.order.submit_order', 'tasks.order.submit_order_in_queue'],
+            'tasks.order.submit_order', 'tasks.order.submit_order_in_queue',
+            'tasks.order.cancel_order', 'tasks.order.cancel_order_in_queue'],
         )
 
 
