@@ -20,7 +20,7 @@ from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
 from views.api.submit_order import SubmitOrderAPIHandler
 from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler
-from views.api.order import OrderWaitingAPIHandler
+from views.api.order import OrderWaitingAPIHandler, OrderOperateAPIHandler
 
 handlers = [
         (r"/login/?", LoginHandler),
@@ -54,4 +54,5 @@ handlers = [
 
         (r"/order/waiting/?", OrderWaitingHandler),
         (r"/api/order/waiting/?", OrderWaitingAPIHandler),
+        (r"/api/order/(?P<order_id>\d+)/operate/?", OrderOperateAPIHandler),
 ]
