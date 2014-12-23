@@ -52,6 +52,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
             ))
 
     def merge_cooped_info(self, rooms, coops):
+        if not coops:
+            return
         for coop in coops:
             for room in rooms:
                 if room['id'] == coop.roomtype_id:
@@ -115,24 +117,18 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         if not roomtype_ids:
             raise JsonException(errcode=2001, errmsg="need id")
 
-        hotel = (yield gen.Task(CooperateHotelModel.get_by_merchant_id_and_hotel_id.apply_async,
-            args=[merchant_id, hotel_id])).result
-        if not hotel:
-            raise JsonException(errcode=404, errmsg="hotel not found")
+        task = yield gen.Task(CooperateRoom.new_roomtype_coops.apply_async,
+            args=[merchant_id, hotel_id, roomtype_ids])
+        if task.status == 'SUCCESS':
+            self.finish_json(result=dict(
+                cooped_roomtypes=[coop.todict() for coop in task.result],
+                ))
+        else:
+            if isinstance(task.result, CeleryException):
+                raise JsonException(errcode=1000, errmsg=task.result.errmsg)
+            else:
+                raise JsonException(errcode=2000, errmsg='server error')
 
-        cooped_rooms = (yield gen.Task(CooperateRoom.get_by_merchant_id_and_hotel_id.apply_async,
-            args=[merchant_id, hotel_id])).result
-        if cooped_rooms:
-            cooped_ids = [coop.id for coop in cooped_rooms]
-            if set(cooped_ids) & set(roomtype_ids):
-                raise JsonException(errcode=2001, errmsg="dunpile id")
-        
-        coops = (yield gen.Task(CooperateRoom.new_roomtype_coops.apply_async,
-            args=[merchant_id, hotel_id, roomtype_ids])).result
-
-        self.finish_json(result=dict(
-            cooped_roomtypes=[coop.todict() for coop in coops],
-            ))
 
 
 class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
