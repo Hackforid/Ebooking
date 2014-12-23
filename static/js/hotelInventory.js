@@ -44,6 +44,20 @@
 		this.remarkName = "";
 
 
+		this.exampleDivIn=function(index){
+
+			$("#exampleDiv-"+index).after("<span class='example' style='position:relative;'>示例：<b>170元</b></span>").show(0, function() {});
+
+		}
+		this.exampleDivLeave=function(index){
+
+			$("#exampleDiv-"+index).next("span.example").hide(0, function() {
+				$("#exampleDiv-"+index).next("span.example").remove();
+			});
+
+		}
+
+
 		this.eachhide = function(index) {
 
 			$("div.eachroom").eq(index).css("display", "none");
@@ -259,6 +273,8 @@
 		$scope.currentIndex;
 		$scope.currentPriceType;
 		$scope.currentId;
+		$scope.desResult=false;
+		$scope.currentDescribe;
 		/*$scope.prefixName;
 		$scope.remarkName;
 		
@@ -271,6 +287,31 @@
 
 		}*/
 
+		$scope.roomDescribe =function roomDescribe(index){
+
+
+			$scope.desResult=true;
+				$scope.currentDescribe=;
+
+
+
+/*var roomDes="<div class='messageDiv' id='cool-roomtype' style=' '><div class='messageBlack'></div><div class='detail detail-roomtype'><div class='head'><h1>房型概述</h1></div>"+
+ "<p id='closeDiv' class='close' ng-click='roomDescribeClose()'>X</p><div class='con'><div class='cm'> <table width='100%' border='0' cellspacing='0' cellpadding='0'>"+
+  "<tr><td width='90'><strong>房型名称：</strong></td><td>豪华房</td> </tr><tr><td><strong>房间大小：</strong></td> <td>15-20平方米</td></tr><tr><td><strong>床型：</strong></td><td>大床、双床、三床、四床</td></tr>"+
+  "<tr><td><strong>床尺寸：</strong></td><td>200cm*180cm</td></tr><tr><td><strong>楼层：</strong></td><td>1层</td></tr><tr><td><strong>入住人数：</strong></td><td>2人</td></tr><tr><td><strong>设施：</strong></td>"+
+   "<td>wi-fi、宽带、有线电视、洗漱用品、24小时热水、空调</td></tr><tr><td><strong>描述：</strong></td><td>标准间……</td></tr></table></div></div>"+
+   "</div> </div>";  
+
+$("body").append(roomDes);  */
+
+		}
+
+		$scope.roomDescribeClose=function roomDescribeClose(){
+
+
+			$scope.desResult=false;
+
+		}
 
 
 		$scope.changeNum = function changeNum(d, c, i, p, m) {
@@ -481,7 +522,7 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 
 			var ninetysum = new Date(ninetyyear, ninetymonth, 0).getDate();
-			var daynum;
+			var daynum;var currentDay=day.getDate();
 
 
 			if (monthvalue == 1) {
@@ -684,6 +725,14 @@
 					};
 				}
 				$scope.dayWeekSum.push(temp);
+
+			}
+
+			if(monthvalue==1){
+				
+				$scope.dayWeekSum[currentDay-1]["day"]="今";
+				$scope.dayWeekSum[currentDay-1]["weekday"]="天";
+				$scope.dayWeekSum[currentDay-1]["textcolor"]={color: '#F30','font-weight': 'bold'};
 
 			}
 

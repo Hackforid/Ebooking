@@ -41,17 +41,17 @@
                     <div class="form form1"
                         ng-repeat="room in cooped" ng-init="index=$index"
                         >
-                      
                         <div class="roomhead"><h1 ng-click="hotelHeadDialog.eachshow($index);">{{room.name}}--剩余房量</h1><span></span>
                             <div class="eachroom" style=" display:none;">
-                                <label>房型名称：{{room.name}}<a class="a-blue" href="javascript:void(0)">[房型详情]</a></label>
+                                <label>房型名称：{{room.name}}<a class="a-blue" ng-click="roomDescribe()">[房型详情]</a></label>
                                 <label>自定义房型名称：<input id={{"prefixId-"+$index}} ng-init="prefixName=room.prefix_name" style="" type="text"  ng-value="room.prefix_name"  ng-model="prefixName" class="input-t"  />
                                                              
                                     <span style="position:relative;left:-7px;">{{room.name}}</span><b style="position:relative;font-weight:normal;" >(</b>
                                         <input id={{"remarkId-"+$index}} style="position:relative;left:-7px" type="text" ng-value="room.remark_name"  ng-model="remarkName" ng-init="remarkName=room.remark_name"  class="input-t"  />
                                         
                                         <b style="position:relative;left:-14px;font-weight:normal;" >)</b>
-                                     <b style="font-weight:normal;">?</b> 
+                                     <span id={{"exampleDiv-"+$index}} style="font-weight:normal;" ng-mouseover="hotelHeadDialog.exampleDivIn($index);" ng-mouseleave="hotelHeadDialog.exampleDivLeave($index);">?
+                                     </span> 
                                     </label>
                                                               
                                 <label>
@@ -229,6 +229,68 @@
 
 </div></div>
 <!--主体内容end--> 
+
+
+
+<!--房型概述弹窗浮层-->     
+<div class="messageDiv" id="cool-roomtype" ng-if="desResult">
+   <div class="messageBlack"></div>
+   <div class="detail detail-roomtype">
+       <div class="head"><h1>房型概述</h1></div>
+       <p id="closeDiv" class="close" ng-click="roomDescribeClose()">X</p>
+       <div class="con"><div class="cm">
+           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="90"><strong>房型名称：</strong></td>
+    <td>豪华房</td>
+  </tr>
+  <tr>
+    <td><strong>房间大小：</strong></td>
+    <td>15-20平方米</td>
+  </tr>
+  <tr>
+    <td><strong>床型：</strong></td>
+    <td>大床、双床、三床、四床</td>
+  </tr>
+  <tr>
+    <td><strong>床尺寸：</strong></td>
+    <td>200cm*180cm</td>
+  </tr>
+  <tr>
+    <td><strong>楼层：</strong></td>
+    <td>1层</td>
+  </tr>
+  <tr>
+    <td><strong>入住人数：</strong></td>
+    <td>2人</td>
+  </tr>
+  <tr>
+    <td><strong>设施：</strong></td>
+    <td>wi-fi、宽带、有线电视、洗漱用品、24小时热水、空调</td>
+  </tr>
+  <tr>
+    <td><strong>描述：</strong></td>
+    <td>标准间……</td>
+  </tr>
+ 
+</table>
+
+       </div></div>
+   </div> 
+</div>   
+<!--房型概述弹窗浮层end-->   
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!--修改房量弹窗浮层-->     
