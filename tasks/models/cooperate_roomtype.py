@@ -11,6 +11,9 @@ from models.cooperate_hotel import CooperateHotelModel
 from exception.celery_exception import CeleryException
 
 
+@app.task(base=SqlAlchemyTask, bind=True)
+def get_by_hotel_id(task_self, hotel_id):
+    return CooperateRoomTypeModel.get_by_hotel_id(task_self.session, hotel_id)
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_by_merchant_id_and_hotel_id(task_self, merchant_id, hotel_id):
@@ -24,13 +27,13 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
         raise CeleryException(1000, 'hotel not found')
 
 
-    coops = CooperateRoomTypeModel.get_by_merchant_hotel_rooms_id(task_self.session,
+    coops = CooperateRoomTypeModel.get_by_merchant_hotel_base_rooms_id(task_self.session,
             merchant_id, hotel_id, roomtype_ids)
     if coops:
         raise CeleryException(1000, 'room has cooped')
 
     coops = CooperateRoomTypeModel.new_roomtype_coops(task_self.session,
-            merchant_id, hotel.id,  hotel_id, roomtype_ids)
+            merchant_id, hotel.id,  hotel.base_hotel_id, roomtype_ids)
 
     for coop in coops:
         InventoryModel.insert_in_four_month(task_self.session,
@@ -52,10 +55,11 @@ def modify_cooped_roomtype_online(self, merchant_id, hotel_id, roomtype_id, is_o
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, prefix_name, remark_name):
-    coop = CooperateRoomTypeModel.get_by_merchant_hotel_room_id(self.session,
-            merchant_id, hotel_id, roomtype_id)
+    coop = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
     if not coop:
         return CeleryException(404, 'coop not found')
+    if coop.merchant_id != merchant_id:
+        return CeleryException(1000, 'merchant not valid')
 
     coop.prefix_name = prefix_name
     coop.remark_name = remark_name
