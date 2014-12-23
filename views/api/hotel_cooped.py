@@ -39,18 +39,31 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, star):
-        cooped_hotel_ids = yield self.get_cooped_hotel_ids(merchant_id)
-        hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_hotel_ids, start, limit)
+        cooped_base_hotels = (yield self.get_cooped_base_hotels(merchant_id)).result
+        cooped_base_hotel_ids = [hotel.base_hotel_id for hotel in cooped_base_hotels]
+        if not cooped_base_hotel_ids:
+            raise gen.Return(([], 0))
+
+        hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_base_hotel_ids, start, limit)
         if hotels is not None and total is not None:
             yield self.merge_district(hotels)
+            self.merge_base_hotel_with_coops(hotels, cooped_base_hotels)
             raise gen.Return((hotels, total))
         else:
             raise gen.Return((None, None))
 
     @gen.coroutine
-    def get_cooped_hotel_ids(self, merchant_id):
-        cooped_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
-        raise gen.Return([hotel.hotel_id for hotel in cooped_hotels.result])
+    def get_cooped_base_hotels(self, merchant_id):
+        cooped_base_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
+        raise gen.Return([] if not cooped_base_hotels.result else cooped_base_hotels)
+
+    def merge_base_hotel_with_coops(self, base_hotels, cooped_hotels):
+        for base in base_hotels:
+            for cooped in cooped_hotels:
+                if base['id'] == cooped.base_hotel_id:
+                    base['base_hotel_id'] = base['id']
+                    base['id'] = cooped.id
+                    break
 
     @gen.coroutine
     def fetch_hotels(self, name, city_id, star, within_ids, start, limit):
@@ -59,6 +72,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         if within_ids:
             params['within_ids'] = url_escape(json_encode(within_ids))
         url = add_get_params(API['POI'] + u'/api/hotel/search/', params)
+        print 'url=', url
 
         resp = yield AsyncHTTPClient().fetch(url)
 

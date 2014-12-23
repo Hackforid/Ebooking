@@ -18,12 +18,20 @@ class CooperateRoomTypeModel(Base):
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
+    cooperate_hotel_id = Column("cooperateHotelId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=0)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
     prefix_name = Column('prefixName', VARCHAR(100))
     remark_name = Column('remarkName', VARCHAR(100))
+
+    @classmethod
+    def get_all(cls, session):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
+
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -50,12 +58,21 @@ class CooperateRoomTypeModel(Base):
                 .first()
 
     @classmethod
-    def new_roomtype_coops(cls, session, merchant_id, hotel_id, roomtype_ids):
+    def get_by_merchant_hotel_rooms_id(cls, session, merchant_id, hotel_id, roomtype_ids):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
+                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
+                .filter(CooperateRoomTypeModel.roomtype_id.in_(roomtype_ids))\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
+
+    @classmethod
+    def new_roomtype_coops(cls, session, merchant_id, cooperate_hotel_id, hotel_id, roomtype_ids):
         coops = []
         try:
 
             for roomtype_id in roomtype_ids:
-                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id)
+                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, cooperate_hotel_id=cooperate_hotel_id)
                 coops.append(coop)
 
             session.add_all(coops)
@@ -63,18 +80,13 @@ class CooperateRoomTypeModel(Base):
         except:
             session.rollback()
             return
-
-        from models.inventory import InventoryModel
-        toyear = datetime.date.today().year
-        for roomtype_id in roomtype_ids:
-            InventoryModel.insert_by_year(session, merchant_id, hotel_id, roomtype_id, toyear)
-
         return coops
 
     def todict(self):
         return ObjectDict(
                 id = self.id,
                 merchant_id = self.merchant_id,
+                cooperate_hotel_id=self.cooperate_hotel_id,
                 hotel_id = self.hotel_id,
                 roomtype_id = self.roomtype_id,
                 is_online = self.is_online,

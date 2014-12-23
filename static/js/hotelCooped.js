@@ -26,6 +26,7 @@ hotelWillCoopApp.controller('hotelCoopedContentCtrl',
 
 		$http.get(url)
 			.success(function(resp) {
+				console.log(resp)
 				console.log(resp);
 				if (resp.errcode == 0) {
 					$scope.hotels = resp.result.hotels;

@@ -16,7 +16,7 @@ class CooperateHotelModel(Base):
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
-    hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
+    base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=0)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
@@ -35,25 +35,25 @@ class CooperateHotelModel(Base):
             .all()
 
     @classmethod
-    def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):
+    def get_by_merchant_id_and_base_hotel_id(cls, session, merchant_id, base_hotel_id):
         return session.query(CooperateHotelModel)\
             .filter(CooperateHotelModel.merchant_id == merchant_id)\
-            .filter(CooperateHotelModel.hotel_id == hotel_id)\
+            .filter(CooperateHotelModel.base_hotel_id == base_hotel_id)\
             .filter(CooperateHotelModel.is_delete == 0)\
             .first()
 
     @classmethod
-    def new_hotel_cooprate(cls, session, merchant_id, hotel_id):
-        coop = CooperateHotelModel(merchant_id=merchant_id, hotel_id=hotel_id)
+    def new_hotel_cooprate(cls, session, merchant_id, base_hotel_id):
+        coop = CooperateHotelModel(merchant_id=merchant_id, base_hotel_id=base_hotel_id)
         session.add(coop)
         session.commit()
 
         return coop
 
     @classmethod
-    def delete_hotel_cooprate(cls, session, merchant_id, hotel_id):
+    def delete_hotel_cooprate(cls, session, merchant_id, base_hotel_id):
         coop = cls.get_by_merchant_id_and_hotel_id(
-            session, merchant_id, hotel_id)
+            session, merchant_id, base_hotel_id)
         if coop:
             coop.is_delete = 1
             session.commit()
@@ -63,6 +63,6 @@ class CooperateHotelModel(Base):
         return ObjectDict(
             id=self.id,
             merchant_id=self.merchant_id,
-            hotel_id=self.hotel_id,
+            base_hotel_id=self.base_hotel_id,
             is_online=self.is_online,
         )
