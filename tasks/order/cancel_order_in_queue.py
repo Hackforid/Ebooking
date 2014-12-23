@@ -11,7 +11,7 @@ from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER, ignore_result=True)
+@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_after_user_confirm(self, order_id):
     session = self.session
     order = get_order(session, order_id)
@@ -34,11 +34,12 @@ def cancel_order_after_user_confirm(self, order_id):
     session.commit()
     return order
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER, ignore_result=True)
+@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_before_user_confirm(self, order_id):
     session = self.session
     order = get_order(session, order_id)
-    if order.status != 0 or order.status != 100:
+    print order.status
+    if order.status not in [0, 100]:
         raise CeleryException(100, 'illegal status')
 
     stay_days = get_stay_days(order.checkin_date, order.checkout_date)

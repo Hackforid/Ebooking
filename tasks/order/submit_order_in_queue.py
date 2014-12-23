@@ -8,6 +8,16 @@ from tasks.base_task import SqlAlchemyTask
 from tasks.models.inventory import InventoryModel
 from models.order import OrderModel
 from constants import QUEUE_ORDER
+from exception.celery_exception import CeleryException
+
+@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
+def start_order(self, order_id):
+    session = self.session
+    order = get_order(session, order_id)
+    if order.status != 0:
+        raise CeleryException(100, 'order status illegal')
+
+    return modify_inventory(session, order)
 
 def get_stay_days(checkin_date, checkout_date):
     aday = datetime.timedelta(days=1)
@@ -64,7 +74,7 @@ def modify_inventory(session, order):
         print 'valid inventory fail'
         order.status = 200
         session.commit()
-        return
+        return order
 
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
@@ -72,27 +82,9 @@ def modify_inventory(session, order):
 
     order.status = 100
     session.commit()
-
-
-
-
-def create_order_success(order):
-    pass
-
-
-def create_order_fail(order):
-    pass
+    return order
 
 def get_order(session, order_id):
     return OrderModel.get_by_id(session, order_id)
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER, ignore_result=True)
-def start_order(self, order_id):
-    session = self.session
-    order = get_order(session, order_id)
-    if order.status != 0:
-        return
-
-    modify_inventory(session, order)
-    print 'modify order complete'
