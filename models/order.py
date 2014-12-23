@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+import datetime
 
 from tornado.util import ObjectDict 
 
@@ -98,9 +100,32 @@ class OrderModel(Base):
     @classmethod
     def get_waiting_orders(cls, session, merchant_id):
         orders = session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id)\
                 .filter(OrderModel.status == 100)\
                 .all()
         return orders
+
+    @classmethod
+    def get_today_book_orders(cls, session, merchant_id):
+        today = datetime.date.today()
+        return session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id,
+                        OrderModel.create_time >= today,
+                        OrderModel.status.in_([100, 300, 400, 500, 600])
+                        )\
+                .all()
+
+    @classmethod
+    def get_today_checkin_orders(cls, session, merchant_id):
+        today = datetime.date.today()
+        tomorrow = today + datetime.timedelta(days=1)
+        return session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id,
+                        OrderModel.checkin_date >= today,
+                        OrderModel.checkin_date < tomorrow,
+                        OrderModel.status.in_([100, 300, 400, 500, 600])
+                        )\
+                .all()
 
     def confirm_by_user(self, session):
         self.status = 300

@@ -5,8 +5,9 @@ from views.base import BtwBaseHandler
 from tools.auth import auth_login
 from tools.request_tools import get_and_valid_arguments
 
-class HotelCoopedHandler(BtwBaseHandler):
+class OrderListHandler(BtwBaseHandler):
 
     @auth_login(json=True)
     def get(self):
-        self.render("hotelCoop.html")
+        self.render("orderList.html")
+
