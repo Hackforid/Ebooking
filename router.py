@@ -7,6 +7,7 @@ from views.hotel_cooped import HotelCoopedHandler
 from views.hotel_inventory import HotelInventoryHandler
 from views.rateplan import RatePlanHandler
 from views.order import OrderWaitingHandler
+from views.order_list import OrderListHandler
 from views.api.city import CityAPIHandler
 from views.api.hotel_will_coop import HotelWillCoopAPIHandler
 from views.api.hotel_coop import HotelCoopAPIHandler
@@ -17,10 +18,10 @@ from views.api.password import PasswordAPIHandler
 from views.api.hotel import HotelAPIHandler
 from views.api.roomtype_cooped import RoomTypeCoopedAPIHandler, RoomTypeCoopedModifyAPIHandler
 from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
-from views.api.submit_order import SubmitOrderAPIHandler
+from views.api.submit_order import SubmitOrderAPIHandler, CancelOrderAPIHander
 from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler
-from views.api.order import OrderWaitingAPIHandler, OrderOperateAPIHandler
+from views.api.order import OrderWaitingAPIHandler, OrderOperateAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler
 
 handlers = [
         (r"/login/?", LoginHandler),
@@ -49,10 +50,15 @@ handlers = [
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/inventory/?", InventoryAPIHandler),
 
-        (r"/api/hotel/submitorder/?", SubmitOrderAPIHandler),
+        (r"/api/server/order/submit?", SubmitOrderAPIHandler),
+        (r"/api/server/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
 
 
         (r"/order/waiting/?", OrderWaitingHandler),
         (r"/api/order/waiting/?", OrderWaitingAPIHandler),
         (r"/api/order/(?P<order_id>\d+)/operate/?", OrderOperateAPIHandler),
+
+        (r"/order/list/?", OrderListHandler),
+        (r"/api/order/todaybook/?", OrderTodayBookListAPIHandler),
+        (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
 ]

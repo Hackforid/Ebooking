@@ -4,6 +4,7 @@ from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
 from tools.auth import auth_login
+from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
@@ -55,9 +56,13 @@ class OrderOperateAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def delete(self, order_id):
         merchant_id = self.current_user.merchant_id
+        args = self.get_json_arguments()
+        reason, = get_and_valid_arguments(args, 'reason')
+        if not reason:
+            raise JsonException(200, 'invalid reason')
 
         task = yield gen.Task(CancelOrder.cancel_order_by_user.apply_async,
-                args=[merchant_id, order_id])
+                args=[merchant_id, order_id, reason])
         if task.status == 'SUCCESS':
             self.finish_json(result=dict(
                 order=task.result.todict(),
@@ -67,3 +72,39 @@ class OrderOperateAPIHandler(BtwBaseHandler):
                 raise JsonException(1000, task.result.errmsg)
             else:
                 raise JsonException(1000, 'network error')
+
+class OrderTodayBookListAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def get(self):
+        merchant_id = self.current_user.merchant_id
+        
+        task = yield gen.Task(Order.get_today_book_orders.apply_async,
+                args=[merchant_id])
+        print task.result
+        if task.status == 'SUCCESS':
+            self.finish_json(result={
+                'orders': [order.todict() for order in task.result] if task.result
+                                            else [],
+                })
+        else:
+            raise JsonException(errcode=1000, errmsg="wrong")
+
+class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def get(self):
+        merchant_id = self.current_user.merchant_id
+        
+        task = yield gen.Task(Order.get_today_checkin_orders.apply_async,
+                args=[merchant_id])
+        print task.result
+        if task.status == 'SUCCESS':
+            self.finish_json(result={
+                'orders': [order.todict() for order in task.result] if task.result
+                                            else [],
+                })
+        else:
+            raise JsonException(errcode=1000, errmsg="wrong")

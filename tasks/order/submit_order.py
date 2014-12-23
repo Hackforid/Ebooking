@@ -31,38 +31,39 @@ def confirm_order_by_user(self, merchant_id, order_id):
 
 
 
-@app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
-def deal_order(self, order):
-    print '==' * 20
-    print order
+@app.task(base=SqlAlchemyTask, bind=True)
+def submit_order(self, order_json):
+    print order_json
     session = self.session
-    submit_order = SubmitOrder(order)
+    submit_order = SubmitOrder(order_json)
     print submit_order
 
     if not valid_arguments(submit_order):
-        pass
+        raise CeleryException(200, 'invalid_arguments')
 
     rate_plan = get_rateplan(session, submit_order)
     if not rate_plan:
-        print 'no rate plan'
-        return
+        raise CeleryException(300, 'no rate plan')
 
     submit_order.merchant_id = rate_plan.merchant_id
     order = create_order(session, submit_order)
     if not order:
-        print 'create order fail'
-        return
+        raise CeleryException(session, 'create order fail')
 
     if not valid_inventory(session, submit_order):
-        # callback inventory fail
         print 'more room please'
         order.status = 200
         session.commit()
-        return
+        return order
 
 
     # second valid in spec queue
-    start_order.apply_async(args=[order.id])
+    task = start_order.apply_async(args=[order.id])
+    result = task.get()
+    if task.status == 'SUCCESS':
+        return result
+    else:
+        raise result
 
 
 def get_stay_days(start_date, end_date):
@@ -83,7 +84,7 @@ def get_stay_days(start_date, end_date):
 
 
 def valid_arguments(order):
-    pass
+    return True
 
 def combin_year_month(year, month):
     return int("{}{:0>2d}".format(year, month))
