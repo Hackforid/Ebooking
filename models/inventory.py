@@ -18,8 +18,8 @@ class InventoryModel(Base):
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
-    cooperate_hotel_id = Column("cooperateHotelId", INTEGER, nullable=False, default=0)
-    cooperate_roomtype_id = Column("cooperateRoomTypeId", INTEGER, nullable=False, default=0)
+    base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
+    base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     month = Column(INTEGER, nullable=False, default=0)
     day1 = Column(VARCHAR(50), nullable=False, default="0|0")
     day2 = Column(VARCHAR(50), nullable=False, default="0|0")
@@ -244,8 +244,8 @@ class InventoryModel(Base):
                 merchant_id=self.merchant_id,
                 hotel_id=self.hotel_id,
                 roomtype_id=self.roomtype_id,
-                cooperate_hotel_id=self.cooperate_hotel_id,
-                cooperate_roomtype_id=self.cooperate_roomtype_id,
+                base_hotel_id=self.base_hotel_id,
+                base_roomtype_id=self.base_roomtype_id,
                 month=self.month,
                 day1=self.day1,
                 day2=self.day2,
