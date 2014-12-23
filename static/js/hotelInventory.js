@@ -40,8 +40,8 @@
 		this.punishType = 0;
 		this.errmsg = '';
 
-		this.prefixName="";
-		this.remarkName="";
+		this.prefixName = "";
+		this.remarkName = "";
 
 
 		this.eachhide = function(index) {
@@ -64,11 +64,12 @@
 
 
 			var params = {
-				"prefix_name":$("#prefixId-"+index).val(),
-				"remark_name":$("#remarkId-"+index).val()
+				"prefix_name": $("#prefixId-" + index).val(),
+				"remark_name": $("#remarkId-" + index).val()
 			}
 
-			console.log(url);console.log(params);
+			console.log(url);
+			console.log(params);
 			http.put(url, params)
 				.success(function(resp) {
 					console.log(resp);
@@ -118,7 +119,7 @@
 				"price_type": parseInt(scope.currentPriceType)
 
 			}
-			
+
 			console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
@@ -128,7 +129,7 @@
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
-						
+
 						scope.dateCheck(scope.monthvalue);
 
 					} else {
@@ -164,7 +165,7 @@
 
 			}
 			console.log(params);
-			
+
 			console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
@@ -246,7 +247,7 @@
 		$scope.selecableMonths = [1, 2, 3];
 		$scope.monthvalue = 1;
 
-$scope.testone;
+		$scope.testone;
 		$scope.months = {};
 		$scope.roomNum = [];
 		$scope.roomNumAuto = [];
@@ -328,7 +329,25 @@ $scope.testone;
 					console.log(resp);
 					if (resp.errcode == 0) {
 						// Todo loading anime
-						loadHotelMsg(hotelId);
+
+						for (var i = 0; i < shouldCooped.length; i++) {
+
+							//$scope.cooped.push(resp.result.cooped_roomtypes[i]);
+							$scope.cooped.push($scope.cooped[0]);
+						};
+
+						console.log($scope.cooped);
+
+						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
+						//$scope.cooped[5]=$scope.cooped[0];
+
+						console.log($scope.cooped);
+
+
+						$scope.dayWeekSum = [];
+						$scope.dateCheck($scope.monthvalue);
+
+
 					} else {
 						console.log(resp.errmsg);
 					}
@@ -348,7 +367,7 @@ $scope.testone;
 					return;
 				}
 				$scope.roomNum = [];
-				
+
 				loadHotelMsg(hotelId);
 			});
 		}
@@ -364,6 +383,9 @@ $scope.testone;
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;
 						$scope.cooped = resp.result.cooped_roomtypes;
+
+
+						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
 
 
 						$scope.dayWeekSum = [];
@@ -477,10 +499,11 @@ $scope.testone;
 
 
 			/*赋值部分*/
+			$scope.roomNum = [];
 			for (var i = 0; i < $scope.cooped.length; i++) {
 				$scope.roomNum.push($scope.cooped[i].inventory);
 			};
-			$scope.roomNum[1] = $scope.cooped[0].inventory;
+			//$scope.roomNum[1] = $scope.cooped[0].inventory;
 			console.log($scope.roomNum);
 			/*赋值部分*/
 

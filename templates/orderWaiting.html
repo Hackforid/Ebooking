@@ -38,21 +38,26 @@
 
 
                         <!--单个订单-->
-                        <div class="room-main">
+                        <div class="room-main" ng-repeat="order in orderList">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
                                 <tr>
-                                    <td width="10%">987898</td>
-                                    <td width="15%">七天连锁酒店（北京朝阳店）</td>
-                                    <td width="10%">双人大床房<br />1间</td>    
-                                    <td width="15%">2014-09-28至<br />
-                                        2014-09-30（2晚）</td>
-                                    <td width="10%" class="po"><em class="price">380元</em> </td>
-                                    <td width="10%">2014-09-28<br />
-                                         18：00</td>    
-                                    <td width="10%">刘小</td>
+                               <!--  <td>{{orderList | json}}</td>-->
+                                    <td width="10%"  style="text-decoration: underline;position:relative"><em id={{"orderConfimId-"+$index}} ng-mouseover=detailDivIn($index); ng-mouseleave=detailDivOut($index); >987898</em></td>
+                                    <td width="15%">{{order.hotel_name}}</td>
+                                    <td width="10%">{{order.room_type_name}}<br />{{order.room_num}}间</td>    
+                                    <td width="15%">{{order.checkin_date}}至<br />
+                                        {{order.checkout_date}}（2晚）</td>
+                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price">{{order.everyday_price}}元</em> </td>
+                                    <td width="10%">{{order["create_time"][0]}}<br />
+                                         {{order["create_time"][1]}}</td>    
+                                    <td width="10%">
+
+                                    <div ng-repeat="cum in order['customer_info']">{{cum["name"]}}<div>
+                                                                     
+                                    </td>
 
                                     <td class="action" width="15%">
-                                        <input name="" type="button" value="接受" class="btn-s btn-orange btn-yes"  />
+                                        <input name="" type="button" value="接受" ng-click=acceptOrder(); class="btn-s btn-orange btn-yes"  />
                                         <input name="" type="button" value="拒绝" class="btn-s btn-no"   />
 
                                     </td>
@@ -62,106 +67,8 @@
                         </div>  
                         <!--单个订单end-->
 
-                        <!--单个订单-->
-                        <div class="room-main">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
-                                <tr>
-                                    <td width="10%">987898</td>
-                                    <td width="15%">七天连锁酒店（北京朝阳店）</td>
-                                    <td width="10%">双人大床房<br />1间</td>    
-                                    <td width="15%">2014-09-28至<br />
-                                        2014-09-30（2晚）</td>
-                                    <td width="10%" class="po"><em class="price">380元</em> </td>
-                                    <td width="10%">2014-09-28<br />
-                                         18：00</td>    
-                                    <td width="10%">刘小</td>
-
-                                    <td class="action" width="15%">
-                                        <input name="" type="button" value="接受" class="btn-s btn-orange btn-yes"  />
-                                        <input name="" type="button" value="拒绝" class="btn-s btn-no"   />
-
-                                    </td>
-                                    <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-                            </table>
-                        </div>  
-                        <!--单个订单end-->
-
-                        <!--单个订单-->
-                        <div class="room-main">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
-                                <tr>
-                                    <td width="10%">987898</td>
-                                    <td width="15%">七天连锁酒店（北京朝阳店）</td>
-                                    <td width="10%">双人大床房<br />1间</td>    
-                                    <td width="15%">2014-09-28至<br />
-                                        2014-09-30（2晚）</td>
-                                    <td width="10%" class="po"><em class="price">380元</em> </td>
-                                    <td width="10%">2014-09-28<br />
-                                         18：00</td>    
-                                    <td width="10%">刘小</td>
-
-                                    <td class="action" width="15%">
-                                        <input name="" type="button" value="接受" class="btn-s btn-orange btn-yes"  />
-                                        <input name="" type="button" value="拒绝" class="btn-s btn-no"   />
-
-                                    </td>
-                                    <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-                            </table>
-                        </div>  
-                        <!--单个订单end-->
-
-                        <!--单个订单-->
-                        <div class="room-main">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
-                                <tr>
-                                    <td width="10%">987898</td>
-                                    <td width="15%">七天连锁酒店（北京朝阳店）</td>
-                                    <td width="10%">双人大床房<br />1间</td>    
-                                    <td width="15%">2014-09-28至<br />
-                                        2014-09-30（2晚）</td>
-                                    <td width="10%" class="po"><em class="price">380元</em> </td>
-                                    <td width="10%">2014-09-28<br />
-                                         18：00</td>    
-                                    <td width="10%">刘小</td>
-
-                                    <td class="action" width="15%">
-                                        <input name="" type="button" value="接受" class="btn-s btn-orange btn-yes"  />
-                                        <input name="" type="button" value="拒绝" class="btn-s btn-no"   />
-
-                                    </td>
-                                    <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-                            </table>
-                        </div>  
-                        <!--单个订单end-->
-
-                        <!--单个订单-->
-                        <div class="room-main">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
-                                <tr>
-                                    <td width="10%">987898</td>
-                                    <td width="15%">七天连锁酒店（北京朝阳店）</td>
-                                    <td width="10%">双人大床房<br />1间</td>    
-                                    <td width="15%">2014-09-28至<br />
-                                        2014-09-30（2晚）</td>
-                                    <td width="10%" class="po"><em class="price">380元</em> </td>
-                                    <td width="10%">2014-09-28<br />
-                                         18：00</td>    
-                                    <td width="10%">刘小</td>
-
-                                    <td class="action" width="15%">
-                                        <input name="" type="button" value="接受" class="btn-s btn-orange btn-yes"  />
-                                        <input name="" type="button" value="拒绝" class="btn-s btn-no"   />
-
-                                    </td>
-                                    <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-                            </table>
-                        </div>  
-                        <!--单个订单end-->
-
+                        
+                                                                  
                         <!--页码-->
                         <div class="page">
                             <span class="disabled"> &lt;  上一页</span>
@@ -195,6 +102,7 @@
 
 
 
+
 </div>
 <!--右侧部分end--> 
 </div>
@@ -203,4 +111,18 @@
 
 <%def name="end()">
 <script src="${static_url('js/orderWaiting.js')}"></script>
+<style>
+.classone{
+   width:40%;line-height:20px;
+}
+.classtwo{
+   width:60%;line-height:20px;position:absolute;left:150px;
+}
+.classthree{width:300px;float:left; position:absolute;top:55px;left:50px;padding:8px 10px;height:auto; z-index:999; background:#FFF;border:1px solid #E3E3E3; 
+text-align:left; line-height:180%; color:#666; 
+-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;}
+
+
+
+</style>
 </%def>
