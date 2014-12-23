@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import traceback
 
 from tornado.util import ObjectDict 
 
@@ -60,7 +61,7 @@ class CooperateRoomTypeModel(Base):
         return session.query(CooperateRoomTypeModel)\
                 .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
                 .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
-                .filter(CooperateRoomTypeModel.roomtype_id == roomtype_id)\
+                .filter(CooperateRoomTypeModel.base_roomtype_id == roomtype_id)\
                 .filter(CooperateRoomTypeModel.is_delete == 0)\
                 .first()
 
@@ -79,12 +80,13 @@ class CooperateRoomTypeModel(Base):
         try:
 
             for roomtype_id in base_roomtype_ids:
-                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, base_hotel_id=base_hotel_id)
+                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, base_roomtype_id=roomtype_id, base_hotel_id=base_hotel_id)
                 coops.append(coop)
 
             session.add_all(coops)
             session.commit()
         except:
+            print traceback.format_exc()
             session.rollback()
             return
         return coops
@@ -93,9 +95,9 @@ class CooperateRoomTypeModel(Base):
         return ObjectDict(
                 id = self.id,
                 merchant_id = self.merchant_id,
-                cooperate_hotel_id=self.cooperate_hotel_id,
+                base_hotel_id=self.base_hotel_id,
                 hotel_id = self.hotel_id,
-                roomtype_id = self.roomtype_id,
+                base_roomtype_id = self.base_roomtype_id,
                 is_online = self.is_online,
                 prefix_name = self.prefix_name,
                 remark_name = self.remark_name,
