@@ -30,11 +30,11 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
         raise CeleryException(1000, 'room has cooped')
 
     coops = CooperateRoomTypeModel.new_roomtype_coops(task_self.session,
-            merchant_id, hotel_id, roomtype_ids)
+            merchant_id, hotel.id,  hotel_id, roomtype_ids)
 
     for coop in coops:
         InventoryModel.insert_in_four_month(task_self.session,
-                merchant_id, hotel_id, coop.roomtype_id)
+                merchant_id, coop.id, hotel_id, coop.roomtype_id)
 
     return coops
 
@@ -62,3 +62,23 @@ def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, prefix_name
     self.session.commit()
 
     return coop
+
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def check_inventories(self):
+    cooped_rooms = CooperateRoomTypeModel.get_all(self.session)
+    cooped_room_ids = [room.id for room in cooped_rooms]
+
+
+    #dates = InventoryModel.get_months(4)
+    #months = [InventoryModel.combin_year_month(date[0], date[1]) for date in dates]
+    #inventories = InventoryModel.get_by_room_ids_and_months(session, cooped_room_ids, months)
+    #need_complete_roomtype_ids = []
+    #for room in cooped_rooms:
+        #for month in months:
+            #for inventory in inventories:
+                #if inventory.roomtype_id == room.roomtype_id and inventory.hotel_id = room.hotel_id and ivnentory.merchant_id Periodic Task and inventory.month == month:
+                    #break
+            #else:
+                #need_complete_roomtype_ids.append(roomtype_id)
+

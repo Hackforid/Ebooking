@@ -7,6 +7,7 @@ from tools.auth import auth_login
 from views.base import BtwBaseHandler
 import tasks.models.cooperate_hotel as CooperateHotel
 from exception.json_exception import JsonException
+from exception.celery_exception import CeleryException
 
 class HotelCoopAPIHandler(BtwBaseHandler):
 
@@ -14,20 +15,17 @@ class HotelCoopAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def post(self, hotel_id):
         merchant_id = self.current_user.merchant_id
-        coop_task = yield gen.Task(CooperateHotel.get_by_merchant_id_and_hotel_id.apply_async, args=[merchant_id, hotel_id])
-        coop = coop_task.result
-        print '==' * 20
-        print coop
-
-        if coop:
-            raise JsonException(1000, "已经合作")
+        coop_task = yield gen.Task(CooperateHotel.new_hotel_cooprate.apply_async, args=[merchant_id, hotel_id])
+        if coop_task.status == 'SUCCESS':
+            self.finish_json(result=dict(
+                hotel_cooprate=coop_task.result.todict(),
+                ))
         else:
-            coop_task = yield gen.Task(CooperateHotel.new_hotel_cooprate.apply_async, args=[merchant_id, hotel_id])
-            coop = coop_task.result
+            if isinstance(coop_task.result, CeleryException):
+                raise JsonException(errcode=1000, errmsg=coop_task.result.errmsg)
+            else:
+                raise JsonException(errcode=2000, errmsg='server error')
 
-        self.finish_json(result=dict(
-            hotel_cooprate=coop.todict(),
-            ))
 
 
 

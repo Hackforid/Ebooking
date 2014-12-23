@@ -35,18 +35,18 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, star):
-        cooped_hotel_ids = yield self.get_cooped_hotel_ids(merchant_id)
-        hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_hotel_ids, start, limit)
-        if hotels is not None and total is not None:
-            raise gen.Return((hotels, total))
+        cooped_base_hotel_ids = yield self.get_cooped_base_hotel_ids(merchant_id)
+        base_hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_base_hotel_ids, start, limit)
+        if base_hotels is not None and total is not None:
+            raise gen.Return((base_hotels, total))
         else:
             raise gen.Return((None, None))
 
     @gen.coroutine
-    def get_cooped_hotel_ids(self, merchant_id):
+    def get_cooped_base_hotel_ids(self, merchant_id):
         cooped_hotels_task = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
         cooped_hotels = cooped_hotels_task.result
-        raise gen.Return([hotel.hotel_id for hotel in cooped_hotels])
+        raise gen.Return([] if not cooped_hotels else [hotel.base_hotel_id for hotel in cooped_hotels])
 
     @gen.coroutine
     def fetch_hotels(self, name, city_id, star, filter_ids, start, limit):

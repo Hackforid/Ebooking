@@ -18,6 +18,8 @@ class InventoryModel(Base):
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    cooperate_hotel_id = Column("cooperateHotelId", INTEGER, nullable=False, default=0)
+    cooperate_roomtype_id = Column("cooperateRoomTypeId", INTEGER, nullable=False, default=0)
     month = Column(INTEGER, nullable=False, default=0)
     day1 = Column(VARCHAR(50), nullable=False, default="0|0")
     day2 = Column(VARCHAR(50), nullable=False, default="0|0")
@@ -123,23 +125,49 @@ class InventoryModel(Base):
         session.commit()
 
     @classmethod
-    def insert_in_four_month(cls, session, merchant_id, hotel_id, roomtype_id):
+    def insert_in_four_month(cls, session, merchant_id, cooperate_hotel_id, hotel_id, roomtype_id):
         inventories = []
-        dates= cls._get_months(4)
+        dates= cls.get_months(4)
         for date in dates:
             inventory = cls.get_by_merchant_hotel_roomtype_date(session, merchant_id, hotel_id, roomtype_id, date[0], date[1])
             if inventory:
                 continue
             else:
                 _month = InventoryModel.combin_year_month(date[0], date[1])
-                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month)
+                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, cooperate_hotel_id=cooperate_hotel_id)
                 inventories.append(inventory)
         session.add_all(inventories)
         session.commit()
         return inventories
 
+
     @classmethod
-    def _get_months(cls, n):
+    def get_by_room_ids_and_months(cls, session, roomtype_ids, months):
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.roomtype_id.in_(roomtype_ids))\
+                .filter(InventoryModel.month.in_(months))\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
+
+    @classmethod
+    def complete_in_four_months(cls, session, roomtype_ids):
+        dates = cls.get_months(4)
+        months = [cls.combin_year_month(date[0], date[1]) for date in dates]
+        inventories = cls.get_by_room_ids_and_months(session, roomtype_ids, months)
+        need_complete_roomtype_ids = []
+        for roomtype_id in roomtype_ids:
+            for month in months:
+                for inventory in inventories:
+                    if inventory.roomtype_id == roomtype_id and inventory.month == month:
+                        break
+                else:
+                    need_complete_roomtype_ids.append(roomtype_id)
+
+
+
+
+    @classmethod
+    def get_months(cls, n):
         today = datetime.date.today()
         year, month = today.year, today.month
 
@@ -216,6 +244,8 @@ class InventoryModel(Base):
                 merchant_id=self.merchant_id,
                 hotel_id=self.hotel_id,
                 roomtype_id=self.roomtype_id,
+                cooperate_hotel_id=self.cooperate_hotel_id,
+                cooperate_roomtype_id=self.cooperate_roomtype_id,
                 month=self.month,
                 day1=self.day1,
                 day2=self.day2,
