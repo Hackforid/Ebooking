@@ -50,6 +50,16 @@ class CooperateRoomTypeModel(Base):
                 .first()
 
     @classmethod
+    def get_by_merchant_hotel_rooms_id(cls, session, merchant_id, hotel_id, roomtype_ids):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
+                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
+                .filter(CooperateRoomTypeModel.roomtype_id.in_(roomtype_ids))\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
+
+
+    @classmethod
     def new_roomtype_coops(cls, session, merchant_id, hotel_id, roomtype_ids):
         coops = []
         try:
@@ -63,12 +73,6 @@ class CooperateRoomTypeModel(Base):
         except:
             session.rollback()
             return
-
-        from models.inventory import InventoryModel
-        toyear = datetime.date.today().year
-        for roomtype_id in roomtype_ids:
-            InventoryModel.insert_by_year(session, merchant_id, hotel_id, roomtype_id, toyear)
-
         return coops
 
     def todict(self):

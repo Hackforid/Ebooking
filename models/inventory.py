@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from tornado.util import ObjectDict
 
 from tasks.models import Base
@@ -119,6 +121,42 @@ class InventoryModel(Base):
                 inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month)
                 session.add(inventory)
         session.commit()
+
+    @classmethod
+    def insert_in_four_month(cls, session, merchant_id, hotel_id, roomtype_id):
+        inventories = []
+        dates= cls._get_months(4)
+        for date in dates:
+            inventory = cls.get_by_merchant_hotel_roomtype_date(session, merchant_id, hotel_id, roomtype_id, date[0], date[1])
+            if inventory:
+                continue
+            else:
+                _month = InventoryModel.combin_year_month(date[0], date[1])
+                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month)
+                inventories.append(inventory)
+        session.add_all(inventories)
+        session.commit()
+        return inventories
+
+    @classmethod
+    def _get_months(cls, n):
+        today = datetime.date.today()
+        year, month = today.year, today.month
+
+        dates = []
+
+        _year = year
+        for i in range(n):
+            _month = month + i
+            if _month > 12:
+                _month = _month - 12
+                _year = _year + 1
+            dates.append((_year, _month))
+
+        return dates
+
+
+
 
     @classmethod
     def update(cls, session, merchant_id, hotel_id, roomtype_id, year, month, day, price_type, val):
