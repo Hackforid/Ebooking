@@ -125,7 +125,7 @@ class InventoryModel(Base):
         session.commit()
 
     @classmethod
-    def insert_in_four_month(cls, session, merchant_id, cooperate_hotel_id, hotel_id, roomtype_id):
+    def insert_in_four_month(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id):
         inventories = []
         dates= cls.get_months(4)
         for date in dates:
@@ -134,7 +134,7 @@ class InventoryModel(Base):
                 continue
             else:
                 _month = InventoryModel.combin_year_month(date[0], date[1])
-                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, cooperate_hotel_id=cooperate_hotel_id)
+                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
                 inventories.append(inventory)
         session.add_all(inventories)
         session.commit()
