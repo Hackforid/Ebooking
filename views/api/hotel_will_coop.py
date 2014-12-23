@@ -46,7 +46,7 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
     def get_cooped_hotel_ids(self, merchant_id):
         cooped_hotels_task = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
         cooped_hotels = cooped_hotels_task.result
-        raise gen.Return([hotel.hotel_id for hotel in cooped_hotels])
+        raise gen.Return([] if not cooped_hotels else [hotel.hotel_id for hotel in cooped_hotels])
 
     @gen.coroutine
     def fetch_hotels(self, name, city_id, star, filter_ids, start, limit):
