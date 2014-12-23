@@ -16,8 +16,6 @@ class SqlAlchemyTask(celery.Task):
 
     def on_failure(self, *args, **kwargs):
         print 'on_failure'
-        db_session.rollback()
-
 
     @property
     def session(self):

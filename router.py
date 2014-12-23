@@ -17,7 +17,7 @@ from views.api.password import PasswordAPIHandler
 from views.api.hotel import HotelAPIHandler
 from views.api.roomtype_cooped import RoomTypeCoopedAPIHandler, RoomTypeCoopedModifyAPIHandler
 from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
-from views.api.submit_order import SubmitOrderAPIHandler
+from views.api.submit_order import SubmitOrderAPIHandler, CancelOrderAPIHander
 from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler
 from views.api.order import OrderWaitingAPIHandler, OrderOperateAPIHandler
@@ -49,7 +49,8 @@ handlers = [
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/inventory/?", InventoryAPIHandler),
 
-        (r"/api/hotel/submitorder/?", SubmitOrderAPIHandler),
+        (r"/api/hotel/order/subbmit?", SubmitOrderAPIHandler),
+        (r"/api/hotel/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
 
 
         (r"/order/waiting/?", OrderWaitingHandler),
