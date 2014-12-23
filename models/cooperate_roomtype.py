@@ -18,9 +18,9 @@ class CooperateRoomTypeModel(Base):
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
-    cooperate_hotel_id = Column("cooperateHotelId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
-    roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
+    base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=0)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
     prefix_name = Column('prefixName', VARCHAR(100))
@@ -41,6 +41,13 @@ class CooperateRoomTypeModel(Base):
                 .first()
 
     @classmethod
+    def get_by_hotel_id(cls, session, hotel_id):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
+
+    @classmethod
     def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):
         return session.query(CooperateRoomTypeModel)\
                 .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
@@ -58,21 +65,21 @@ class CooperateRoomTypeModel(Base):
                 .first()
 
     @classmethod
-    def get_by_merchant_hotel_rooms_id(cls, session, merchant_id, hotel_id, roomtype_ids):
+    def get_by_merchant_hotel_base_rooms_id(cls, session, merchant_id, hotel_id, base_roomtype_ids):
         return session.query(CooperateRoomTypeModel)\
                 .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
                 .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
-                .filter(CooperateRoomTypeModel.roomtype_id.in_(roomtype_ids))\
+                .filter(CooperateRoomTypeModel.base_roomtype_id.in_(base_roomtype_ids))\
                 .filter(CooperateRoomTypeModel.is_delete == 0)\
                 .all()
 
     @classmethod
-    def new_roomtype_coops(cls, session, merchant_id, cooperate_hotel_id, hotel_id, roomtype_ids):
+    def new_roomtype_coops(cls, session, merchant_id, hotel_id, base_hotel_id, base_roomtype_ids):
         coops = []
         try:
 
-            for roomtype_id in roomtype_ids:
-                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, cooperate_hotel_id=cooperate_hotel_id)
+            for roomtype_id in base_roomtype_ids:
+                coop = CooperateRoomTypeModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, base_hotel_id=base_hotel_id)
                 coops.append(coop)
 
             session.add_all(coops)
