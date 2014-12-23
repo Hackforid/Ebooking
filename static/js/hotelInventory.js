@@ -74,7 +74,7 @@
 		this.save = function(index) {
 			console.log(scope.cooped);
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.cooped[index]["id"] + '/cooped/';
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.cooped[index]["cooped_roomtype_id"] + '/cooped/';
 
 
 			var params = {
@@ -361,8 +361,8 @@ $("body").append(roomDes);  */
 			var url = "/api/hotel/" + hotelId + "/roomtype/";
 			console.log(url);
 			$http.post(url, {
-				'year':$scope.months[$scope.monthvalue-1].year,
-				'month':$scope.months[$scope.monthvalue-1].month,
+				//'year':$scope.months[$scope.monthvalue-1].year,
+				//'month':$scope.months[$scope.monthvalue-1].month,
 				'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
