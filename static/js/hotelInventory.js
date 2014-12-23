@@ -274,7 +274,6 @@
 		$scope.currentPriceType;
 		$scope.currentId;
 		$scope.desResult=false;
-		$scope.currentDescribe;
 		/*$scope.prefixName;
 		$scope.remarkName;
 		
@@ -291,7 +290,6 @@
 
 
 			$scope.desResult=true;
-				$scope.currentDescribe=;
 
 
 
@@ -307,8 +305,6 @@ $("body").append(roomDes);  */
 		}
 
 		$scope.roomDescribeClose=function roomDescribeClose(){
-
-
 			$scope.desResult=false;
 
 		}
@@ -362,9 +358,12 @@ $("body").append(roomDes);  */
 				}
 			}
 
-			var url = "/api/hotel/" + hotelId + "/roomtype/?m=" + $scope.monthvalue;
+			var url = "/api/hotel/" + hotelId + "/roomtype/";
+			console.log(url);
 			$http.post(url, {
-					'roomtype_ids': shouldCooped
+				'year':$scope.months[$scope.monthvalue-1].year,
+				'month':$scope.months[$scope.monthvalue-1].month,
+				'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
 					console.log(resp);
@@ -403,6 +402,9 @@ $("body").append(roomDes);  */
 
 
 		function initMonthWatch() {
+
+			console.log("watch");
+
 			$scope.$watch('monthvalue', function() {
 				if ($scope.monthvalue == undefined) {
 					return;
@@ -415,7 +417,7 @@ $("body").append(roomDes);  */
 
 
 		function loadHotelMsg(hotel_id) {
-			var url = "/api/hotel/" + hotel_id + "/roomtype/?m=" + $scope.monthvalue;
+			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue-1].year+"&month="+$scope.months[$scope.monthvalue-1].month;   
 			console.log(url);
 			$http.get(url)
 				.success(function(resp) {
@@ -464,6 +466,9 @@ $("body").append(roomDes);  */
 		function init() {
 			//computeSelecableDate();
 			monthCheck();
+			console.log("months");
+
+			console.log($scope.months);
 
 			initMonthWatch();
 		}
