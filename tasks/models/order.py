@@ -9,6 +9,15 @@ from models.order import OrderModel
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_waiting_orders(self, merchant_id):
     orders = OrderModel.get_waiting_orders(self.session, merchant_id)
-    print orders
     return orders
 
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def get_today_book_orders(self, merchant_id):
+    orders = OrderModel.get_today_book_orders(self.session, merchant_id)
+    return orders
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def get_today_checkin_orders(self, merchant_id):
+    orders = OrderModel.get_today_checkin_orders(self.session, merchant_id)
+    return orders

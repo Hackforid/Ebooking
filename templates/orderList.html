@@ -1,0 +1,339 @@
+<%inherit file="base.html" />
+<%def name="right_content()">
+
+    <!--导航条--> 
+    <div class="notice" id="notice"><h2>订单查询</h2></div>
+    <!--导航条end-->  
+
+    <!--主体内容-->  
+    <div class="main"><div class="p15">
+
+
+
+            <!--订单查询开始-->  
+            <div class="main-osearch"><div class="content">
+
+                    <div class="tabList">
+                        <ul>
+                            <li><a href="#" onclick="easytabs('1', '1');" onfocus="easytabs('1', '1');" title="" id="tablink1" class="tabactive" >今日预订列表</a></li>
+                            <li><a href="#" onclick="easytabs('1', '2');" onfocus="easytabs('1', '2');" title="" id="tablink2">今日入住列表</a></li>
+                            <li><a href="#" onclick="easytabs('1', '3');" onfocus="easytabs('1', '3');" title="" id="tablink3">按条件查询</a></li>
+                        </ul>
+                    </div>
+
+
+                    <div class="tabCon">
+                        <div id="tabcontent1" class="tabcon1" style=" display:block">
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
+                                <thead><tr>
+                                        <th width="13%">订单确认号</th>
+                                        <th width="15%">酒店名称</th>
+                                        <th width="10%">房型</th>
+                                        <th width="15%">入离日期</th>
+                                        <th width="12%">预约时间</th>
+                                        <th width="8%">入住人</th>
+                                        <th width="7%">类型</th>
+                                        <th width="8%">总价</th>
+                                        <th width="5%">状态</th>
+                                        <th width="7%">打印</th>
+                                </tr></thead>
+                            </table>
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                            </table>
+
+                            <!--页码-->
+                            <div class="page">
+                                <span class="disabled"> &lt;  上一页</span>
+                                <span class="current">1</span>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                ...<a href="#">20</a>
+                                <a href="#">21</a>
+                                <a href="#">下一页  &gt; </a>
+                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
+                                        <option value="1">10</option>
+                                        <option value="2">20</option>
+                                        <option value="3">30</option>
+                                        <option value="4">40</option>
+                                </select></span>
+                            </div>
+                            <!--页码end-->               
+                        </div>
+
+                        <div id="tabcontent2" class="tabcon2" style=" display:none">
+                            　
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
+                                <thead><tr>
+                                        <th width="13%">订单确认号</th>
+                                        <th width="15%">酒店名称</th>
+                                        <th width="10%">房型</th>
+                                        <th width="15%">入离日期</th>
+                                        <th width="12%">预约时间</th>
+                                        <th width="8%">入住人</th>
+                                        <th width="7%">类型</th>
+                                        <th width="8%">总价</th>
+                                        <th width="5%">状态</th>
+                                        <th width="7%">打印</th>
+                                </tr></thead>
+                            </table>
+
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow2">
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+                            </table>
+
+                            <!--页码-->
+                            <div class="page">
+                                <span class="disabled"> &lt;  上一页</span>
+                                <span class="current">1</span>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                ...<a href="#">20</a>
+                                <a href="#">21</a>
+                                <a href="#">下一页  &gt; </a>
+                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
+                                        <option value="1">10</option>
+                                        <option value="2">20</option>
+                                        <option value="3">30</option>
+                                        <option value="4">40</option>
+                                </select></span>
+                            </div>
+                            <!--页码end-->                 
+                        </div>
+
+
+
+
+
+                        <div id="tabcontent3" class="tabcon3" style=" display:none">
+
+                            <div class="search-div">
+                                <div class="divone">
+                                    <label>订单确认号： <input name="" type="text" value="" class="input-t"/></label>
+                                    <label>酒店名称： <input name="" type="text" value="" class="input-t"/></label>
+
+
+                                    <label >入住日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
+                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    </label>
+
+                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input name="" type="text" value="" class="input-t"/></label>
+
+                                    <label>操作状态： <select name="" class="input-s"  >
+                                            <option value="0">不限</option>
+                                            <option value="1">接受</option>
+                                            <option value="2">拒绝</option>
+                                    </select></label>
+
+                                    <label >下单日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
+                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    </label>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="choose-div">
+                                <div class="left content">
+                                    <input name="" type="button" value="搜索" />
+                                    <input name="" type="button" value="重置"   class="btn-bai btn-s" /> 
+
+                                </div>
+                                <!-- <div class="btn-div right"> <input name="input" type="button" value="导出所选" class="btn-s btn-bai"  /></div>  -->
+                            </div>
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
+                                <thead><tr>
+                                        <th width="13%">订单确认号</th>
+                                        <th width="15%">酒店名称</th>
+                                        <th width="10%">房型</th>
+                                        <th width="15%">入离日期</th>
+                                        <th width="12%">预约时间</th>
+                                        <th width="8%">入住人</th>
+                                        <th width="7%">类型</th>
+                                        <th width="8%">总价</th>
+                                        <th width="5%">状态</th>
+                                        <th width="7%">打印</th>
+                                </tr></thead>
+                            </table>
+
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="13%">333333</td>
+                                    <td width="15%">七天连锁酒店（客村店）</td>
+                                    <td width="10%">双人大床房</td>
+                                    <td width="15%">2014-09-31至<br />
+                                        2014-10-02（2晚）</td>
+                                    <td width="12%">2014-09-28<br />
+                                         09：00</td>
+                                    <td width="8%">刘小</td>
+                                    <td width="7%">系统确认</td>
+                                    <td width="8%"><em class="price">380元</em></td>
+                                    <td width="5%">接受</td>
+                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                </tr>
+                            </table>
+
+
+
+                            <!--页码-->
+                            <div class="page">
+                                <span class="disabled"> &lt;  上一页</span>
+                                <span class="current">1</span>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                ...<a href="#">20</a>
+                                <a href="#">21</a>
+                                <a href="#">下一页  &gt; </a>
+                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
+                                        <option value="1">10</option>
+                                        <option value="2">20</option>
+                                        <option value="3">30</option>
+                                        <option value="4">40</option>
+                                </select></span>
+                            </div>
+                            <!--页码end-->                 
+
+                        </div>
+                    </div>
+
+
+
+
+            </div></div>
+            <!--订单查询结束-->  
+
+
+    </div></div>
+    <!--主体内容end--> 
+
+
+
+</%def>
+
+<%def name="end()">
+</%def>
