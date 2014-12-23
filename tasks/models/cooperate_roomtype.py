@@ -22,9 +22,11 @@ def get_by_merchant_id_and_hotel_id(task_self, merchant_id, hotel_id):
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
-    hotel = CooperateHotelModel.get_by_merchant_id_and_hotel_id(task_self.session, merchant_id, hotel_id)
+    hotel = CooperateHotelModel.get_by_id(task_self.session, hotel_id)
     if not hotel:
         raise CeleryException(1000, 'hotel not found')
+    if hotel.merchant_id != merchant_id:
+        raise CeleryException(2000, 'merchant not valid')
 
 
     coops = CooperateRoomTypeModel.get_by_merchant_hotel_base_rooms_id(task_self.session,
@@ -37,7 +39,7 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
 
     for coop in coops:
         InventoryModel.insert_in_four_month(task_self.session,
-                merchant_id, coop.id, hotel_id, coop.roomtype_id)
+                merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id)
 
     return coops
 

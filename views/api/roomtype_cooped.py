@@ -60,7 +60,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         if not task.result:
             raise gen.Return([])
         if task.status == 'SUCCESS':
-            if task.result.merchant_id == self.current_user.merchant_id:
+            if task.result[0].merchant_id == self.current_user.merchant_id:
                 raise gen.Return(task.result)
             else:
                 raise JsonException(errorcode=1000, errmsg='merchant not valid')
