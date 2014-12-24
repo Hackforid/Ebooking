@@ -40,7 +40,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 class CancelOrderAPIHander(BtwBaseHandler):
 
     @gen.coroutine
-    def delete(self, order_id):
+    def post(self, order_id):
        
         task = yield gen.Task(cancel_order_by_server.apply_async,
                 args=[order_id])
