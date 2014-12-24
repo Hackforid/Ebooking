@@ -52,7 +52,7 @@
 			this.errmsg = '';
 			console.log(this.name + this.mealType + this.punishType);
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/rateplan/';
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
 			console.log(url);
 			var params = {
 				'name': this.name,
@@ -106,7 +106,7 @@
 			this.errmsg = '';
 			//console.log(this.name + this.mealType + this.punishType);					
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/rateplan/' + scope.rateplans[index].id;
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/' + scope.rateplans[index].id;
 			console.log(url);
 			var params = {
 				"name": ($("#roomheadinput" + index).val()),

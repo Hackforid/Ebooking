@@ -55,7 +55,7 @@
 
 		$scope.acceptOrder = function() {
 			
-			var url = "/api/order/67/operate/";
+			var url = "/api/order/67/operate/";   //???
 
 			$http.post(url)
 				.success(function(resp) {
@@ -80,7 +80,7 @@
 
 			}
 			
-			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson;
+			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson; //???
 			
 			$http.delete(url)
 				.success(function(resp) {
