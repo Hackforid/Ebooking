@@ -18,6 +18,8 @@ class RoomRateModel(Base):
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
+    base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     rate_plan_id = Column("ratePlanId", INTEGER, nullable=False, default=0)
     month1 = Column(VARCHAR(500), nullable=False,
                     default='-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1')
@@ -86,9 +88,16 @@ class RoomRateModel(Base):
                 .first()
 
     @classmethod
-    def new_roomrate(cls, session, hotel_id, roomtype_id, rate_plan_id, meal_num, commit=True):
+    def get_by_rateplans(cls, session, rate_plan_ids):
+        return session.query(RoomRateModel)\
+                .filter(RoomRateModel.rate_plan_id.in_(rate_plan_ids))\
+                .filter(RoomRateModel.is_delete == 0)\
+                .all()
+
+    @classmethod
+    def new_roomrate(cls, session, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, rate_plan_id, meal_num, commit=True):
         room = RoomRateModel(hotel_id=hotel_id,
-                             roomtype_id=roomtype_id, rate_plan_id=rate_plan_id)
+                             roomtype_id=roomtype_id, rate_plan_id=rate_plan_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
         room.set_meal_num(meal_num)
         session.add(room)
         if commit:
@@ -169,6 +178,8 @@ class RoomRateModel(Base):
                 id=self.id,
                 hotel_id=self.hotel_id,
                 roomtype_id=self.roomtype_id,
+                base_hotel_id=self.base_hotel_id,
+                base_roomtype_id=self.base_roomtype_id,
                 rate_plan_id=self.rate_plan_id,
                 month1=self.month1,
                 month2=self.month2,

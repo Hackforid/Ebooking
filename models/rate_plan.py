@@ -19,6 +19,8 @@ class RatePlanModel(Base):
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
+    base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     name = Column(VARCHAR(20), nullable=False)
     pay_types = Column("payType", TINYINT(4), nullable=False, default=1)
     stay_days = Column("stayDays", TINYINT(4), nullable=False, default=1)
@@ -56,35 +58,22 @@ class RatePlanModel(Base):
 
 
     @classmethod
-    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type):
+    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type):
 
-        from models.room_rate import RoomRateModel
-        rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, name=name, punish_type=punish_type)
+        rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type)
         session.add(rateplan)
         session.commit()
-
-        roomrate = RoomRateModel.new_roomrate(session, hotel_id, roomtype_id, rateplan.id, meal_num)
-        return rateplan, roomrate
+        return rateplan
 
     @classmethod
     def get_by_room(cls, session, merchant_id, hotel_id, roomtype_id):
-        from models.room_rate import RoomRateModel
         rateplans = session.query(RatePlanModel)\
                 .filter(RatePlanModel.merchant_id == merchant_id,
-                        RatePlanModel.hotel_id == hotel_id,
-                        RatePlanModel.roomtype_id == roomtype_id)\
+                        RatePlanModel.roomtype_id == roomtype_id,
+                        RatePlanModel.hotel_id == hotel_id)\
                 .filter(RatePlanModel.is_delete == 0)\
                 .all()
-        if rateplans:
-            rateplan_ids = [rateplan.id for rateplan in rateplans]
-            roomrates = session.query(RoomRateModel)\
-                    .filter(RoomRateModel.rate_plan_id.in_(rateplan_ids))\
-                    .filter(RoomRateModel.is_delete == 0)\
-                    .all()
-
-            return rateplans, roomrates
-        else:
-            return None, None
+        return rateplans
 
     def todict(self):
         return ObjectDict(
@@ -92,6 +81,8 @@ class RatePlanModel(Base):
                 merchant_id=self.merchant_id,
                 hotel_id=self.hotel_id,
                 roomtype_id=self.roomtype_id,
+                base_hotel_id=self.base_hotel_id,
+                base_roomtype_id=self.base_roomtype_id,
                 name=self.name,
                 pay_types=self.pay_types,
                 stay_days=self.stay_days,
