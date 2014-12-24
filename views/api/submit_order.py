@@ -40,13 +40,12 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 class CancelOrderAPIHander(BtwBaseHandler):
 
     @gen.coroutine
-    def post(self, order_id):
+    def delete(self, order_id):
        
         task = yield gen.Task(cancel_order_by_server.apply_async,
                 args=[order_id])
 
         if task.status == 'SUCCESS':
-            order = task.result
             self.finish_json(result=dict(
                 order_id=task.result.id,
                 ))
