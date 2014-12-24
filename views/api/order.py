@@ -32,7 +32,7 @@ class OrderWaitingAPIHandler(BtwBaseHandler):
             raise JsonException(errcode=1000, errmsg="wrong")
 
 
-class OrderOperateAPIHandler(BtwBaseHandler):
+class OrderUserConfirmAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
@@ -51,10 +51,11 @@ class OrderOperateAPIHandler(BtwBaseHandler):
             else:
                 raise JsonException(1000, 'network error')
 
+class OrderUserCancelAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
-    def delete(self, order_id):
+    def post(self, order_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
         reason, = get_and_valid_arguments(args, 'reason')

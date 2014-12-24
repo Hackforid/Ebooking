@@ -7,5 +7,8 @@ Config = {
 
 API = {
     'POI': 'http://192.168.10.15:9000',
+    'STOCK': 'http://121.41.23.128:8080/stock2',
 }
 
+
+CHAIN_ID = 6
