@@ -46,7 +46,6 @@ class CancelOrderAPIHander(BtwBaseHandler):
                 args=[order_id])
 
         if task.status == 'SUCCESS':
-            order = task.result
             self.finish_json(result=dict(
                 order_id=task.result.id,
                 ))
