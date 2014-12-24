@@ -18,7 +18,7 @@ hotelWillCoopApp.controller('hotelWillCoopContentCtrl',
 
 
 
-$scope.aaa=function(){alert("rr");}
+
 
 
 function setPage(container, count, pageindex) {
@@ -102,16 +102,6 @@ var a = [];
     }
   } ()*/
 }
-
-
-
-
-
-
-
-
-
-
 
 
 	function page(){
@@ -200,8 +190,6 @@ var a = [];
 
 
 	}
-
-
 
 	$scope.cooprate = function(hotel) {
 
