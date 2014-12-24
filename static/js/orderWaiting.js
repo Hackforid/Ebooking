@@ -4,7 +4,7 @@
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 		
-		$scope.orderList = {};$scope.refuseReson="";
+		$scope.orderList = {};$scope.refuseReson="";$scope.currentIndex="";
 
 		$scope.priceDivIn = function(index) {
 
@@ -53,14 +53,19 @@
 
 		}
 
+				
 		$scope.acceptOrder = function() {
 			
-			var url = "/api/order/67/operate/";   //???
+			var url = "/api/order/"+$scope.orderList[$scope.currentIndex]["id"]+"/confirm/";   //???
+
+			console.log(url);
 
 			$http.post(url)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+
+						$scope.orderList.splice($scope.currentIndex,1);
 
 					} else {
 						alert(resp.errmsg);
@@ -80,12 +85,16 @@
 
 			}
 			
-			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson; //???
+			var url = "/api/order/"+$scope.orderList[$scope.currentIndex]["id"]+"/cancel/"; //???
+
+			console.log(url);console.log({"reason":$scope.refuseReson});
 			
-			$http.delete(url)
+			$http.post(url,{"reason":$scope.refuseReson})
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+
+						$scope.orderList.splice($scope.currentIndex,1);
 
 					} else {
 						alert(resp.errmsg);
@@ -98,9 +107,9 @@
 		}
 
 
-		$scope.showInfo1=function(){$("#infoDiv1").show();}
+		$scope.showInfo1=function(m){  $scope.currentIndex=m; $("#infoDiv1").show();}
 		$scope.hideInfo1=function(){$("#infoDiv1").hide();}
-		$scope.showInfo2=function(){$("#infoDiv2").show();}
+		$scope.showInfo2=function(m){$scope.currentIndex=m; $("#infoDiv2").show();}
 		$scope.hideInfo2=function(){$("#infoDiv2").hide();}
 
 
