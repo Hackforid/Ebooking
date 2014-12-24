@@ -1,6 +1,11 @@
 <%inherit file="base.html" />
 <%def name="right_content()">
 
+<div
+    ng-app="orderListApp"
+    ng-controller="orderListCtrl"
+    >
+
     <!--导航条--> 
     <div class="notice" id="notice"><h2>订单查询</h2></div>
     <!--导航条end-->  
@@ -41,80 +46,21 @@
                             </table>
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
+                                <tr ng-repeat="book in todayBook">
+                                    <td width="13%">订单确认号</td>
+                                        <td width="15%">{{book.hotel_name}}</td>
+                                        <td width="10%">{{book.room_type_name}}</td>
+                                        <td width="15%">{{book.checkin_date}}至<br />
+                                        {{book.checkout_date}}（2晚）</td>
+                                        <td width="12%">{{book["create_time"][0]}}<br />
+                                         {{book["create_time"][1]}}</td>
+                                        <td width="8%"> <div ng-repeat="cum in book['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="7%">类型</td>
+                                        <td width="8%"><em class="price">{{book.everyday_price}}</em></td>
+                                        <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
-
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
-
+                                                                                                                     
                             </table>
 
                             <!--页码-->
@@ -156,35 +102,22 @@
 
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow2">
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
+                                <tr ng-repeat="check in todayCheckIn">
+                                    <td width="13%">订单确认号</td>
+                                        <td width="15%">{{check.hotel_name}}</td>
+                                        <td width="10%">{{check.room_type_name}}</td>
+                                        <td width="15%">{{check.checkin_date}}至<br />
+                                        {{check.checkout_date}}（2晚）</td>
+                                        <td width="12%">{{check["create_time"][0]}}<br />
+                                         {{check["create_time"][1]}}</td>
+                                        <td width="8%"> <div ng-repeat="cum in check['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="7%">类型</td>
+                                        <td width="8%"><em class="price">{{check.everyday_price}}</em></td>
+                                        <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
 
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
+                                
                             </table>
 
                             <!--页码-->
@@ -332,8 +265,13 @@
     <!--主体内容end--> 
 
 
+</div>
+
 
 </%def>
 
 <%def name="end()">
+
+<script src="${static_url('js/orderList.js')}"></script>
+<script src="${static_url('js/menu-tab.js')}"></script>
 </%def>

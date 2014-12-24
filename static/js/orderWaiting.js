@@ -4,7 +4,7 @@
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 		
-		$scope.orderList = {};
+		$scope.orderList = {};$scope.refuseReson;
 
 		$scope.priceDivIn = function(index) {
 
@@ -25,7 +25,7 @@
 
 			var detailDiv = "<div class='classthree'>" +
 				"<div style='width:100%;height:30px;text-align:center;font-size:15px'>订单详情</div>" +
-				"<div> <span class='classone'>订单确认号：</span>  <span  class='classtwo'>" + "??ee" + "</span> </div>" +
+				"<div> <span class='classone'>订单确认号：</span>  <span  class='classtwo'>" + "98789855555555555555555555555555555555555" + "</span> </div>" +
 				"<div> <span class='classone'>酒店名称：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['hotel_name']) + "</span></div>" +
 				"<div> <span class='classone'>房型：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['room_type_name']) + "</span></div>" +
 				"<div> <span class='classone'>入离日期：</span>  <span class='classtwo'>" + ($scope.orderList[index]['checkin_date']) + "至" + ($scope.orderList[index]['checkout_date']) + "</span></div>" +
@@ -35,9 +35,9 @@
 				"<div><span class='classone'>联系电话：</span>  <span class='classtwo' >" + ($scope.orderList[index]['contact_mobile']) + "</span> </div>" +
 				"<div><span class='classone'>取消规则：</span>  <span  class='classtwo'>e" + ($scope.orderList[index]['hotel_name']) + "</span> </div>" +
 				"<div><span class='classone'>价格代码名称：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['hotel_name']) + "</span> </div>" +
-				"<div><span class='classone'>每日价格：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['hotel_name']) + "</span> </div>" +
-				"<div><span class='classone'>总价：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['hotel_name']) + "</span> </div>" +
-				"<div><span class='classone'>备注：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['hotel_name']) + "</span> </div></div>";
+				"<div><span class='classone'>每日价格：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['everyday_price']) + "</span> </div>" +
+				"<div><span class='classone'>总价：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div>" +
+				"<div><span class='classone'>备注：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div></div>";
 
 
 
@@ -54,11 +54,10 @@
 		}
 
 		$scope.acceptOrder = function() {
-			console.log("44");
-
+			
 			var url = "/api/order/67/operate/";
 
-			$http.put(url)
+			$http.post(url)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
@@ -72,6 +71,37 @@
 				})
 
 		}
+
+		$scope.refuseOrder = function() {
+
+			if($scope.refuseReson.trim()==""||$scope.refuseReson==undefined)
+			{
+				alert("不能为空");return;
+
+			}
+			
+			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson;
+			
+			$http.delete(url)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+
+					} else {
+						alert(resp.errmsg);
+					}
+				})
+				.error(function() {
+					alert('network error');
+				})
+
+		}
+
+
+		$scope.showInfo1=function(){$("#infoDiv1").show();}
+		$scope.hideInfo1=function(){$("#infoDiv1").hide();}
+		$scope.showInfo2=function(){$("#infoDiv2").show();}
+		$scope.hideInfo2=function(){$("#infoDiv2").hide();}
 
 
 		function init() {

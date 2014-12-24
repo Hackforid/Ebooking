@@ -45,7 +45,7 @@
 
 
                         <div class="form form1"
-                            ng-repeat="rateplan in rateplans"
+                            ng-repeat="rateplan in rateplans" ng-init="index=$index"
                             >
                             <div class="roomhead" ><h1 ng-click="roomHeadPlanDialog.eachshow($index);">{{rateplan.name}}</h1><span></span>
                              
@@ -87,7 +87,7 @@
                                 <tbody>
                                     <tr>
                                     <td class="table-title">预付底价</td>
-                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),(v.currentindex),(v.classstyle));>{{v.dayprice }}</span></td>          
+                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),index,(v.classstyle));>{{v.dayprice }}</span></td>          
                                     </tr>
                                 </tbody>
                             </table>             
