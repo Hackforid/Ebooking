@@ -61,7 +61,7 @@
 			};
 			console.log(params);
 
-			console.log(scope.roomrates);
+			console.log(scope.currentRoomType);
 			http.post(url, params)
 				.success(function(resp) {
 					console.log(resp);
@@ -150,7 +150,7 @@
 		this.save = function() {
 			console.log(scope.roomrates[scope.currentindex].id);
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType.id + '/roomrate/' + scope.roomrates[scope.currentindex].id;
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
 			var time1 = $("#time1").val();
 			var time2 = $("#time2").val();
 			var price = parseInt($("#lowprice").val());
@@ -306,10 +306,10 @@
 		monthCheck();
 
 		$scope.$watch('currentRoomType', function() {
-			if (!$scope.currentRoomType.id) {
+			if (!$scope.currentRoomType["base_roomtype_id"]) {
 				return;
 			}
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + $scope.currentRoomType.id + '/rateplan/';
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + $scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
 			console.log(url);
 
 			$http.get(url)
