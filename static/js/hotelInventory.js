@@ -27,9 +27,9 @@
 
 
 
-	$("#roomtype-list .action input").click(function() {
+	/*$("#roomtype-list .action input").click(function() {
 		$("#roomtype-list").fadeOut(500);
-	});
+	});*/
 
 
 	var HotelHeadDialog = function(scope, http) {
@@ -255,6 +255,7 @@
 
 	hotelInventoryApp.controller('hotelInventoryCtrl', ['$scope', '$http', function($scope, $http) {
 
+		$scope.desResult=false;
 		$scope.hotel = {};
 		$scope.willCoop = [];
 		$scope.cooped = [];
@@ -273,7 +274,7 @@
 		$scope.currentIndex;
 		$scope.currentPriceType;
 		$scope.currentId;
-		$scope.desResult=false;
+		
 		/*$scope.prefixName;
 		$scope.remarkName;
 		
@@ -288,10 +289,7 @@
 
 		$scope.roomDescribe =function roomDescribe(index){
 
-
 			$scope.desResult=true;
-
-
 
 /*var roomDes="<div class='messageDiv' id='cool-roomtype' style=' '><div class='messageBlack'></div><div class='detail detail-roomtype'><div class='head'><h1>房型概述</h1></div>"+
  "<p id='closeDiv' class='close' ng-click='roomDescribeClose()'>X</p><div class='con'><div class='cm'> <table width='100%' border='0' cellspacing='0' cellpadding='0'>"+
@@ -359,34 +357,21 @@ $("body").append(roomDes);  */
 			}
 
 			var url = "/api/hotel/" + hotelId + "/roomtype/";
-			console.log(url);
-			$http.post(url, {
-				//'year':$scope.months[$scope.monthvalue-1].year,
-				//'month':$scope.months[$scope.monthvalue-1].month,
+			console.log(url);console.log(shouldCooped);
+			$http.post(url, {								
 				'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+						
+
+					loadHotelMsg(hotelId);
+							
+					$("#roomtype-list").fadeOut(500);
+	
 						// Todo loading anime
-
-						for (var i = 0; i < shouldCooped.length; i++) {
-
-							//$scope.cooped.push(resp.result.cooped_roomtypes[i]);
-							$scope.cooped.push($scope.cooped[0]);
-						};
-
-						console.log($scope.cooped);
-
-						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
-						//$scope.cooped[5]=$scope.cooped[0];
-
-						console.log($scope.cooped);
-
-
-						$scope.dayWeekSum = [];
-						$scope.dateCheck($scope.monthvalue);
-
+												 																																																
 
 					} else {
 						console.log(resp.errmsg);
@@ -398,6 +383,12 @@ $("body").append(roomDes);  */
 		}
 
 		// -----------------------------
+
+
+		$scope.closeRoomType=function(){
+			$("#roomtype-list").fadeOut(500);
+
+		}
 
 
 
@@ -427,13 +418,9 @@ $("body").append(roomDes);  */
 						$scope.willCoop = resp.result.will_coop_roomtypes;
 						$scope.cooped = resp.result.cooped_roomtypes;
 
-
 						//$scope.cooped[1].inventory = $scope.cooped[0].inventory;
-
-
-						$scope.dayWeekSum = [];
+						
 						$scope.dateCheck($scope.monthvalue);
-
 
 					} else {
 						alert(resp.errmsg);
@@ -528,6 +515,7 @@ $("body").append(roomDes);  */
 
 			var ninetysum = new Date(ninetyyear, ninetymonth, 0).getDate();
 			var daynum;var currentDay=day.getDate();
+			$scope.dayWeekSum = [];
 
 
 			if (monthvalue == 1) {
