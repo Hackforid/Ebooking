@@ -58,8 +58,8 @@
 
                                     <!--ng-click=acceptOrder(); ng-click=refuseOrder(); -->
                                     <td class="action" width="15%">
-                                        <input name="" type="button" value="接受"  class="btn-s btn-orange btn-yes"  />
-                                        <input name="" type="button" value="拒绝"  class="btn-s btn-no"   />
+                                        <input name="" type="button" value="接受" ng-click=showInfo1();  class="btn-s btn-orange btn-yes"  />
+                                        <input name="" type="button" value="拒绝" ng-click=showInfo2(); class="btn-s btn-no"   />
 
                                     </td>
                                     <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
@@ -106,6 +106,39 @@
 
 </div>
 <!--右侧部分end--> 
+
+
+<!--酒店弹窗浮层-->     
+<div class="messageDiv" id="infoDiv1" style=" display:none" >
+   <div class="messageBlack"></div>
+   <div class="detail">
+       <div class="head"><h1>提示</h1></div>
+       <div class="con">
+          <p class="f16" style=" text-align:center;padding:30px 0;">请再次确认是否接受此单！</p>
+          <p class="action" style=" text-align:center">
+          <input name="接受" type="button" value="接受"  ng-click=acceptOrder(); class="btn-orange"/>
+          <input name="取消" type="button" value="取消" ng-click=hideinfo1(); class="btn-bai"  />
+          </p>
+       </div>
+   </div> 
+</div>   
+
+<div class="messageDiv" id="infoDiv2" style=" display:none">
+  <div class="messageBlack"></div>
+   <div class="detail">
+       <div class="head"><h1>请输入拒绝理由</h1></div>       
+       <div class="con">
+           <p style="width:80%;margin:10px auto;"> <textarea ng-model="refuseReson" name="" cols="" rows="" style="width:100%">请输入拒绝理由</textarea></p>
+          <p class="action" style=" text-align:center">
+          <input name="确定" type="button" value="确定" ng-click=refuseOrder(); />
+          <input name="取消" type="button" value="取消" ng-click=hideInfo2();class="btn-bai" />
+          </p>
+       </div>
+   </div> 
+</div>   
+ <!--酒店弹窗浮层结束-->  
+
+
 </div>
 
 </%def>

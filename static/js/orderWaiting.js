@@ -4,7 +4,7 @@
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 		
-		$scope.orderList = {};
+		$scope.orderList = {};$scope.refuseReson;
 
 		$scope.priceDivIn = function(index) {
 
@@ -73,15 +73,16 @@
 		}
 
 		$scope.refuseOrder = function() {
-			
-			var url = "/api/order/67/operate/";
 
-			var params = {
-				"reson": "22"				
+			if($scope.refuseReson.trim()==""||$scope.refuseReson==undefined)
+			{
+				alert("不能为空");return;
 
 			}
-
-			$http.delete(url,params)
+			
+			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson;
+			
+			$http.delete(url)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
@@ -95,6 +96,12 @@
 				})
 
 		}
+
+
+		$scope.showInfo1=function(){$("#infoDiv1").show();}
+		$scope.hideInfo1=function(){$("#infoDiv1").hide();}
+		$scope.showInfo2=function(){$("#infoDiv2").show();}
+		$scope.hideInfo2=function(){$("#infoDiv2").hide();}
 
 
 		function init() {

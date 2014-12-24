@@ -428,7 +428,7 @@ $("body").append(roomDes);  */
 						$scope.cooped = resp.result.cooped_roomtypes;
 
 
-						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
+						//$scope.cooped[1].inventory = $scope.cooped[0].inventory;
 
 
 						$scope.dayWeekSum = [];
