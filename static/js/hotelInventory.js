@@ -27,9 +27,9 @@
 
 
 
-	$("#roomtype-list .action input").click(function() {
+	/*$("#roomtype-list .action input").click(function() {
 		$("#roomtype-list").fadeOut(500);
-	});
+	});*/
 
 
 	var HotelHeadDialog = function(scope, http) {
@@ -42,6 +42,20 @@
 
 		this.prefixName = "";
 		this.remarkName = "";
+
+
+		this.exampleDivIn = function(index) {
+
+			$("#exampleDiv-" + index).after("<span class='example' style='position:relative;'>示例：<b>170元</b></span>").show(0, function() {});
+
+		}
+		this.exampleDivLeave = function(index) {
+
+			$("#exampleDiv-" + index).next("span.example").hide(0, function() {
+				$("#exampleDiv-" + index).next("span.example").remove();
+			});
+
+		}
 
 
 		this.eachhide = function(index) {
@@ -60,7 +74,7 @@
 		this.save = function(index) {
 			console.log(scope.cooped);
 
-			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.cooped[index]["id"] + '/cooped/';
+			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.cooped[index]["cooped_roomtype_id"] + '/cooped/';
 
 
 			var params = {
@@ -241,6 +255,7 @@
 
 	hotelInventoryApp.controller('hotelInventoryCtrl', ['$scope', '$http', function($scope, $http) {
 
+		$scope.desResult = false;
 		$scope.hotel = {};
 		$scope.willCoop = [];
 		$scope.cooped = [];
@@ -259,6 +274,7 @@
 		$scope.currentIndex;
 		$scope.currentPriceType;
 		$scope.currentId;
+
 		/*$scope.prefixName;
 		$scope.remarkName;
 		
@@ -271,6 +287,25 @@
 
 		}*/
 
+		$scope.roomDescribe = function roomDescribe(index) {
+
+			$scope.desResult = true;
+
+			/*var roomDes="<div class='messageDiv' id='cool-roomtype' style=' '><div class='messageBlack'></div><div class='detail detail-roomtype'><div class='head'><h1>房型概述</h1></div>"+
+			 "<p id='closeDiv' class='close' ng-click='roomDescribeClose()'>X</p><div class='con'><div class='cm'> <table width='100%' border='0' cellspacing='0' cellpadding='0'>"+
+			  "<tr><td width='90'><strong>房型名称：</strong></td><td>豪华房</td> </tr><tr><td><strong>房间大小：</strong></td> <td>15-20平方米</td></tr><tr><td><strong>床型：</strong></td><td>大床、双床、三床、四床</td></tr>"+
+			  "<tr><td><strong>床尺寸：</strong></td><td>200cm*180cm</td></tr><tr><td><strong>楼层：</strong></td><td>1层</td></tr><tr><td><strong>入住人数：</strong></td><td>2人</td></tr><tr><td><strong>设施：</strong></td>"+
+			   "<td>wi-fi、宽带、有线电视、洗漱用品、24小时热水、空调</td></tr><tr><td><strong>描述：</strong></td><td>标准间……</td></tr></table></div></div>"+
+			   "</div> </div>";  
+
+			$("body").append(roomDes);  */
+
+		}
+
+		$scope.roomDescribeClose = function roomDescribeClose() {
+			$scope.desResult = false;
+
+		}
 
 
 		$scope.changeNum = function changeNum(d, c, i, p, m) {
@@ -321,31 +356,22 @@
 				}
 			}
 
-			var url = "/api/hotel/" + hotelId + "/roomtype/?m=" + $scope.monthvalue;
+			var url = "/api/hotel/" + hotelId + "/roomtype/";
+			console.log(url);
+			console.log(shouldCooped);
 			$http.post(url, {
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+
+
+						loadHotelMsg(hotelId);
+
+						$("#roomtype-list").fadeOut(500);
+
 						// Todo loading anime
-
-						for (var i = 0; i < shouldCooped.length; i++) {
-
-							//$scope.cooped.push(resp.result.cooped_roomtypes[i]);
-							$scope.cooped.push($scope.cooped[0]);
-						};
-
-						console.log($scope.cooped);
-
-						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
-						//$scope.cooped[5]=$scope.cooped[0];
-
-						console.log($scope.cooped);
-
-
-						$scope.dayWeekSum = [];
-						$scope.dateCheck($scope.monthvalue);
 
 
 					} else {
@@ -360,8 +386,17 @@
 		// -----------------------------
 
 
+		$scope.closeRoomType = function() {
+			$("#roomtype-list").fadeOut(500);
+
+		}
+
+
 
 		function initMonthWatch() {
+
+			console.log("watch");
+
 			$scope.$watch('monthvalue', function() {
 				if ($scope.monthvalue == undefined) {
 					return;
@@ -374,7 +409,7 @@
 
 
 		function loadHotelMsg(hotel_id) {
-			var url = "/api/hotel/" + hotel_id + "/roomtype/?m=" + $scope.monthvalue;
+			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue - 1].year + "&month=" + $scope.months[$scope.monthvalue - 1].month;
 			console.log(url);
 			$http.get(url)
 				.success(function(resp) {
@@ -384,13 +419,9 @@
 						$scope.willCoop = resp.result.will_coop_roomtypes;
 						$scope.cooped = resp.result.cooped_roomtypes;
 
+						//$scope.cooped[1].inventory = $scope.cooped[0].inventory;
 
-						$scope.cooped[1].inventory = $scope.cooped[0].inventory;
-
-
-						$scope.dayWeekSum = [];
 						$scope.dateCheck($scope.monthvalue);
-
 
 					} else {
 						alert(resp.errmsg);
@@ -423,6 +454,9 @@
 		function init() {
 			//computeSelecableDate();
 			monthCheck();
+			console.log("months");
+
+			console.log($scope.months);
 
 			initMonthWatch();
 		}
@@ -482,6 +516,8 @@
 
 			var ninetysum = new Date(ninetyyear, ninetymonth, 0).getDate();
 			var daynum;
+			var currentDay = day.getDate();
+			$scope.dayWeekSum = [];
 
 
 			if (monthvalue == 1) {
@@ -684,6 +720,17 @@
 					};
 				}
 				$scope.dayWeekSum.push(temp);
+
+			}
+
+			if (monthvalue == 1) {
+
+				$scope.dayWeekSum[currentDay - 1]["day"] = "今";
+				$scope.dayWeekSum[currentDay - 1]["weekday"] = "天";
+				$scope.dayWeekSum[currentDay - 1]["textcolor"] = {
+					color: '#F30',
+					'font-weight': 'bold'
+				};
 
 			}
 

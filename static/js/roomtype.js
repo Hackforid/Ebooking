@@ -226,11 +226,12 @@
 		//$scope.currentrateindex = "";
 
 		$scope.addChangeP = function addChangeP(d, m, c) {
+			
 
 			if (c == "action5") {
 				$scope.currentindex = m;
 				//$scope.currentrateindex=i;
-				console.log(m);
+				
 
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 					$(".btn-number").click(function() {
@@ -357,7 +358,7 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 
 			var ninetysum = new Date(ninetyyear, ninetymonth, 0).getDate();
-			var daynum;
+			var daynum;var currentDay=day.getDate();
 
 
 			if (monthvalue == 1) {
@@ -405,8 +406,7 @@
 						tempprice = dayprice[j];
 						classstyle = "action5";
 					}
-					temp = {
-						"currentindex": i,
+					temp = {						
 						"classstyle": classstyle,
 						"dayprice": tempprice
 					};
@@ -441,6 +441,14 @@
 					};
 				}
 				$scope.dayWeekSum.push(temp);
+
+			}
+
+			if(monthvalue==1){
+				
+				$scope.dayWeekSum[currentDay-1]["day"]="今";
+				$scope.dayWeekSum[currentDay-1]["weekday"]="天";
+				$scope.dayWeekSum[currentDay-1]["textcolor"]={color: '#F30','font-weight': 'bold'};
 
 			}
 
