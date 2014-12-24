@@ -28,17 +28,19 @@ class RatePlanAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         self.valid_new_rateplan_args(name, meal_num, punish_type)
 
-        rateplan, roomrate = (
-            yield gen.Task(RatePlanModel.new_rate_plan.apply_async,
-                           args=[merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type])).result
-
-        if rateplan:
+        task = yield gen.Task(RatePlanModel.new_rate_plan.apply_async,
+                           args=[merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type])
+        if task.status == 'SUCCESS':
+            rateplan, roomrate = task.result
             self.finish_json(result=dict(
                 rateplan=rateplan.todict(),
                 roomrate=roomrate.todict(),
             ))
         else:
-            raise JsonException(errcode="1001", errmsg="wrong")
+            if isinstance(task.result, CeleryException):
+                raise JsonException(task.result.errcode, task.result.errmsg)
+            else:
+                raise JsonException(errcode="1000", errmsg="server error")
 
     @gen.coroutine
     @auth_login(json=True)

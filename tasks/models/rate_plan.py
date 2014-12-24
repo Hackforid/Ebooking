@@ -6,6 +6,7 @@ from tasks.base_task import SqlAlchemyTask
 
 from models.rate_plan import RatePlanModel
 from models.room_rate import RoomRateModel
+from models.cooperate_roomtype import CooperateRoomTypeModel
 
 from exception.celery_exception import CeleryException
 
@@ -19,20 +20,28 @@ def get_by_id(task_self, id):
 
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def new_rate_plan(task_self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type):
+def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type):
+    room = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
+    if not room:
+        raise CeleryException(errcode=1000, errmsg='room not exist')
+
     rate_plan = RatePlanModel.get_by_merchant_hotel_room_name(
-        task_self.session, merchant_id, hotel_id, roomtype_id, name)
+        self.session, merchant_id, hotel_id, roomtype_id, name)
     if rate_plan:
         return CeleryException(errcode=405, errmsg="name exist")
 
-    return RatePlanModel.new_rate_plan(task_self.session,
-                                       merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type)
+    new_rateplan = RatePlanModel.new_rate_plan(self.session,
+        merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type)
+    new_roomrate = RoomRateModel.new_roomrate(self.session, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num)
+    return new_rateplan, new_roomrate
 
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_by_room(task_self, merchant_id, hotel_id, roomtype_id):
-    return RatePlanModel.get_by_room(task_self.session, merchant_id, hotel_id, roomtype_id)
-
+    rateplans = RatePlanModel.get_by_room(task_self.session, merchant_id, hotel_id, roomtype_id)
+    rateplan_ids = [rateplan.id for rateplan in rateplans]
+    roomrates= RoomRateModel.get_by_rateplans(task_self.session, rateplan_ids)
+    return rateplans, roomrates
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def modify_rateplan(self, rateplan_id, name, meal_num, punish_type):
