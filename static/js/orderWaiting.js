@@ -4,7 +4,7 @@
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 		
-		$scope.orderList = {};$scope.refuseReson;
+		$scope.orderList = {};$scope.refuseReson="";
 
 		$scope.priceDivIn = function(index) {
 
