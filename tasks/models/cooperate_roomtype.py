@@ -5,6 +5,7 @@ import datetime
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from tasks.stock import push_hotel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 from models.cooperate_hotel import CooperateHotelModel
@@ -40,6 +41,8 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
     for coop in coops:
         InventoryModel.insert_in_four_month(task_self.session,
                 merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id)
+
+    push_hotel.delay(hotel_id)
 
     return coops
 

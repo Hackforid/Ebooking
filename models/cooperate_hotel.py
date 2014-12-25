@@ -17,7 +17,7 @@ class CooperateHotelModel(Base):
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
-    is_online = Column('isOnline', BIT, nullable=False, default=0)
+    is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
     @classmethod

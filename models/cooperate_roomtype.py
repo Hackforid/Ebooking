@@ -22,7 +22,7 @@ class CooperateRoomTypeModel(Base):
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
     base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
-    is_online = Column('isOnline', BIT, nullable=False, default=0)
+    is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
     prefix_name = Column('prefixName', VARCHAR(100))
     remark_name = Column('remarkName', VARCHAR(100))

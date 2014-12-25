@@ -9,7 +9,6 @@ from tasks.base_task import SqlAlchemyTask
 from tasks.order import cancel_order_in_queue as Cancel
 
 from models.order import OrderModel
-from models.cooperate_roomtype import CooperateRoomTypeModel
 from exception.celery_exception import CeleryException
 
 from config import CHAIN_ID, API
@@ -17,6 +16,7 @@ from config import CHAIN_ID, API
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
 def push_hotel(self, hotel_id):
     from models.cooperate_hotel import CooperateHotelModel
+    from models.cooperate_roomtype import CooperateRoomTypeModel
 
     hotel = CooperateHotelModel.get_by_id(self.session, hotel_id)
     if not hotel:
@@ -76,7 +76,8 @@ def generate_rooms(roomtypes, base_roomtypes):
                 room['id'] = roomtype.id
                 room['name'] = base_roomtype['name']
                 room['bed_type'] = base_roomtype['bed_type']
-                room['facilities'] = base_roomtype['facilities'].replace(',', '|') if base_roomtype['facilities'] else ''
+                room['facilities'] = base_roomtype['facility'].replace(',', '|') if base_roomtype['facility'] else ''
+                room['is_valid'] = roomtype.is_online
                 rooms.append(room)
                 break
     return rooms
