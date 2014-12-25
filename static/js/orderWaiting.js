@@ -41,15 +41,11 @@
 				"<div><span class='classone'>总价：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div>" +
 				"<div><span class='classone'>备注：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div></div>";
 
-
-
 			$("#orderConfimId-" + index).after(detailDiv).show(0, function() {});
 
-
-
 		}
+
 		$scope.detailDivOut = function(index) {
-			console.log("222");
 
 			$("#orderConfimId-" + index).next("div.classthree").hide();
 
@@ -58,7 +54,7 @@
 
 		$scope.acceptOrder = function() {
 
-			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/"; //???
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/"; 
 
 			console.log(url);
 
@@ -68,7 +64,7 @@
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
-						$("#infoDiv1").hide();
+						$("#acceptDialog").hide();
 
 					} else {
 						alert(resp.errmsg);
@@ -88,7 +84,7 @@
 
 			}
 
-			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/"; //???
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/"; 
 
 			console.log(url);
 			console.log({
@@ -103,7 +99,7 @@
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
-						$("#infoDiv2").hide();
+						$("#refuseDialog").hide();
 
 					} else {
 						alert(resp.errmsg);
@@ -116,19 +112,19 @@
 		}
 
 
-		$scope.showInfo1 = function(m) {
+		$scope.acceptShow = function(m) {
 			$scope.currentIndex = m;
-			$("#infoDiv1").show();
+			$("#acceptDialog").show();
 		}
-		$scope.hideInfo1 = function() {
-			$("#infoDiv1").hide();
+		$scope.acceptHide = function() {
+			$("#acceptDialog").hide();
 		}
-		$scope.showInfo2 = function(m) {
+		$scope.refuseShow = function(m) {
 			$scope.currentIndex = m;
-			$("#infoDiv2").show();
+			$("#refuseDialog").show();
 		}
-		$scope.hideInfo2 = function() {
-			$("#infoDiv2").hide();
+		$scope.refuseHide = function() {
+			$("#refuseDialog").hide();
 		}
 
 
@@ -156,8 +152,6 @@
 
 						};
 						console.log($scope.orderList);
-
-
 
 					} else {
 						alert(resp.errmsg);
