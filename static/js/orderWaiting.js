@@ -3,8 +3,10 @@
 	var orderWaitingApp = angular.module('orderWaitingApp', []);
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
-		
-		$scope.orderList = {};$scope.refuseReson="";
+
+		$scope.orderList = {};
+		$scope.refuseReson = "";
+		$scope.currentIndex = "";
 
 		$scope.priceDivIn = function(index) {
 
@@ -39,28 +41,30 @@
 				"<div><span class='classone'>总价：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div>" +
 				"<div><span class='classone'>备注：</span>  <span  class='classtwo'>" + ($scope.orderList[index]['total_price']) + "</span> </div></div>";
 
-
-
 			$("#orderConfimId-" + index).after(detailDiv).show(0, function() {});
 
-
-
 		}
+
 		$scope.detailDivOut = function(index) {
-			console.log("222");
 
-			$("#orderConfimId-" + index).next("div.classthree").hide(); 
+			$("#orderConfimId-" + index).next("div.classthree").hide();
 
 		}
+
 
 		$scope.acceptOrder = function() {
-			
-			var url = "/api/order/67/operate/";   //???
+
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/"; 
+
+			console.log(url);
 
 			$http.post(url)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+
+						$scope.orderList.splice($scope.currentIndex, 1);
+						$("#acceptDialog").hide();
 
 					} else {
 						alert(resp.errmsg);
@@ -74,18 +78,28 @@
 
 		$scope.refuseOrder = function() {
 
-			if($scope.refuseReson.trim()==""||$scope.refuseReson==undefined)
-			{
-				alert("不能为空");return;
+			if ($scope.refuseReson.trim() == "" || $scope.refuseReson == undefined) {
+				alert("不能为空");
+				return;
 
 			}
-			
-			var url = "/api/order/67/operate/?reson=" +$scope.refuseReson; //???
-			
-			$http.delete(url)
+
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/"; 
+
+			console.log(url);
+			console.log({
+				"reason": $scope.refuseReson
+			});
+
+			$http.post(url, {
+					"reason": $scope.refuseReson
+				})
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+
+						$scope.orderList.splice($scope.currentIndex, 1);
+						$("#refuseDialog").hide();
 
 					} else {
 						alert(resp.errmsg);
@@ -98,10 +112,20 @@
 		}
 
 
-		$scope.showInfo1=function(){$("#infoDiv1").show();}
-		$scope.hideInfo1=function(){$("#infoDiv1").hide();}
-		$scope.showInfo2=function(){$("#infoDiv2").show();}
-		$scope.hideInfo2=function(){$("#infoDiv2").hide();}
+		$scope.acceptShow = function(m) {
+			$scope.currentIndex = m;
+			$("#acceptDialog").show();
+		}
+		$scope.acceptHide = function() {
+			$("#acceptDialog").hide();
+		}
+		$scope.refuseShow = function(m) {
+			$scope.currentIndex = m;
+			$("#refuseDialog").show();
+		}
+		$scope.refuseHide = function() {
+			$("#refuseDialog").hide();
+		}
 
 
 		function init() {
@@ -128,8 +152,6 @@
 
 						};
 						console.log($scope.orderList);
-
-
 
 					} else {
 						alert(resp.errmsg);
