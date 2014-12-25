@@ -2,7 +2,9 @@
 //此文档的js是登录后模板页公共js部分，静态适用，动态代码可重写
 //
 //
-$(document).ready(function(){  
+$(document).ready(function(){ 
+
+//$(".menu1").find("a").click(function(){console.log($(this).parent());$(this).parent().addclass("active");alert("1");});
 
 //显示或隐藏左上角的用户菜单
 var handle = null;

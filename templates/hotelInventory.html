@@ -137,7 +137,7 @@
                                     <td class="table-title">自动确认房量</td>
                                     <td class={{numauto.classStyle}} ng-repeat="numauto in roomNumAuto[room.id] | orderObjectBy:'' ">
 
-                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.id),(index),0);>{{numauto.autoNum}}</span></td>
+                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),0);>{{numauto.autoNum}}</span></td>
                                    <!-- <td class="stop"><span>{{room.day1}}</span></td>
                                     <td class="stop"><span>{{room.day2}}</span></td>
                                     <td class="stop"><span>{{room.day3}}</span></td>
@@ -174,7 +174,7 @@
                                     <td class="table-title">手工确认房量</td>
                                      <td class={{numhead.classStyle}} ng-repeat="numhead in roomNumHand[room.id] | orderObjectBy:''">
 
-                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numauto.classStyle),(room.id),(index),1);>{{numhead.headNum}}</span>
+                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),1);>{{numhead.headNum}}</span>
 
 
 

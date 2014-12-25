@@ -413,7 +413,7 @@
 			console.log(url);
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp)
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;
