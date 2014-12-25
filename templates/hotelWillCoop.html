@@ -69,12 +69,10 @@
 							</div>
 
 							<!--页码-->
-							<div id="pageInfo" class="page"
-                                <!--ng-controller="hotelWillCoopPageIndicatorCtrl"-->
-                                >
-								<span class="disabled"> &lt;  上一页</span>
+							<div id="pageInfo" class="page">
+                                
+								<span id="pageNumber"></span>
 								
-								<a href="#">下一页  &gt; </a>
                                 <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
 										<option value="10">10</option>
 										<option value="20">20</option>

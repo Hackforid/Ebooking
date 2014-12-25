@@ -11,27 +11,26 @@
 			$scope.serchName = "";
 			$scope.serchCity = "";
 			$scope.serchStar = "";
-			$scope.itemPerPage = 10;
-			$scope.currentPage;
+			$scope.itemPerPage = "20";
+			$scope.currentPage = 1;
 			$scope.total;
 
-			function setPage(container, count, pageindex) {
-				var container = container;
+			function setPage(count, pageindex) {
 				var count = count;
 				var pageindex = pageindex;
 				var a = [];
-				//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
+				//总页数少于10 全部显示 大于10 显示前3 后3 中间3 其余....
 				if (pageindex == 1) {
-					a[a.length] = "<a onclick='aaa();' href=\"#\" >prev</a>";
+					a[a.length] = "<span  href='#' class='disabled' >&lt; 上一页</span>";
 				} else {
-					a[a.length] = "<a onclick='aaa();' href=\"#\" >prev</a>";
+					a[a.length] = "<a  href='#' >&lt; 上一页</a>";
 				}
 
 				function setPageList() {
 						if (pageindex == i) {
-							a[a.length] = "<a onclick='aaa();' href=\"#\" >" + i + "</a>";
+							a[a.length] = "<a  href='#' class='current'>" + i + "</a>";
 						} else {
-							a[a.length] = "<a onclick='aaa();' href=\"#\">" + i + "</a>";
+							a[a.length] = "<a  href='#'>" + i + "</a>";
 						}
 					}
 					//总页数小于10
@@ -46,62 +45,79 @@
 						for (var i = 1; i <= 5; i++) {
 							setPageList();
 						}
-						a[a.length] = "...<a onclick='aaa();' href=\"#\">" + count + "</a>";
+						a[a.length] = "...<a  href='#'>" + count + "</a>";
 					} else if (pageindex >= count - 3) {
-						a[a.length] = "<a href=\"#\">1</a>...";
+						a[a.length] = "<a href='#'>1</a>...";
 						for (var i = count - 4; i <= count; i++) {
 							setPageList();
 						}
 					} else { //当前页在中间部分
-						a[a.length] = "<a href=\"#\">1</a>...";
+						a[a.length] = "<a href='#'>1</a>...";
 						for (var i = pageindex - 2; i <= pageindex + 2; i++) {
 							setPageList();
 						}
-						a[a.length] = "...<a onclick='aaa();' href=\"#\">" + count + "</a>";
+						a[a.length] = "...<a  href='#'>" + count + "</a>";
 					}
 				}
 				if (pageindex == count) {
-					a[a.length] = "<a onclick='aaa();' href=\"#\" >next</a>";
+					a[a.length] = "<span  href='#' class='disabled'>下一页  &gt;</span>";
 				} else {
-					a[a.length] = "<a onclick='aaa();' href=\"#\" >next</a>";
+					a[a.length] = "<a  href='#' >下一页  &gt;</a>";
 				}
 
-				$("#pageInfo").append(a.join(""));
+				$("#pageNumber").html(a.join(""));
+
 				//事件点击
-				/*var pageClick = function() {
-				  var oAlink = container.getElementsByTagName("a");
-				  var inx = pageindex; //初始的页码
-				  oAlink[0].onclick = function() { //点击上一页
-				    if (inx == 1) {
-				      return false;
-				    }
-				    inx--;
-				    setPage(container, count, inx);
-				    return false;
-				  }
-				  for (var i = 1; i < oAlink.length - 1; i++) { //点击页码
-				    oAlink[i].onclick = function() {
-				      inx = parseInt(this.innerHTML);
-				      setPage(container, count, inx);
-				      return false;
-				    }
-				  }
-				  oAlink[oAlink.length - 1].onclick = function() { //点击下一页
-				    if (inx == count) {
-				      return false;
-				    }
-				    inx++;
-				    setPage(container, count, inx);
-				    return false;
-				  }
-				} ()*/
+				var pageClick = function() {
+					var aLink = $("#pageNumber").find("a");
+					var initPage = pageindex; //初始的页码
+					aLink[0].onclick = function() { //点击上一页
+						if (initPage == 1) {
+							return;
+						}
+						initPage--;
+						setPage(count, initPage);
+						$scope.currentPage = initPage;
+												
+						$scope.searchHotel();
+						return;
+					}
+					for (var i = 1; i < aLink.length - 1; i++) { //点击页码
+						aLink[i].onclick = function() {
+							initPage = parseInt(this.innerHTML);
+
+							$scope.currentPage = initPage;
+												
+							setPage(count, initPage);
+							$scope.searchHotel();
+							return;
+						}
+					}
+					aLink[aLink.length - 1].onclick = function() { //点击下一页
+						if (initPage == count) {
+							return;
+						}
+						initPage++;
+						setPage(count, initPage);
+						$scope.currentPage = initPage;
+											
+						$scope.searchHotel();
+						return;
+					}
+				}()
 			}
 
 
-			function page() {
-				var pageNum = ($scope.total) / ($scope.itemPerPage);
-				if (pageNum <= 10) {}
-			}
+			$scope.$watch('itemPerPage', function() {
+
+
+				$scope.currentPage = 1;
+				$scope.searchHotel();
+
+
+			});
+
+
 
 			function loadCitys() {
 				var url = "/api/city/";
@@ -116,7 +132,12 @@
 
 
 			function loadHotels() {
-				var url = '/api/hotel/willcoop/';
+
+				var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+				var url = '/api/hotel/willcoop/?start=' + pageNum + '&limit=' + $scope.itemPerPage;
+
+				console.log(url);
 
 				$http.get(url)
 					.success(function(resp) {
@@ -127,6 +148,12 @@
 							$scope.total = resp.result.total;
 
 							$scope.hotels = resp.result.hotels;
+
+							var pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+							setPage(pageCount, $scope.currentPage);
+
+
 						} else {
 							alert(resp.errmsg);
 						}
@@ -137,9 +164,11 @@
 					});
 			}
 
-			$scope.searchHotel = function() {
+			$scope.searchHotel = function searchHotel() {
 
-				var url = '/api/hotel/willcoop/?start=0';
+				var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+				var url = '/api/hotel/willcoop/?start=' + pageNum;
 
 				if ($scope.serchName.trim() != "" && $scope.serchName != undefined) {
 					url = url + "&name=" + $scope.serchName;
@@ -155,13 +184,28 @@
 					url = url + "&star=" + $scope.serchStar;
 
 				}
+				if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+					url = url + "&limit=" + $scope.itemPerPage;
+
+				}
+
 
 				console.log(url);
 				$http.get(url)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
 							console.log(resp);
+
+							$scope.itemPerPage = resp.result.limit;
+							$scope.total = resp.result.total;
+
 							$scope.hotels = resp.result.hotels;
+
+							var pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+							setPage(pageCount, $scope.currentPage);
+
+
 						} else {
 							alert(resp.errmsg);
 						}
@@ -194,9 +238,9 @@
 			function init() {
 				$(".menu2").find("dd").eq(1).addClass("active");
 				loadCitys();
-				loadHotels();
+				$scope.searchHotel();
 
-				setPage(document.getElementById("pageInfo"), 20, 9);
+
 			}
 
 			init();
