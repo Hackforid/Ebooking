@@ -78,7 +78,7 @@
 						initPage--;
 						setPage(count, initPage);
 						$scope.currentPage = initPage;
-												
+
 						$scope.searchHotel();
 						return;
 					}
@@ -87,7 +87,7 @@
 							initPage = parseInt(this.innerHTML);
 
 							$scope.currentPage = initPage;
-												
+
 							setPage(count, initPage);
 							$scope.searchHotel();
 							return;
@@ -100,7 +100,7 @@
 						initPage++;
 						setPage(count, initPage);
 						$scope.currentPage = initPage;
-											
+
 						$scope.searchHotel();
 						return;
 					}

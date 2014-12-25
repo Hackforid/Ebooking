@@ -87,7 +87,7 @@
                                 <tbody>
                                     <tr>
                                     <td class="table-title">预付底价</td>
-                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),index,(v.classstyle));>{{v.dayprice }}</span></td>          
+                                    <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),index,($index));>{{v.dayprice }}</span></td>          
                                     </tr>
                                 </tbody>
                             </table>             

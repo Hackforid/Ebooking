@@ -209,23 +209,36 @@
 		$scope.rateplans = {};
 		$scope.roomrates = {};
 		$scope.monthvalue = 1;
-		$scope.months = {};
+		$scope.months = [];
 		$scope.dayWeekSum = [];
 		$scope.dayPriceSum = {};
 		$scope.currentindex = "";
 
 		$scope.addChangeP = function addChangeP(d, m, c) {
 
+			var day = new Date();
+			var currentDay = day.getDate();
 
-			if (c == "action5") {
-				$scope.currentindex = m;
+			var ninetytime = new Date().getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetyday = new Date(ninetytime);
+			var ninetycurrentDay = ninetyday.getDate();
 
-				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
-					$(".btn-number").click(function() {
-						$("#openDiv1").show();
-					});
-				});
+			if ($scope.monthvalue == 1 && (c + 1) < currentDay) {
+				return;
 			}
+			if ($scope.monthvalue == $scope.months.length && (c + 1) > ninetycurrentDay) {
+				return;
+			}
+
+
+			$scope.currentindex = m;
+
+			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
+				$(".btn-number").click(function() {
+					$("#openDiv1").show();
+				});
+			});
+
 
 			$("#" + d).mouseout(function() {
 
@@ -271,10 +284,10 @@
 
 			var temp = {};
 
-			$scope.months[0] = {
+			$scope.months.push({
 				"month": month,
 				"year": year
-			};
+			});
 			for (var i = 1; i < monthcount; i++) {
 				month++;
 				if (month > 12) {
@@ -285,7 +298,7 @@
 					"month": month,
 					"year": year
 				};
-				$scope.months[i] = temp;
+				$scope.months.push(temp);
 			}
 
 		}
@@ -354,7 +367,7 @@
 
 			if (monthvalue == 1) {
 				daynum = day.getDate();
-			} else if (monthvalue == 4) {
+			} else if (monthvalue == $scope.months.length) {
 				daynum = ninetyday.getDate();
 
 			} else {
@@ -377,7 +390,7 @@
 						dayprice[a] = "-1"
 					};
 
-				} else if (monthvalue == 4) {
+				} else if (monthvalue == $scope.months.length) {
 					for (var o = daynum; o < ninetysum; o++) {
 						dayprice[o] = "-1"
 					};
