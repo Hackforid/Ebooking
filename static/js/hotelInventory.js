@@ -237,7 +237,7 @@
 
 	hotelInventoryApp.controller('hotelInventoryCtrl', ['$scope', '$http', function($scope, $http) {
 
-		$scope.desResult = false;
+		//$scope.desResult = false;
 		$scope.hotel = {};
 		$scope.willCoop = [];
 		$scope.cooped = [];
@@ -260,7 +260,8 @@
 
 		$scope.roomDescribe = function roomDescribe(index) {
 
-			$scope.desResult = true;
+			//$scope.desResult = true;
+			$("#cool-roomtype").show();
 
 			/*var roomDes="<div class='messageDiv' id='cool-roomtype' style=' '><div class='messageBlack'></div><div class='detail detail-roomtype'><div class='head'><h1>房型概述</h1></div>"+
 			 "<p id='closeDiv' class='close' ng-click='roomDescribeClose()'>X</p><div class='con'><div class='cm'> <table width='100%' border='0' cellspacing='0' cellpadding='0'>"+
@@ -274,7 +275,8 @@
 		}
 
 		$scope.roomDescribeClose = function roomDescribeClose() {
-			$scope.desResult = false;
+			//$scope.desResult = false;
+			$("#cool-roomtype").hide();
 
 		}
 
