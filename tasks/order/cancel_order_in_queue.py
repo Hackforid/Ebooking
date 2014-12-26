@@ -25,7 +25,7 @@ def cancel_order_after_user_confirm(self, order_id):
 
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, order.room_type_id, year_months)
+        order.hotel_id, order.roomtype_id, year_months)
 
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
@@ -33,7 +33,7 @@ def cancel_order_after_user_confirm(self, order_id):
 
     order.status = 600
     session.commit()
-    PushInventoryTask().push_request.delay(order.roomtype_id)
+    PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
@@ -50,7 +50,7 @@ def cancel_order_before_user_confirm(self, order_id):
 
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, order.room_type_id, year_months)
+        order.hotel_id, order.roomtype_id, year_months)
 
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
@@ -58,7 +58,7 @@ def cancel_order_before_user_confirm(self, order_id):
 
     order.status = 500
     session.commit()
-    PushInventoryTask().push_request.delay(order.roomtype_id)
+    PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
 
 
@@ -75,7 +75,7 @@ def cancel_order_by_user(self, order_id, reason):
 
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, order.room_type_id, year_months)
+        order.hotel_id, order.roomtype_id, year_months)
 
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
@@ -85,7 +85,7 @@ def cancel_order_by_user(self, order_id, reason):
     order.extra = reason
     session.commit()
 
-    PushInventoryTask().push_request.delay(order.roomtype_id)
+    PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
 
 

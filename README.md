@@ -14,7 +14,7 @@ rabbitmq-server
 2.Step Celery  
 as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html#broker-rabbitmq  
 
-``sudo pip install rabbitmq-server``  
+``sudo apt-get install rabbitmq-server``  
 ``sudo rabbitmqctl add_user admin admin``  
 ``sudo rabbitmqctl add_vhost ebooking``  
 ``sudo rabbitmqctl set_permissions -p ebooking admin ".*" ".*" ".*"``  
