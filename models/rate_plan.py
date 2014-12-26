@@ -22,20 +22,20 @@ class RatePlanModel(Base):
     base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
     base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     name = Column(VARCHAR(20), nullable=False)
-    pay_types = Column("payType", TINYINT(4), nullable=False, default=1)
+    pay_type = Column("payType", TINYINT(4), nullable=False, default=1)
     stay_days = Column("stayDays", TINYINT(4), nullable=False, default=1)
     ahead_days = Column("aheadDays", TINYINT(4), nullable=False, default=0)
     cancel_type = Column("cancelType", TINYINT(4), nullable=False, default=1)
     cancel_days = Column("cancelDays", TINYINT(4), nullable=False, default=0)
-    cancel_time = Column("cancelTime", TIME)
+    cancel_time = Column("cancelTime", TIME, nullable=False, default="18:00:00")
     punish_type = Column("punishType", TINYINT(4), nullable=False, default=0)
     punish_value = Column("punishValue", INTEGER, nullable=False, default=0)
     guarantee_start_time = Column("guaranteeStartTime", TIME)
     guarantee_type = Column("guaranteeType", TINYINT(4), nullable=False, default=0)
     guarantee_count = Column("guaranteeCount", TINYINT(4), nullable=False, default=0)
-    #start_date = Column("startDate", DATE)
-    #end_date = Column("endDate", DATE)
-    is_online = Column('isOnline', BIT, nullable=False, default=0)
+    start_date = Column("startDate", DATE, nullable=False, default='1990-09-21')
+    end_date = Column("endDate", DATE, nullable=False, default='3000-12-25')
+    is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
     ts_update = Column("tsUpdate", TIMESTAMP)
 
@@ -84,7 +84,7 @@ class RatePlanModel(Base):
                 base_hotel_id=self.base_hotel_id,
                 base_roomtype_id=self.base_roomtype_id,
                 name=self.name,
-                pay_types=self.pay_types,
+                pay_type=self.pay_type,
                 stay_days=self.stay_days,
                 ahead_days=self.ahead_days,
                 cancel_type=self.cancel_type,
@@ -94,6 +94,8 @@ class RatePlanModel(Base):
                 punish_value=self.punish_value,
                 guarantee_type=self.guarantee_type,
                 guarantee_count=self.guarantee_count,
+                start_date=self.start_date,
+                end_date=self.end_date,
                 is_online=self.is_online,
                 is_delete=self.is_delete,
                 )

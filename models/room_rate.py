@@ -69,7 +69,7 @@ class RoomRateModel(Base):
                     default='-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1')
     meal12 = Column(VARCHAR(150), nullable=False,
                     default='-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1')
-    is_online = Column('isOnline', BIT, nullable=False, default=0)
+    is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
     ts_update = Column("tsUpdate", TIMESTAMP)
 
@@ -104,6 +104,16 @@ class RoomRateModel(Base):
             session.commit()
 
         return room
+
+    def get_price_by_date(self, month, day):
+        month_key = 'month{}'.format(month)
+        month = getattr(self, month_key)
+        prices = month.split('|')
+        return int(prices[day-1])
+
+
+    def get_meal(self):
+        return int(self.meal1.split('|')[0])
 
     def set_meal_num(self, meal_num):
         meal_num = str(meal_num)

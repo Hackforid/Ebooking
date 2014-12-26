@@ -4,6 +4,7 @@ import datetime
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
 from models.order import OrderModel
@@ -17,7 +18,10 @@ def start_order(self, order_id):
     if order.status != 0:
         raise CeleryException(100, 'order status illegal')
 
-    return modify_inventory(session, order)
+    order = modify_inventory(session, order)
+    PushInventoryTask().push_request.delay(order.roomtype_id)
+
+    return order
 
 def get_stay_days(checkin_date, checkout_date):
     aday = datetime.timedelta(days=1)

@@ -4,6 +4,7 @@ import datetime
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from tasks.stock import PushInventoryTask
 from models.inventory import InventoryModel
 
 from constants import QUEUE_ORDER
@@ -35,6 +36,8 @@ def modify_inventory(self, merchant_id, hotel_id, roomtype_id, price_type, chang
         else:
             inventory.set_val_by_day(day.day, price_type, change_num)
     session.commit()
+
+    PushInventoryTask().push_inventory.delay(roomtype_id)
     return inventories
 
 

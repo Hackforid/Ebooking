@@ -4,6 +4,7 @@ import datetime
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
 from models.order import OrderModel
@@ -32,6 +33,7 @@ def cancel_order_after_user_confirm(self, order_id):
 
     order.status = 600
     session.commit()
+    PushInventoryTask().push_request.delay(order.roomtype_id)
     return order
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
@@ -56,6 +58,7 @@ def cancel_order_before_user_confirm(self, order_id):
 
     order.status = 500
     session.commit()
+    PushInventoryTask().push_request.delay(order.roomtype_id)
     return order
 
 
@@ -82,6 +85,7 @@ def cancel_order_by_user(self, order_id, reason):
     order.extra = reason
     session.commit()
 
+    PushInventoryTask().push_request.delay(order.roomtype_id)
     return order
 
 
