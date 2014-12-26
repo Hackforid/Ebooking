@@ -3,6 +3,7 @@
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+from tasks.stock import PushRatePlanTask
 
 from models.rate_plan import RatePlanModel
 from models.room_rate import RoomRateModel
@@ -33,6 +34,8 @@ def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, puni
     new_rateplan = RatePlanModel.new_rate_plan(self.session,
         merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type)
     new_roomrate = RoomRateModel.new_roomrate(self.session, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num)
+
+    PushRatePlanTask().push_rateplan.delay(new_rateplan.id)
     return new_rateplan, new_roomrate
 
 
@@ -62,4 +65,5 @@ def modify_rateplan(self, rateplan_id, name, meal_num, punish_type):
 
     self.session.commit()
 
+    PushRatePlanTask().push_rateplan.delay(rateplan.id, with_roomrate=True)
     return rateplan, roomrate

@@ -103,6 +103,9 @@ class InventoryModel(Base):
                 .all()
     @classmethod
     def get_by_merchant_hotel_roomtype_dates(cls, session, merchant_id, hotel_id, roomtype_id, days):
+        '''
+        days as [(year, months),]
+        '''
         months = [InventoryModel.combin_year_month(day[0], day[1]) for day in days]
         return session.query(InventoryModel)\
                 .filter(InventoryModel.merchant_id == merchant_id)\
@@ -111,6 +114,19 @@ class InventoryModel(Base):
                 .filter(InventoryModel.month.in_(months))\
                 .filter(InventoryModel.is_delete == 0)\
                 .all()
+
+    @classmethod
+    def get_by_roomtype_and_dates(cls, session, roomtype_id, days):
+        '''
+        days as [(year, months),]
+        '''
+        months = [InventoryModel.combin_year_month(day[0], day[1]) for day in days]
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.roomtype_id == roomtype_id)\
+                .filter(InventoryModel.month.in_(months))\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
+
 
     @classmethod
     def insert_by_year(cls, session, merchant_id, hotel_id, roomtype_id, year):
@@ -173,13 +189,12 @@ class InventoryModel(Base):
 
         dates = []
 
-        _year = year
         for i in range(n):
-            _month = month + i
-            if _month > 12:
-                _month = _month - 12
-                _year = _year + 1
-            dates.append((_year, _month))
+            if month > 12:
+                month = month - 12
+                year = year + 1
+            dates.append((year, month))
+            month = month + 1
 
         return dates
 
@@ -211,6 +226,14 @@ class InventoryModel(Base):
         day_key = 'day' + str(day)
         value = getattr(self, day_key)
         return int(value.split('|')[type])
+
+    def get_day_count(self, day):
+        if day < 1 or day > 31:
+            return 0
+        day_key = 'day' + str(day)
+        value = getattr(self, day_key)
+        counts = value.split('|')
+        return int(counts[0]), int(counts[1])
 
     def add_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)
