@@ -245,7 +245,7 @@
 		$scope.monthvalue = 1;
 
 		$scope.testone;
-		$scope.months = {};
+		$scope.months = [];
 		$scope.roomNum = [];
 		$scope.roomNumAuto = [];
 		$scope.roomNumHand = [];
@@ -432,10 +432,10 @@
 
 			var temp = {};
 
-			$scope.months[0] = {
+			$scope.months.push({
 				"month": month,
 				"year": year
-			};
+			});
 			for (var i = 1; i < monthcount; i++) {
 				month++;
 				if (month > 12) {
@@ -446,7 +446,7 @@
 					"month": month,
 					"year": year
 				};
-				$scope.months[i] = temp;
+				$scope.months.push(temp);
 			}
 
 		}
@@ -478,7 +478,7 @@
 
 			if (monthvalue == 1) {
 				daynum = day.getDate();
-			} else if (monthvalue == 4) {
+			} else if (monthvalue == $scope.months.length) {
 				daynum = ninetyday.getDate();
 
 			} else {
@@ -522,9 +522,12 @@
 						var classStyle;
 						temp = $scope.roomNum[i]["day" + (j + 1)].split("|");
 						if (temp[0] == "0") {
-							classStyle = "action1 man-close"
+							classStyle = "action1 man-close";
+						} else if (temp[0] == "-1") {
+							classStyle = "action1";
+							temp[0] = "--";
 						} else {
-							classStyle = "action1"
+							classStyle = "action1";
 						};
 
 						tempAuto[j] = {
@@ -533,6 +536,9 @@
 						};
 						if (temp[1] == "0") {
 							classStyle = "action1 man-close"
+						} else if (temp[1] == "-1") {
+							classStyle = "action1";
+							temp[1] == "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -547,7 +553,7 @@
 					$scope.roomNumHand[id] = tempHead;
 				};
 
-			} else if (monthvalue == 4) {
+			} else if (monthvalue == $scope.months.length) {
 
 				for (var i = 0; i < $scope.roomNum.length; i++) {
 					var tempAuto = {};
@@ -572,6 +578,9 @@
 						temp = $scope.roomNum[i]["day" + (j + 1)].split("|");
 						if (temp[0] == "0") {
 							classStyle = "action1 man-close"
+						} else if (temp[0] == "-1") {
+							classStyle = "action1";
+							temp[0] == "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -584,6 +593,9 @@
 
 						if (temp[1] == "0") {
 							classStyle = "action1 man-close"
+						} else if (temp[1] == "-1") {
+							classStyle = "action1";
+							temp[1] == "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -613,6 +625,9 @@
 						temp = $scope.roomNum[i]["day" + (j + 1)].split("|");
 						if (temp[0] == "0") {
 							classStyle = "action1 man-close"
+						} else if (temp[0] == "-1") {
+							classStyle = "action1";
+							temp[0] == "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -624,9 +639,12 @@
 
 
 						if (temp[1] == "0") {
-							classStyle = "action1 man-close"
+							classStyle = "action1 man-close";
+						} else if (temp[1] == "-1") {
+							classStyle = "action1";
+							temp[1] == "--";
 						} else {
-							classStyle = "action1"
+							classStyle = "action1";
 						};
 
 						tempHead[j] = {
