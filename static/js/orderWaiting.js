@@ -16,7 +16,7 @@
 		}
 
 		$scope.priceDivOut = function(index) {
-			console.log(index);
+
 			$("#orderPrice-" + index).next("div.room-info").hide(0, function() {
 				$("#orderPrice-" + index).next("div.room-info").remove();
 			});
@@ -54,7 +54,7 @@
 
 		$scope.acceptOrder = function() {
 
-			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/"; 
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/";
 
 			console.log(url);
 
@@ -84,12 +84,9 @@
 
 			}
 
-			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/"; 
+			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/";
 
 			console.log(url);
-			console.log({
-				"reason": $scope.refuseReson
-			});
 
 			$http.post(url, {
 					"reason": $scope.refuseReson
@@ -130,6 +127,8 @@
 
 		function init() {
 
+			$(".menu1").find("dd").eq(0).addClass("active");
+
 			var url = "/api/order/waiting/";
 
 			$http.get(url)
@@ -151,7 +150,7 @@
 							$scope.orderList[i]["create_time"] = temptime;
 
 						};
-						console.log($scope.orderList);
+
 
 					} else {
 						alert(resp.errmsg);

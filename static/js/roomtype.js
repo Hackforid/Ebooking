@@ -59,9 +59,7 @@
 				'meal_num': parseInt(this.mealType),
 				'punish_type': parseInt(this.punishType)
 			};
-			console.log(params);
 
-			console.log(scope.currentRoomType);
 			http.post(url, params)
 				.success(function(resp) {
 					console.log(resp);
@@ -69,7 +67,6 @@
 
 						scope.roomrates.push(resp.result.roomrate);
 						scope.rateplans.push(resp.result.rateplan);
-						scope.dayWeekSum = [];
 						scope.dateCheck(scope.monthvalue);
 						$("#newRatePlanDialog").fadeOut(500);
 
@@ -104,8 +101,6 @@
 		}
 		this.save = function(index) {
 			this.errmsg = '';
-			//console.log(this.name + this.mealType + this.punishType);					
-
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/' + scope.rateplans[index].id;
 			console.log(url);
 			var params = {
@@ -113,7 +108,6 @@
 				"meal_num": parseInt($("#roomheadmeal" + index).val()),
 				"punish_type": parseInt($("#roomheadpunish" + index).val())
 			};
-			console.log(params);
 			http.put(url, params)
 				.success(function(resp) {
 					console.log(resp);
@@ -123,7 +117,6 @@
 						scope.roomrates[index] = resp.result.roomrate;
 						scope.rateplans[index] = resp.result.rateplan;
 
-						scope.dayWeekSum = [];
 						scope.dateCheck(scope.monthvalue);
 					} else {
 						this.errmsg = resp.errmsg;
@@ -148,7 +141,6 @@
 			$("#openDiv1").fadeOut(500);
 		}
 		this.save = function() {
-			console.log(scope.roomrates[scope.currentindex].id);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
 			var time1 = $("#time1").val();
@@ -186,14 +178,12 @@
 				"price": price
 
 			};
-			console.log(params);
 			http.put(url, params)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
-						scope.dayWeekSum = [];
 						scope.dateCheck(scope.monthvalue);
 
 					} else {
@@ -219,26 +209,36 @@
 		$scope.rateplans = {};
 		$scope.roomrates = {};
 		$scope.monthvalue = 1;
-		$scope.months = {};
+		$scope.months = [];
 		$scope.dayWeekSum = [];
 		$scope.dayPriceSum = {};
 		$scope.currentindex = "";
-		//$scope.currentrateindex = "";
 
 		$scope.addChangeP = function addChangeP(d, m, c) {
-			
 
-			if (c == "action5") {
-				$scope.currentindex = m;
-				//$scope.currentrateindex=i;
-				
+			var day = new Date();
+			var currentDay = day.getDate();
 
-				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
-					$(".btn-number").click(function() {
-						$("#openDiv1").show();
-					});
-				});
+			var ninetytime = new Date().getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetyday = new Date(ninetytime);
+			var ninetycurrentDay = ninetyday.getDate();
+
+			if ($scope.monthvalue == 1 && (c + 1) < currentDay) {
+				return;
 			}
+			if ($scope.monthvalue == $scope.months.length && (c + 1) > ninetycurrentDay) {
+				return;
+			}
+
+
+			$scope.currentindex = m;
+
+			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
+				$(".btn-number").click(function() {
+					$("#openDiv1").show();
+				});
+			});
+
 
 			$("#" + d).mouseout(function() {
 
@@ -270,7 +270,7 @@
 				})
 		}
 
-		loadRoomTypes(hotelId);
+
 
 		function monthCheck() {
 			var day = new Date();
@@ -284,10 +284,10 @@
 
 			var temp = {};
 
-			$scope.months[0] = {
+			$scope.months.push({
 				"month": month,
 				"year": year
-			};
+			});
 			for (var i = 1; i < monthcount; i++) {
 				month++;
 				if (month > 12) {
@@ -298,12 +298,18 @@
 					"month": month,
 					"year": year
 				};
-				$scope.months[i] = temp;
+				$scope.months.push(temp);
 			}
 
 		}
 
-		monthCheck();
+		function init() {
+			$(".menu2").find("dd").eq(0).addClass("active");
+			loadRoomTypes(hotelId);
+			monthCheck();
+		}
+
+		init();
 
 		$scope.$watch('currentRoomType', function() {
 			if (!$scope.currentRoomType["base_roomtype_id"]) {
@@ -319,33 +325,30 @@
 						$scope.rateplans = resp.result.rateplans;
 						$scope.roomrates = resp.result.roomrates;
 					}
-					console.log($scope.roomrates);
-					console.log($scope.rateplans);
 
 					//$scope.roomrates[0].month1 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 					//$scope.roomrates[0].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 					//$scope.roomrates[1].month12 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 					//$scope.roomrates[1].month1 = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
 
-					$scope.dayWeekSum = [];
 					$scope.dateCheck($scope.monthvalue);
 				})
 				.error(function() {})
 		});
 
 		$scope.$watch('monthvalue', function() {
-			//$scope.dayPriceSum = {};
-			$scope.dayWeekSum = [];
+
+
 			$scope.dateCheck($scope.monthvalue);
 
 		});
-
 
 		$scope.dateCheck = function dateCheck(monthvalue) {
 			if (typeof($scope.roomrates) === "object" && !($scope.roomrates instanceof Array)) {
 				return;
 			}
 
+			$scope.dayWeekSum = [];
 			var day = new Date();
 			var year = $scope.months[monthvalue - 1].year;
 			var month = $scope.months[monthvalue - 1].month;
@@ -358,12 +361,13 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 
 			var ninetysum = new Date(ninetyyear, ninetymonth, 0).getDate();
-			var daynum;var currentDay=day.getDate();
+			var daynum;
+			var currentDay = day.getDate();
 
 
 			if (monthvalue == 1) {
 				daynum = day.getDate();
-			} else if (monthvalue == 4) {
+			} else if (monthvalue == $scope.months.length) {
 				daynum = ninetyday.getDate();
 
 			} else {
@@ -380,15 +384,13 @@
 
 				dayprice = $scope.roomrates[i]["month" + month].split("|", tempdaysum);
 
-				//console.log($scope.roomrates[i].id);
-
 				if (monthvalue == 1) {
 
 					for (var a = 0; a < daynum - 1; a++) {
 						dayprice[a] = "-1"
 					};
 
-				} else if (monthvalue == 4) {
+				} else if (monthvalue == $scope.months.length) {
 					for (var o = daynum; o < ninetysum; o++) {
 						dayprice[o] = "-1"
 					};
@@ -406,7 +408,7 @@
 						tempprice = dayprice[j];
 						classstyle = "action5";
 					}
-					temp = {						
+					temp = {
 						"classstyle": classstyle,
 						"dayprice": tempprice
 					};
@@ -444,11 +446,14 @@
 
 			}
 
-			if(monthvalue==1){
-				
-				$scope.dayWeekSum[currentDay-1]["day"]="今";
-				$scope.dayWeekSum[currentDay-1]["weekday"]="天";
-				$scope.dayWeekSum[currentDay-1]["textcolor"]={color: '#F30','font-weight': 'bold'};
+			if (monthvalue == 1) {
+
+				$scope.dayWeekSum[currentDay - 1]["day"] = "今";
+				$scope.dayWeekSum[currentDay - 1]["weekday"] = "天";
+				$scope.dayWeekSum[currentDay - 1]["textcolor"] = {
+					color: '#F30',
+					'font-weight': 'bold'
+				};
 
 			}
 
