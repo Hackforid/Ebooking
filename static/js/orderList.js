@@ -6,9 +6,8 @@
 		$scope.todayBook = {};
 		$scope.todayCheckIn = {};
 
-
-
 		function initBook() {
+			$(".menu1").find("dd").eq(1).addClass("active");
 
 			var url = "/api/order/todaybook";
 
@@ -19,7 +18,6 @@
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
-						console.log($scope.todayBook);
 						var todayBookLength = $scope.todayBook.length;
 
 						for (var i = 0; i < $scope.todayBook.length; i++) {
@@ -43,15 +41,21 @@
 
 
 								if (bookStatus == "100") {
+
 									$scope.todayBook[i]["status"] = "待确定";
 
 								} else if (bookStatus == "300") {
+
 									$scope.todayBook[i]["status"] = "接受";
 
 								} else if (bookStatus == "400") {
+
 									$scope.todayBook[i]["status"] = "拒绝";
+
 								} else if (bookStatus == "500" || bookStatus == "600") {
+
 									$scope.todayBook[i]["status"] = "服务器取消";
+
 								}
 
 							}

@@ -42,14 +42,14 @@
                         ng-repeat="room in cooped" ng-init="index=$index"
                         >
                         <div class="roomhead"><h1 ng-click="hotelHeadDialog.eachshow($index);">{{room.name}}--剩余房量</h1><span></span>
-                            <div class="eachroom" style=" display:none;">
+                            <div class="eachroom" style=" display:none;background:#EBEBED">
                                 <label>房型名称：{{room.name}}<a class="a-blue" ng-click="roomDescribe()">[房型详情]</a></label>
-                                <label>自定义房型名称：<input id={{"prefixId-"+$index}} ng-init="prefixName=room.prefix_name" style="" type="text"  ng-value="room.prefix_name"  ng-model="prefixName" class="input-t"  />
+                                <label style="line-height:30px;margin-top:10px;">自定义房型名称：<span style="display:inline-block;background:white"><input id={{"prefixId-"+$index}} ng-init="prefixName=room.prefix_name" style="" type="text"  ng-value="room.prefix_name"  ng-model="prefixName" class="input-t"  />
                                                              
                                     <span style="position:relative;left:-7px;">{{room.name}}</span><b style="position:relative;font-weight:normal;" >(</b>
                                         <input id={{"remarkId-"+$index}} style="position:relative;left:-7px" type="text" ng-value="room.remark_name"  ng-model="remarkName" ng-init="remarkName=room.remark_name"  class="input-t"  />
                                         
-                                        <b style="position:relative;left:-14px;font-weight:normal;" >)</b>
+                                        <b style="position:relative;left:-14px;font-weight:normal;" >)</b></span>
                                      <span id={{"exampleDiv-"+$index}} style="font-weight:normal;" ng-mouseover="hotelHeadDialog.exampleDivIn($index);" ng-mouseleave="hotelHeadDialog.exampleDivLeave($index);">?
                                      </span> 
                                     </label>
@@ -233,7 +233,7 @@
 
 
 <!--房型概述弹窗浮层-->     
-<div class="messageDiv" id="cool-roomtype" ng-show="desResult" style="z-index:99999">
+<div class="messageDiv" id="cool-roomtype"  style="z-index:99999;display:none">
    <div class="messageBlack"></div>
    <div class="detail detail-roomtype">
        <div class="head"><h1>房型概述</h1></div>
