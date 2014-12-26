@@ -37,7 +37,7 @@ def modify_inventory(self, merchant_id, hotel_id, roomtype_id, price_type, chang
             inventory.set_val_by_day(day.day, price_type, change_num)
     session.commit()
 
-    PushInventoryTask().push_request.delay(roomtype_id)
+    PushInventoryTask().push_inventory.delay(roomtype_id)
     return inventories
 
 

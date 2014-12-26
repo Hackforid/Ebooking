@@ -280,6 +280,7 @@ class PushInventoryTask(SqlAlchemyTask):
         data['manual_confirm_counts'] = '|'.join(manual_confirm_count)
         data['start_date'] = start_day
         data['end_date'] = end_day
+        data['is_soldout_auto_close'] = 1
 
         return data
 
