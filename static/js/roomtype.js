@@ -405,7 +405,7 @@
 						tempprice = "--";
 						classstyle = "stop";
 					} else {
-						tempprice = dayprice[j];
+						tempprice = dayprice[j] / 100;
 						classstyle = "action5";
 					}
 					temp = {
