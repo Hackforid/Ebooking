@@ -18,16 +18,16 @@
 				<div class="search-div">
 					<div class="content">
 						<div class="divone"><div class="c">
-								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="serchName"/></label>
-								<label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="serchCity"/></label>
-								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="serchStar">
+								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+								<label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="searchCity"/></label>
+								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="searchStar">
 										<option value="0">不限</option>
 										<option value="1">经济型</option>
 										<option value="2">五星级</option>
 								</select></label>
 
 								<label>
-									<input name="" type="button" value="搜索" ng-click="searchHotel()"/> <input name="" type="button" value="重置" class="btn-bai btn-s" />
+									<input name="" type="button" value="搜索" ng-click="urlCheck(1)"/> <input name="" type="button" value="重置" class="btn-bai btn-s" />
 								</label>
 
 
@@ -71,7 +71,7 @@
 							<!--页码-->
 							<div id="pageInfo" class="page">
                                 
-								<span id="pageNumber"></span>
+								<span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
 								
                                 <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
 										<option value="10">10</option>
@@ -93,5 +93,6 @@
 </%def>
 
 <%def name="end()">
+<script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/hotelWillCoop.js')}"></script>
 </%def>

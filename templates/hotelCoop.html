@@ -16,19 +16,19 @@
             <div class="search-div">
                 <div class="content">
                     <div class="divone"><div class="c">
-                            <label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="serchName"/></label>
-                            <label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="serchCity"/></label>
-                            <label><strong>星级：</strong><select name="" class="input-s" ng-model="serchStar" >
+                            <label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+                            <label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="searchCity"/></label>
+                            <label><strong>星级：</strong><select name="" class="input-s" ng-model="searchStar" >
                                     <option value="0">不限</option>
                                     <option value="1">经济型</option>
                                     <option value="2">五星级</option>
                             </select></label>
-                            <label><strong>状态：</strong><select name="" class="input-s"  ng-model="serchStatus">
+                            <label><strong>状态：</strong><select name="" class="input-s"  ng-model="searchStatus">
                                     <option value="0">不限</option>
                                     <option value="1">正常</option>
                                     <option value="2">暂停</option>
                             </select></label>
-                            <label><input name="" type="button" value="搜索" ng-click="searchHotel()" />
+                            <label><input name="" type="button" value="搜索" ng-click="urlCheck(1)" />
                                 <input name="" type="button" value="重置" class="btn-bai btn-s" /></label>
 
                     </div></div>
@@ -67,20 +67,15 @@
 
                         </table>
                         <!--页码-->
-                        <div class="page">
-                            <span class="disabled"> &lt;  上一页</span>
-                            <span class="current">1</span>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            ...<a href="#">20</a>
-                            <a href="#">21</a>
-                            <a href="#">下一页  &gt; </a>
-                            <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
-                                    <option value="1">10</option>
-                                    <option value="2">20</option>
-                                    <option value="3">30</option>
-                                    <option value="4">40</option>
+                        <div id="pageInfo" class="page">
+
+                           <span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
+                                
+                            <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">                                                                                                      
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
                             </select></span>
                         </div>
                         <!--页码end-->     
@@ -101,5 +96,6 @@
 </%def>
 
 <%def name="end()">
+    <script src="${static_url('js/pageDirectives.js')}"></script>
     <script src="${static_url('js/hotelCooped.js')}"></script>
 </%def>
