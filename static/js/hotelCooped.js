@@ -19,6 +19,7 @@
 		$scope.directiveCtl = false;
 		$scope.finalUrl;
 		$scope.paginationId = "pageNumber";
+		$scope.messageBox;
 
 
 
@@ -41,6 +42,11 @@
 			$scope.searchStar = "";
 		}
 
+
+		$scope.confirmResult = function confirmResult() {
+			$("#acceptDialog").hide();
+
+		}
 
 
 		$scope.urlCheck = function urlCheck(a) {
@@ -98,12 +104,19 @@
 
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#acceptDialog").show();
+
 					}
 
 				})
 				.error(function() {
-					alert('酒店列表读取失败');
+
+					$scope.messageBox = "酒店列表读取失败";
+					$("#acceptDialog").show();
+
+
 				});
 
 
