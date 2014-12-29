@@ -2,6 +2,7 @@
 
 	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myApp.directives']);
 
+
 	hotelWillCoopApp.controller('hotelWillCoopContentCtrl', ['$scope', '$http', function($scope, $http) {
 
 			$scope.citys = [];
@@ -17,6 +18,10 @@
 			$scope.pageCount;
 			$scope.directiveCtl = false;
 			$scope.finalUrl;
+
+
+
+			//$scope.cityList = [];
 
 
 			$scope.urlCheck = function urlCheck(a) {
@@ -60,6 +65,48 @@
 						}
 					})
 					.error(function() {});
+
+			}
+
+
+
+			/*$scope.$watch('searchCity', function(newValue, oldValue) {
+				//console.log("watch");
+				if (newValue == oldValue) {
+					return;
+				}
+
+				for (var i = 0; i < $scope.citys.length; i++) {
+					if ($scope.citys[i]["name"] == newValue) {
+						$("#cityShow").hide();
+						return;
+					}
+				};
+
+				$("#cityShow").show();
+				$scope.cityList = [];
+
+				for (var i = 0; i < $scope.citys.length; i++) {
+					if (($scope.citys[i]["name"].indexOf($scope.searchCity)) >= 0) {
+						$scope.cityList.push($scope.citys[i]["name"]);
+
+					}
+
+				};
+
+			});
+
+			$scope.cityChoose = function cityChoose(a) {
+				$scope.searchCity = a;
+				$("#cityShow").hide();
+			}*/
+
+
+			$scope.conditionReset = function conditionReset() {
+
+				$scope.searchName = "";
+				$scope.searchCity = "";
+				$scope.searchStar = "";
 			}
 
 
@@ -93,12 +140,14 @@
 
 			}
 
-			$scope.cooprate = function(hotel) {
+			$scope.cooprate = function(hotel, index) {
 
 				var url = '/api/hotel/coop/' + hotel.id;
 				$http.post(url)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
+							$scope.hotels.splice(index, 1);
+
 							alert("合作成功");
 						} else {
 							alert(resp.errmsg);

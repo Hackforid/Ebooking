@@ -7,7 +7,7 @@ angular.module('myApp.directives', []).directive('pageInfo', function() {
         //console.log("这里是setpage");
         var count = Math.ceil((scope.total) / (scope.itemPerPage));
         var pageindex = scope.currentPage;
-        var linkList = []
+        var linkList = [];
           //总页数少于10 全部显示 大于10 显示前3 后3 中间3 其余....
         if (pageindex == 1) {
           linkList[linkList.length] = "<span  href='#' class='disabled' >&lt; 上一页</span>";

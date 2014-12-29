@@ -19,7 +19,18 @@
 					<div class="content">
 						<div class="divone"><div class="c">
 								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
-								<label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="searchCity"/></label>
+								<label ><strong>城市：</strong>
+
+								<input  name=""  type="text" value="" class="input-t" ng-model="searchCity"/>
+
+								<div id="cityShow" style="display:none;overflow:auto;position:absolute;width:140px;height:80px;background:white;top:185px;left:490px">
+								<div style="width:100%"  ng-click="cityChoose(city);" ng-repeat="city in cityList">{{city}}</div>
+								
+								</div> 
+							
+								</label>
+
+
 								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="searchStar">
 										<option value="0">不限</option>
 										<option value="1">经济型</option>
@@ -27,7 +38,7 @@
 								</select></label>
 
 								<label>
-									<input name="" type="button" value="搜索" ng-click="urlCheck(1)"/> <input name="" type="button" value="重置" class="btn-bai btn-s" />
+									<input name="" type="button" value="搜索" ng-click="urlCheck(1)"/> <input name="" type="button" value="重置"  ng-click="conditionReset()" class="btn-bai btn-s" />
 								</label>
 
 
@@ -60,7 +71,7 @@
                                     <td width="20%">{{hotel.address}}</td>
                                     <td width="10%">{{hotel.phone}}</td>
 									<td width="10%">可申请合作</td>
-									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel)"/></td>
+									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>
 								</tr>
 								</tbody>
 							</table>
@@ -93,6 +104,7 @@
 </%def>
 
 <%def name="end()">
+
 <script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/hotelWillCoop.js')}"></script>
 </%def>

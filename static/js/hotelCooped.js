@@ -33,9 +33,17 @@
 		}
 
 
+		$scope.conditionReset = function conditionReset() {
+			$scope.searchName = "";
+			$scope.searchStatus = "";
+			$scope.searchCity = "";
+			$scope.searchStar = "";
+		}
+
+
 
 		$scope.urlCheck = function urlCheck(a) {
-			
+
 			$scope.currentPage = a;
 			//console.log("这里是urlCheck url变化的地方");
 
