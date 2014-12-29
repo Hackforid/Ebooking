@@ -18,6 +18,7 @@
 			$scope.pageCount;
 			$scope.directiveCtl = false;
 			$scope.finalUrl;
+			$scope.messageBox;
 
 
 
@@ -135,12 +136,16 @@
 							//console.log("数据库操作");
 
 						} else {
-							alert(resp.errmsg);
+
+							$scope.messageBox = resp.errmsg;
+							$("#acceptDialog").show();
 						}
 
 					})
 					.error(function() {
-						alert('酒店列表读取失败');
+						$scope.messageBox = "酒店列表读取失败";
+						$("#acceptDialog").show();
+
 					});
 
 
@@ -152,16 +157,25 @@
 				$http.post(url)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
+							$scope.messageBox = "合作成功";
 
 							$("#acceptDialog").show();
+
 							$scope.hotels.splice(index, 1);
 
 						} else {
-							alert(resp.errmsg);
+
+							$scope.messageBox = resp.errmsg;
+
+							$("#acceptDialog").show();
 						}
 					})
 					.error(function() {
-						alert("网络错误");
+
+						$scope.messageBox = "网络错误";
+
+						$("#acceptDialog").show();
+
 					});
 
 			}
