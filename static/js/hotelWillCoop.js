@@ -110,6 +110,12 @@
 			}
 
 
+			$scope.confirmResult = function confirmResult() {
+				$("#acceptDialog").hide();
+
+			}
+
+
 			$scope.searchHotel = function searchHotel() {
 
 				//console.log($scope.finalUrl);
@@ -146,9 +152,10 @@
 				$http.post(url)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
+
+							$("#acceptDialog").show();
 							$scope.hotels.splice(index, 1);
 
-							alert("合作成功");
 						} else {
 							alert(resp.errmsg);
 						}
