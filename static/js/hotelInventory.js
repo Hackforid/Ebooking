@@ -298,7 +298,7 @@
 				$scope.currentPriceType = m;
 				$scope.currentId = d;
 
-				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
+				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房量' class='btn-number' /></div>").show(0, function() {
 					$(".btn-number").click(function() {
 						$("#openDiv1").show();
 					});
