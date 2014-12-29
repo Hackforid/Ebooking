@@ -19,6 +19,7 @@
 			$scope.directiveCtl = false;
 			$scope.finalUrl;
 			$scope.messageBox;
+			$scope.paginationId = "pageNumber";
 
 
 
@@ -117,7 +118,7 @@
 			}
 
 
-			$scope.searchHotel = function searchHotel() {
+			$scope.searchResult = function searchResult() {
 
 				//console.log($scope.finalUrl);
 				$http.get($scope.finalUrl)
@@ -184,7 +185,7 @@
 				$(".menu2").find("dd").eq(1).addClass("active");
 				loadCitys();
 				$scope.urlCheck($scope.currentPage);
-				$scope.searchHotel();
+				$scope.searchResult();
 
 			}
 

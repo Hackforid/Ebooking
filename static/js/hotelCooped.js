@@ -18,6 +18,7 @@
 		$scope.pageCount;
 		$scope.directiveCtl = false;
 		$scope.finalUrl;
+		$scope.paginationId = "pageNumber";
 
 
 
@@ -81,7 +82,7 @@
 
 
 
-		$scope.searchHotel = function searchHotel() {
+		$scope.searchResult = function searchResult() {
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
@@ -116,7 +117,7 @@
 
 			$scope.urlCheck($scope.currentPage);
 
-			$scope.searchHotel();
+			$scope.searchResult();
 
 
 		}
