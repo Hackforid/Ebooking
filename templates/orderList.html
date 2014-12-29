@@ -3,7 +3,7 @@
 
 <div
     ng-app="orderListApp"
-    ng-controller="orderListCtrl"
+    
     >
 
     <!--导航条--> 
@@ -27,8 +27,8 @@
                     </div>
 
 
-                    <div class="tabCon">
-                        <div id="tabcontent1" class="tabcon1" style=" display:block">
+                    <div class="tabCon" >
+                        <div id="tabcontent1" class="tabcon1" style=" display:block" ng-controller="orderListCtrl">
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                                 <thead><tr>
@@ -65,25 +65,22 @@
 
                             <!--页码-->
                             <div class="page">
-                                <span class="disabled"> &lt;  上一页</span>
-                                <span class="current">1</span>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                ...<a href="#">20</a>
-                                <a href="#">21</a>
-                                <a href="#">下一页  &gt; </a>
-                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
-                                        <option value="1">10</option>
-                                        <option value="2">20</option>
-                                        <option value="3">30</option>
-                                        <option value="4">40</option>
+                                
+                            <span  id="pagebookNumber"  ng-if="directiveCtl" page-info></span>
+                                
+                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="40">40</option>
                                 </select></span>
+                              
+                                
                             </div>
                             <!--页码end-->               
                         </div>
 
-                        <div id="tabcontent2" class="tabcon2" style=" display:none">
+                        <div id="tabcontent2" class="tabcon2" style=" display:none" ng-controller="orderListCtrlt">
                             　
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                                 <thead><tr>
@@ -120,24 +117,21 @@
                                 
                             </table>
 
-                            <!--页码-->
+                             <!--页码-->
                             <div class="page">
-                                <span class="disabled"> &lt;  上一页</span>
-                                <span class="current">1</span>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                ...<a href="#">20</a>
-                                <a href="#">21</a>
-                                <a href="#">下一页  &gt; </a>
-                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
-                                        <option value="1">10</option>
-                                        <option value="2">20</option>
-                                        <option value="3">30</option>
-                                        <option value="4">40</option>
+                                
+                            <span  id="pagecheckNumber"  ng-if="directiveCtl" page-info></span>
+                                
+                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="40">40</option>
                                 </select></span>
+                              
+                                
                             </div>
-                            <!--页码end-->                 
+                            <!--页码end-->                  
                         </div>
 
 
@@ -271,6 +265,7 @@
 </%def>
 
 <%def name="end()">
+<script src="${static_url('js/pageDirectives.js')}"></script>
 
 <script src="${static_url('js/orderList.js')}"></script>
 <script src="${static_url('js/menu-tab.js')}"></script>

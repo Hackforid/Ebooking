@@ -8,7 +8,7 @@ angular.module('myApp.directives', []).directive('pageInfo', function() {
         var count = Math.ceil((scope.total) / (scope.itemPerPage));
         var pageindex = scope.currentPage;
         var linkList = [];
-          //总页数少于10 全部显示 大于10 显示前3 后3 中间3 其余....
+        //总页数少于10 全部显示 大于10 显示前3 后3 中间3 其余....
         if (pageindex == 1) {
           linkList[linkList.length] = "<span  href='#' class='disabled' >&lt; 上一页</span>";
         } else {
@@ -55,11 +55,11 @@ angular.module('myApp.directives', []).directive('pageInfo', function() {
         }
 
 
-        $("#pageNumber").html(linkList.join(""));
+        $("#" + scope.paginationId).html(linkList.join(""));
 
         //事件点击
         var pageClick = function() {
-          var aLink = $("#pageNumber").find("a");
+          var aLink = $("#" + scope.paginationId).find("a");
           var initPage = pageindex; //初始的页码
           aLink[0].onclick = function() { //点击上一页
             if (initPage == 1) {
@@ -121,7 +121,7 @@ angular.module('myApp.directives', []).directive('pageInfo', function() {
       scope.$watch('finalUrl', function() {
         //console.log("这里是url变化时候产生的watch");
         //console.log(scope.finalUrl);
-        scope.searchHotel();
+        scope.searchResult();
 
       });
 
