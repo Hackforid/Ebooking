@@ -86,6 +86,8 @@
 
 						$("div.eachroom").eq(index).css("display", "none");
 
+						scope.cooped[index]["prefix_name"] = resp.result.cooped_roomtype["prefix_name"];
+
 					} else {
 						this.errmsg = resp.errmsg;
 						console.log(errmsg);
@@ -256,6 +258,12 @@
 		$scope.currentIndex;
 		$scope.currentPriceType;
 		$scope.currentId;
+
+
+		$scope.nameTest = function(e) {
+			return e != null;
+		}
+
 
 
 		$scope.roomDescribe = function roomDescribe(index) {
