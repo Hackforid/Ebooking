@@ -184,6 +184,11 @@
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
 
+						$scope.total = resp.result.total;
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
 						for (var i = 0; i < $scope.orderList.length; i++) {
 
 							var temp = $scope.orderList[i]["customer_info"];
@@ -198,13 +203,7 @@
 						};
 
 						$scope.itemPerPage = resp.result.limit;
-						$scope.total = resp.result.total;
-
-						if ($scope.total == 0) {
-							$("#pageInfo").hide();
-						}
-
-
+						
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
 
 						$scope.directiveCtl = true;
