@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商旅分销管理系统</title>
+    <link href="${static_url('css/default.css')}" rel="stylesheet" type="text/css"/>
+    <link href="${static_url('css/mod.css')}" rel="stylesheet" type="text/css"/>
+    <script src="${static_url('js/angular.js')}"></script>
+</head>
+
+<body class="no-bg" ng-app="userManageApp" ng-controller="userInfoController">
+
+<div class="wrapper">
+    <div class="main-mid">
+
+        <!--主体内容-->
+        <div class="main">
+            <div class="p15">
+                <!--用户管理-->
+                <div class="main-mod main-user">
+                    <div class="content">
+
+                        <div class="tab-menu">
+                            <ul>
+                                <li ng-repeat="user in users" ng-click="showSelectUser(user.id)" ng-bind="user.username" ng-class="selected[user.id]"></li>
+                                <li ng-click="showAddUser()" ng-class="selected[0]"><a class="add-one">+</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="tabcon-main">
+                            <div id="div-showSelect" class="tabcon0" ng-show="showSelect">
+                                <div class="label-div">
+                                    <div class="each">
+                                        <label>用户名：</label>
+                                        <p><input name="select_username" type="text" class="input-t input-no"
+                                                  ng-model="selectUser.username" readOnly="true" disabled="true"/></p>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>密码：</label>
+                                        <p><input name="select_password" type="password" class="input-t" placeholder="不修改密码请勿填写"
+                                                  ng-model="selectUser.password" ng-change="selectBadPassword=false"/></p>
+                                        <b class="red-tips" ng-show="selectBadPassword">请填写长度6-20位的正确密码</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>部门：</label>
+                                        <p><input name="select_department" type="text" class="input-t"
+                                                  ng-model="selectUser.department" ng-change="selectBadDepartment=false"/></p>
+                                        <b class="red-tips" ng-show="selectBadDepartment">请填写部门</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>手机：</label>
+                                        <p><input name="select_mobile" type="text" class="input-t" ng-model="selectUser.mobile" ng-change="selectBadMobile=false"/></p>
+                                        <b class="red-tips" ng-show="selectBadMobile">请输入正确手机号</b>
+                                    </div>
+
+                                    <div class="each" ng-show="isShow">
+                                        <label>是否有效：</label>
+                                        <p ng-init="selectUser.is_valid">
+                                            <input name="select_valid" type="radio" ng-model="selectUser.is_valid" value="1"/>是&nbsp;&nbsp;&nbsp;
+                                            <input name="select_valid" type="radio" ng-model="selectUser.is_valid" value="0"/>否
+                                        </p>
+                                    </div>
+
+                                    <div class="each" ng-show="isShow">
+                                        <label>权限范围：</label>
+                                        <input name="auth_all" type="checkbox" ng-model="selectUser.auth_all" ng-click="selectAllAuth(selectUser)"/>全选
+                                        <div class="check">
+                                            <p><input name="select_auth1" type="checkbox" ng-click="changeAuth(selectUser, 1)" ng-model="selectUser.auths[1]"/>待确认订单</p>
+                                            <p><input name="select_auth2" type="checkbox" ng-click="changeAuth(selectUser, 2)" ng-model="selectUser.auths[2]"/>订单查询</p>
+                                            <p><input name="select_auth3" type="checkbox" ng-click="changeAuth(selectUser, 3)" ng-model="selectUser.auths[3]"/>已合作酒店</p>
+                                            <p><input name="select_auth4" type="checkbox" ng-click="changeAuth(selectUser, 4)" ng-model="selectUser.auths[4]"/>可合作酒店</p>
+                                            <p><input name="select_auth5" type="checkbox" ng-click="changeAuth(selectUser, 5)" ng-model="selectUser.auths[5]"/>房量房态</p>
+                                            <p><input name="select_auth6" type="checkbox" ng-click="changeAuth(selectUser, 6)" ng-model="selectUser.auths[6]"/>房价金额</p>
+                                            <p><input name="select_auth7" type="checkbox" ng-click="changeAuth(selectUser, 7)" ng-model="selectUser.auths[7]"/>订单统计</p>
+                                            <p><input name="select_auth8" type="checkbox" ng-click="changeAuth(selectUser, 8)" ng-model="selectUser.auths[8]"/>收益统计</p>
+                                            <p><input name="select_auth9" type="checkbox" ng-click="changeAuth(selectUser, 9)" ng-model="selectUser.auths[9]"/>修改密码</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="btn-div">
+                                    <input name="select_save" type="button" value="保存" class="btn-b" ng-click="submitUpdate()"/>
+                                    <input name="select_cancel" type="button" value="取消" class="btn-b btn-hui" ng-click="cancelUpdate()"/>
+                                </div>
+                            </div>
+
+                            <div id="div-addUser" ng-show="showAdd">
+                                <div class="label-div" id="add-label">
+                                    <div class="each">
+                                        <label>用户名：</label>
+                                        <p><input name="add_username" type="text" class="input-t" placeholder="请输入用户名，不可更改" ng-model="addUser.username" ng-change="addBadUsername=false"/></p>
+                                        <b class="red-tips">不可为空，2-20个英文数字或中文</b>
+                                        <b class="red-tips" ng-show="addBadUsername">用户名有错，请重新填写</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>密码：</label>
+                                        <p><input name="add_password" type="password" class="input-t" placeholder="请输入密码" ng-model="addUser.password" ng-change="addBadPassword=false"/></p>
+                                        <b class="red-tips">密码长度为6-20位</b>
+                                        <b class="red-tips" ng-show="addBadPassword">请填写长度6-20位的正确密码</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>确认密码：</label>
+                                        <p><input name="add_rePassword" type="password" class="input-t" placeholder="请确认密码" ng-model="addUser.re_password" ng-change="addBadPassword=false"/></p>
+                                        <b class="red-tips" ng-show="addBadPassword">请填写长度6-20位的正确密码</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>部门：</label>
+                                        <p><input name="add_department" type="text" class="input-t" placeholder="请输入部门" ng-model="addUser.department" ng-change="addBadDepartment=false"/></p>
+                                        <b class="red-tips" ng-show="addBadDepartment">请输入部门</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>手机：</label>
+                                        <p><input name="add_mobile" type="text" class="input-t" placeholder="请输入电话" ng-model="addUser.mobile" ng-change="addBadMobile=false"/></p>
+                                        <b class="red-tips" ng-show="addBadMobile">请输入正确手机号</b>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>是否有效：</label>
+                                        <p>
+                                            <input name="add_valid" type="radio" ng-model="addUser.is_valid" value="1"/>是&nbsp;&nbsp;&nbsp;
+                                            <input name="add_valid" type="radio" ng-model="addUser.is_valid" value="0"/>否
+                                        </p>
+                                    </div>
+
+                                    <div class="each">
+                                        <label>权限范围：</label>
+                                        <input name="" type="checkbox" ng-model="addUser.auth_all" ng-click="selectAllAuth(addUser)"/>全选
+                                        <div class="check">
+                                            <p><input name="add_auth1" type="checkbox" ng-click="changeAuth(addUser, 1)" ng-model="addUser.auths[1]"/>待确认订单</p>
+                                            <p><input name="add_auth2" type="checkbox" ng-click="changeAuth(addUser, 2)" ng-model="addUser.auths[2]"/>订单查询</p>
+                                            <p><input name="add_auth3" type="checkbox" ng-click="changeAuth(addUser, 3)" ng-model="addUser.auths[3]"/>已合作酒店</p>
+                                            <p><input name="add_auth4" type="checkbox" ng-click="changeAuth(addUser, 4)" ng-model="addUser.auths[4]"/>可合作酒店</p>
+                                            <p><input name="add_auth5" type="checkbox" ng-click="changeAuth(addUser, 5)" ng-model="addUser.auths[5]"/>房量房态</p>
+                                            <p><input name="add_auth6" type="checkbox" ng-click="changeAuth(addUser, 6)" ng-model="addUser.auths[6]"/>房价金额</p>
+                                            <p><input name="add_auth7" type="checkbox" ng-click="changeAuth(addUser, 7)" ng-model="addUser.auths[7]"/>订单统计</p>
+                                            <p><input name="add_auth8" type="checkbox" ng-click="changeAuth(addUser, 8)" ng-model="addUser.auths[8]"/>收益统计</p>
+                                            <p><input name="add_auth9" type="checkbox" ng-click="changeAuth(addUser, 9)" ng-model="addUser.auths[9]"/>修改密码</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="btn-div">
+                                    <input name="add_save" type="button" value="新增用户" class="btn-b" ng-click="submitAdd()"/>
+                                    <input name="add_cancel" type="button" value="清空重填" class="btn-b btn-hui" ng-click="cancelAdd()"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--用户管理end-->
+        </div>
+    </div>
+    <!--主体内容end-->
+
+</div>
+</div>
+<script src="${static_url('js/jquery.min.js')}"></script>
+<script src="${static_url('js/jquery.Placeholder.js')}"></script>
+<!--tab标签js-->
+<script src="${static_url('js/datechoose.js')}"></script>
+<!--日历选择-->
+<script>
+    var userList = ${users}
+</script>
+<script src="${static_url('js/userManage.js')}"></script>
+<!--自定义js-->
+</body>
+</html>
