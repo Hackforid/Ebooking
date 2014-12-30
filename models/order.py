@@ -48,9 +48,42 @@ class OrderModel(Base):
     confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=1)
 
     @classmethod
-    def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None):
+    def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
         if id:
-            pass
+            return cls.get_by_id(session, id)
+        query = session.query(OrderModel)
+
+        if hotel_name:
+            query = query.filter(OrderModel.hotel_name.like(u'%{}%'.format(hotel_name)))
+        if customer:
+            query = query.filter(OrderModel.customer_info.like(u'%{}%'.format(customer)))
+        if checkin_date:
+            date = datetime.datetime.strptime(checkin_date, '%Y-%m-%d')
+            query = query.filter(OrderModel.checkin_date == date.date())
+        if checkout_date:
+            date = datetime.datetime.strptime(checkout_date, '%Y-%m-%d')
+            query = query.filter(OrderModel.checkout_date == date.date())
+        if status is not None:
+            query = query.filter(OrderModel.status == status)
+        if create_time_start:
+            date = datetime.datetime.strptime(create_time_start, '%Y-%m-%d')
+            query = query.filter(OrderModel.create_time >= date)
+        if create_time_end:
+            date = datetime.datetime.strptime(create_time_end, '%Y-%m-%d')
+            query = query.filter(OrderModel.create_time <= date)
+
+        total = query.count()
+
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
+
+
+
+
 
     @classmethod
     def get_by_id(cls, session, id):
