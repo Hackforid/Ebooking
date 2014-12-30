@@ -252,18 +252,13 @@
 
 
 		$scope.searchOrderId = "";
-		$scope.searchHotelName = "";
-		$scope.searchLiveStart = "";
-		$scope.searchLiveEnd = "";
+		$scope.searchHotelName = "";			
 		$scope.searchInPeople = "";
 		$scope.searchStatus = "";
-		$scope.searchListStart = "";
-		$scope.searchListEnd = "";
-
-
+		
+		
 		$scope.urlCheck = function urlCheck(a) {
 
-			console.log($scope.searchListStart);
 			$scope.currentPage = a;
 			var liveStarTime = $("#liveStarTime").val();
 			var liveEndTime = $("#liveEndTime").val();
@@ -318,7 +313,7 @@
 
 			}
 
-			$scope.finalUrl = encodeURI(url);
+			$scope.finalUrl = encodeURI("/api/order/search/?start=0&order_id=1&limit=20");
 			console.log($scope.finalUrl);
 
 		}
