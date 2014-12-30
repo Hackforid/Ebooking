@@ -44,7 +44,7 @@ class BtwBaseHandler(BaseHandler):
 
     def render(self, template_name, **kwargs):
         kwargs['current_user'] = self.current_user
-        super(BtwBaseHandler, self).render(template_name, **kwargs)
+        super(BtwBaseHandler, self).render(template_name, user=self.current_user.todict(), **kwargs) 
 
     def _handle_request_exception(self, e):
         self.db.rollback()
