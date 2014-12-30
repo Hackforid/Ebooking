@@ -70,6 +70,14 @@ class InventoryModel(Base):
                 .filter(InventoryModel.is_delete == 0)\
                 .all()
 
+    @classmethod
+    def get_by_roomtype_id_and_date(cls, session, roomtype_id, year, month):
+        month = InventoryModel.combin_year_month(year, month)
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.roomtype_id == roomtype_id)\
+                .filter(InventoryModel.month == month)\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
 
     @classmethod
     def get_by_merchant_id_and_hotel_id_and_date(cls, session, merchant_id, hotel_id, year, month):
@@ -156,6 +164,24 @@ class InventoryModel(Base):
         session.commit()
         return inventories
 
+    @classmethod
+    def insert_all_in_four_month(cls, session, roomtype_ids):
+
+        inventories = []
+        dates= cls.get_months(4)
+
+        for roomtype_id in roomtype_ids:
+            for date in dates:
+                inventory = cls.get_by_roomtype_id_and_date(session, roomtype_id, date[0], date[1])
+                if inventory:
+                    continue
+                else:
+                    _month = InventoryModel.combin_year_month(date[0], date[1])
+                    inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
+                    inventories.append(inventory)
+        session.add_all(inventories)
+        session.commit()
+        return inventories
 
     @classmethod
     def get_by_room_ids_and_months(cls, session, roomtype_ids, months):
