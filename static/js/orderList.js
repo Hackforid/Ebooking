@@ -1,7 +1,7 @@
 (function() {
 
 	var orderListApp = angular.module('orderListApp', ['myApp.directives']);
-	orderListApp.controller('orderListCtrl', ['$scope', '$http', function($scope, $http) {
+	orderListApp.controller('orderListBookCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.todayBook = {};
 		$scope.itemPerPage = "20";
@@ -111,7 +111,7 @@
 
 
 
-	orderListApp.controller('orderListCtrlt', ['$scope', '$http', function($scope, $http) {
+	orderListApp.controller('orderListCheckCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.todayCheckIn = {};
 
@@ -155,7 +155,7 @@
 						if ($scope.total == 0) {
 							$("#pagecheckInfo").hide();
 						}
-						
+
 						for (var i = 0; i < $scope.todayCheckIn.length; i++) {
 
 							var temp = $scope.todayCheckIn[i]["customer_info"];
@@ -189,6 +189,78 @@
 
 
 	}])
+
+
+
+
+
+
+orderListApp.controller('orderListQueryCtrl', ['$scope', '$http', function($scope, $http) {
+
+		$scope.queryList = {};
+		$scope.itemPerPage = "20";
+		$scope.currentPage = 1;
+		$scope.total;
+		$scope.pageCount;
+		$scope.directiveCtl = false;
+		$scope.finalUrl;
+		$scope.paginationId = "pagequeryNumber";
+
+
+		$scope.urlCheck = function urlCheck(a) {
+			$scope.currentPage = a;
+
+			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+			var url = '/api/order/search/?start=' + pageNum;
+
+			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				url = url + "&limit=" + $scope.itemPerPage;
+
+			}
+			$scope.finalUrl = url;
+
+		}
+
+		$scope.searchResult = function searchResult() {
+
+			console.log($scope.finalUrl);
+			$http.get($scope.finalUrl)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						$scope.queryList = resp.result.orders;
+
+						$scope.total = resp.result.total;
+						if ($scope.total == 0) {
+							$("#pagequeryInfo").hide();
+						}
+												
+						$scope.itemPerPage = resp.result.limit;
+						
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						$scope.directiveCtl = true;
+
+					} else {
+						alert(resp.errmsg);
+					}
+				})
+				.error(function() {
+					alert('network error');
+				})
+
+		}
+
+		$scope.urlCheck(1);
+		$scope.searchResult();
+		$(".menu1").find("dd").eq(1).addClass("active");
+
+
+	}])
+
+
+
 
 
 
