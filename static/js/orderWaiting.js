@@ -197,8 +197,16 @@
 
 						};
 
-						$scope.total = 500;
-						$scope.pageCount = Math.ceil($scope.total / $scope.itemPerPage);
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
 						$scope.directiveCtl = true;
 
 

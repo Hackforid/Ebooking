@@ -129,6 +129,10 @@
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
 
+							if ($scope.total == 0) {
+								$("#pageInfo").hide();
+							}
+
 							$scope.hotels = resp.result.hotels;
 
 							$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));

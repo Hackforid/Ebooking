@@ -80,9 +80,18 @@
 							}
 
 						};
-						$scope.total = 500;
-						$scope.pageCount = Math.ceil($scope.total / $scope.itemPerPage);
+
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
 						$scope.directiveCtl = true;
+
 					} else {
 						alert(resp.errmsg);
 					}
@@ -150,9 +159,19 @@
 							var temptime = $scope.todayCheckIn[i]["create_time"].split(" ");
 							$scope.todayCheckIn[i]["create_time"] = temptime;
 						};
-						$scope.total = 400;
-						$scope.pageCount = Math.ceil($scope.total / $scope.itemPerPage);
+
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
 						$scope.directiveCtl = true;
+
+
 					} else {
 						alert(resp.errmsg);
 					}

@@ -98,7 +98,13 @@
 
 						$scope.itemPerPage = resp.result.limit;
 						$scope.total = resp.result.total;
-						var pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
 
 						$scope.directiveCtl = true;
 
