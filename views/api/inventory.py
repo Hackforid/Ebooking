@@ -15,8 +15,6 @@ from exception.json_exception import JsonException
 
 import tasks.models.inventory as Inventory
 
-import tcelery
-tcelery.setup_nonblocking_producer()
 
 class InventoryAPIHandler(BtwBaseHandler):
 

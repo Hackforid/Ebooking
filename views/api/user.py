@@ -1,22 +1,30 @@
 # -*- coding: utf-8 -*-
 import re
 
+from tornado.escape import json_encode
+from tornado import gen
+
+
 from views.base import BtwBaseHandler
 from tools.auth import auth_login
 from tools.auth import auth_permission
-from models.user import UserModel
 from constants import PERMISSIONS
-from tornado.escape import json_encode
 from tools.request_tools import get_and_valid_arguments
+
+from tasks.models import user as User
 
 class UserManageAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     @auth_login()
     @auth_permission(PERMISSIONS.admin)
     def get(self):
-        users = UserModel.get_users_by_merchant_id(self.db, self.current_user.merchant_id)
-        return self.finish_json(0, u'成功', json_encode([user.todict() for user in users]))
+        task = yield gen.Task(User.get_users_by_merchant_id.apply_async,
+                args=[self.current_user.merchant_id])
+        users = task.result
+        self.finish_json(0, u'成功', json_encode([user.todict() for user in users]))
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin, json=True)
     def put(self):
@@ -51,7 +59,10 @@ class UserManageAPIHandler(BtwBaseHandler):
             return
 
         ''' 可以管理用户 '''
-        UserModel.update_user(self.db, merchant_id, username, password, department, mobile, email, authority, is_valid)
+        yield gen.Task(User.update_user.apply_async,
+                args=[merchant_id, username, password, department, mobile, email, authority, is_valid])
+
+
 
         ''' 修改了自己的密码 '''
         if self.current_user.username == username and password:
@@ -62,6 +73,7 @@ class UserManageAPIHandler(BtwBaseHandler):
 
         self.finish_json(0, u'成功')
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin, json=True)
     def post(self):
@@ -91,13 +103,15 @@ class UserManageAPIHandler(BtwBaseHandler):
         if authority % 2 == 1:
             self.finish_json(1, u'不允许添加管理员用户')
             return
-        if UserModel.get_user_by_merchantid_username(self.db, merchant_id, username):
-            self.finish_json(1, u'用户名已被使用')
-            return
 
-        UserModel.add_user(session=self.db, merchant_id=merchant_id, username=username, password=password,
-                           department=department, mobile=mobile, authority=authority, is_valid=is_valid)
-        return self.finish_json(0, u'添加成功')
+        user = (yield gen.Task(User.get_user_by_merchantid_username.apply_async, args=[merchant_id, username])).result
+
+        if user:
+            self.finish_json(1, u'用户名已被使用')
+        else:
+            yield gen.Task(User.add_user.apply_async,
+                    args=[merchant_id, username, password, department, mobile, authority, is_valid])
+            self.finish_json(0, u'添加成功')
 
     @staticmethod
     def mobile_check(mobile):
