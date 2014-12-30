@@ -80,11 +80,16 @@
 						$("#acceptDialog").hide();
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
+
 				})
 
 		}
@@ -112,11 +117,16 @@
 						$("#refuseDialog").hide();
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
+
 				})
 
 		}
@@ -137,6 +147,11 @@
 			$("#refuseDialog").hide();
 		}
 
+
+		$scope.confirmResult = function confirmResult() {
+			$("#messageDialog").hide();
+
+		}
 
 
 		$scope.urlCheck = function urlCheck(a) {
@@ -188,11 +203,15 @@
 
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
 				})
 
 		}
