@@ -142,24 +142,24 @@
 
                             <div class="search-div">
                                 <div class="divone">
-                                    <label>订单确认号： <input name="" type="text" value="" class="input-t"/></label>
-                                    <label>酒店名称： <input name="" type="text" value="" class="input-t"/></label>
+                                    <label>订单确认号： <input name="" type="text" ng-model="searchOrderId" class="input-t"/></label>
+                                    <label>酒店名称： <input name="" type="text" ng-model="searchHotelName" class="input-t"/></label>
 
 
-                                    <label >入住日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
-                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    <label >入住日期： <input type="text" ng-model="searchLiveStart" name="time1" id="liveStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
+                                        <input type="text" ng-model="searchLiveEnd" name="time2" id="liveEndTime" onclick="WdatePicker()" value="" class="input-time"/>
                                     </label>
 
-                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input name="" type="text" value="" class="input-t"/></label>
+                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input ng-model="searchInPeople" name="" type="text" value="" class="input-t"/></label>
 
-                                    <label>操作状态： <select name="" class="input-s"  >
+                                    <label>操作状态： <select name="" class="input-s" ng-model="searchStatus" >
                                             <option value="0">不限</option>
                                             <option value="1">接受</option>
                                             <option value="2">拒绝</option>
                                     </select></label>
 
-                                    <label >下单日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
-                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    <label >下单日期： <input type="text" ng-model="searchListStart" name="ListStarTime" id="ListStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
+                                        <input type="text" ng-model="searchListEnd" name="time2" id="ListEndTime" onclick="WdatePicker()" value="" class="input-time"/>
                                     </label>
 
                                 </div>
@@ -169,7 +169,7 @@
 
                             <div class="choose-div">
                                 <div class="left content">
-                                    <input name="" type="button" value="搜索" />
+                                    <input name="" type="button" value="搜索" ng-click="urlCheck(1)"/>
                                     <input name="" type="button" value="重置"   class="btn-bai btn-s" /> 
 
                                 </div>
@@ -193,35 +193,21 @@
 
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
+                                <tr ng-repeat="query in queryList">
+                                    <td width="13%">订单确认号</td>
+                                        <td width="15%">{{query.hotel_name}}</td>
+                                        <td width="10%">{{query.room_type_name}}</td>
+                                        <td width="15%">{{query.checkin_date}}至<br />
+                                        {{query.checkout_date}}（2晚）</td>
+                                        <td width="12%">{{query["create_time"][0]}}<br />
+                                         {{query["create_time"][1]}}</td>
+                                        <td width="8%"> <div ng-repeat="cum in query['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="7%">类型</td>
+                                        <td width="8%"><em class="price">{{query.everyday_price}}</em></td>
+                                        <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
-
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
+                               
                             </table>
 
 
