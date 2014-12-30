@@ -115,14 +115,47 @@
 			$("#openDiv1").fadeOut(500);
 		}
 
+
+		this.dateCheck = function(timeStart, timeEnd) {
+			var day = new Date();
+			var month = day.getMonth() + 1;
+			var year = day.getFullYear();
+			var date = day.getDate();
+			var startday = year + "-" + month + "-" + date;
+
+			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetyday = new Date(ninetytime);
+			var ninetymonth = ninetyday.getMonth() + 1;
+			var ninetydate = ninetyday.getDate();
+			var ninetyyear = ninetyday.getFullYear();
+			var endday = ninetyyear + "-" + ninetymonth + "-" + ninetydate;
+
+
+			if (timeEnd == null || timeStart == null || timeEnd == "" || timeStart == "") {
+				this.errmsg = '日期为空';
+				return 0;
+			} else if (timeEnd < timeStart) {
+				this.errmsg = '开始日期大于结束日期';
+				return 0;
+			} else if (timeEnd > (endday + "") || timeStart < (startday + "")) {
+				this.errmsg = '日期超出范围';
+				return 0;
+			}
+
+		}
+
 		this.addSave = function() {
-			var time1 = $("#time1").val();
-			var time2 = $("#time2").val();
+			var timeStart = $("#timeStart").val();
+			var timeEnd = $("#timeEnd").val();
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomId + '/inventory/';
 
+			if (this.dateCheck(timeStart, timeEnd) == 0) {
+				return;
+			}
+
 			var params = {
-				"start_date": time1,
-				"end_date": time2,
+				"start_date": timeStart,
+				"end_date": timeEnd,
 				"change_num": parseInt($("#roomNumCount").val()),
 				"price_type": parseInt(scope.currentPriceType)
 
@@ -153,13 +186,17 @@
 
 		}
 		this.minusSave = function() {
-			var time1 = $("#time1").val();
-			var time2 = $("#time2").val();
+			var timeStart = $("#timeStart").val();
+			var timeEnd = $("#timeEnd").val();
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomId + '/inventory/';
 
+			if (this.dateCheck(timeStart, timeEnd) == 0) {
+				return;
+			}
+
 			var params = {
-				"start_date": time1,
-				"end_date": time2,
+				"start_date": timeStart,
+				"end_date": timeEnd,
 				"change_num": -parseInt($("#roomNumCount").val()),
 				"price_type": parseInt(scope.currentPriceType)
 
@@ -194,13 +231,17 @@
 
 			var tempNum = $("#" + scope.currentId).html();
 
-			var time1 = $("#time1").val();
-			var time2 = $("#time2").val();
+			var timeStart = $("#timeStart").val();
+			var timeEnd = $("#timeEnd").val();
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomId + '/inventory/';
 
+			if (this.dateCheck(timeStart, timeEnd) == 0) {
+				return;
+			}
+
 			var params = {
-				"start_date": time1,
-				"end_date": time2,
+				"start_date": timeStart,
+				"end_date": timeEnd,
 				"change_num": -parseInt(tempNum),
 				"price_type": parseInt(scope.currentPriceType)
 
@@ -301,10 +342,10 @@
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房量' class='btn-number' /></div>").show(0, function() {
 					$(".btn-number").click(function() {
 						$("#openDiv1").show();
-						var day = new Date(); 
+						var day = new Date();
 						var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
-						$("#time1").val(inputCurrent);
-						$("#time2").val(inputCurrent);
+						$("#timeStart").val(inputCurrent);
+						$("#timeEnd").val(inputCurrent);
 
 					});
 				});

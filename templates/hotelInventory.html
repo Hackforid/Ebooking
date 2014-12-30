@@ -306,14 +306,15 @@
   </tr>
   <tr>
     <td>日期：</td> 
-    <td><input type="text" name="time1" id="time1" onClick="WdatePicker()"  class="input-time" / > 至 
-                     <input type="text" name="time2" id="time2" onClick="WdatePicker()"  class="input-time" /></td>
+    <td><input type="text" name="timeStart" id="timeStart" onClick="WdatePicker()"  class="input-time" / > 至 
+                     <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" /></td>
   </tr>
   <tr>
     <td>房量调整：</td>
     <td><input name="" id="roomNumCount" type="text" class="input-t" value="5" placeholder="输入数字" ng-model="num"/></td>    
   </tr>
 </table>
+<p style="padding-left:32px">{{changeNumDialog.errmsg}}</p>
           <p class="action" style=" text-align:center">
           <input name="" type="button" value="设置为0" ng-click="changeNumDialog.zeroSave()" class="sure-more btn-bai" />
           <input name="" type="button" ng-click="changeNumDialog.addSave()" value={{"加("+num+")房量"}}  class="sure-more" />
