@@ -39,12 +39,14 @@ class BtwBaseHandler(BaseHandler):
             self.set_secure_cookie('merchant_id', merchant_id)
         self.current_user = (yield gen.Task(User.get_user_by_merchantid_username.apply_async,
                 args=[merchant_id, username])).result
-        print self.current_user.todict()
         raise gen.Return(self.current_user)
 
     def render(self, template_name, **kwargs):
         kwargs['current_user'] = self.current_user
-        super(BtwBaseHandler, self).render(template_name, user=self.current_user.todict(), **kwargs) 
+        if self.current_user:
+            super(BtwBaseHandler, self).render(template_name, user=self.current_user.todict(), **kwargs) 
+        else:
+            super(BtwBaseHandler, self).render(template_name, **kwargs) 
 
     def _handle_request_exception(self, e):
         self.db.rollback()
