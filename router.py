@@ -21,7 +21,7 @@ from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
 from views.api.submit_order import SubmitOrderAPIHandler, CancelOrderAPIHander
 from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler
-from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler, OrderUserConfirmAPIHandler, OrderUserCancelAPIHandler
+from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler, OrderUserConfirmAPIHandler, OrderUserCancelAPIHandler, OrderSearchAPIHandler
 handlers = [
         (r"/login/?", LoginHandler),
         (r"/hotel/willcoop/?", HotelWillCoopHandler),
@@ -61,4 +61,5 @@ handlers = [
         (r"/order/list/?", OrderListHandler),
         (r"/api/order/todaybook/?", OrderTodayBookListAPIHandler),
         (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
+        (r"/api/order/search/?", OrderSearchAPIHandler),
 ]
