@@ -29,3 +29,6 @@ def new_hotel_cooprate(self, merchant_id, hotel_id):
 
     return coop
 
+@app.task(base=SqlAlchemyTask, bind=True)
+def new_hotel_cooprates(self, merchant_id, hotel_ids):
+    return CooperateHotelModel.new_hotel_cooprates(self.session, merchant_id, hotel_ids)
