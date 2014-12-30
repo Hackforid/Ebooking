@@ -145,7 +145,7 @@
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
 			var time1 = $("#time1").val();
 			var time2 = $("#time2").val();
-			var price = parseInt($("#lowprice").val());
+			var price = parseInt($("#lowprice").val())*100;
 
 			var day = new Date();
 			var month = day.getMonth() + 1;
