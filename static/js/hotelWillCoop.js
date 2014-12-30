@@ -26,6 +26,34 @@
 			//$scope.cityList = [];
 
 
+			$scope.checkedHotel=function checkedHotel() { 
+			//$("[name='checkBox']").attr("checked",'true');//全选
+			 //$("[name='checkBox']").removeAttr("checked");//取消全选
+
+			 var hotelIds=[];
+			 var checkbox=$("[name='checkBox']");
+			 for (var i = 0; i < checkbox.length; i++) {
+			 	if($(checkbox[i]).is(':checked'))
+			 	{hotelIds.push(i);
+			 	}
+			 };
+
+
+			 var url = "/api/hotel/coops/";
+				$http.post(url,{'hotel_ids': [1,2,3]})
+					.success(function(resp) {
+						if (resp.errcode == 0) {
+							console.log(resp);
+						}
+					})
+					.error(function() {});
+
+
+		}
+
+
+
+
 			$scope.urlCheck = function urlCheck(a) {
 				$scope.currentPage = a;
 				//console.log("这里是urlCheck url变化的地方");

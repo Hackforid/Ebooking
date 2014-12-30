@@ -79,7 +79,7 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow"
                                >
 								<tr ng-repeat="hotel in hotels">
-									<td width="10%"><input name="" type="checkbox" value="" /></td>
+									<td width="10%"><input name="checkBox" type="checkbox" value="" /></td>
                                     <td width="25%">{{hotel.name}}</td>
                                     <td width="10%">{{getCityName(hotel.city_id)}}</td>
                                     <td width="20%">{{hotel.address}}</td>
@@ -90,7 +90,7 @@
 								</tbody>
 							</table>
 							<div class="btn-div">
-								<input name="input" type="button" value="将选择酒店全部申请合作" class="btn-s btn-bai" id="choose-all" />
+								<input name="input" type="button" value="将选择酒店全部申请合作" ng-click="checkedHotel()" class="btn-s btn-bai" id="choose-all" />
 							</div>
 
 							<!--页码-->
