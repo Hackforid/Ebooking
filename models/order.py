@@ -48,6 +48,11 @@ class OrderModel(Base):
     confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=1)
 
     @classmethod
+    def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None):
+        if id:
+            pass
+
+    @classmethod
     def get_by_id(cls, session, id):
         order = session.query(OrderModel)\
                 .filter(OrderModel.id == id)\
@@ -98,12 +103,19 @@ class OrderModel(Base):
         return order
 
     @classmethod
-    def get_waiting_orders(cls, session, merchant_id):
-        orders = session.query(OrderModel)\
+    def get_waiting_orders(cls, session, merchant_id, start=None, limit=None):
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id)\
-                .filter(OrderModel.status == 100)\
-                .all()
-        return orders
+                .filter(OrderModel.status == 100)
+        total = query.count()
+
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
+
 
     @classmethod
     def get_today_book_orders(cls, session, merchant_id):
