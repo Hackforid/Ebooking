@@ -118,26 +118,39 @@ class OrderModel(Base):
 
 
     @classmethod
-    def get_today_book_orders(cls, session, merchant_id):
+    def get_today_book_orders(cls, session, merchant_id, start=None, limit=None):
         today = datetime.date.today()
-        return session.query(OrderModel)\
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id,
                         OrderModel.create_time >= today,
                         OrderModel.status.in_([100, 300, 400, 500, 600])
-                        )\
-                .all()
+                        )
+        total = query.count()
+
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
 
     @classmethod
-    def get_today_checkin_orders(cls, session, merchant_id):
+    def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
-        return session.query(OrderModel)\
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id,
                         OrderModel.checkin_date >= today,
                         OrderModel.checkin_date < tomorrow,
                         OrderModel.status.in_([100, 300, 400, 500, 600])
-                        )\
-                .all()
+                        )
+        total = query.count()
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
 
     def confirm_by_user(self, session):
         self.status = 300

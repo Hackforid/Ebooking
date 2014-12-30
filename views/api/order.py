@@ -85,14 +85,19 @@ class OrderTodayBookListAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
+        start = self.get_query_argument('start', 0)
+        limit = self.get_query_argument('limit', 20)
         
         task = yield gen.Task(Order.get_today_book_orders.apply_async,
-                args=[merchant_id])
+                args=[merchant_id, start, limit])
         print task.result
         if task.status == 'SUCCESS':
+            orders, total = task.result
             self.finish_json(result={
-                'orders': [order.todict() for order in task.result] if task.result
-                                            else [],
+                'total': total,
+                'start': start,
+                'limit': limit,
+                'orders': [order.todict() for order in orders],
                 })
         else:
             raise JsonException(errcode=1000, errmsg="wrong")
@@ -103,14 +108,19 @@ class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
+        start = self.get_query_argument('start', 0)
+        limit = self.get_query_argument('limit', 20)
         
         task = yield gen.Task(Order.get_today_checkin_orders.apply_async,
-                args=[merchant_id])
+                args=[merchant_id, start, limit])
         print task.result
         if task.status == 'SUCCESS':
+            orders, total = task.result
             self.finish_json(result={
-                'orders': [order.todict() for order in task.result] if task.result
-                                            else [],
+                'orders': [order.todict() for order in orders],
+                'total': total,
+                'start': start,
+                'limit': limit,
                 })
         else:
             raise JsonException(errcode=1000, errmsg="wrong")
