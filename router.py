@@ -49,7 +49,7 @@ handlers = [
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/inventory/?", InventoryAPIHandler),
 
-        (r"/api/server/order/submit?", SubmitOrderAPIHandler),
+        (r"/api/server/order/submit/?", SubmitOrderAPIHandler),
         (r"/api/server/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
 
 

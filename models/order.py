@@ -20,10 +20,10 @@ class OrderModel(Base):
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
     hotel_name = Column("hotelName", VARCHAR(50), nullable=False)
-    room_type_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
-    room_type_name = Column("roomTypeName", VARCHAR(50), nullable=False)
-    rate_plan_id = Column("ratePlanId", INTEGER, nullable=False, default=0)
-    rate_plan_name = Column("ratePlanName", VARCHAR(50), nullable=False)
+    roomtype_id = Column("roomTypeId", INTEGER, nullable=False, default=0)
+    roomtype_name = Column("roomTypeName", VARCHAR(50), nullable=False)
+    rateplan_id = Column("ratePlanId", INTEGER, nullable=False, default=0)
+    rateplan_name = Column("ratePlanName", VARCHAR(50), nullable=False)
     room_num = Column("roomNum", INTEGER, nullable=False, default=0)
     currency_type = Column("currencyType", VARCHAR(10), nullable=False, default="CNY")
     pay_type = Column("payType", INTEGER, nullable=False, default=0)
@@ -45,7 +45,12 @@ class OrderModel(Base):
     extra = Column(TEXT, nullable=False)
     create_time = Column("createTime", TIMESTAMP)
     update_time = Column("updateTime", TIMESTAMP)
-    confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=0)
+    confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=1)
+
+    @classmethod
+    def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None):
+        if id:
+            pass
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -68,10 +73,10 @@ class OrderModel(Base):
                 merchant_id=submit_order.merchant_id,
                 hotel_id=submit_order.hotel_id,
                 hotel_name=submit_order.hotel_name,
-                room_type_id=submit_order.room_type_id,
-                room_type_name=submit_order.room_type_name,
-                rate_plan_id=submit_order.rate_plan_id,
-                rate_plan_name=submit_order.rate_plan_name,
+                roomtype_id=submit_order.roomtype_id,
+                roomtype_name=submit_order.roomtype_name,
+                rateplan_id=submit_order.rateplan_id,
+                rateplan_name=submit_order.rateplan_name,
                 room_num=submit_order.room_quantity,
                 currency_type=submit_order.currency_type,
                 pay_type=submit_order.pay_type,
@@ -98,34 +103,54 @@ class OrderModel(Base):
         return order
 
     @classmethod
-    def get_waiting_orders(cls, session, merchant_id):
-        orders = session.query(OrderModel)\
+    def get_waiting_orders(cls, session, merchant_id, start=None, limit=None):
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id)\
-                .filter(OrderModel.status == 100)\
-                .all()
-        return orders
+                .filter(OrderModel.status == 100)
+        total = query.count()
+
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
+
 
     @classmethod
-    def get_today_book_orders(cls, session, merchant_id):
+    def get_today_book_orders(cls, session, merchant_id, start=None, limit=None):
         today = datetime.date.today()
-        return session.query(OrderModel)\
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id,
                         OrderModel.create_time >= today,
                         OrderModel.status.in_([100, 300, 400, 500, 600])
-                        )\
-                .all()
+                        )
+        total = query.count()
+
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
 
     @classmethod
-    def get_today_checkin_orders(cls, session, merchant_id):
+    def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
-        return session.query(OrderModel)\
+        query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id,
                         OrderModel.checkin_date >= today,
                         OrderModel.checkin_date < tomorrow,
                         OrderModel.status.in_([100, 300, 400, 500, 600])
-                        )\
-                .all()
+                        )
+        total = query.count()
+        if start:
+            query = query.offset(start)
+        if limit:
+            query = query.limit(limit)
+
+        return query.all(), total
 
     def confirm_by_user(self, session):
         self.status = 300
@@ -139,10 +164,10 @@ class OrderModel(Base):
                 main_order_id=self.main_order_id,
                 hotel_id=self.hotel_id,
                 hotel_name=self.hotel_name,
-                room_type_id=self.room_type_id,
-                room_type_name=self.room_type_name,
-                rate_plan_id=self.rate_plan_id,
-                rate_plan_name=self.rate_plan_name,
+                roomtype_id=self.roomtype_id,
+                roomtype_name=self.roomtype_name,
+                rateplan_id=self.rateplan_id,
+                rateplan_name=self.rateplan_name,
                 room_num=self.room_num,
                 currency_type=self.currency_type,
                 pay_type=self.pay_type,

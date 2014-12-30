@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+import time
 import datetime
+import requests
 
 from tasks.celery_app import app
 
@@ -15,6 +17,7 @@ from tasks.order.submit_order_in_queue import start_order
 from exception.celery_exception import CeleryException
 
 from entity.order import SubmitOrder
+from config import API
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def confirm_order_by_user(self, merchant_id, order_id):
@@ -25,10 +28,26 @@ def confirm_order_by_user(self, merchant_id, order_id):
     if order.status != 100:
         raise CeleryException(200, 'illegal status')
 
-    # TODO ASK SERVER
-    order.confirm_by_user(session)
-    return order
+    if callback_order_server(order_id):
+        order.confirm_by_user(session)
+        return order
+    else:
+        raise CeleryException(1000, 'callback order server fail')
 
+def callback_order_server(order_id):
+    url = API['ORDER'] + '/order/ebooking/update'
+    params = {'orderId': order_id, 'msgType': 0, 'success': True,
+            'trackId': generate_track_id(order_id)}
+    r = requests.post(url, data=params)
+    print r.text
+    if r.status_code == 200:
+        j = r.json()
+        if j['errcode'] == 0:
+            return True
+    return False
+
+def generate_track_id(order_id):
+    return "{}|{}".format(order_id, time.time())
 
 
 @app.task(base=SqlAlchemyTask, bind=True)
@@ -49,6 +68,9 @@ def submit_order(self, order_json):
     order = create_order(session, submit_order)
     if not order:
         raise CeleryException(session, 'create order fail')
+
+    if order.status != 0:
+        return order
 
     if not valid_inventory(session, submit_order):
         print 'more room please'
@@ -97,7 +119,7 @@ def valid_inventory(session, order):
 
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, order.room_type_id, year_months)
+        order.hotel_id, order.roomtype_id, year_months)
     
     if not inventories:
         print "no inventory"
@@ -134,7 +156,6 @@ def create_order(session, submit_order):
     if order:
         # callback 订单已存在
         print 'order exist'
-        #return False
         return order
 
     order = OrderModel.new_order(session, submit_order)
@@ -146,7 +167,7 @@ def create_order(session, submit_order):
 
 
 def get_rateplan(session, order):
-    rate_plan = RatePlanModel.get_by_id(session, order.rate_plan_id)
+    rate_plan = RatePlanModel.get_by_id(session, order.rateplan_id)
     if not rate_plan:
         # callback no rateplan
         pass

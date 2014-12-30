@@ -7,6 +7,6 @@ from tools.request_tools import get_and_valid_arguments
 
 class HotelInventoryHandler(BtwBaseHandler):
 
-    @auth_login(json=True)
+    @auth_login()
     def get(self, hotel_id):
         self.render("hotelInventory.html", hotel_id=hotel_id)

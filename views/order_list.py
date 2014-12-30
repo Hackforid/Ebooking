@@ -7,7 +7,7 @@ from tools.request_tools import get_and_valid_arguments
 
 class OrderListHandler(BtwBaseHandler):
 
-    @auth_login(json=True)
+    @auth_login()
     def get(self):
         self.render("orderList.html")
 

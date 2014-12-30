@@ -7,6 +7,6 @@ from tools.request_tools import get_and_valid_arguments
 
 class HotelCoopedHandler(BtwBaseHandler):
 
-    @auth_login(json=True)
+    @auth_login()
     def get(self):
         self.render("hotelRoomRate.html")

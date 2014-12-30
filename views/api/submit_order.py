@@ -18,7 +18,6 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def post(self):
-        
         task = yield gen.Task(submit_order.apply_async,
                 args=[self.request.body])
 
@@ -29,6 +28,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             else:
                 self.finish_json(result=dict(
                     order_id=task.result.id,
+                    wait=1,
                     ))
         else:
             if isinstance(task.result, CeleryException):
@@ -41,7 +41,6 @@ class CancelOrderAPIHander(BtwBaseHandler):
 
     @gen.coroutine
     def delete(self, order_id):
-       
         task = yield gen.Task(cancel_order_by_server.apply_async,
                 args=[order_id])
 

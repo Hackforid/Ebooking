@@ -16,10 +16,10 @@ def start_order(self, order_id):
     session = self.session
     order = get_order(session, order_id)
     if order.status != 0:
-        raise CeleryException(100, 'order status illegal')
+        return
 
     order = modify_inventory(session, order)
-    PushInventoryTask().push_request.delay(order.roomtype_id)
+    PushInventoryTask().push_inventory.delay(order.roomtype_id)
 
     return order
 
@@ -72,7 +72,7 @@ def modify_inventory(session, order):
 
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
-        order.hotel_id, order.room_type_id, year_months)
+        order.hotel_id, order.roomtype_id, year_months)
 
     if not valid_inventory(inventories, stay_days, order.room_num):
         print 'valid inventory fail'
