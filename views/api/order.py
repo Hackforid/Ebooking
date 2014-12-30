@@ -132,16 +132,31 @@ class OrderSearchAPIHandler(BtwBaseHandler):
     def get(self):
         merchant_id = self.current_user.merchant_id
 
-        args = self.get_json_arguments()
-        
-        order_id = args.get('order_id', None)
-        hotel_name = args.get('hotel_name', None)
-        checkin_date = args.get('checkin_date', None)
-        checkout_date = args.get('checkout_date', None)
-        customer = args.get('customer')
-        order_status = args.get('order_status', None)
-        create_time_start = args.get('create_time_start', None)
-        create_time_end = args.get('create_time_end', None)
+        order_id = self.get_query_argument('order_id', None)
+        hotel_name = self.get_query_argument('hotel_name', None)
+        checkin_date = self.get_query_argument('checkin_date', None)
+        checkout_date = self.get_query_argument('checkout_date', None)
+        customer = self.get_query_argument('customer', None)
+        order_status = self.get_query_argument('order_status', None)
+        create_time_start = self.get_query_argument('create_time_start', None)
+        create_time_end = self.get_query_argument('create_time_end', None)
+        start = self.get_query_argument('start', 0)
+        limit = self.get_query_argument('limit', 20)
+
+        task = yield gen.Task(Order.search.apply_async,
+                args=[order_id, hotel_name, checkin_date, checkout_date, customer, order_status, create_time_start, create_time_end, start, limit])
+        if task.status == 'SUCCESS':
+            orders, total = task.result
+            self.finish_json(result={
+                'orders': [order.todict() for order in orders],
+                'total': total,
+                'start': start,
+                'limit': limit,
+                })
+        else:
+            raise JsonException(errcode=1000, errmsg="wrong")
+            
+
 
 
 
