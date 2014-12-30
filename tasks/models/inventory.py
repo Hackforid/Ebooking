@@ -6,6 +6,7 @@ from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from tasks.stock import PushInventoryTask
 from models.inventory import InventoryModel
+from models.cooperate_roomtype import CooperateRoomTypeModel
 
 from constants import QUEUE_ORDER
 
@@ -60,3 +61,14 @@ def get_inventory_by_date(inventories, year, month):
             return inventory
     else:
         return
+
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def complete_in_four_months(self):
+    roomtype_ids = CooperateRoomTypeModel.get_all_ids(self.session)
+    InventoryModel.insert_all_in_four_month(self.session, roomtype_ids)
+
+
+@app.task
+def test(str):
+    print str 

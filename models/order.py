@@ -50,7 +50,11 @@ class OrderModel(Base):
     @classmethod
     def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
         if id:
-            return cls.get_by_id(session, id)
+            order = cls.get_by_id(session, id)
+            if order:
+                return [order], 1
+            else:
+                return None, 0
         query = session.query(OrderModel)
 
         if hotel_name:
@@ -80,8 +84,6 @@ class OrderModel(Base):
             query = query.limit(limit)
 
         return query.all(), total
-
-
 
 
 
