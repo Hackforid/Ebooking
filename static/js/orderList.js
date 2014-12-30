@@ -85,7 +85,7 @@
 						$scope.total = resp.result.total;
 
 						if ($scope.total == 0) {
-							$("#pageInfo").hide();
+							$("#pagebookInfo").hide();
 						}
 
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
@@ -164,7 +164,7 @@
 						$scope.total = resp.result.total;
 
 						if ($scope.total == 0) {
-							$("#pageInfo").hide();
+							$("#pagecheckInfo").hide();
 						}
 
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
