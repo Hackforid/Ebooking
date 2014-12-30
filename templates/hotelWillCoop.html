@@ -11,6 +11,20 @@
         ng-app="hotelWillCoopApp"  ng-controller="hotelWillCoopContentCtrl"
         ><div class="p15">
 
+       		<!--酒店弹窗浮层-->     
+			<div class="messageDiv" id="acceptDialog" style="display:none" >
+ 		 	 <div class="messageBlack"></div>
+ 		 	 <div class="detail">
+  		    	 <div class="head"><h1>提示</h1></div>
+    		 	  <div class="con">
+      		 	   <p class="f16" style=" text-align:center;padding:30px 0;">{{messageBox}}</p>
+      		 	   <p class="action" style=" text-align:center">
+      		 	   <input name="确认" type="button" value="确认"  ng-click="confirmResult();" class="btn-orange"/>
+      		 	   </p>
+     		 	 </div>
+  			 </div> 
+			</div>     
+
 			<!--可合作酒店开始-->  
 			<div class="main-mod main-wcoop">
 
@@ -18,16 +32,27 @@
 				<div class="search-div">
 					<div class="content">
 						<div class="divone"><div class="c">
-								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="serchName"/></label>
-								<label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="serchCity"/></label>
-								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="serchStar">
+								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+								<label ><strong>城市：</strong>
+
+								<input  name=""  type="text" value="" class="input-t" ng-model="searchCity"/>
+
+								<div id="cityShow" style="display:none;overflow:auto;position:absolute;width:140px;height:80px;background:white;top:185px;left:490px">
+								<div style="width:100%"  ng-click="cityChoose(city);" ng-repeat="city in cityList">{{city}}</div>
+								
+								</div> 
+							
+								</label>
+
+
+								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="searchStar">
 										<option value="0">不限</option>
 										<option value="1">经济型</option>
 										<option value="2">五星级</option>
 								</select></label>
 
 								<label>
-									<input name="" type="button" value="搜索" ng-click="searchHotel()"/> <input name="" type="button" value="重置" class="btn-bai btn-s" />
+									<input name="" type="button" value="搜索" ng-click="urlCheck(1)"/> <input name="" type="button" value="重置"  ng-click="conditionReset()" class="btn-bai btn-s" />
 								</label>
 
 
@@ -60,7 +85,7 @@
                                     <td width="20%">{{hotel.address}}</td>
                                     <td width="10%">{{hotel.phone}}</td>
 									<td width="10%">可申请合作</td>
-									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel)"/></td>
+									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>
 								</tr>
 								</tbody>
 							</table>
@@ -71,7 +96,7 @@
 							<!--页码-->
 							<div id="pageInfo" class="page">
                                 
-								<span id="pageNumber"></span>
+								<span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
 								
                                 <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
 										<option value="10">10</option>
@@ -93,5 +118,7 @@
 </%def>
 
 <%def name="end()">
+
+<script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/hotelWillCoop.js')}"></script>
 </%def>

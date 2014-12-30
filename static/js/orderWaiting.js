@@ -1,12 +1,25 @@
 (function() {
 
-	var orderWaitingApp = angular.module('orderWaitingApp', []);
+	var orderWaitingApp = angular.module('orderWaitingApp', ['myApp.directives']);
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 
 		$scope.orderList = {};
 		$scope.refuseReson = "";
 		$scope.currentIndex = "";
+
+
+
+		$scope.itemPerPage = "20";
+		$scope.currentPage = 1;
+		$scope.total;
+		$scope.pageCount;
+		$scope.directiveCtl = false;
+		$scope.finalUrl;
+		$scope.messageBox;
+		$scope.paginationId = "pageNumber";
+
+
 
 		$scope.priceDivIn = function(index) {
 
@@ -67,11 +80,16 @@
 						$("#acceptDialog").hide();
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
+
 				})
 
 		}
@@ -99,11 +117,16 @@
 						$("#refuseDialog").hide();
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
+
 				})
 
 		}
@@ -125,18 +148,41 @@
 		}
 
 
-		function init() {
+		$scope.confirmResult = function confirmResult() {
+			$("#messageDialog").hide();
 
-			$(".menu1").find("dd").eq(0).addClass("active");
+		}
 
-			var url = "/api/order/waiting/";
 
-			$http.get(url)
+		$scope.urlCheck = function urlCheck(a) {
+			$scope.currentPage = a;
+			//console.log("这里是urlCheck url变化的地方");
+
+			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+			var url = '/api/order/waiting/?start=' + pageNum;
+
+
+			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				url = url + "&limit=" + $scope.itemPerPage;
+
+			}
+			$scope.finalUrl = url;
+
+		}
+
+
+
+		$scope.searchResult = function searchResult() {
+
+			//var url = "/api/order/waiting/";
+			console.log($scope.finalUrl);
+
+			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
-
 
 						for (var i = 0; i < $scope.orderList.length; i++) {
 
@@ -151,17 +197,36 @@
 
 						};
 
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						$scope.directiveCtl = true;
+
 
 					} else {
-						alert(resp.errmsg);
+
+						$scope.messageBox = resp.errmsg;
+						$("#messageDialog").show();
 					}
 				})
 				.error(function() {
-					alert('network error');
+
+					$scope.messageBox = 'network error';
+					$("#messageDialog").show();
 				})
 
 		}
-		init();
+
+		$(".menu1").find("dd").eq(0).addClass("active");
+		$scope.urlCheck(1);
+		$scope.searchResult();
 
 
 

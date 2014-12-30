@@ -6,7 +6,19 @@
     ng-controller="orderWaitingCtrl"
     >
 
-
+      <!--信息提示弹窗浮层-->     
+      <div class="messageDiv" id="messageDialog" style="display:none" >
+       <div class="messageBlack"></div>
+       <div class="detail">
+             <div class="head"><h1>提示</h1></div>
+            <div class="con">
+               <p class="f16" style=" text-align:center;padding:30px 0;">{{messageBox}}</p>
+               <p class="action" style=" text-align:center">
+               <input name="确认" type="button" value="确认"  ng-click="confirmResult();" class="btn-orange"/>
+               </p>
+           </div>
+         </div> 
+      </div>     
 
 <!--酒店弹窗浮层-->     
 <div class="messageDiv" id="acceptDialog" style=" display:none" >
@@ -97,55 +109,40 @@
                             </table>
                         </div>  
                         <!--单个订单end-->
-
-                        
-                                                                  
-                        <!--页码-->
-                        <div class="page">
-                            <span class="disabled"> &lt;  上一页</span>
-                            <span class="current">1</span>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            ...<a href="#">20</a>
-                            <a href="#">21</a>
-                            <a href="#">下一页  &gt; </a>
-                            <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
-                                    <option value="1">10</option>
-                                    <option value="2">20</option>
-                                    <option value="3">30</option>
-                                    <option value="4">40</option>
-                            </select></span>
-                        </div>
-                        <!--页码end-->       
-
-
-
+                                                                                       
+                       <!--页码-->
+                        <div id="pageInfo" class="page">
+                                
+                          <span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
+                
+                          <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                          </select></span>
+                      </div>
+                      <!--页码end-->        
 
                 </div></div>
             </div>
 
             <!--待确认订单结束-->  
 
-
     </div></div>
     <!--主体内容end--> 
 
 
-
-
 </div>
 <!--右侧部分end--> 
-
-
-
-
 
 </div>
 
 </%def>
 
 <%def name="end()">
+
+<script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/orderWaiting.js')}"></script>
 <style>
 .classone{

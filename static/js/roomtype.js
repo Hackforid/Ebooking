@@ -143,9 +143,9 @@
 		this.save = function() {
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
-			var time1 = $("#time1").val();
-			var time2 = $("#time2").val();
-			var price = parseInt($("#lowprice").val());
+			var timeStart = $("#timeStart").val();
+			var timeEnd = $("#timeEnd").val();
+			var price = parseInt($("#lowprice").val()) * 100;
 
 			var day = new Date();
 			var month = day.getMonth() + 1;
@@ -160,21 +160,21 @@
 			var ninetyyear = ninetyday.getFullYear();
 			var endday = ninetyyear + "-" + ninetymonth + "-" + ninetydate;
 
-			if (time2 == null || time1 == null || time2 == "" || time1 == "") {
+			if (timeEnd == null || timeStart == null || timeEnd == "" || timeStart == "") {
 				this.errmsg = '日期为空';
 				return;
-			} else if (time2 < time1) {
+			} else if (timeEnd < timeStart) {
 				this.errmsg = '开始日期大于结束日期';
 				return;
-			} else if (time2 > endday || time1 < startday) {
+			} else if (timeEnd > (endday + "") || timeStart < (startday + "")) {
 				this.errmsg = '日期超出范围';
 				return;
 			}
 
 			console.log(url);
 			var params = {
-				"start_date": time1,
-				"end_date": time2,
+				"start_date": timeStart,
+				"end_date": timeEnd,
 				"price": price
 
 			};
@@ -236,6 +236,11 @@
 			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 				$(".btn-number").click(function() {
 					$("#openDiv1").show();
+					var day = new Date();
+					var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+					$("#timeStart").val(inputCurrent);
+					$("#timeEnd").val(inputCurrent);
+
 				});
 			});
 
@@ -405,7 +410,7 @@
 						tempprice = "--";
 						classstyle = "stop";
 					} else {
-						tempprice = dayprice[j];
+						tempprice = dayprice[j] / 100;
 						classstyle = "action5";
 					}
 					temp = {

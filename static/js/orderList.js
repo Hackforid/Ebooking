@@ -1,18 +1,37 @@
 (function() {
 
-	var orderListApp = angular.module('orderListApp', []);
+	var orderListApp = angular.module('orderListApp', ['myApp.directives']);
 	orderListApp.controller('orderListCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.todayBook = {};
-		$scope.todayCheckIn = {};
+		$scope.itemPerPage = "20";
+		$scope.currentPage = 1;
+		$scope.total;
+		$scope.pageCount;
+		$scope.directiveCtl = false;
+		$scope.finalUrl;
+		$scope.paginationId = "pagebookNumber";
 
-		function initBook() {
-			$(".menu1").find("dd").eq(1).addClass("active");
 
-			var url = "/api/order/todaybook";
+		$scope.urlCheck = function urlCheck(a) {
+			$scope.currentPage = a;
 
-			console.log(url);
-			$http.get(url)
+			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+			var url = '/api/order/todaybook/?start=' + pageNum;
+
+			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				url = url + "&limit=" + $scope.itemPerPage;
+
+			}
+			$scope.finalUrl = url;
+
+		}
+
+		$scope.searchResult = function searchResult() {
+
+			console.log($scope.finalUrl);
+			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
@@ -61,6 +80,18 @@
 							}
 
 						};
+
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						$scope.directiveCtl = true;
+
 					} else {
 						alert(resp.errmsg);
 					}
@@ -71,12 +102,49 @@
 
 		}
 
-		function initCheckin() {
+		$scope.urlCheck(1);
+		$scope.searchResult();
+		$(".menu1").find("dd").eq(1).addClass("active");
 
-			var url = "/api/order/todaycheckin";
 
-			console.log(url);
-			$http.get(url)
+	}])
+
+
+
+	orderListApp.controller('orderListCtrlt', ['$scope', '$http', function($scope, $http) {
+
+		$scope.todayCheckIn = {};
+
+		$scope.itemPerPage = "20";
+		$scope.currentPage = 1;
+		$scope.total;
+		$scope.pageCount;
+		$scope.directiveCtl = false;
+		$scope.finalUrl;
+		$scope.paginationId = "pagecheckNumber";
+
+
+		$scope.urlCheck = function urlCheck(a) {
+			$scope.currentPage = a;
+
+			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+
+			var url = '/api/order/todaycheckin/?start=' + pageNum;
+
+			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				url = url + "&limit=" + $scope.itemPerPage;
+
+			}
+			$scope.finalUrl = url;
+
+		}
+
+
+
+		$scope.searchResult = function searchResult() {
+
+			console.log($scope.finalUrl);
+			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
@@ -91,6 +159,19 @@
 							var temptime = $scope.todayCheckIn[i]["create_time"].split(" ");
 							$scope.todayCheckIn[i]["create_time"] = temptime;
 						};
+
+						$scope.itemPerPage = resp.result.limit;
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pageInfo").hide();
+						}
+
+						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						$scope.directiveCtl = true;
+
+
 					} else {
 						alert(resp.errmsg);
 					}
@@ -101,8 +182,10 @@
 
 		}
 
-		initBook();
-		initCheckin();
+
+		$scope.urlCheck(1);
+		$scope.searchResult();
+
 
 	}])
 
