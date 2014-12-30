@@ -37,6 +37,11 @@
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
+						$scope.total = resp.result.total;
+						if ($scope.total == 0) {
+							$("#pagebookInfo").hide();
+						}
+
 						var todayBookLength = $scope.todayBook.length;
 
 						for (var i = 0; i < $scope.todayBook.length; i++) {
@@ -82,12 +87,7 @@
 						};
 
 						$scope.itemPerPage = resp.result.limit;
-						$scope.total = resp.result.total;
-
-						if ($scope.total == 0) {
-							$("#pageInfo").hide();
-						}
-
+						
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
 
 						$scope.directiveCtl = true;
@@ -150,6 +150,12 @@
 					if (resp.errcode == 0) {
 						$scope.todayCheckIn = resp.result.orders;
 
+						$scope.total = resp.result.total;
+
+						if ($scope.total == 0) {
+							$("#pagecheckInfo").hide();
+						}
+						
 						for (var i = 0; i < $scope.todayCheckIn.length; i++) {
 
 							var temp = $scope.todayCheckIn[i]["customer_info"];
@@ -161,12 +167,7 @@
 						};
 
 						$scope.itemPerPage = resp.result.limit;
-						$scope.total = resp.result.total;
-
-						if ($scope.total == 0) {
-							$("#pageInfo").hide();
-						}
-
+						
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
 
 						$scope.directiveCtl = true;
