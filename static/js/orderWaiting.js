@@ -1,12 +1,25 @@
 (function() {
 
-	var orderWaitingApp = angular.module('orderWaitingApp', []);
+	var orderWaitingApp = angular.module('orderWaitingApp', ['myApp.directives']);
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 
 		$scope.orderList = {};
 		$scope.refuseReson = "";
 		$scope.currentIndex = "";
+
+
+
+		$scope.itemPerPage = "20";
+		$scope.currentPage = 1;
+		$scope.total;
+		$scope.pageCount;
+		$scope.directiveCtl = false;
+		$scope.finalUrl;
+		$scope.messageBox;
+		$scope.paginationId = "pageNumber";
+
+
 
 		$scope.priceDivIn = function(index) {
 
@@ -125,18 +138,36 @@
 		}
 
 
-		function init() {
 
-			$(".menu1").find("dd").eq(0).addClass("active");
+		$scope.urlCheck = function urlCheck(a) {
+			$scope.currentPage = a;
+			//console.log("这里是urlCheck url变化的地方");
 
-			var url = "/api/order/waiting/";
+			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
 
-			$http.get(url)
+			var url = '/api/order/waiting/?start=' + pageNum;
+
+
+			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				url = url + "&limit=" + $scope.itemPerPage;
+
+			}
+			$scope.finalUrl = url;
+
+		}
+
+
+
+		$scope.searchResult = function searchResult() {
+
+			//var url = "/api/order/waiting/";
+			console.log($scope.finalUrl);
+
+			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
-
 
 						for (var i = 0; i < $scope.orderList.length; i++) {
 
@@ -151,6 +182,10 @@
 
 						};
 
+						$scope.total = 500;
+						$scope.pageCount = Math.ceil($scope.total / $scope.itemPerPage);
+						$scope.directiveCtl = true;
+
 
 					} else {
 						alert(resp.errmsg);
@@ -161,7 +196,10 @@
 				})
 
 		}
-		init();
+
+		$(".menu1").find("dd").eq(0).addClass("active");
+		$scope.urlCheck(1);
+		$scope.searchResult();
 
 
 
