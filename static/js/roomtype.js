@@ -236,11 +236,11 @@
 			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 				$(".btn-number").click(function() {
 					$("#openDiv1").show();
-					var day = new Date();
+					var day = new Date(); 
 					var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
 					$("#time1").val(inputCurrent);
 					$("#time2").val(inputCurrent);
-					
+
 				});
 			});
 
