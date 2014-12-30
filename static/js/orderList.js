@@ -110,7 +110,6 @@
 	}])
 
 
-
 	orderListApp.controller('orderListCheckCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.todayCheckIn = {};
@@ -139,8 +138,6 @@
 
 		}
 
-
-
 		$scope.searchResult = function searchResult() {
 
 			console.log($scope.finalUrl);
@@ -165,8 +162,6 @@
 							var temptime = $scope.todayCheckIn[i]["create_time"].split(" ");
 							$scope.todayCheckIn[i]["create_time"] = temptime;
 						};*/
-
-
 
 						for (var i = 0; i < $scope.todayCheckIn.length; i++) {
 
@@ -210,8 +205,6 @@
 
 						};
 
-
-
 						$scope.itemPerPage = resp.result.limit;
 
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
@@ -228,7 +221,6 @@
 				})
 
 		}
-
 
 		$scope.urlCheck(1);
 		$scope.searchResult();
@@ -250,13 +242,28 @@
 		$scope.paginationId = "pagequeryNumber";
 
 
-
 		$scope.searchOrderId = "";
-		$scope.searchHotelName = "";			
+		$scope.searchHotelName = "";
 		$scope.searchInPeople = "";
 		$scope.searchStatus = "";
-		
-		
+		$scope.messageLive = "";
+		$scope.messageList = "";
+
+
+
+		$scope.conditionReset = function conditionReset() {
+
+			$scope.searchOrderId = "";
+			$scope.searchHotelName = "";
+			$scope.searchInPeople = "";
+			$scope.searchStatus = "";
+			$("#liveStarTime").val("");
+			$("#liveEndTime").val("");
+			$("#ListStarTime").val("");
+			$("#ListEndTime").val("");
+		}
+
+
 		$scope.urlCheck = function urlCheck(a) {
 
 			$scope.currentPage = a;
@@ -264,6 +271,17 @@
 			var liveEndTime = $("#liveEndTime").val();
 			var ListStarTime = $("#ListStarTime").val();
 			var ListEndTime = $("#ListEndTime").val();
+			$scope.messageLive = "";
+			$scope.messageList = "";
+
+			if (liveStarTime > liveEndTime) {
+				$scope.messageLive = "起始日期大于结束日期";
+				return;
+			}
+			if (ListStarTime > ListEndTime) {
+				$scope.messageList = "起始日期大于结束日期";
+				return;
+			}
 
 			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
 
@@ -294,9 +312,13 @@
 
 			}
 
-
 			if ($scope.searchStatus.trim() != "" && $scope.searchStatus != undefined) {
-				url = url + "&order_status=" + $scope.searchStatus;
+
+				if ($scope.searchStatus == "500") {
+					url = url + "&order_status=" + $scope.searchStatus + "&order_status=600";
+				} else {
+					url = url + "&order_status=" + $scope.searchStatus;
+				}
 
 			}
 
@@ -313,8 +335,8 @@
 
 			}
 
-			$scope.finalUrl = encodeURI("/api/order/search/?start=0&order_id=1&limit=20");
-			console.log($scope.finalUrl);
+			$scope.finalUrl = encodeURI(url);
+
 
 		}
 
@@ -370,7 +392,6 @@
 							}
 
 						};
-
 
 						$scope.itemPerPage = resp.result.limit;
 

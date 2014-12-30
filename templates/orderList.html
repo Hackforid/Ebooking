@@ -148,18 +148,25 @@
 
                                     <label >入住日期： <input type="text"  name="time1" id="liveStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
                                         <input type="text"  name="time2" id="liveEndTime" onclick="WdatePicker()" value="" class="input-time"/>
+                                    
+                                         <span>{{messageLive}}</span>
                                     </label>
 
                                     <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input ng-model="searchInPeople" name="" type="text" value="" class="input-t"/></label>
 
                                     <label>操作状态： <select name="" class="input-s" ng-model="searchStatus" >
                                             <option value="0">不限</option>
-                                            <option value="1">接受</option>
-                                            <option value="2">拒绝</option>
+                                            <option value="100">待确定</option>
+                                            <option value="300">接受</option>
+                                            <option value="400">拒绝</option>
+                                            <option value="500">服务器取消</option>
+                                            
                                     </select></label>
 
                                     <label >下单日期： <input type="text"  name="ListStarTime" id="ListStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
                                         <input type="text"  name="time2" id="ListEndTime" onclick="WdatePicker()" value="" class="input-time"/>
+                                        <span>{{messageList}}</span>
+
                                     </label>
 
                                 </div>
@@ -170,7 +177,7 @@
                             <div class="choose-div">
                                 <div class="left content">
                                     <input name="" type="button" value="搜索" ng-click="urlCheck(1)"/>
-                                    <input name="" type="button" value="重置"   class="btn-bai btn-s" /> 
+                                    <input name="" type="button" value="重置" ng-click="conditionReset()" class="btn-bai btn-s" /> 
 
                                 </div>
                                 <!-- <div class="btn-div right"> <input name="input" type="button" value="导出所选" class="btn-s btn-bai"  /></div>  -->
