@@ -16,6 +16,7 @@ app = Celery("celery_app",
             'tasks.order.cancel_order', 'tasks.order.cancel_order_in_queue'],
         )
 
+app.config_from_object('tasks.celery_config')
 
 if __name__ == '__main__':
     app.start()

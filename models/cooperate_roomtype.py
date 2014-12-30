@@ -33,6 +33,11 @@ class CooperateRoomTypeModel(Base):
                 .filter(CooperateRoomTypeModel.is_delete == 0)\
                 .all()
 
+    @classmethod
+    def get_all_ids(cls, session):
+        return session.query(CooperateRoomTypeModel.id)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
 
     @classmethod
     def get_by_id(cls, session, id):

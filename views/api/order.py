@@ -147,6 +147,7 @@ class OrderSearchAPIHandler(BtwBaseHandler):
                 args=[order_id, hotel_name, checkin_date, checkout_date, customer, order_status, create_time_start, create_time_end, start, limit])
         if task.status == 'SUCCESS':
             orders, total = task.result
+            orders = orders if orders is not None else  []
             self.finish_json(result={
                 'orders': [order.todict() for order in orders],
                 'total': total,
