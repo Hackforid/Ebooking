@@ -20,7 +20,7 @@ from views.api.roomtype_cooped import RoomTypeCoopedAPIHandler, RoomTypeCoopedMo
 from views.api.rateplan import RatePlanAPIHandler, RatePlanModifyAPIHandler
 from views.api.submit_order import SubmitOrderAPIHandler, CancelOrderAPIHander
 from views.api.roomrate import RoomRateAPIHandler
-from views.api.inventory import InventoryAPIHandler
+from views.api.inventory import InventoryAPIHandler, InventoryCompleteAPIHandler
 from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler, OrderUserConfirmAPIHandler, OrderUserCancelAPIHandler, OrderSearchAPIHandler
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -65,4 +65,6 @@ handlers = [
         (r"/api/order/todaybook/?", OrderTodayBookListAPIHandler),
         (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
         (r"/api/order/search/?", OrderSearchAPIHandler),
+
+        ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
 ]
