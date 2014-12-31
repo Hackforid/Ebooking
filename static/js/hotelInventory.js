@@ -42,7 +42,7 @@
 		this.remarkName = "";
 
 
-		this.exampleDivIn = function(index) {
+		/*this.exampleDivIn = function(index) {
 
 			$("#exampleDiv-" + index).after("<span class='example' style='position:relative;'>示例：<b>170元</b></span>").show(0, function() {});
 
@@ -53,7 +53,7 @@
 				$("#exampleDiv-" + index).next("span.example").remove();
 			});
 
-		}
+		}*/
 
 
 		this.eachhide = function(index) {
@@ -87,6 +87,7 @@
 						$("div.eachroom").eq(index).css("display", "none");
 
 						scope.cooped[index]["prefix_name"] = resp.result.cooped_roomtype["prefix_name"];
+						scope.cooped[index]["remark_name"] = resp.result.cooped_roomtype["remark_name"];
 
 					} else {
 						this.errmsg = resp.errmsg;
