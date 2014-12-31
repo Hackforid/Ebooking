@@ -28,7 +28,7 @@
 
 
                     <div class="tabCon" >
-                        <div id="tabcontent1" class="tabcon1" style=" display:block" ng-controller="orderListCtrl">
+                        <div id="tabcontent1" class="tabcon1" style=" display:block" ng-controller="orderListBookCtrl">
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                                 <thead><tr>
@@ -80,7 +80,7 @@
                             <!--页码end-->               
                         </div>
 
-                        <div id="tabcontent2" class="tabcon2" style=" display:none" ng-controller="orderListCtrlt">
+                        <div id="tabcontent2" class="tabcon2" style=" display:none" ng-controller="orderListCheckCtrl">
                             　
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                                 <thead><tr>
@@ -138,28 +138,35 @@
 
 
 
-                        <div id="tabcontent3" class="tabcon3" style=" display:none">
+                        <div id="tabcontent3" class="tabcon3" style=" display:none" ng-controller="orderListQueryCtrl">
 
                             <div class="search-div">
                                 <div class="divone">
-                                    <label>订单确认号： <input name="" type="text" value="" class="input-t"/></label>
-                                    <label>酒店名称： <input name="" type="text" value="" class="input-t"/></label>
+                                    <label>订单确认号： <input name="" type="text" ng-model="searchOrderId" class="input-t"/></label>
+                                    <label>酒店名称： <input name="" type="text" ng-model="searchHotelName" class="input-t"/></label>
 
 
-                                    <label >入住日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
-                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    <label >入住日期： <input type="text"  name="time1" id="liveStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
+                                        <input type="text"  name="time2" id="liveEndTime" onclick="WdatePicker()" value="" class="input-time"/>
+                                    
+                                         <span>{{messageLive}}</span>
                                     </label>
 
-                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input name="" type="text" value="" class="input-t"/></label>
+                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input ng-model="searchInPeople" name="" type="text" value="" class="input-t"/></label>
 
-                                    <label>操作状态： <select name="" class="input-s"  >
+                                    <label>操作状态： <select name="" class="input-s" ng-model="searchStatus" >
                                             <option value="0">不限</option>
-                                            <option value="1">接受</option>
-                                            <option value="2">拒绝</option>
+                                            <option value="100">待确定</option>
+                                            <option value="300">接受</option>
+                                            <option value="400">拒绝</option>
+                                            <option value="500">服务器取消</option>
+                                            
                                     </select></label>
 
-                                    <label >下单日期： <input type="text" name="time1" id="time1" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/ > 至 
-                                        <input type="text" name="time2" id="time2" onclick="MyCalendar.SetDate(this)" value="" class="input-time"/>
+                                    <label >下单日期： <input type="text"  name="ListStarTime" id="ListStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
+                                        <input type="text"  name="time2" id="ListEndTime" onclick="WdatePicker()" value="" class="input-time"/>
+                                        <span>{{messageList}}</span>
+
                                     </label>
 
                                 </div>
@@ -169,8 +176,8 @@
 
                             <div class="choose-div">
                                 <div class="left content">
-                                    <input name="" type="button" value="搜索" />
-                                    <input name="" type="button" value="重置"   class="btn-bai btn-s" /> 
+                                    <input name="" type="button" value="搜索" ng-click="urlCheck(1)"/>
+                                    <input name="" type="button" value="重置" ng-click="conditionReset()" class="btn-bai btn-s" /> 
 
                                 </div>
                                 <!-- <div class="btn-div right"> <input name="input" type="button" value="导出所选" class="btn-s btn-bai"  /></div>  -->
@@ -193,57 +200,40 @@
 
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
+                                <tr ng-repeat="query in queryList">
+                                    <td width="13%">订单确认号</td>
+                                        <td width="15%">{{query.hotel_name}}</td>
+                                        <td width="10%">{{query.room_type_name}}</td>
+                                        <td width="15%">{{query.checkin_date}}至<br />
+                                        {{query.checkout_date}}（2晚）</td>
+                                        <td width="12%">{{query["create_time"][0]}}<br />
+                                         {{query["create_time"][1]}}</td>
+                                        <td width="8%"> <div ng-repeat="cum in query['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="7%">类型</td>
+                                        <td width="8%"><em class="price">{{query.everyday_price}}</em></td>
+                                        <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
-
-                                <tr>
-                                    <td width="13%">333333</td>
-                                    <td width="15%">七天连锁酒店（客村店）</td>
-                                    <td width="10%">双人大床房</td>
-                                    <td width="15%">2014-09-31至<br />
-                                        2014-10-02（2晚）</td>
-                                    <td width="12%">2014-09-28<br />
-                                         09：00</td>
-                                    <td width="8%">刘小</td>
-                                    <td width="7%">系统确认</td>
-                                    <td width="8%"><em class="price">380元</em></td>
-                                    <td width="5%">接受</td>
-                                    <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
-                                </tr>
+                               
                             </table>
 
 
 
-                            <!--页码-->
-                            <div class="page">
-                                <span class="disabled"> &lt;  上一页</span>
-                                <span class="current">1</span>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                ...<a href="#">20</a>
-                                <a href="#">21</a>
-                                <a href="#">下一页  &gt; </a>
-                                <span>共230条，每页10条，每页显示条数：<select name="" class="input-s"  >
-                                        <option value="1">10</option>
-                                        <option value="2">20</option>
-                                        <option value="3">30</option>
-                                        <option value="4">40</option>
-                                </select></span>
+                             <!--页码-->
+                            <div  id="pagequeryInfo"  class="page">
+                                
+                            <span  id="pagequeryNumber"  ng-if="directiveCtl" page-info></span>
+                                
+                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="40">40</option>
+                                </select></span>                                                            
                             </div>
-                            <!--页码end-->                 
+                            <!--页码end-->   
+
+                                          
 
                         </div>
                     </div>
