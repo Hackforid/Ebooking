@@ -94,11 +94,19 @@
 				}
 				if ($scope.searchCity.trim() != "" && $scope.searchCity != undefined) {
 					var cityId = getCityId($scope.searchCity);
+
+					if (cityId == false) {
+						$("#pageInfo").hide();
+						$scope.hotels = [];
+						return;
+					}
+
+
 					url = url + "&city_id=" + cityId;
 
 
 				}
-				if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined) {
+				if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 					url = url + "&star=" + $scope.searchStar;
 
 				}
@@ -163,6 +171,9 @@
 				$scope.searchName = "";
 				$scope.searchCity = "";
 				$scope.searchStar = "";
+
+				$scope.finalUrl = '/api/hotel/willcoop/?start=0&limit=' + $scope.itemPerPage;
+				$scope.searchResult();
 			}
 
 
@@ -182,6 +193,7 @@
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
+							$("#pageInfo").show();
 
 							if ($scope.total == 0) {
 								$("#pageInfo").hide();
@@ -273,7 +285,7 @@
 					}
 				}
 
-				return ' ';
+				return false;
 			}
 
 		}])
