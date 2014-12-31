@@ -142,9 +142,9 @@ def valid_inventory(session, order):
             print 'day', day, 'not found'
             return False
 
-        if inventory.get_day(day.day, 1) < order.room_quantity:
+        if inventory.get_day(day.day, 1) < order.room_quantity\
+                and inventory.get_day(day.day, 0) < order.room_quantity:
             print 'room not enough in {}'.format(day)
-            print 'remain {} need {}'.format(inventory.get_day(day.day, 1), order.room_quantity)
             return False
     else:
         print 'found'

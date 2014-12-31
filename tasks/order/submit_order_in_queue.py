@@ -18,10 +18,10 @@ def start_order(self, order_id):
     if order.status != 0:
         return
 
-    order = modify_inventory(session, order)
+    order, inventory_type = modify_inventory(session, order)
     PushInventoryTask().push_inventory.delay(order.roomtype_id)
 
-    return order
+    return order, inventory_type
 
 def get_stay_days(checkin_date, checkout_date):
     aday = datetime.timedelta(days=1)
@@ -44,7 +44,7 @@ def get_inventory_by_date(inventories, year, month):
     else:
         return
 
-def valid_inventory(inventories, stay_days, room_quantity):
+def valid_inventory(inventories, stay_days, room_quantity, type):
     if not inventories:
         print "no inventory"
         return False
@@ -57,7 +57,7 @@ def valid_inventory(inventories, stay_days, room_quantity):
         if not inventory:
             print 'day {}-{} inventory not found'.format(day.year, day.month)
             return False
-        if inventory.get_day(day.day, 1) < room_quantity:
+        if inventory.get_day(day.day, type) < room_quantity:
             print 'room not enough'
             return False
     else:
@@ -73,20 +73,28 @@ def modify_inventory(session, order):
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
+    
+    is_inventory_auto_enough = valid_inventory(inventories, stay_days, order.room_num, 0)
+    is_inventory_manual_enough = valid_inventory(inventories, stay_days, order.room_num, 1)
 
-    if not valid_inventory(inventories, stay_days, order.room_num):
+    if not (is_inventory_auto_enough or is_inventory_manual_enough):
         print 'valid inventory fail'
         order.status = 200
         session.commit()
-        return order
+        return order, -1
+
+    inventory_type = 0 if is_inventory_auto_enough else 1
 
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
-        inventory.add_val_by_day(day.day, 1, -order.room_num)
+        inventory.add_val_by_day(day.day, inventory_type, -order.room_num)
 
-    order.status = 100
+    if inventory_type == 0:
+        order.status = 300
+    else:
+        order.status = 100
     session.commit()
-    return order
+    return order, inventory_type
 
 def get_order(session, order_id):
     return OrderModel.get_by_id(session, order_id)

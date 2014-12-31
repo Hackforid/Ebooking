@@ -26,9 +26,10 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             if order.status == 200:
                 raise JsonException(1, 'fail')
             else:
+                order, inventory_type = task.result
                 self.finish_json(result=dict(
-                    order_id=task.result.id,
-                    wait=1,
+                    order_id=order,
+                    wait=inventory_type,
                     ))
         else:
             if isinstance(task.result, CeleryException):
