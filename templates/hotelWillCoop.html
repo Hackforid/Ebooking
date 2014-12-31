@@ -60,12 +60,12 @@
 				    </div>
                 </div>
 
-				<div class="willcoop-div">
+				<div class="willcoop-div" ng-init="checkStatus=false">
 					<div class="content"><div class="p15">
 
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
 								<thead><tr>
-										<th width="10%"><input name="input2" type="checkbox" value="" />全选</th>
+										<th width="10%"><input ng-click="checkStatus=!checkStatus" ng-checked="checkStatus" name="input2" type="checkbox" value="" />全选</th>
 										<th width="25%">酒店名称</th>
 										<th width="10%">城市</th>
 										<th width="20%">地址</th>
@@ -79,7 +79,7 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow"
                                >
 								<tr ng-repeat="hotel in hotels">
-									<td width="10%"><input name="checkBox" type="checkbox" value="" /></td>
+									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
                                     <td width="25%">{{hotel.name}}</td>
                                     <td width="10%">{{getCityName(hotel.city_id)}}</td>
                                     <td width="20%">{{hotel.address}}</td>

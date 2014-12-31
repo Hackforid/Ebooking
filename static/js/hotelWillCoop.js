@@ -25,32 +25,44 @@
 
 			//$scope.cityList = [];
 
+			$scope.checkedHotel = function checkedHotel() {
 
-			$scope.checkedHotel=function checkedHotel() { 
-			//$("[name='checkBox']").attr("checked",'true');//全选
-			 //$("[name='checkBox']").removeAttr("checked");//取消全选
+				var hotelIds = [];
+				var checkbox = $("[name='checkBox']");
+				for (var i = 0; i < checkbox.length; i++) {
+					if ($(checkbox[i]).is(':checked')) {
+						hotelIds.push($scope.hotels[i].id);
+					}
+				};
 
-			 var hotelIds=[];
-			 var checkbox=$("[name='checkBox']");
-			 for (var i = 0; i < checkbox.length; i++) {
-			 	if($(checkbox[i]).is(':checked'))
-			 	{hotelIds.push(i);
-			 	}
-			 };
+				console.log(hotelIds);
+				console.log({
+					'hotel_ids': hotelIds
+				});
 
-
-			 var url = "/api/hotel/coops/";
-				$http.post(url,{'hotel_ids': [1,2,3]})
+				var url = "/api/hotel/coops/";
+				$http.post(url, {
+						'hotel_ids': hotelIds
+					})
 					.success(function(resp) {
 						if (resp.errcode == 0) {
 							console.log(resp);
+							var hotelResult = resp.result.hotels;
+							for (var i = 0; i < $scope.hotels.length; i++) {
+
+								for (var j = 0; j < hotelResult.length; j++) {
+									if ($scope.hotels[i].id == hotelResult[j].id) {
+										$scope.hotels.splice(i, 1);
+										i--;
+									}
+								};
+							};
+
 						}
 					})
 					.error(function() {});
 
-
-		}
-
+			}
 
 
 
