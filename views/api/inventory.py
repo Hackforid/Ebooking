@@ -70,3 +70,13 @@ class InventoryAPIHandler(BtwBaseHandler):
             raise JsonException(errcode=2001, errmsg="invalid date: end date out of range")
 
         return start_date, end_date
+
+class InventoryCompleteAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def get(self):
+        yield gen.Task(Inventory.complete_in_four_months.apply_async,
+                args=[])
+        self.finish_json()
+

@@ -18,7 +18,6 @@ CELERY_IMPORTS = (
 CELERYBEAT_SCHEDULE = {
         'complete_inventory_in_four_months': {
             'task': 'tasks.models.inventory.complete_in_four_months',
-            #'schedule': crontab(hour=9),
-            'schedule': timedelta(seconds=5),
+            'schedule': crontab(hour=0, minute=0),
             },
 }
