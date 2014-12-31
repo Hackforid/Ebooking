@@ -165,19 +165,19 @@ class InventoryModel(Base):
         return inventories
 
     @classmethod
-    def insert_all_in_four_month(cls, session, roomtype_ids):
+    def insert_all_in_four_month(cls, session, roomtypes):
 
         inventories = []
         dates= cls.get_months(4)
 
-        for roomtype_id in roomtype_ids:
+        for roomtype in roomtypes:
             for date in dates:
-                inventory = cls.get_by_roomtype_id_and_date(session, roomtype_id, date[0], date[1])
+                inventory = cls.get_by_roomtype_id_and_date(session, roomtype.id, date[0], date[1])
                 if inventory:
                     continue
                 else:
                     _month = InventoryModel.combin_year_month(date[0], date[1])
-                    inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
+                    inventory = InventoryModel(merchant_id=roomtype.merchant_id, hotel_id=roomtype.hotel_id, roomtype_id=roomtype.id, month=_month, base_hotel_id=roomtype.base_hotel_id, base_roomtype_id=roomtype.base_roomtype_id)
                     inventories.append(inventory)
         session.add_all(inventories)
         session.commit()
