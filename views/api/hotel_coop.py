@@ -37,7 +37,7 @@ class HotelCoopsAPIHandler(BtwBaseHandler):
     def post(self):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
-        hotel_ids, = get_and_valid_arguments('hotel_ids')
+        hotel_ids, = get_and_valid_arguments(args, 'hotel_ids')
         coop_task = yield gen.Task(CooperateHotel.new_hotel_cooprates.apply_async, args=[merchant_id, hotel_ids])
         if coop_task.status == 'SUCCESS':
             coops = coop_task.result if coop_task.result else []
