@@ -55,9 +55,8 @@ class CooperateHotelModel(Base):
         coops = []
         for base_hotel_id in base_hotel_ids:
             coop = cls.get_by_merchant_id_and_base_hotel_id(session, merchant_id, base_hotel_id)
-            if coop:
-                continue
-            coop = CooperateHotelModel(merchant_id=merchant_id, base_hotel_id=base_hotel_id)
+            if not coop:
+                coop = CooperateHotelModel(merchant_id=merchant_id, base_hotel_id=base_hotel_id)
             coops.append(coop)
         session.add_all(coops)
         session.commit()
