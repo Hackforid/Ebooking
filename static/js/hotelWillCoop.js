@@ -25,6 +25,60 @@
 
 			//$scope.cityList = [];
 
+			$scope.checkedHotel = function checkedHotel() {
+
+				var hotelIds = [];
+				var checkbox = $("[name='checkBox']");
+				for (var i = 0; i < checkbox.length; i++) {
+					if ($(checkbox[i]).is(':checked')) {
+						hotelIds.push($scope.hotels[i].id);
+					}
+				};
+
+
+				var url = "/api/hotel/coops/";
+
+				$http.post(url, {
+						'hotel_ids': hotelIds
+					})
+					.success(function(resp) {
+						if (resp.errcode == 0) {
+							console.log(resp);
+							var hotelResult = resp.result.hotel_cooprate;
+							for (var i = 0; i < $scope.hotels.length; i++) {
+								for (var j = 0; j < hotelResult.length; j++) {
+									if ($scope.hotels[i]["id"] == hotelResult[j]["base_hotel_id"]) {
+										$scope.hotels.splice(i, 1);
+										hotelResult.splice(j, 1);
+										i--;
+										break;
+									}
+								};
+							};
+
+							$scope.messageBox = "合作成功";
+
+							$("#acceptDialog").show();
+
+						} else {
+
+							$scope.messageBox = resp.errmsg;
+
+							$("#acceptDialog").show();
+						}
+
+					})
+					.error(function() {
+
+						$scope.messageBox = "网络错误";
+
+						$("#acceptDialog").show();
+
+					});
+
+			}
+
+
 
 			$scope.urlCheck = function urlCheck(a) {
 				$scope.currentPage = a;
@@ -165,8 +219,13 @@
 							$scope.messageBox = "合作成功";
 
 							$("#acceptDialog").show();
+							console.log(resp);
+							var hotelResult = [];
+							hotelResult.push(resp.result.hotel_cooprate);
 
-							$scope.hotels.splice(index, 1);
+							if (hotelResult.length != 0) {
+								$scope.hotels.splice(index, 1);
+							}
 
 						} else {
 

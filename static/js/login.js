@@ -19,7 +19,8 @@ loginApp.controller('LoginCtrl', ['$scope', '$http',
 		$http.post(url, params)
 			.success(function(resp) {
 				if (resp.errcode == 0) {
-					alert('login success');
+					
+					window.location.href = ("/order/waiting/");
 				} else {
 					$scope.errMsg = resp.errmsg;
 				}
