@@ -28,3 +28,10 @@ class LoginHandler(BtwBaseHandler):
                 })
         else:
             self.finish_json(errcode=100, errmsg=u"帐号或密码错误")
+
+class LogoutHandler(BtwBaseHandler):
+
+    @auth_login()
+    def get(self):
+        self.clear_all_cookies()
+        self.redirect("/login/")
