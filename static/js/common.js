@@ -44,7 +44,7 @@ $(".admin-info").mouseout(function () {clearTimeout(handle);});
 });
  
  $("#out-div #sure-out").click( function() {
-    location.href = "index.html"
+    location.href = "/logout";
 }); 	
 	
 });  
