@@ -78,10 +78,10 @@
 				"remark_name": $("#remarkId-" + index).val()
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -91,7 +91,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -162,10 +162,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
 						scope.roomNum = [];
@@ -176,7 +176,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -203,10 +203,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -218,7 +218,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -248,10 +248,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -263,7 +263,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -314,13 +314,13 @@
 
 		$scope.roomDescribe = function roomDescribe(index) {
 			//console.log(index);
-			console.log($scope.cooped[index]);
+			//console.log($scope.cooped[index]);
 
 			$scope.roomDescribeInfo = $scope.cooped[index];
 
 			var bedTypeIndex = $scope.roomDescribeInfo['bed_type'];
 			$scope.roomDescribeInfo['bed_type'] = $scope.roomBedType[bedTypeIndex];
-			console.log($scope.roomDescribeInfo);
+			//console.log($scope.roomDescribeInfo);
 
 			$("#cool-roomtype").show();
 
@@ -384,13 +384,13 @@
 			}
 
 			var url = "/api/hotel/" + hotelId + "/roomtype/";
-			console.log(url);
-			console.log(shouldCooped);
+			//console.log(url);
+			//console.log(shouldCooped);
 			$http.post(url, {
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);
@@ -399,7 +399,7 @@
 
 
 					} else {
-						console.log(resp.errmsg);
+						//console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
@@ -427,10 +427,10 @@
 
 		function loadHotelMsg(hotel_id) {
 			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue - 1].year + "&month=" + $scope.months[$scope.monthvalue - 1].month;
-			console.log(url);
+			//console.log(url);
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;

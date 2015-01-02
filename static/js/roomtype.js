@@ -50,10 +50,10 @@
 			}
 
 			this.errmsg = '';
-			console.log(this.name + this.mealType + this.punishType);
+			//console.log(this.name + this.mealType + this.punishType);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
-			console.log(url);
+			//console.log(url);
 			var params = {
 				'name': this.name,
 				'meal_num': parseInt(this.mealType),
@@ -62,7 +62,7 @@
 
 			http.post(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						scope.roomrates.push(resp.result.roomrate);
@@ -102,7 +102,7 @@
 		this.save = function(index) {
 			this.errmsg = '';
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/' + scope.rateplans[index].id;
-			console.log(url);
+			//console.log(url);
 			var params = {
 				"name": ($("#roomheadinput" + index).val()),
 				"meal_num": parseInt($("#roomheadmeal" + index).val()),
@@ -110,7 +110,7 @@
 			};
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$("div.eachroom").eq(index).css("display", "none");
 
@@ -171,7 +171,7 @@
 				return;
 			}
 
-			console.log(url);
+			//console.log(url);
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
@@ -180,7 +180,7 @@
 			};
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
@@ -259,7 +259,7 @@
 			var url = "/api/hotel/" + _hotelId + "/roomtype/?simple=1";
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp)
+					//console.log(resp)
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.roomtypes = resp.result.cooped_roomtypes;
@@ -321,11 +321,11 @@
 				return;
 			}
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + $scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
-			console.log(url);
+			//console.log(url);
 
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.rateplans = resp.result.rateplans;
 						$scope.roomrates = resp.result.roomrates;
