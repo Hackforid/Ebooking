@@ -193,9 +193,11 @@
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
-							$("#pageInfo").show();
 
-							if ($scope.total == 0) {
+
+							if ($scope.total != 0) {
+								$("#pageInfo").show();
+							} else {
 								$("#pageInfo").hide();
 							}
 

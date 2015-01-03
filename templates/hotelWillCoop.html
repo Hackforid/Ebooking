@@ -17,7 +17,7 @@
  		 	 <div class="detail">
   		    	 <div class="head"><h1>提示</h1></div>
     		 	  <div class="con">
-      		 	   <p class="f16" style=" text-align:center;padding:30px 0;">{{messageBox}}</p>
+      		 	   <p class="f16" style=" text-align:center;padding:30px 0;" ng-bind="messageBox"></p>
       		 	   <p class="action" style=" text-align:center">
       		 	   <input name="确认" type="button" value="确认"  ng-click="confirmResult();" class="btn-orange"/>
       		 	   </p>
@@ -80,10 +80,10 @@
                                >
 								<tr ng-repeat="hotel in hotels">
 									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
-                                    <td width="25%">{{hotel.name}}</td>
-                                    <td width="10%">{{getCityName(hotel.city_id)}}</td>
-                                    <td width="20%">{{hotel.address}}</td>
-                                    <td width="10%">{{hotel.phone}}</td>
+                                    <td width="25%" ng-bind="hotel.name"></td>
+                                    <td width="10%" ng-bind="getCityName(hotel.city_id)"></td>
+                                    <td width="20%" ng-bind="hotel.address"></td>
+                                    <td width="10%" ng-bind="hotel.phone"></td>
 									<td width="10%">可申请合作</td>
 									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>
 								</tr>
@@ -94,11 +94,11 @@
 							</div>
 
 							<!--页码-->
-							<div id="pageInfo" class="page">
+							<div id="pageInfo" class="page" style="display:none">
                                 
 								<span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
 								
-                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
 										<option value="10">10</option>
 										<option value="20">20</option>
 										<option value="30">30</option>

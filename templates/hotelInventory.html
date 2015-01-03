@@ -5,7 +5,7 @@
     ng-controller="hotelInventoryCtrl"
     >
 <!--导航条--> 
-<div class="notice" id="notice"><h2>当前酒店：{{hotel.name}}</h2></div>
+<div class="notice" id="notice"><h2 ng-bind="'当前酒店：'+hotel.name"></h2></div>
 <!--导航条end-->  
 
 <!--主体内容-->  
@@ -29,7 +29,7 @@
                             <select name="" class="input-s"
                                 ng-model="monthvalue"                               
                                 >
-                                <option  value={{$index+1}}  ng-repeat="i in months">{{i.month}}月</option>
+                                <option  value={{$index+1}}  ng-repeat="i in months" ng-bind="i.month+'月'"></option>
 
                             </select></div>
 
@@ -39,12 +39,12 @@
                       <div class="form form1"
                         ng-repeat="room in cooped" ng-init="index=$index"
                         >
-                        <div class="roomhead"><h1 ng-click="hotelHeadDialog.eachshow($index);">{{room.prefix_name | filter : nameTest}}{{room.name}}{{room.remark_name | filter : nameTest}}--剩余房量</h1><span></span>
+                        <div class="roomhead"><h1 ng-click="hotelHeadDialog.eachshow($index);"><span ng-bind="room.prefix_name | filter : nameTest"></span><span ng-bind="room.name"></span><span ng-bind="room.remark_name | filter : nameTest"></span><span>--剩余房量</span></h1><span></span>
                             <div class="eachroom" style=" display:none;background:#EBEBED">
-                                <label>房型名称：{{room.name}}<a class="a-blue" ng-click="roomDescribe($index)">[房型详情]</a></label>
+                                <label><span ng-bind="'房型名称：'+room.name"></span><a class="a-blue" ng-click="roomDescribe($index)">[房型详情]</a></label>
                                 <label style="line-height:30px;margin-top:10px;">自定义房型名称：<span style="display:inline-block;background:white"><input id={{"prefixId-"+$index}} ng-init="prefixName=room.prefix_name" style="" type="text"  ng-value="room.prefix_name"  ng-model="prefixName" class="input-t"  />
                                                              
-                                    <span style="position:relative;left:-7px;">{{room.name}}</span>
+                                    <span style="position:relative;left:-7px;" ng-bind='room.name'></span>
                                         <input id={{"remarkId-"+$index}} style="position:relative;left:-7px" type="text" ng-value="room.remark_name"  ng-model="remarkName" ng-init="remarkName=room.remark_name"  class="input-t"  /> 
                                      </span>
                                     <!-- <span id={{"exampleDiv-"+$index}} style="font-weight:normal;" ng-mouseover="hotelHeadDialog.exampleDivIn($index);" ng-mouseleave="hotelHeadDialog.exampleDivLeave($index);">?
@@ -62,71 +62,8 @@
                             <thead><tr>
                                     <th class="table-title">日期</th>
 
-                                    <th id={{"dayth"+monthvalue+""+day.day}} ng-repeat="day in dayWeekSum" ng-style="day.textcolor">{{day.day}}<br/>{{day.weekday}}</th>
-
-
-                                    <!--<th>1<br />
-                                        三</th>
-                                    <th>2<br />
-                                        四</th>
-                                    <th>3<br />
-                                        五</th>
-                                    <th ><strong class="today">今<br />
-                                            天</strong></th>
-                                    <th ><strong>5<br />
-                                            日</strong></th>
-                                    <th>6<br />
-                                        一<br /></th>
-                                    <th>7<br />
-                                        二</th>
-                                    <th>8<br />
-                                        三</th>
-                                    <th>9<br />
-                                        四</th>
-                                    <th>10<br />
-                                        五</th>
-                                    <th><strong>11<br />
-                                            六</strong></th>
-                                    <th><strong>12<br />
-                                            日</strong></th>
-                                    <th>13<br />
-                                        一<br /></th>
-                                    <th>14<br />
-                                        二</th>
-                                    <th>15<br />
-                                        三</th>
-                                    <th>16<br />
-                                        四</th>
-                                    <th>17<br />
-                                        五</th>
-                                    <th><strong>18<br />
-                                            六</strong></th>
-                                    <th><strong>19<br />
-                                            日</strong></th>
-                                    <th>20<br />
-                                        一<br /></th>
-                                    <th>21<br />
-                                        二</th>
-                                    <th>22<br />
-                                        一<br /></th>
-                                    <th>23<br />
-                                        二</th>
-                                    <th>24<br />
-                                        三</th>
-                                    <th>25<br />
-                                        四</th>
-                                    <th>26<br />
-                                        五</th>
-                                    <th><strong>27<br />
-                                            六</strong></th>
-                                    <th><strong>28<br />
-                                            日</strong></th>
-                                    <th>29<br />
-                                        一<br /></th>
-                                    <th>30<br />
-                                        二</th>
-                                    <th>31<br />
-                                        一<br /></th>-->
+                                    <th id={{"dayth"+monthvalue+""+day.day}} ng-repeat="day in dayWeekSum" ng-style="day.textcolor"><span ng-bind="day.day"></span><br/><span ng-bind="day.weekday"></span></th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -134,79 +71,17 @@
                                     <td class="table-title">自动确认房量</td>
                                     <td class={{numauto.classStyle}} ng-repeat="numauto in roomNumAuto[room.id] | orderObjectBy:'' ">
 
-                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),0);>{{numauto.autoNum}}</span></td>
-                                   <!-- <td class="stop"><span>{{room.day1}}</span></td>
-                                    <td class="stop"><span>{{room.day2}}</span></td>
-                                    <td class="stop"><span>{{room.day3}}</span></td>
-                                    <td class="action1 man-close"><span>{{room.day4}}</span></td>
-                                    <td class="action1 man-close"><span>0</span></td>
-                                    <td class="action1"><span>90</span></td>
-                                    <td class="action1"><span>95</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1 man-close"><span>0</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>90</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td>
-                                    <td class="action1"><span>100</span></td> -->
+                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),0); ng-bind="numauto.autoNum"></span></td>
+                                  
                                 </tr>
                                 <tr>
                                     <td class="table-title">手工确认房量</td>
                                      <td class={{numhead.classStyle}} ng-repeat="numhead in roomNumHand[room.id] | orderObjectBy:''">
 
-                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numhead.classStyle),(room.cooped_roomtype_id),(index),1);>{{numhead.headNum}}</span>
-
-
+                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numhead.classStyle),(room.cooped_roomtype_id),(index),1); ng-bind="numhead.headNum"></span>
 
                                      </td>
-                                    <!--<td class="stop"><span>--</span></td>
-                                    <td class="stop"><span>--</span></td>
-                                    <td class="stop"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1 man-close"><span>0</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>5</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>
-                                    <td class="action1"><span>--</span></td>-->
+                                    
                                 </tr>
                             </tbody>
                         </table>             
@@ -239,7 +114,7 @@
            <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="90"><strong>房型名称：</strong></td>
-    <td>{{roomDescribeInfo['name']}}</td>
+    <td ng-bind="roomDescribeInfo['name']"></td>
   </tr>
   <tr>
     <td><strong>房间大小：</strong></td>
@@ -247,7 +122,7 @@
   </tr>
   <tr>
     <td><strong>床型：</strong></td>
-    <td>{{roomDescribeInfo['bed_type']}}</td>
+    <td ng-bind="roomDescribeInfo['bed_type']"></td>
   </tr>
   <tr>
     <td><strong>床尺寸：</strong></td>
@@ -255,7 +130,7 @@
   </tr>
   <tr>
     <td><strong>楼层：</strong></td>
-    <td>{{roomDescribeInfo['floor']}}</td>
+    <td ng-bind="roomDescribeInfo['floor']"></td>
   </tr>
   <tr>
     <td><strong>入住人数：</strong></td>
@@ -267,7 +142,7 @@
   </tr>
   <tr>
     <td><strong>描述：</strong></td>
-    <td>{{roomDescribeInfo['description']}}</td>
+    <td ng-bind="roomDescribeInfo['description']"></td>
   </tr>
  
 </table>
@@ -311,11 +186,11 @@
     <td><input name="" id="roomNumCount" type="text" class="input-t" value="5" placeholder="输入数字" ng-model="num"/></td>    
   </tr>
 </table>
-<p style="padding-left:32px">{{changeNumDialog.errmsg}}</p>
+<p style="padding-left:32px" ng-bind="changeNumDialog.errmsg"></p>
           <p class="action" style=" text-align:center">
           <input name="" type="button" value="设置为0" ng-click="changeNumDialog.zeroSave()" class="sure-more btn-bai" />
-          <input name="" type="button" ng-click="changeNumDialog.addSave()" value={{"加("+num+")房量"}}  class="sure-more" />
-           <input name="" type="button" ng-click="changeNumDialog.minusSave()" value={{"减("+num+")房量"}} class="sure-more" />
+          <input name="" type="button" ng-click="changeNumDialog.addSave()" ng-value="'加('+num+')房量'"  class="sure-more" />
+           <input name="" type="button" ng-click="changeNumDialog.minusSave()" ng-value="'减('+num+')房量'" class="sure-more" />
           <input name="" ng-click="changeNumDialog.close()" type="button" value="取消" class="btn btn-bai"  />
           </p>
        </div>
@@ -355,12 +230,12 @@
        
           <div class="cm">
           <h2>您已合作的房型：</h2>
-          <p><i ng-repeat="coopedRoom in cooped">{{coopedRoom.name+"    "}}</i></p>
+          <p><i ng-repeat="coopedRoom in cooped" ng-bind="coopedRoom.name+'    '"></i></p>
           
           <h2>选择你想要合作的房型：<span><a class="a-blue" href="http://wpa.qq.com/msgrd?v=3&uin=1816777547&site=qq&menu=yes" target="_blank">没有您要合作的房型？联系客服</a></span></h2>
     <div class="list">
         <label ng-repeat="willCoopRoom in willCoop">
-            <input name="" type="checkbox" ng-model="willCoopRoom.isChecked" value="" />{{willCoopRoom.name}}<a class="a-blue" ng-click="roomDescribe()">[房型详情]</a>
+            <input name="" type="checkbox" ng-model="willCoopRoom.isChecked" value="" /><span ng-bind="willCoopRoom.name"></span><a class="a-blue" ng-click="roomDescribe()">[房型详情]</a>
         </label>
      </div>
          </div>

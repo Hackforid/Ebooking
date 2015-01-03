@@ -73,7 +73,7 @@
 
 			$http.post(url)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
@@ -110,7 +110,7 @@
 					"reason": $scope.refuseReson
 				})
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
@@ -180,12 +180,14 @@
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pageInfo").show();
+						} else {
 							$("#pageInfo").hide();
 						}
 

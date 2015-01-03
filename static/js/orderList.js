@@ -33,12 +33,14 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagebookInfo").show();
+						} else {
 							$("#pagebookInfo").hide();
 						}
 
@@ -149,7 +151,9 @@
 
 						$scope.total = resp.result.total;
 
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagecheckInfo").show();
+						} else {
 							$("#pagecheckInfo").hide();
 						}
 
@@ -350,7 +354,9 @@
 						$scope.queryList = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagequeryInfo").show();
+						} else {
 							$("#pagequeryInfo").hide();
 						}
 

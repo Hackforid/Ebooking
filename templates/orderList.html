@@ -48,15 +48,15 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                                 <tr ng-repeat="book in todayBook">
                                     <td width="13%">订单确认号</td>
-                                        <td width="15%">{{book.hotel_name}}</td>
-                                        <td width="10%">{{book.room_type_name}}</td>
-                                        <td width="15%">{{book.checkin_date}}至<br />
-                                        {{book.checkout_date}}（2晚）</td>
-                                        <td width="12%">{{book["create_time"][0]}}<br />
-                                         {{book["create_time"][1]}}</td>
-                                        <td width="8%"> <div ng-repeat="cum in book['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="15%" ng-bind='book.hotel_name'></td>
+                                        <td width="10%" ng-bind='book.room_type_name'></td>
+                                        <td width="15%" ><span ng-bind="book.checkin_date+'至'"></span><br />
+                                        <span ng-bind="book.checkout_date+'（2晚）'"></span></td>
+                                        <td width="12%"><span ng-bind="book['create_time'][0]"></span><br />
+                                         <span ng-bind="book['create_time'][1]"></span></td>
+                                        <td width="8%"> <div ng-repeat="cum in book['customer_info']" ng-bind="cum['name']"><div></td>
                                         <td width="7%">类型</td>
-                                        <td width="8%"><em class="price">{{book.everyday_price}}</em></td>
+                                        <td width="8%"><em class="price" ng-bind="book.everyday_price"></em></td>
                                         <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
@@ -64,11 +64,11 @@
                             </table>
 
                             <!--页码-->
-                            <div id="pagebookInfo" class="page">
+                            <div id="pagebookInfo" class="page" style="display:none">
                                 
                             <span  id="pagebookNumber"  ng-if="directiveCtl" page-info></span>
                                 
-                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
                                         <option value="10">10</option>
                                         <option value="20">20</option>
                                         <option value="30">30</option>
@@ -101,16 +101,18 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow2">
                                 <tr ng-repeat="check in todayCheckIn">
                                     <td width="13%">订单确认号</td>
-                                        <td width="15%">{{check.hotel_name}}</td>
-                                        <td width="10%">{{check.room_type_name}}</td>
-                                        <td width="15%">{{check.checkin_date}}至<br />
-                                        {{check.checkout_date}}（2晚）</td>
-                                        <td width="12%">{{check["create_time"][0]}}<br />
-                                         {{check["create_time"][1]}}</td>
-                                        <td width="8%"> <div ng-repeat="cum in check['customer_info']">{{cum["name"]}}<div></td>
+                                        <td width="15%" ng-bind="check.hotel_name"></td>
+
+                                        <td width="10%" ng-bind='check.room_type_name'></td>
+                                        <td width="15%" ><span ng-bind="check.checkin_date+'至'"></span><br />
+                                        <span ng-bind="check.checkout_date+'（2晚）'"></span></td>
+                                        <td width="12%"><span ng-bind="check['create_time'][0]"></span><br />
+                                         <span ng-bind="check['create_time'][1]"></span></td>
+                                        <td width="8%"> <div ng-repeat="cum in check['customer_info']" ng-bind="cum['name']"><div></td>
                                         <td width="7%">类型</td>
-                                        <td width="8%"><em class="price">{{check.everyday_price}}</em></td>
+                                        <td width="8%"><em class="price" ng-bind="check.everyday_price"></em></td>
                                         <td width="5%">接受</td>
+                                       
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
 
@@ -118,11 +120,11 @@
                             </table>
 
                              <!--页码-->
-                            <div  id="pagecheckInfo"  class="page">
+                            <div  id="pagecheckInfo"  class="page" style="display:none">
                                 
                             <span  id="pagecheckNumber"  ng-if="directiveCtl" page-info></span>
                                 
-                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
                                         <option value="10">10</option>
                                         <option value="20">20</option>
                                         <option value="30">30</option>
@@ -149,7 +151,7 @@
                                     <label >入住日期： <input type="text"  name="time1" id="liveStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
                                         <input type="text"  name="time2" id="liveEndTime" onclick="WdatePicker()" value="" class="input-time"/>
                                     
-                                         <span>{{messageLive}}</span>
+                                         <span ng-bind="messageLive"></span>
                                     </label>
 
                                     <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;入住人： <input ng-model="searchInPeople" name="" type="text" value="" class="input-t"/></label>
@@ -165,7 +167,7 @@
 
                                     <label >下单日期： <input type="text"  name="ListStarTime" id="ListStarTime" onclick="WdatePicker()" value="" class="input-time"/ > 至 
                                         <input type="text"  name="time2" id="ListEndTime" onclick="WdatePicker()" value="" class="input-time"/>
-                                        <span>{{messageList}}</span>
+                                        <span ng-bind="messageList"></span>
 
                                     </label>
 
@@ -202,16 +204,20 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
                                 <tr ng-repeat="query in queryList">
                                     <td width="13%">订单确认号</td>
-                                        <td width="15%">{{query.hotel_name}}</td>
-                                        <td width="10%">{{query.room_type_name}}</td>
-                                        <td width="15%">{{query.checkin_date}}至<br />
-                                        {{query.checkout_date}}（2晚）</td>
-                                        <td width="12%">{{query["create_time"][0]}}<br />
-                                         {{query["create_time"][1]}}</td>
-                                        <td width="8%"> <div ng-repeat="cum in query['customer_info']">{{cum["name"]}}<div></td>
-                                        <td width="7%">类型</td>
-                                        <td width="8%"><em class="price">{{query.everyday_price}}</em></td>
-                                        <td width="5%">接受</td>
+
+                                    <td width="15%" ng-bind="query.hotel_name"></td>
+
+                                    <td width="10%" ng-bind='query.room_type_name'></td>
+                                    <td width="15%" ><span ng-bind="query.checkin_date+'至'"></span><br />
+                                    <span ng-bind="query.checkout_date+'（2晚）'"></span></td>
+                                    <td width="12%"><span ng-bind="query['create_time'][0]"></span><br />
+                                         <span ng-bind="query['create_time'][1]"></span></td>
+                                    <td width="8%"> <div ng-repeat="cum in query['customer_info']" ng-bind="cum['name']"><div></td>
+                                    <td width="7%">类型</td>
+                                    <td width="8%"><em class="price" ng-bind="query.everyday_price"></em></td>
+                                    <td width="5%">接受</td>
+                                                                                                                                                                                                      
+                                        
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
                                
@@ -220,11 +226,11 @@
 
 
                              <!--页码-->
-                            <div  id="pagequeryInfo"  class="page">
+                            <div  id="pagequeryInfo"  class="page" style="display:none">
                                 
                             <span  id="pagequeryNumber"  ng-if="directiveCtl" page-info></span>
                                 
-                                <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                                <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
                                         <option value="10">10</option>
                                         <option value="20">20</option>
                                         <option value="30">30</option>
