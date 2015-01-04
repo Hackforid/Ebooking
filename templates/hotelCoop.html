@@ -67,7 +67,7 @@
 
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                             <tr ng-repeat="hotel in hotels">
-                                <td width="30%"><a href="javascript:void(0)" class="hotel-btn" ng-bind="hotel.name"></a></td>
+                                <td width="30%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
                                 <td width="10%" ng-bind="hotel.star"></td>
                                 <td width="10%" ng-bind="getCityName(hotel.city_id)"></td>
                                 <td width="10%" ng-bind="hotel.district_name"></td>
@@ -99,6 +99,49 @@
 
         </div>
         <!--已合作酒店结束-->  
+
+
+
+
+        <!--酒店弹窗浮层-->     
+<div class="messageDiv" id="hotel-detail" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail">
+       <div class="head"><h1>酒店信息</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="closeHotelDetail()">X</p>
+       <div class="con">
+           <div class="cm1">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left" width="70%">
+    
+    <label><strong>酒店名称：</strong><span ng-bind="currentHotel['name']"></span>
+              <a href="javascript:void(0)" class="a-orange">[ 百度地图 ]</a> <a href="javascript:void(0)" class="a-orange">[ 谷歌地图 ]</a></label>
+     <label><strong>运营状态：</strong><input name="" type="radio" value="" />正常&nbsp;&nbsp;&nbsp;<input name="" type="radio" value="" />暂停</label>      
+    </td>
+    <td align="right" width="30%"><input name="" type="button" value="保存更改" /></td>
+  </tr>
+</table>
+           </div>
+           <div class="cm2">
+             
+              <label><strong>星　　级：</strong><span ng-bind="currentHotel['star']"></span></label>
+              <label><strong>预订要求：</strong><span ng-bind="currentHotel['']"></span></label>
+              <label><strong>酒店设施：</strong><span ng-bind="currentHotel['facilities']"></span></label>
+              <label><strong>省市县区：</strong><span ng-bind="currentHotel['district_name']"></span></label>
+              <label><strong>商　　圈：</strong><span ng-bind="currentHotel['']"></span></label>
+              <label><strong>详细地址：</strong><span ng-bind="currentHotel['address']"></span></label>
+              <label><strong>描　　述：</strong><span ng-bind="currentHotel['']"></span></label>
+              
+           </div>
+          
+       </div>
+   </div> 
+</div></div> 
+ <!--酒店弹窗浮层结束-->    
+
+
+
 
 </div></div>
 <!--主体内容end--> 

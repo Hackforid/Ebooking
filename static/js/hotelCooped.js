@@ -23,6 +23,26 @@
 
 
 
+		$scope.currentHotel;
+
+
+		$scope.hotelDetail = function(m) {
+
+			$scope.currentHotel = $scope.hotels[m];
+			console.log($scope.currentHotel);
+			$("#hotel-detail").show();
+
+		}
+
+		$scope.closeHotelDetail = function() {
+			$("#hotel-detail").hide();
+
+		}
+
+
+
+
+
 		function loadCitys() {
 			var url = "/api/city/";
 			$http.get(url)
@@ -105,7 +125,7 @@
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
-						//	console.log(resp);
+						console.log(resp);
 						$scope.hotels = resp.result.hotels;
 
 						$scope.itemPerPage = resp.result.limit;
