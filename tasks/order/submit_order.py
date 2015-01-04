@@ -10,6 +10,7 @@ from tasks.celery_app import app
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 from models.rate_plan import RatePlanModel
+from models.order_history import OrderHistoryModel
 from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask
 from tasks.order.submit_order_in_queue import start_order
@@ -20,16 +21,19 @@ from entity.order import SubmitOrder
 from config import API
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def confirm_order_by_user(self, merchant_id, order_id):
+def confirm_order_by_user(self, user, order_id):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
-    if order.merchant_id != merchant_id:
+    pre_status = order.status
+    if order.merchant_id != user.merchant_id:
         raise CeleryException(100, 'merchant not valid')
     if order.status != 100:
         raise CeleryException(200, 'illegal status')
 
     if callback_order_server(order_id):
         order.confirm_by_user(session)
+        if order.status != pre_status:
+            OrderHistoryModel.set_order_status_by_user(session, user, order, pre_status, order.status)
         return order
     else:
         raise CeleryException(1000, 'callback order server fail')
@@ -54,7 +58,10 @@ def generate_track_id(order_id):
 def submit_order(self, order_json):
     print order_json
     session = self.session
-    submit_order = SubmitOrder(order_json)
+    try:
+        submit_order = SubmitOrder(order_json)
+    except ValueError as e:
+        raise CeleryException(errcode=2000, errmsg=e.message)
     print submit_order
 
     if not valid_arguments(submit_order):
@@ -76,6 +83,8 @@ def submit_order(self, order_json):
         print 'more room please'
         order.status = 200
         session.commit()
+
+        OrderHistoryModel.set_order_status_by_server(session, order, 0, 200)
         return order
 
 

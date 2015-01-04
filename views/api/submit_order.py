@@ -7,6 +7,7 @@ from tools.auth import auth_login
 from views.base import BtwBaseHandler
 from tasks.order.submit_order import submit_order 
 from tasks.order.cancel_order import cancel_order_by_server
+from models.order import OrderModel
 
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
@@ -26,10 +27,9 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             if order.status == 200:
                 raise JsonException(1, 'fail')
             else:
-                order, inventory_type = task.result
                 self.finish_json(result=dict(
-                    order_id=order,
-                    wait=inventory_type,
+                    order_id=order.id,
+                    wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO else 1,
                     ))
         else:
             if isinstance(task.result, CeleryException):
