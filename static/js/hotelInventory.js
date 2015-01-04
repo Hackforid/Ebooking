@@ -376,7 +376,7 @@
 		}
 
 
-		$scope.changeNum = function changeNum(d, c, i, p, m) {
+		$scope.changeNum = function changeNum(d, c, i, p, m, w) {
 
 
 			if (c != "stop") {
@@ -388,9 +388,11 @@
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房量' class='btn-number' /></div>").show(0, function() {
 					$(".btn-number").click(function() {
 						$("#openDiv1").show();
-						var day = new Date();
-						var month = day.getMonth() + 1;
-						var date = day.getDate();
+
+
+						var month = $scope.months[$scope.monthvalue - 1]["month"];
+
+						var date = w + 1;
 
 						if (month < 10) {
 							month = "0" + month;
@@ -399,7 +401,20 @@
 							date = "0" + date;
 						}
 
-						var inputCurrent = day.getFullYear() + "-" + month + "-" + date;
+
+						/*var day = new Date();
+						var month = day.getMonth() + 1;
+						var date = day.getDate();
+
+						if (month < 10) {
+							month = "0" + month;
+						}
+						if (date < 10) {
+							date = "0" + date;
+						}*/
+
+
+						var inputCurrent = $scope.months[$scope.monthvalue - 1]["year"] + "-" + month + "-" + date;
 						$("#timeStart").val(inputCurrent);
 						$("#timeEnd").val(inputCurrent);
 

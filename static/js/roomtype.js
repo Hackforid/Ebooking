@@ -294,7 +294,22 @@
 			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 				$(".btn-number").click(function() {
 					$("#openDiv1").show();
-					var day = new Date();
+
+
+					var month = $scope.months[$scope.monthvalue - 1]["month"];
+
+					var date = c + 1;
+
+					if (month < 10) {
+						month = "0" + month;
+					}
+					if (date < 10) {
+						date = "0" + date;
+					}
+
+					var inputCurrent = $scope.months[$scope.monthvalue - 1]["year"] + "-" + month + "-" + date;
+
+					/*var day = new Date();
 
 					var month = day.getMonth() + 1;
 					var date = day.getDate();
@@ -306,7 +321,7 @@
 						date = "0" + date;
 					}
 
-					var inputCurrent = day.getFullYear() + "-" + month + "-" + date;
+					var inputCurrent = day.getFullYear() + "-" + month + "-" + date;*/
 					$("#timeStart").val(inputCurrent);
 					$("#timeEnd").val(inputCurrent);
 
