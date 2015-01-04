@@ -36,9 +36,7 @@
                     </div>
 
 
- 
-
-                    <div class="form form1"
+                      <div class="form form1"
                         ng-repeat="room in cooped" ng-init="index=$index"
                         >
                         <div class="roomhead"><h1 ng-click="hotelHeadDialog.eachshow($index);">{{room.prefix_name | filter : nameTest}}{{room.name}}{{room.remark_name | filter : nameTest}}--剩余房量</h1><span></span>
