@@ -22,8 +22,25 @@
 			$scope.paginationId = "pageNumber";
 
 
-
 			//$scope.cityList = [];
+			$scope.getHotelStar = function(m) {
+				if (m == "0") {
+					return "无";
+				} else if (m == "1") {
+					return "一星级";
+				} else if (m == "2") {
+					return "二星级";
+				} else if (m == "3") {
+					return "三星级";
+				} else if (m == "4") {
+					return "四星级";
+				} else if (m == "5") {
+					return "五星级";
+				}
+
+			}
+
+
 
 			$scope.checkedHotel = function checkedHotel() {
 
@@ -189,7 +206,7 @@
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							//console.log(resp);
+							console.log(resp);
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
