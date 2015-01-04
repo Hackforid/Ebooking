@@ -40,6 +40,9 @@
 			$scope.searchStatus = "";
 			$scope.searchCity = "";
 			$scope.searchStar = "";
+
+			$scope.finalUrl = '/api/hotel/cooped/?start=0&limit=' + $scope.itemPerPage;
+			$scope.searchResult();
 		}
 
 
@@ -64,15 +67,23 @@
 			}
 			if ($scope.searchCity.trim() != "" && $scope.searchCity != undefined) {
 				var cityId = getCityId($scope.searchCity);
+
+				if (cityId == false) {
+					$("#pageInfo").hide();
+					$scope.hotels = [];
+					return;
+				}
+
+
 				url = url + "&city_id=" + cityId;
 
 			}
-			if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined) {
+			if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 				url = url + "&star=" + $scope.searchStar;
 
 			}
 
-			if ($scope.searchStatus.trim() != "" && $scope.searchStatus != undefined) {
+			if ($scope.searchStatus.trim() != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
 				url = url + "&status=" + $scope.searchStatus;
 
 			}
@@ -98,6 +109,7 @@
 
 						$scope.itemPerPage = resp.result.limit;
 						$scope.total = resp.result.total;
+						$("#pageInfo").show();
 
 						if ($scope.total == 0) {
 							$("#pageInfo").hide();
@@ -163,7 +175,7 @@
 				}
 			}
 
-			return ' ';
+			return false;
 		}
 
 		$scope.redictToInventoryPage = function(hotel) {
