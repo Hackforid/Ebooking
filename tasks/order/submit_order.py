@@ -58,7 +58,10 @@ def generate_track_id(order_id):
 def submit_order(self, order_json):
     print order_json
     session = self.session
-    submit_order = SubmitOrder(order_json)
+    try:
+        submit_order = SubmitOrder(order_json)
+    except ValueError as e:
+        raise CeleryException(errcode=2000, errmsg=e.message)
     print submit_order
 
     if not valid_arguments(submit_order):

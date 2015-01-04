@@ -21,7 +21,7 @@ def start_order(self, order_id):
 
     pre_status = order.status
 
-    order, inventory_type = modify_inventory(session, order)
+    order = modify_inventory(session, order)
     PushInventoryTask().push_inventory.delay(order.roomtype_id)
 
     new_status = order.status
@@ -29,7 +29,7 @@ def start_order(self, order_id):
     if pre_status != new_status:
         OrderHistoryModel.set_order_status_by_server(session, order, pre_status, new_status)
 
-    return order, inventory_type
+    return order
 
 def get_stay_days(checkin_date, checkout_date):
     aday = datetime.timedelta(days=1)
@@ -89,7 +89,7 @@ def modify_inventory(session, order):
         print 'valid inventory fail'
         order.status = 200
         session.commit()
-        return order, -1
+        return order
 
     inventory_type = 0 if is_inventory_auto_enough else 1
 
@@ -99,11 +99,13 @@ def modify_inventory(session, order):
 
     if inventory_type == 0:
         order.status = 300
+        order.confirm_type = OrderModel.CONFIRM_TYPE_AUTO
     else:
         order.status = 100
+        order.confirm_type = OrderModel.CONFIRM_TYPE_MANUAL
     session.commit()
 
-    return order, inventory_type
+    return order
 
 def get_order(session, order_id):
     return OrderModel.get_by_id(session, order_id)

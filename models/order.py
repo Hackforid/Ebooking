@@ -45,7 +45,11 @@ class OrderModel(Base):
     extra = Column(TEXT, nullable=False)
     create_time = Column("createTime", TIMESTAMP)
     update_time = Column("updateTime", TIMESTAMP)
-    confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=1)
+    confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=0)
+
+    CONFIRM_TYPE_INIT = 0
+    CONFIRM_TYPE_AUTO = 1
+    CONFIRM_TYPE_MANUAL = 2
 
     @classmethod
     def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
