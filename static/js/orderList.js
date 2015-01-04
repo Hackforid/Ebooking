@@ -13,6 +13,31 @@
 		$scope.paginationId = "pagebookNumber";
 
 
+		$scope.getConfirmType = function getConfirmType(v) {
+			if (v == "2") {
+				return "手动确认";
+			} else if (v == "1") {
+				return "自动确认";
+			} else {
+				return " ";
+			}
+
+		}
+
+		$scope.DateDiff = function DateDiff(startDate, endDate) {
+			var splitDate, startTime, endTime, iDays;
+			splitDate = startDate.split("-");
+			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			splitDate = endDate.split("-");
+			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+			var daysResult = "( " + iDays + "晚 )";
+			return daysResult;
+		}
+
+
+
 		$scope.urlCheck = function urlCheck(a) {
 			$scope.currentPage = a;
 
@@ -123,6 +148,31 @@
 		$scope.directiveCtl = false;
 		$scope.finalUrl;
 		$scope.paginationId = "pagecheckNumber";
+
+
+		$scope.getConfirmType = function getConfirmType(v) {
+			if (v == "2") {
+				return "手动确认";
+			} else if (v == "1") {
+				return "自动确认";
+			} else {
+				return " ";
+			}
+
+		}
+
+
+		$scope.DateDiff = function DateDiff(startDate, endDate) {
+			var splitDate, startTime, endTime, iDays;
+			splitDate = startDate.split("-");
+			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			splitDate = endDate.split("-");
+			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+			var daysResult = "( " + iDays + "晚 )";
+			return daysResult;
+		}
 
 
 		$scope.urlCheck = function urlCheck(a) {
@@ -252,6 +302,29 @@
 		$scope.searchStatus = "";
 		$scope.messageLive = "";
 		$scope.messageList = "";
+
+		$scope.getConfirmType = function getConfirmType(v) {
+			if (v == "2") {
+				return "手动确认";
+			} else if (v == "1") {
+				return "自动确认";
+			} else {
+				return " ";
+			}
+
+		}
+
+		$scope.DateDiff = function DateDiff(startDate, endDate) {
+			var splitDate, startTime, endTime, iDays;
+			splitDate = startDate.split("-");
+			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			splitDate = endDate.split("-");
+			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+			var daysResult = "( " + iDays + "晚 )";
+			return daysResult;
+		}
 
 
 

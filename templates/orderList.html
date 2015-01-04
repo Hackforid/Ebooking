@@ -43,7 +43,7 @@
                                         <th width="5%">状态</th>
                                         <th width="7%">打印</th>
                                 </tr></thead>
-                            </table>
+                            </table>   <!--<span ng-bind="DateDiff(book.checkin_date,book.checkout_date)"></span>-->
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                                 <tr ng-repeat="book in todayBook">
@@ -51,11 +51,11 @@
                                         <td width="15%" ng-bind='book.hotel_name'></td>
                                         <td width="10%" ng-bind='book.room_type_name'></td>
                                         <td width="15%" ><span ng-bind="book.checkin_date+'至'"></span><br />
-                                        <span ng-bind="book.checkout_date+'（2晚）'"></span></td>
+                                        <span ng-bind="book.checkout_date"></span><span ng-bind="DateDiff(book.checkin_date,book.checkout_date)"></span></td>
                                         <td width="12%"><span ng-bind="book['create_time'][0]"></span><br />
                                          <span ng-bind="book['create_time'][1]"></span></td>
                                         <td width="8%"> <div ng-repeat="cum in book['customer_info']" ng-bind="cum['name']"><div></td>
-                                        <td width="7%">类型</td>
+                                        <td width="7%" ng-bind="getConfirmType(book.confirm_type)"></td>
                                         <td width="8%"><em class="price" ng-bind="book.everyday_price"></em></td>
                                         <td width="5%">接受</td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
@@ -95,7 +95,7 @@
                                         <th width="5%">状态</th>
                                         <th width="7%">打印</th>
                                 </tr></thead>
-                            </table>
+                            </table>   
 
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow2">
@@ -105,11 +105,11 @@
 
                                         <td width="10%" ng-bind='check.room_type_name'></td>
                                         <td width="15%" ><span ng-bind="check.checkin_date+'至'"></span><br />
-                                        <span ng-bind="check.checkout_date+'（2晚）'"></span></td>
+                                        <span ng-bind="check.checkout_date"></span><span ng-bind="DateDiff(check.checkin_date,check.checkout_date)"></span></td>
                                         <td width="12%"><span ng-bind="check['create_time'][0]"></span><br />
                                          <span ng-bind="check['create_time'][1]"></span></td>
                                         <td width="8%"> <div ng-repeat="cum in check['customer_info']" ng-bind="cum['name']"><div></td>
-                                        <td width="7%">类型</td>
+                                        <td width="7%" ng-bind='getConfirmType(check.confirm_type)'></td>
                                         <td width="8%"><em class="price" ng-bind="check.everyday_price"></em></td>
                                         <td width="5%">接受</td>
                                        
@@ -198,7 +198,7 @@
                                         <th width="5%">状态</th>
                                         <th width="7%">打印</th>
                                 </tr></thead>
-                            </table>
+                            </table> 
 
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
@@ -209,11 +209,11 @@
 
                                     <td width="10%" ng-bind='query.room_type_name'></td>
                                     <td width="15%" ><span ng-bind="query.checkin_date+'至'"></span><br />
-                                    <span ng-bind="query.checkout_date+'（2晚）'"></span></td>
+                                    <span ng-bind="query.checkout_date"></span> <span ng-bind="DateDiff(query.checkin_date,query.checkout_date)"></span></td>
                                     <td width="12%"><span ng-bind="query['create_time'][0]"></span><br />
                                          <span ng-bind="query['create_time'][1]"></span></td>
                                     <td width="8%"> <div ng-repeat="cum in query['customer_info']" ng-bind="cum['name']"><div></td>
-                                    <td width="7%">类型</td>
+                                    <td width="7%" ng-bind='getConfirmType(query.confirm_type)'></td>
                                     <td width="8%"><em class="price" ng-bind="query.everyday_price"></em></td>
                                     <td width="5%">接受</td>
                                                                                                                                                                                                       
