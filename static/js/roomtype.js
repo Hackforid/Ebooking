@@ -62,7 +62,7 @@
 
 			http.post(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						scope.roomrates.push(resp.result.roomrate);
@@ -139,18 +139,47 @@
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
+			this.errmsg = ' ';
+			$("#lowprice").val("");
 		}
+
+
+		/*乘法*/
+		this.accMul = function(arg1, arg2) {
+			var m = 0,
+				s1 = arg1.toString(),
+				s2 = arg2.toString();
+			try {
+				m += s1.split(".")[1].length;
+			} catch (e) {}
+			try {
+				m += s2.split(".")[1].length;
+			} catch (e) {}
+			return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+		}
+
+
+
 		this.save = function() {
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
 			var timeStart = $("#timeStart").val();
 			var timeEnd = $("#timeEnd").val();
-			var price = parseInt($("#lowprice").val()) * 100;
+
 
 			var day = new Date();
 			var month = day.getMonth() + 1;
 			var year = day.getFullYear();
 			var date = day.getDate();
+
+			if (month < 10) {
+				month = "0" + month;
+			}
+			if (date < 10) {
+				date = "0" + date;
+			}
+
+
 			var startday = year + "-" + month + "-" + date;
 
 			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
@@ -158,6 +187,15 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 			var ninetydate = ninetyday.getDate();
 			var ninetyyear = ninetyday.getFullYear();
+
+			if (ninetymonth < 10) {
+				ninetymonth = "0" + ninetymonth;
+			}
+			if (ninetydate < 10) {
+				ninetydate = "0" + ninetydate;
+			}
+
+
 			var endday = ninetyyear + "-" + ninetymonth + "-" + ninetydate;
 
 			if (timeEnd == null || timeStart == null || timeEnd == "" || timeStart == "") {
@@ -171,7 +209,27 @@
 				return;
 			}
 
+
+			var testStr = /^\d+(\.\d{1,2})?$/;
+			var priceTest = $.trim($("#lowprice").val());
+			//console.log(priceTest);
+
+			if (testStr.test(priceTest) == false) {
+				this.errmsg = '房量为整数或小数,精确到小数点后两位';
+				return;
+			}
+			if ((parseInt(priceTest)) > 9999.99) {
+				this.errmsg = '房价最大不超过9999.99';
+				return;
+			}
+
+
+
+			this.errmsg = ' ';
 			//console.log(url);
+
+			var price = this.accMul($.trim($("#lowprice").val()), 100);
+			//console.log(price);
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
@@ -236,8 +294,34 @@
 			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 				$(".btn-number").click(function() {
 					$("#openDiv1").show();
-					var day = new Date();
-					var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+
+
+					var month = $scope.months[$scope.monthvalue - 1]["month"];
+
+					var date = c + 1;
+
+					if (month < 10) {
+						month = "0" + month;
+					}
+					if (date < 10) {
+						date = "0" + date;
+					}
+
+					var inputCurrent = $scope.months[$scope.monthvalue - 1]["year"] + "-" + month + "-" + date;
+
+					/*var day = new Date();
+
+					var month = day.getMonth() + 1;
+					var date = day.getDate();
+
+					if (month < 10) {
+						month = "0" + month;
+					}
+					if (date < 10) {
+						date = "0" + date;
+					}
+
+					var inputCurrent = day.getFullYear() + "-" + month + "-" + date;*/
 					$("#timeStart").val(inputCurrent);
 					$("#timeEnd").val(inputCurrent);
 

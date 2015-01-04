@@ -78,10 +78,10 @@
 				"remark_name": $("#remarkId-" + index).val()
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -91,7 +91,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -114,6 +114,8 @@
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
+			this.errmsg = ' ';
+			$("#roomNumCount").val("");
 		}
 
 
@@ -122,6 +124,16 @@
 			var month = day.getMonth() + 1;
 			var year = day.getFullYear();
 			var date = day.getDate();
+
+			if (month < 10) {
+				month = "0" + month;
+			}
+			if (date < 10) {
+				date = "0" + date;
+			}
+
+
+
 			var startday = year + "-" + month + "-" + date;
 
 			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
@@ -129,6 +141,17 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 			var ninetydate = ninetyday.getDate();
 			var ninetyyear = ninetyday.getFullYear();
+
+
+			if (ninetymonth < 10) {
+				ninetymonth = "0" + ninetymonth;
+			}
+			if (ninetydate < 10) {
+				ninetydate = "0" + ninetydate;
+			}
+
+
+
 			var endday = ninetyyear + "-" + ninetymonth + "-" + ninetydate;
 
 
@@ -142,6 +165,20 @@
 				this.errmsg = '日期超出范围';
 				return 0;
 			}
+
+			var testStr = /^[0-9]*[1-9][0-9]*$/;
+			var roomNumCount = $("#roomNumCount").val();
+
+			if (testStr.test(roomNumCount) == false) {
+				this.errmsg = '房量为正整数';
+				return 0;
+			}
+			if ((parseInt(roomNumCount)) > 99) {
+				this.errmsg = '房量最大不超过99间';
+				return 0;
+			}
+
+			this.errmsg = ' ';
 
 		}
 
@@ -162,12 +199,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
+
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -176,7 +215,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -203,13 +242,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -218,7 +258,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -248,13 +288,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -263,7 +304,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -335,7 +376,7 @@
 		}
 
 
-		$scope.changeNum = function changeNum(d, c, i, p, m) {
+		$scope.changeNum = function changeNum(d, c, i, p, m, w) {
 
 
 			if (c != "stop") {
@@ -347,8 +388,33 @@
 				$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房量' class='btn-number' /></div>").show(0, function() {
 					$(".btn-number").click(function() {
 						$("#openDiv1").show();
-						var day = new Date();
-						var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+
+
+						var month = $scope.months[$scope.monthvalue - 1]["month"];
+
+						var date = w + 1;
+
+						if (month < 10) {
+							month = "0" + month;
+						}
+						if (date < 10) {
+							date = "0" + date;
+						}
+
+
+						/*var day = new Date();
+						var month = day.getMonth() + 1;
+						var date = day.getDate();
+
+						if (month < 10) {
+							month = "0" + month;
+						}
+						if (date < 10) {
+							date = "0" + date;
+						}*/
+
+
+						var inputCurrent = $scope.months[$scope.monthvalue - 1]["year"] + "-" + month + "-" + date;
 						$("#timeStart").val(inputCurrent);
 						$("#timeEnd").val(inputCurrent);
 
@@ -390,7 +456,7 @@
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);

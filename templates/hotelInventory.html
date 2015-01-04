@@ -71,14 +71,14 @@
                                     <td class="table-title">自动确认房量</td>
                                     <td class={{numauto.classStyle}} ng-repeat="numauto in roomNumAuto[room.id] | orderObjectBy:'' ">
 
-                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),0); ng-bind="numauto.autoNum"></span></td>
+                                    <span id={{room.id+"-auto"+$index}}  ng-click=changeNum((room.id+"-auto"+$index),(numauto.classStyle),(room.cooped_roomtype_id),(index),0,$index); ng-bind="numauto.autoNum"></span></td>
                                   
                                 </tr>
                                 <tr>
                                     <td class="table-title">手工确认房量</td>
                                      <td class={{numhead.classStyle}} ng-repeat="numhead in roomNumHand[room.id] | orderObjectBy:''">
 
-                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numhead.classStyle),(room.cooped_roomtype_id),(index),1); ng-bind="numhead.headNum"></span>
+                                     <span id={{room.id+"-head"+$index}}  ng-click=changeNum((room.id+"-head"+$index),(numhead.classStyle),(room.cooped_roomtype_id),(index),1,$index); ng-bind="numhead.headNum"></span>
 
                                      </td>
                                     
@@ -178,8 +178,8 @@
   </tr>
   <tr>
     <td>日期：</td> 
-    <td><input type="text" name="timeStart" id="timeStart" onClick="WdatePicker()"  class="input-time" / > 至 
-                     <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" /></td>
+    <td><input type="text" name="timeStart" id="timeStart" onClick="WdatePicker()"  class="input-time" readonly="readonly"/ > 至 
+                     <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" readonly="readonly"/></td>
   </tr>
   <tr>
     <td>房量调整：</td>
