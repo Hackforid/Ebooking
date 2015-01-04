@@ -268,9 +268,11 @@ class InventoryModel(Base):
         if price_type == 0:
             price_reserved = int(price_reserved) + val
             price_reserved = price_reserved if price_reserved >= 0 else 0
+            price_reserved = price_reserved if price_reserved <= 99 else 99
         else:
             price_manual = int(price_manual) + val
             price_manual = price_manual if price_manual >= 0 else 0
+            price_manual = price_manual if price_manual <= 99 else 99
 
         value = "{}|{}".format(price_reserved, price_manual)
         setattr(self, day_key, value)

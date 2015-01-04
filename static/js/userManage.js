@@ -188,7 +188,7 @@
                 good=false;
             }
             if(!phoneChecker($scope.addUser.mobile)) {
-                $scope.addBadmobile = true;
+                $scope.addBadMobile = true;
                 good=false;
             }
             if(!good) {

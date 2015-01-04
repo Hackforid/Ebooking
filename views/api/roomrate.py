@@ -63,8 +63,8 @@ class RoomRateAPIHandler(BtwBaseHandler):
 
     def valid_price(self, price):
         # range [0, 2^31]
-        if not isinstance(price, int) or price < 0 or price > 2147483647:
-            raise JsonException(errcode=2002, errmsg="invalid price")
+        if not isinstance(price, int) or price < 0 or price > 999999:
+            raise JsonException(errcode=2002, errmsg="price out of range")
 
     @gen.coroutine
     def set_price(self, roomrate_id, price, start_date, end_date):
