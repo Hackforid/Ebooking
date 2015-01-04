@@ -69,11 +69,11 @@
 
 			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/confirm/";
 
-			console.log(url);
+			//console.log(url);
 
 			$http.post(url)
 				.success(function(resp) {
-					console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
@@ -96,7 +96,7 @@
 
 		$scope.refuseOrder = function() {
 
-			if ($scope.refuseReson.trim() == "" || $scope.refuseReson == undefined) {
+			if ($.trim($scope.refuseReson) == "" || $scope.refuseReson == undefined) {
 				alert("不能为空");
 				return;
 
@@ -104,13 +104,13 @@
 
 			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/";
 
-			console.log(url);
+			//console.log(url);
 
 			$http.post(url, {
 					"reason": $scope.refuseReson
 				})
 				.success(function(resp) {
-					console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.orderList.splice($scope.currentIndex, 1);
@@ -163,7 +163,7 @@
 			var url = '/api/order/waiting/?start=' + pageNum;
 
 
-			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
 
 			}
@@ -176,16 +176,18 @@
 		$scope.searchResult = function searchResult() {
 
 			//var url = "/api/order/waiting/";
-			console.log($scope.finalUrl);
+			//console.log($scope.finalUrl);
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pageInfo").show();
+						} else {
 							$("#pageInfo").hide();
 						}
 
@@ -203,7 +205,7 @@
 						};
 
 						$scope.itemPerPage = resp.result.limit;
-						
+
 						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
 
 						$scope.directiveCtl = true;

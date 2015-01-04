@@ -61,11 +61,11 @@
 
 			var url = '/api/hotel/cooped/?start=' + pageNum;
 
-			if ($scope.searchName.trim() != "" && $scope.searchName != undefined) {
+			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 				url = url + "&name=" + $scope.searchName;
 
 			}
-			if ($scope.searchCity.trim() != "" && $scope.searchCity != undefined) {
+			if ($.trim($scope.searchCity) != "" && $scope.searchCity != undefined) {
 				var cityId = getCityId($scope.searchCity);
 
 				if (cityId == false) {
@@ -78,22 +78,23 @@
 				url = url + "&city_id=" + cityId;
 
 			}
-			if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
+			if ($.trim($scope.searchStar) != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 				url = url + "&star=" + $scope.searchStar;
 
 			}
 
-			if ($scope.searchStatus.trim() != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
+			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
 				url = url + "&status=" + $scope.searchStatus;
 
 			}
-			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
 
 			}
 
 
-			$scope.finalUrl = url;
+			$scope.finalUrl = encodeURI(url);
+			//console.log($scope.finalUrl);
 
 		}
 
@@ -104,14 +105,16 @@
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
-						console.log(resp);
+						//	console.log(resp);
 						$scope.hotels = resp.result.hotels;
 
 						$scope.itemPerPage = resp.result.limit;
 						$scope.total = resp.result.total;
-						$("#pageInfo").show();
 
-						if ($scope.total == 0) {
+
+						if ($scope.total != 0) {
+							$("#pageInfo").show();
+						} else {
 							$("#pageInfo").hide();
 						}
 

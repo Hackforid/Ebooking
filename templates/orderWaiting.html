@@ -1,7 +1,7 @@
 <%inherit file="base.html" />
 <%def name="right_content()">
 
-<div
+<div id="ng-app"
     ng-app="orderWaitingApp"
     ng-controller="orderWaitingCtrl"
     >
@@ -12,7 +12,7 @@
        <div class="detail">
              <div class="head"><h1>提示</h1></div>
             <div class="con">
-               <p class="f16" style=" text-align:center;padding:30px 0;">{{messageBox}}</p>
+               <p class="f16" style=" text-align:center;padding:30px 0;" ng-bind="messageBox"></p>
                <p class="action" style=" text-align:center">
                <input name="确认" type="button" value="确认"  ng-click="confirmResult();" class="btn-orange"/>
                </p>
@@ -86,16 +86,16 @@
                                 <tr>
                                
                                     <td width="10%"  style="text-decoration: underline;position:relative"><em id={{"orderConfimId-"+$index}} ng-mouseover=detailDivIn($index); ng-mouseleave=detailDivOut($index); >987898</em></td>
-                                    <td width="15%">{{order.hotel_name}}</td>
-                                    <td width="10%">{{order.room_type_name}}<br />{{order.room_num}}间</td>    
-                                    <td width="15%">{{order.checkin_date}}至<br />
-                                        {{order.checkout_date}}（2晚）</td>
-                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price">{{order.everyday_price}}元</em> </td>
-                                    <td width="10%">{{order["create_time"][0]}}<br />
-                                         {{order["create_time"][1]}}</td>    
+                                    <td width="15%" ng-bind="order.hotel_name"></td>
+                                    <td width="10%"><span ng-bind="order.room_type_name"></span><br /><span ng-bind="order.room_num+'间'"></span></td>    
+                                    <td width="15%"><span ng-bind="order.checkin_date+'至'"></span><br />
+                                       <span ng-bind="order.checkout_date+'（2晚）'"></span></td>
+                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price" ng-bind="order.everyday_price+'元'"></em> </td>
+                                    <td width="10%"><span ng-bind="order['create_time'][0]"></span><br />
+                                         <span ng-bind="order['create_time'][1]"></span></td>    
                                     <td width="10%">
 
-                                    <div ng-repeat="cum in order['customer_info']">{{cum["name"]}}<div>
+                                    <div ng-repeat="cum in order['customer_info']" ng-bind="cum['name']"><div>
                                                                      
                                     </td>
                                     
@@ -111,11 +111,11 @@
                         <!--单个订单end-->
                                                                                        
                        <!--页码-->
-                        <div id="pageInfo" class="page">
+                        <div id="pageInfo" class="page" style="display:none">
                                 
                           <span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
                 
-                          <span>共{{total}}条，每页{{itemPerPage}}条，每页显示条数：<select name="" class="input-s"  ng-model="itemPerPage">
+                          <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
