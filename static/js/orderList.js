@@ -33,7 +33,7 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
@@ -189,19 +189,19 @@
 
 								if (checkStatus == "100") {
 
-									$scope.todayBook[i]["status"] = "待确定";
+									$scope.todayCheckIn[i]["status"] = "待确定";
 
 								} else if (checkStatus == "300") {
 
-									$scope.todayBook[i]["status"] = "接受";
+									$scope.todayCheckIn[i]["status"] = "接受";
 
 								} else if (checkStatus == "400") {
 
-									$scope.todayBook[i]["status"] = "拒绝";
+									$scope.todayCheckIn[i]["status"] = "拒绝";
 
 								} else if (checkStatus == "500" || bookStatus == "600") {
 
-									$scope.todayBook[i]["status"] = "服务器取消";
+									$scope.todayCheckIn[i]["status"] = "服务器取消";
 
 								}
 
@@ -379,19 +379,19 @@
 
 								if (queryStatus == "100") {
 
-									$scope.todayBook[i]["status"] = "待确定";
+									$scope.queryList[i]["status"] = "待确定";
 
 								} else if (queryStatus == "300") {
 
-									$scope.todayBook[i]["status"] = "接受";
+									$scope.queryList[i]["status"] = "接受";
 
 								} else if (queryStatus == "400") {
 
-									$scope.todayBook[i]["status"] = "拒绝";
+									$scope.queryList[i]["status"] = "拒绝";
 
 								} else if (queryStatus == "500" || bookStatus == "600") {
 
-									$scope.todayBook[i]["status"] = "服务器取消";
+									$scope.queryList[i]["status"] = "服务器取消";
 
 								}
 
