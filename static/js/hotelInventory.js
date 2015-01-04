@@ -78,10 +78,10 @@
 				"remark_name": $("#remarkId-" + index).val()
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -91,7 +91,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -122,6 +122,16 @@
 			var month = day.getMonth() + 1;
 			var year = day.getFullYear();
 			var date = day.getDate();
+
+			if (month < 10) {
+				month = "0" + month;
+			}
+			if (date < 10) {
+				date = "0" + date;
+			}
+
+
+
 			var startday = year + "-" + month + "-" + date;
 
 			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
@@ -129,6 +139,17 @@
 			var ninetymonth = ninetyday.getMonth() + 1;
 			var ninetydate = ninetyday.getDate();
 			var ninetyyear = ninetyday.getFullYear();
+
+
+			if (ninetymonth < 10) {
+				ninetymonth = "0" + ninetymonth;
+			}
+			if (ninetydate < 10) {
+				ninetydate = "0" + ninetydate;
+			}
+
+
+
 			var endday = ninetyyear + "-" + ninetymonth + "-" + ninetydate;
 
 
@@ -142,6 +163,8 @@
 				this.errmsg = '日期超出范围';
 				return 0;
 			}
+
+			this.errmsg = ' ';
 
 		}
 
@@ -162,12 +185,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
+
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -176,7 +201,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -203,13 +228,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -218,7 +244,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -248,13 +274,14 @@
 
 			}
 
-		//	console.log(url);
+			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
+
 						scope.roomNum = [];
 
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
@@ -263,7 +290,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-					//	console.log(errmsg);
+						//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -348,7 +375,17 @@
 					$(".btn-number").click(function() {
 						$("#openDiv1").show();
 						var day = new Date();
-						var inputCurrent = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+						var month = day.getMonth() + 1;
+						var date = day.getDate();
+
+						if (month < 10) {
+							month = "0" + month;
+						}
+						if (date < 10) {
+							date = "0" + date;
+						}
+
+						var inputCurrent = day.getFullYear() + "-" + month + "-" + date;
 						$("#timeStart").val(inputCurrent);
 						$("#timeEnd").val(inputCurrent);
 
@@ -390,7 +427,7 @@
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-				//	console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);
