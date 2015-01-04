@@ -85,7 +85,7 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
                                 <tr>
                                
-                                    <td width="10%"  style="text-decoration: underline;position:relative"><em id={{"orderConfimId-"+$index}} ng-mouseover=detailDivIn($index); ng-mouseleave=detailDivOut($index); >987898</em></td>
+                                    <td width="10%"  style="text-decoration: underline;position:relative"><a href="javascript:void(0)" ng-click="orderDetail($index)" id={{"orderConfimId-"+$index}} ng-bind="order.main_order_id"></a></td>
                                     <td width="15%" ng-bind="order.hotel_name"></td>
                                     <td width="10%"><span ng-bind="order.room_type_name"></span><br /><span ng-bind="order.room_num+'间'"></span></td>    
                                     <td width="15%"><span ng-bind="order.checkin_date+'至'"></span><br />
@@ -130,6 +130,52 @@
             </div>
 
             <!--待确认订单结束-->  
+
+
+
+
+
+ <!--订单详情弹窗浮层-->     
+<div class="messageDiv" id="hotel-detail" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail">
+       <div class="head"><h1>订单详情</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="closeDetail()">X</p>
+       <div class="con">
+           
+           <div class="cm2" style="height:350px">
+             
+              <label><strong>订单确认号：</strong><span ng-bind="currentOrder['main_order_id']"></span></label>
+              <label><strong>酒店名称：</strong><span ng-bind="currentOrder['hotel_name']"></span></label>
+              <label><strong>房型：</strong><span ng-bind="currentOrder['room_type_name']"></span></label>
+              <label><strong>入离时间：</strong><span ng-bind="currentOrder['checkin_date']"></span></label>
+              <label><strong>预定时间：</strong><span ng-bind="currentOrder['create_time'].join('  ')"></span></label>
+              <label><strong>入住人：</strong><span ng-bind="currentOrder['hotel_name']"></span></label>
+              <label><strong>联系人：</strong><span ng-bind="currentOrder['contact_name']"></span></label>
+              <label><strong>联系电话：</strong><span ng-bind="currentOrder['contact_mobile']"></span></label>
+              <label><strong>取消规则：</strong><span ng-bind="currentOrder['']"></span></label>
+              <label><strong>价格代码名称：</strong><span ng-bind="currentOrder['']"></span></label>
+              <label><strong>每日价格：</strong><span ng-bind="currentOrder['everyday_price']"></span></label>
+              <label><strong>总价：</strong><span ng-bind="currentOrder['total_price']"></span></label>
+              <label><strong>备注：</strong><span ng-bind="currentOrder['']"></span></label>
+              
+           </div>
+          
+       </div>
+   </div> 
+</div></div> 
+ <!--订单详情浮层结束-->    
+
+
+
+
+
+
+
+
+
+
+
 
     </div></div>
     <!--主体内容end--> 
