@@ -114,6 +114,8 @@
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
+			this.errmsg = ' ';
+			$("#roomNumCount").val("");
 		}
 
 
@@ -161,6 +163,18 @@
 				return 0;
 			} else if (timeEnd > (endday + "") || timeStart < (startday + "")) {
 				this.errmsg = '日期超出范围';
+				return 0;
+			}
+
+			var testStr = /^[0-9]*[1-9][0-9]*$/;
+			var roomNumCount = $("#roomNumCount").val();
+
+			if (testStr.test(roomNumCount) == false) {
+				this.errmsg = '房量为正整数';
+				return 0;
+			}
+			if ((parseInt(roomNumCount)) > 99) {
+				this.errmsg = '房量最大不超过99间';
 				return 0;
 			}
 

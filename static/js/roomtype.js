@@ -139,13 +139,33 @@
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
+			this.errmsg = ' ';
+			$("#lowprice").val("");
 		}
+
+
+		/*乘法*/
+		this.accMul = function(arg1, arg2) {
+			var m = 0,
+				s1 = arg1.toString(),
+				s2 = arg2.toString();
+			try {
+				m += s1.split(".")[1].length;
+			} catch (e) {}
+			try {
+				m += s2.split(".")[1].length;
+			} catch (e) {}
+			return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+		}
+
+
+
 		this.save = function() {
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/roomrate/' + scope.roomrates[scope.currentindex].id;
 			var timeStart = $("#timeStart").val();
 			var timeEnd = $("#timeEnd").val();
-			var price = parseInt($("#lowprice").val()) * 100;
+
 
 			var day = new Date();
 			var month = day.getMonth() + 1;
@@ -190,8 +210,26 @@
 			}
 
 
+			var testStr = /^\d+(\.\d{1,2})?$/;
+			var priceTest = $.trim($("#lowprice").val());
+			//console.log(priceTest);
+
+			if (testStr.test(priceTest) == false) {
+				this.errmsg = '房量为整数或小数,精确到小数点后两位';
+				return;
+			}
+			if ((parseInt(priceTest)) > 9999.99) {
+				this.errmsg = '房价最大不超过9999.99';
+				return;
+			}
+
+
+
 			this.errmsg = ' ';
 			//console.log(url);
+
+			var price = this.accMul($.trim($("#lowprice").val()), 100);
+			//console.log(price);
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
