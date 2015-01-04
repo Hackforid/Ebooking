@@ -8,6 +8,7 @@ from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
 from models.order import OrderModel
+from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
 
@@ -18,8 +19,15 @@ def start_order(self, order_id):
     if order.status != 0:
         return
 
+    pre_status = order.status
+
     order, inventory_type = modify_inventory(session, order)
     PushInventoryTask().push_inventory.delay(order.roomtype_id)
+
+    new_status = order.status
+
+    if pre_status != new_status:
+        OrderHistoryModel.set_order_status_by_server(session, order, pre_status, new_status)
 
     return order, inventory_type
 
@@ -94,6 +102,7 @@ def modify_inventory(session, order):
     else:
         order.status = 100
     session.commit()
+
     return order, inventory_type
 
 def get_order(session, order_id):

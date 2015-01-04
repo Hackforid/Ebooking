@@ -9,6 +9,7 @@ from tasks.base_task import SqlAlchemyTask
 from tasks.order import cancel_order_in_queue as Cancel
 
 from models.order import OrderModel
+from models.order_history import OrderHistoryModel
 from exception.celery_exception import CeleryException
 from config import API
 
@@ -18,21 +19,29 @@ def cancel_order_by_server(self, order_id):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
 
+    pre_status = order.status
+
     if order.status == 0 or order.status == 100:
-        return cancel_before_user_confirm(session, order.id)
+        _order =cancel_before_user_confirm(session, order.id)
     elif order.status == 200:
         raise CeleryException(1000, 'illegal status')
     elif order.status == 300:
-        return cancel_after_user_confirm(session, order.id)
+        _order = cancel_after_user_confirm(session, order.id)
     else:
         raise CeleryException(1000, 'illegal status')
 
+    if _order.status != pre_status:
+        OrderHistoryModel.set_order_status_by_server(session, _order, pre_status, _order.status)
+    return _order
+
 @app.task(base=SqlAlchemyTask, bind=True)
-def cancel_order_by_user(self, merchant_id, order_id, reason):
+def cancel_order_by_user(self, user, order_id, reason):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
 
-    if order.merchant_id != merchant_id:
+    pre_status = order.status
+
+    if order.merchant_id != user.merchant_id:
         raise CeleryException(100, 'merchant invalid')
     if order.status not in [0, 100]:
         raise CeleryException(1000, 'illegal status')
@@ -45,6 +54,8 @@ def cancel_order_by_user(self, merchant_id, order_id, reason):
     result = task.get()
     
     if task.status == 'SUCCESS':
+        if result.status != pre_status:
+            OrderHistoryModel.set_order_status_by_user(session, user, result, pre_status, result.status)
         return result
     else:
         if isinstance(result, Exception):

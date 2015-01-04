@@ -45,7 +45,7 @@ class OrderUserConfirmAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
 
         task = yield gen.Task(SubmitOrder.confirm_order_by_user.apply_async,
-                args=[merchant_id, order_id])
+                args=[self.current_user, order_id])
         if task.status == 'SUCCESS':
             self.finish_json(result=dict(
                 order=task.result.todict(),
@@ -68,7 +68,7 @@ class OrderUserCancelAPIHandler(BtwBaseHandler):
             raise JsonException(200, 'invalid reason')
 
         task = yield gen.Task(CancelOrder.cancel_order_by_user.apply_async,
-                args=[merchant_id, order_id, reason])
+                args=[self.current_user, order_id, reason])
         if task.status == 'SUCCESS':
             self.finish_json(result=dict(
                 order=task.result.todict(),
