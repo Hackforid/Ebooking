@@ -43,7 +43,7 @@
 					})
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							console.log(resp);
+							//console.log(resp);
 							var hotelResult = resp.result.hotel_cooprate;
 							for (var i = 0; i < $scope.hotels.length; i++) {
 								for (var j = 0; j < hotelResult.length; j++) {
@@ -88,11 +88,11 @@
 
 				var url = '/api/hotel/willcoop/?start=' + pageNum;
 
-				if ($scope.searchName.trim() != "" && $scope.searchName != undefined) {
+				if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 					url = url + "&name=" + $scope.searchName;
 
 				}
-				if ($scope.searchCity.trim() != "" && $scope.searchCity != undefined) {
+				if ($.trim($scope.searchCity) != "" && $scope.searchCity != undefined) {
 					var cityId = getCityId($scope.searchCity);
 
 					if (cityId == false) {
@@ -106,15 +106,15 @@
 
 
 				}
-				if ($scope.searchStar.trim() != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
+				if ($.trim($scope.searchStar) != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 					url = url + "&star=" + $scope.searchStar;
 
 				}
-				if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+				if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 					url = url + "&limit=" + $scope.itemPerPage;
 
 				}
-				$scope.finalUrl = url;
+				$scope.finalUrl = encodeURI(url);
 
 			}
 
@@ -189,13 +189,15 @@
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							console.log(resp);
+							//console.log(resp);
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
-							$("#pageInfo").show();
 
-							if ($scope.total == 0) {
+
+							if ($scope.total != 0) {
+								$("#pageInfo").show();
+							} else {
 								$("#pageInfo").hide();
 							}
 
@@ -231,7 +233,7 @@
 							$scope.messageBox = "合作成功";
 
 							$("#acceptDialog").show();
-							console.log(resp);
+							//console.log(resp);
 							var hotelResult = [];
 							hotelResult.push(resp.result.hotel_cooprate);
 

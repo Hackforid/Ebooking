@@ -78,10 +78,10 @@
 				"remark_name": $("#remarkId-" + index).val()
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -91,7 +91,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -162,10 +162,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
 						scope.roomNum = [];
@@ -176,7 +176,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -203,10 +203,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -218,7 +218,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -248,10 +248,10 @@
 
 			}
 
-			console.log(url);
+		//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -263,7 +263,7 @@
 
 					} else {
 						this.errmsg = resp.errmsg;
-						console.log(errmsg);
+					//	console.log(errmsg);
 					}
 				})
 				.error(function() {
@@ -302,6 +302,10 @@
 		$scope.currentId;
 
 
+		$scope.roomDescribeInfo;
+		$scope.roomBedType = ['单床', '大床', '双床', '三床', '三床-1大2单', '榻榻米', '拼床', '水床', '榻榻米双床', '榻榻米单床', '圆床', '上下铺', '大床或双床'];
+
+
 		$scope.nameTest = function(e) {
 			return e != null;
 		}
@@ -309,18 +313,18 @@
 
 
 		$scope.roomDescribe = function roomDescribe(index) {
+			//console.log(index);
+			//console.log($scope.cooped[index]);
 
-			//$scope.desResult = true;
+			$scope.roomDescribeInfo = $scope.cooped[index];
+
+			var bedTypeIndex = $scope.roomDescribeInfo['bed_type'];
+			$scope.roomDescribeInfo['bed_type'] = $scope.roomBedType[bedTypeIndex];
+			//console.log($scope.roomDescribeInfo);
+
 			$("#cool-roomtype").show();
 
-			/*var roomDes="<div class='messageDiv' id='cool-roomtype' style=' '><div class='messageBlack'></div><div class='detail detail-roomtype'><div class='head'><h1>房型概述</h1></div>"+
-			 "<p id='closeDiv' class='close' ng-click='roomDescribeClose()'>X</p><div class='con'><div class='cm'> <table width='100%' border='0' cellspacing='0' cellpadding='0'>"+
-			  "<tr><td width='90'><strong>房型名称：</strong></td><td>豪华房</td> </tr><tr><td><strong>房间大小：</strong></td> <td>15-20平方米</td></tr><tr><td><strong>床型：</strong></td><td>大床、双床、三床、四床</td></tr>"+
-			  "<tr><td><strong>床尺寸：</strong></td><td>200cm*180cm</td></tr><tr><td><strong>楼层：</strong></td><td>1层</td></tr><tr><td><strong>入住人数：</strong></td><td>2人</td></tr><tr><td><strong>设施：</strong></td>"+
-			   "<td>wi-fi、宽带、有线电视、洗漱用品、24小时热水、空调</td></tr><tr><td><strong>描述：</strong></td><td>标准间……</td></tr></table></div></div>"+
-			   "</div> </div>";  
 
-			*/
 
 		}
 
@@ -380,13 +384,13 @@
 			}
 
 			var url = "/api/hotel/" + hotelId + "/roomtype/";
-			console.log(url);
-			console.log(shouldCooped);
+			//console.log(url);
+			//console.log(shouldCooped);
 			$http.post(url, {
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-					console.log(resp);
+				//	console.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);
@@ -395,7 +399,7 @@
 
 
 					} else {
-						console.log(resp.errmsg);
+						//console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
@@ -423,10 +427,10 @@
 
 		function loadHotelMsg(hotel_id) {
 			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue - 1].year + "&month=" + $scope.months[$scope.monthvalue - 1].month;
-			console.log(url);
+			//console.log(url);
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;

@@ -20,7 +20,7 @@
 
 			var url = '/api/order/todaybook/?start=' + pageNum;
 
-			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
 
 			}
@@ -30,15 +30,17 @@
 
 		$scope.searchResult = function searchResult() {
 
-			console.log($scope.finalUrl);
+			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					//	console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagebookInfo").show();
+						} else {
 							$("#pagebookInfo").hide();
 						}
 
@@ -130,7 +132,7 @@
 
 			var url = '/api/order/todaycheckin/?start=' + pageNum;
 
-			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
 
 			}
@@ -140,16 +142,18 @@
 
 		$scope.searchResult = function searchResult() {
 
-			console.log($scope.finalUrl);
+			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayCheckIn = resp.result.orders;
 
 						$scope.total = resp.result.total;
 
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagecheckInfo").show();
+						} else {
 							$("#pagecheckInfo").hide();
 						}
 
@@ -287,32 +291,32 @@
 
 			var url = '/api/order/search/?start=' + pageNum;
 
-			if ($scope.searchOrderId.trim() != "" && $scope.searchOrderId != undefined) {
+			if ($.trim($scope.searchOrderId) != "" && $scope.searchOrderId != undefined) {
 				url = url + "&order_id=" + $scope.searchOrderId;
 
 			}
 
-			if ($scope.searchHotelName.trim() != "" && $scope.searchHotelName != undefined) {
+			if ($.trim($scope.searchHotelName) != "" && $scope.searchHotelName != undefined) {
 				url = url + "&hotel_name=" + $scope.searchHotelName;
 
 			}
 
-			if (liveStarTime.trim() != "" && liveStarTime != undefined) {
+			if ($.trim(liveStarTime) != "" && liveStarTime != undefined) {
 				url = url + "&checkin_date=" + liveStarTime;
 
 			}
 
-			if (liveEndTime.trim() != "" && liveEndTime != undefined) {
+			if ($.trim(liveEndTime) != "" && liveEndTime != undefined) {
 				url = url + "&checkout_date=" + liveEndTime;
 
 			}
 
-			if ($scope.searchInPeople.trim() != "" && $scope.searchInPeople != undefined) {
+			if ($.trim($scope.searchInPeople) != "" && $scope.searchInPeople != undefined) {
 				url = url + "&customer=" + $scope.searchInPeople;
 
 			}
 
-			if ($scope.searchStatus.trim() != "" && $scope.searchStatus != undefined) {
+			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined) {
 
 				if ($scope.searchStatus == "500") {
 					url = url + "&order_status=" + $scope.searchStatus + "&order_status=600";
@@ -322,15 +326,15 @@
 
 			}
 
-			if (ListStarTime.trim() != "" && ListStarTime != undefined) {
+			if ($.trim(ListStarTime) != "" && ListStarTime != undefined) {
 				url = url + "&create_time_start=" + ListStarTime;
 
 			}
-			if (ListEndTime.trim() != "" && ListEndTime != undefined) {
+			if ($.trim(ListEndTime) != "" && ListEndTime != undefined) {
 				url = url + "&create_time_end=" + ListEndTime;
 
 			}
-			if ($scope.itemPerPage.trim() != "" && $scope.itemPerPage != undefined) {
+			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
 
 			}
@@ -342,15 +346,17 @@
 
 		$scope.searchResult = function searchResult() {
 
-			console.log($scope.finalUrl);
+			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					//console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.queryList = resp.result.orders;
 
 						$scope.total = resp.result.total;
-						if ($scope.total == 0) {
+						if ($scope.total != 0) {
+							$("#pagequeryInfo").show();
+						} else {
 							$("#pagequeryInfo").hide();
 						}
 
