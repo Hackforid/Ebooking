@@ -257,7 +257,6 @@ class PushInventoryTask(SqlAlchemyTask):
         start_day = datetime.date.today()
         end_day = start_day + datetime.timedelta(days=89)
 
-        auto_confirm_count = []
         manual_confirm_count = []
 
         day = start_day
@@ -266,8 +265,7 @@ class PushInventoryTask(SqlAlchemyTask):
             for inventory in inventories:
                 if inventory.month == month:
                     auto, manual = inventory.get_day_count(day.day)
-                    auto_confirm_count.append(str(auto))
-                    manual_confirm_count.append(str(manual))
+                    manual_confirm_count.append(str(auto + manual))
                     break
             day = day + datetime.timedelta(days=1)
 
@@ -276,7 +274,6 @@ class PushInventoryTask(SqlAlchemyTask):
         data['ota_id'] = 0
         data['hotel_id'] = str(inventories[0].hotel_id)
         data['room_type_id'] = str(inventories[0].roomtype_id)
-        data['auto_confirm_counts'] = '|'.join(auto_confirm_count)
         data['manual_confirm_counts'] = '|'.join(manual_confirm_count)
         data['start_date'] = start_day
         data['end_date'] = end_day
