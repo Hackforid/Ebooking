@@ -45,8 +45,14 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
     PushHotelTask().push_hotel.delay(hotel_id)
     for coop in coops:
         PushInventoryTask().push_inventory(coop.id)
+        create_default_rateplan(coop)
 
     return coops
+
+def create_default_rateplan(coop_room):
+    from tasks.models.rate_plan import new_rate_plan
+    new_rate_plan.delay(coop_room.merchant_id, coop_room.hotel_id, coop_room.id, "常规价格", 0, 0)
+
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def modify_cooped_roomtype_online(self, merchant_id, hotel_id, roomtype_id, is_online):
