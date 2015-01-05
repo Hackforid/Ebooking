@@ -1,12 +1,15 @@
 (function() {
 
-	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myApp.directives']);
+	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myApp.directives', 'ui.bootstrap']);
 
 
 	hotelWillCoopApp.controller('hotelWillCoopContentCtrl', ['$scope', '$http', function($scope, $http) {
 
 			$scope.citys = [];
 			$scope.hotels = [];
+
+
+			$scope.citysName = [];
 
 
 			$scope.searchName = "";
@@ -99,6 +102,8 @@
 
 			$scope.urlCheck = function urlCheck(a) {
 				$scope.currentPage = a;
+				$scope.searchCity = $("#searchCity").val();
+
 				//console.log("这里是urlCheck url变化的地方");
 
 				var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
@@ -143,6 +148,12 @@
 					.success(function(resp) {
 						if (resp.errcode == 0) {
 							$scope.citys = resp.result.citys;
+
+							for (var i = 0; i < $scope.citys.length; i++) {
+								$scope.citysName.push($scope.citys[i]['name']);
+							};
+
+
 						}
 					})
 					.error(function() {});
@@ -186,7 +197,8 @@
 			$scope.conditionReset = function conditionReset() {
 
 				$scope.searchName = "";
-				$scope.searchCity = "";
+				//$scope.searchCity = "";
+				$("#searchCity").val("");
 				$scope.searchStar = "";
 
 				$scope.finalUrl = '/api/hotel/willcoop/?start=0&limit=' + $scope.itemPerPage;
@@ -206,7 +218,7 @@
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							console.log(resp);
+							//console.log(resp);
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;

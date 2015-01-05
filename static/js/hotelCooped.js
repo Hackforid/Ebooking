@@ -1,11 +1,15 @@
 (function() {
 
-	var hotelCoopApp = angular.module('hotelCoopedApp', ['myApp.directives']);
+	var hotelCoopApp = angular.module('hotelCoopedApp', ['myApp.directives', 'ui.bootstrap']);
 
 	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.citys = [];
 		$scope.hotels = [];
+
+
+		$scope.citysName = [];
+
 
 		$scope.searchName = "";
 		$scope.searchStatus = "";
@@ -29,7 +33,7 @@
 		$scope.hotelDetail = function(m) {
 
 			$scope.currentHotel = $scope.hotels[m];
-			console.log($scope.currentHotel);
+			//console.log($scope.currentHotel);
 			$("#hotel-detail").show();
 
 		}
@@ -72,6 +76,12 @@
 				.success(function(resp) {
 					if (resp.errcode == 0) {
 						$scope.citys = resp.result.citys;
+
+						for (var i = 0; i < $scope.citys.length; i++) {
+							$scope.citysName.push($scope.citys[i]['name']);
+						};
+
+
 					}
 				})
 				.error(function() {});
@@ -81,7 +91,8 @@
 		$scope.conditionReset = function conditionReset() {
 			$scope.searchName = "";
 			$scope.searchStatus = "";
-			$scope.searchCity = "";
+			//$scope.searchCity = "";
+			$("#searchCity").val("");
 			$scope.searchStar = "";
 
 			$scope.finalUrl = '/api/hotel/cooped/?start=0&limit=' + $scope.itemPerPage;
@@ -98,6 +109,7 @@
 		$scope.urlCheck = function urlCheck(a) {
 
 			$scope.currentPage = a;
+			$scope.searchCity = $("#searchCity").val();
 			//console.log("这里是urlCheck url变化的地方");
 
 			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
@@ -137,7 +149,7 @@
 
 
 			$scope.finalUrl = encodeURI(url);
-			console.log($scope.finalUrl);
+			//console.log($scope.finalUrl);
 
 		}
 
@@ -148,7 +160,7 @@
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
-						console.log(resp);
+						//console.log(resp);
 						$scope.hotels = resp.result.hotels;
 
 						$scope.itemPerPage = resp.result.limit;

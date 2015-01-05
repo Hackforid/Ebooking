@@ -31,7 +31,13 @@
                 <div class="content">
                     <div class="divone"><div class="c">
                             <label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
-                            <label><strong>城市：</strong><input name="" type="text" value="" class="input-t" ng-model="searchCity"/></label>
+                            <label><strong>城市：</strong></label>
+                           
+                            <label>
+                            <input  style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
+                            </label>
+
+
                             <label><strong>星级：</strong><select name="" class="input-s" ng-model="searchStar" >
 
                                 <option value="0">不限</option>
@@ -59,26 +65,24 @@
 
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                             <thead><tr>
-                                    <th width="30%">酒店名称</th>
-                                    <th width="10%">星级</th>
-                                    <th width="10%">城市</th>
-                                    <th width="10%">商圈</th>
-                                    <th width="10%">类型</th>
-                                    <th width="10%">状态</th>
-                                    <th width="20%">维护</th>
+                                    <th width="33%">酒店名称</th>
+                                    <th width="12%">星级</th>
+                                    <th width="12%">城市</th>
+                                    <th width="11%">商圈</th>                                 
+                                    <th width="11%">状态</th>
+                                    <th width="21%">维护</th>
                             </tr></thead>
                         </table>
 
 
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                             <tr ng-repeat="hotel in hotels">
-                                <td width="30%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
-                                <td width="10%" ng-bind="getHotelStar(hotel.star)"></td>
-                                <td width="10%" ng-bind="getCityName(hotel.city_id)"></td>
-                                <td width="10%" ng-bind="hotel.district_name"></td>
-                                <td width="10%" >系统确认</td>
-                                <td width="10%" ng-bind="getStatus(hotel.is_online)"></td>
-                                <td class="action" width="20%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+                                <td width="33%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
+                                <td width="12%" ng-bind="getHotelStar(hotel.star)"></td>
+                                <td width="12%" ng-bind="getCityName(hotel.city_id)"></td>
+                                <td width="11%" ng-bind="hotel.district_name"></td>                               
+                                <td width="11%" ng-bind="getStatus(hotel.is_online)"></td>
+                                <td class="action" width="21%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
                             </tr>
 
                         </table>
@@ -155,6 +159,11 @@
 </%def>
 
 <%def name="end()">
+
+    <script src="${static_url('js/ui-bootstrap-tpls.js')}"></script>
+    <link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}"> 
+
+
     <script src="${static_url('js/pageDirectives.js')}"></script>
     <script src="${static_url('js/hotelCooped.js')}"></script>
 </%def>

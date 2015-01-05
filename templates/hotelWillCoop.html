@@ -33,16 +33,21 @@
 					<div class="content">
 						<div class="divone"><div class="c">
 								<label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
-								<label ><strong>城市：</strong>
+								<label ><strong>城市：</strong></label>
 
-								<input  name=""  type="text" value="" class="input-t" ng-model="searchCity"/>
+								<label>
+  								<input style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
+								</label>
 
-								<div id="cityShow" style="display:none;overflow:auto;position:absolute;width:140px;height:80px;background:white;top:185px;left:490px">
+
+								<!--<input  name=""  type="text" value="" class="input-t" ng-model="searchCity"/> -->
+
+								<!--<div id="cityShow" style="display:none;overflow:auto;position:absolute;width:140px;height:80px;background:white;top:185px;left:490px">
 								<div style="width:100%"  ng-click="cityChoose(city);" ng-repeat="city in cityList">{{city}}</div>
 								
-								</div> 
+								</div> -->
 							
-								</label>
+								
 
 
 								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="searchStar">
@@ -125,6 +130,9 @@
 </%def>
 
 <%def name="end()">
+
+<script src="${static_url('js/ui-bootstrap-tpls.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}"> 
 
 <script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/hotelWillCoop.js')}"></script>
