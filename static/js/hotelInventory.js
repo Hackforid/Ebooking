@@ -167,7 +167,7 @@
 			}
 
 			var testStr = /^[0-9]*[1-9][0-9]*$/;
-			var roomNumCount = $("#roomNumCount").val();
+			var roomNumCount = $.trim($("#roomNumCount").val());
 
 			if (testStr.test(roomNumCount) == false) {
 				this.errmsg = '房量为正整数';
@@ -194,7 +194,7 @@
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
-				"change_num": parseInt($("#roomNumCount").val()),
+				"change_num": parseInt($.trim($("#roomNumCount").val())),
 				"price_type": parseInt(scope.currentPriceType)
 
 			}
@@ -237,7 +237,7 @@
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
-				"change_num": -parseInt($("#roomNumCount").val()),
+				"change_num": -parseInt($.trim($("#roomNumCount").val())),
 				"price_type": parseInt(scope.currentPriceType)
 
 			}
@@ -270,7 +270,7 @@
 
 		this.zeroSave = function() {
 
-			var tempNum = $("#" + scope.currentId).html();
+			var tempNum = $.trim($("#" + scope.currentId).html());
 
 			var timeStart = $("#timeStart").val();
 			var timeEnd = $("#timeEnd").val();
