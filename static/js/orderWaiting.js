@@ -20,6 +20,37 @@
 		$scope.paginationId = "pageNumber";
 
 
+		$scope.currentOrder;
+
+
+
+		$scope.orderDetail = function(m) {
+
+			$scope.currentOrder = $scope.orderList[m];
+
+			$("#hotel-detail").show();
+
+		}
+
+
+		$scope.closeDetail = function() {
+			$("#hotel-detail").hide();
+
+		}
+
+
+		$scope.DateDiff = function DateDiff(startDate, endDate) {
+			var splitDate, startTime, endTime, iDays;
+			splitDate = startDate.split("-");
+			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			splitDate = endDate.split("-");
+			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+			var daysResult = "( " + iDays + "晚 )";
+			return daysResult;
+		}
+
 
 		$scope.priceDivIn = function(index) {
 
@@ -36,7 +67,7 @@
 
 		}
 
-		$scope.detailDivIn = function(index) {
+		/*$scope.detailDivIn = function(index) {
 
 			var detailDiv = "<div class='classthree'>" +
 				"<div style='width:100%;height:30px;text-align:center;font-size:15px'>订单详情</div>" +
@@ -56,13 +87,13 @@
 
 			$("#orderConfimId-" + index).after(detailDiv).show(0, function() {});
 
-		}
+		}*/
 
-		$scope.detailDivOut = function(index) {
+		/*$scope.detailDivOut = function(index) {
 
 			$("#orderConfimId-" + index).next("div.classthree").hide();
 
-		}
+		}*/
 
 
 		$scope.acceptOrder = function() {

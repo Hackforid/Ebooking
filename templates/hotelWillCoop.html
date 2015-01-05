@@ -47,8 +47,11 @@
 
 								<label><strong>星级：</strong><select name="" class="input-s"  ng-model="searchStar">
 										<option value="0">不限</option>
-										<option value="1">经济型</option>
-										<option value="2">五星级</option>
+										<option value="1">一星级</option>
+										<option value="2">二星级</option>
+										<option value="3">三星级</option>
+										<option value="4">四星级</option>
+										<option value="5">五星级</option>
 								</select></label>
 
 								<label>
@@ -67,8 +70,9 @@
 								<thead><tr>
 										<th width="10%"><input ng-click="checkStatus=!checkStatus" ng-checked="checkStatus" name="input2" type="checkbox" value="" />全选</th>
 										<th width="25%">酒店名称</th>
+										<th width="5%">星级</th>
 										<th width="10%">城市</th>
-										<th width="20%">地址</th>
+										<th width="15%">地址</th>
 										<th width="10%">电话</th>
 										<th width="10%">状态</th>
 										<th width="15%">操作</th>
@@ -81,8 +85,11 @@
 								<tr ng-repeat="hotel in hotels">
 									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
                                     <td width="25%" ng-bind="hotel.name"></td>
+
+                                    <td width="5%" ng-bind="getHotelStar(hotel.star)"></td>
+
                                     <td width="10%" ng-bind="getCityName(hotel.city_id)"></td>
-                                    <td width="20%" ng-bind="hotel.address"></td>
+                                    <td width="15%" ng-bind="hotel.address"></td>
                                     <td width="10%" ng-bind="hotel.phone"></td>
 									<td width="10%">可申请合作</td>
 									<td class="action" width="15%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>

@@ -40,8 +40,31 @@
 		}
 
 
+		$scope.getStatus = function(s) {
+			if (s == "1") {
+				return "正常";
+			} else if (s == "0") {
+				return "暂停";
+			}
+		}
 
 
+		$scope.getHotelStar = function(m) {
+			if (m == "0") {
+				return "无";
+			} else if (m == "1") {
+				return "一星级";
+			} else if (m == "2") {
+				return "二星级";
+			} else if (m == "3") {
+				return "三星级";
+			} else if (m == "4") {
+				return "四星级";
+			} else if (m == "5") {
+				return "五星级";
+			}
+
+		}
 
 		function loadCitys() {
 			var url = "/api/city/";
@@ -114,7 +137,7 @@
 
 
 			$scope.finalUrl = encodeURI(url);
-			//console.log($scope.finalUrl);
+			console.log($scope.finalUrl);
 
 		}
 
