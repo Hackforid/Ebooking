@@ -10,8 +10,8 @@ from views.order import OrderWaitingHandler
 from views.order_list import OrderListHandler
 from views.api.city import CityAPIHandler
 from views.api.hotel_will_coop import HotelWillCoopAPIHandler
-from views.api.hotel_coop import HotelCoopAPIHandler, HotelCoopsAPIHandler
-from views.api.hotel_cooped import HotelCoopedAPIHandler
+from views.api.hotel_coop import HotelCoopAPIHandler, HotelCoopsAPIHandler 
+from views.api.hotel_cooped import HotelCoopedAPIHandler, HotelCoopOnlineAPIHandler
 from views.api.user import UserManageAPIHandler
 from views.password import PasswordHandler
 from views.api.password import PasswordAPIHandler
@@ -42,6 +42,7 @@ handlers = [
         (r"/api/hotel/coops/?", HotelCoopsAPIHandler),
         (r"/api/hotel/cooped/?", HotelCoopedAPIHandler),
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/cooped/?", RoomTypeCoopedModifyAPIHandler),
+        (r"/api/hotel/cooped/(?P<hotel_id>\d+)/online/(?P<is_online>\d+)/?", HotelCoopOnlineAPIHandler),
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/?", RoomTypeCoopedAPIHandler),
 
@@ -65,6 +66,5 @@ handlers = [
         (r"/api/order/todaybook/?", OrderTodayBookListAPIHandler),
         (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
         (r"/api/order/search/?", OrderSearchAPIHandler),
-
         ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
 ]

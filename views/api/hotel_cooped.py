@@ -9,8 +9,9 @@ from tools.auth import auth_login
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
+from exception.celery_exception import CeleryException
 
-from tasks.models.cooperate_hotel import get_by_merchant_id
+from tasks.models.cooperate_hotel import get_by_merchant_id, change_hotel_online_status
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -111,4 +112,27 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise gen.Return(districts)
         else:
             raise gen.Return([])
+
+class HotelCoopOnlineAPIHandler(BtwBaseHandler):
+
+    @gen.coroutine
+    @auth_login(json=True)
+    def put(self, hotel_id, is_online):
+        merchant_id = self.current_user.merchant_id
+        is_online = int(is_online)
+        if is_online not in [0, 1]:
+            raise JsonException(errcode=500, errmsg="wrong arg: is_online")
+        task = yield gen.Task(change_hotel_online_status.apply_async, args=[merchant_id, hotel_id, is_online])
+
+        if task.status == 'SUCCESS':
+            hotel = task.result
+            self.finish_json(result=dict(
+                cooperate_hotel=hotel.todict()
+                ))
+        else:
+            e = task.result
+            if isinstance(e, CeleryException):
+                raise JsonException(errcode=e.errcode, errmsg=e.errmsg)
+            else:
+                raise JsonException(errcode=1000, errmsg='server error')
 

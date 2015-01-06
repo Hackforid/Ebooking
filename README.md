@@ -20,9 +20,14 @@ as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html
 ``sudo rabbitmqctl set_permissions -p ebooking admin ".*" ".*" ".*"``  
 
 
-##Run  
+## Run  
 ``celery -A tasks.celery_app worker  -l debug -n worker1``  
 ``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER``  
 ``python app.py``  
 
+## API  
+**修改酒店上线状态**  
+``/api/hotel/cooped/{hotel_id}/online/{is_online}/``  
+*is_online* in [0, 1]  
+return cooped hotel info  
 
