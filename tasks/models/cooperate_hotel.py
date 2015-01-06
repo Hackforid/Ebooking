@@ -31,4 +31,15 @@ def new_hotel_cooprate(self, merchant_id, hotel_id):
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def new_hotel_cooprates(self, merchant_id, hotel_ids):
-    return CooperateHotelModel.new_hotel_cooprates(self.session, merchant_id, hotel_ids)
+    return CooperateHotelModel.new_hotel_cooprates(self.session, merchant_id, hotel_id, is_online)
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def change_hotel_online_status(self, merchant_id, hotel_id, is_online):
+    hotel = CooperateHotelModel.get_by_merchant_id_and_hotel_id(self.session, merchant_id, hotel_id)
+    if not hotel:
+        raise CeleryException(404, 'hotel not found')
+
+    hotel.is_online = is_online
+    self.session.commit()
+
+    return hotel

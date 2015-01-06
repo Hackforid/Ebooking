@@ -35,6 +35,14 @@ class CooperateHotelModel(Base):
             .all()
 
     @classmethod
+    def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):
+        return session.query(CooperateHotelModel)\
+            .filter(CooperateHotelModel.id == hotel_id)\
+            .filter(CooperateHotelModel.merchant_id == merchant_id)\
+            .filter(CooperateHotelModel.is_delete == 0)\
+            .first()
+
+    @classmethod
     def get_by_merchant_id_and_base_hotel_id(cls, session, merchant_id, base_hotel_id):
         return session.query(CooperateHotelModel)\
             .filter(CooperateHotelModel.merchant_id == merchant_id)\
