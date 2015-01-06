@@ -73,6 +73,12 @@
 
 						for (var i = 0; i < $scope.todayBook.length; i++) {
 
+
+							$scope.todayBook[i]["everyday_price"] = ($scope.todayBook[i]["everyday_price"]) / 100;
+
+							$scope.todayBook[i]["total_price"] = ($scope.todayBook[i]["total_price"]) / 100;
+
+
 							/*过滤状态为200的*/
 							var bookStatus = $scope.todayBook[i]["status"];
 							if (bookStatus == "200") {
@@ -218,6 +224,13 @@
 						};*/
 
 						for (var i = 0; i < $scope.todayCheckIn.length; i++) {
+
+
+							$scope.todayCheckIn[i]["everyday_price"] = ($scope.todayCheckIn[i]["everyday_price"]) / 100;
+
+							$scope.todayCheckIn[i]["total_price"] = ($scope.todayCheckIn[i]["total_price"]) / 100;
+
+
 
 							/*过滤状态为200的*/
 							var checkStatus = $scope.todayCheckIn[i]["status"];
@@ -438,6 +451,12 @@
 						}
 
 						for (var i = 0; i < $scope.queryList.length; i++) {
+
+
+							$scope.queryList[i]["everyday_price"] = ($scope.queryList[i]["everyday_price"]) / 100;
+
+							$scope.queryList[i]["total_price"] = ($scope.queryList[i]["total_price"]) / 100;
+
 
 							var queryStatus = $scope.queryList[i]["status"];
 							if (queryStatus == "200") {

@@ -49,7 +49,7 @@
                                 <tr ng-repeat="book in todayBook">
                                     <td width="13%" ng-bind='book.id'></td>
                                         <td width="15%" ng-bind='book.hotel_name'></td>
-                                        <td width="10%" ng-bind='book.room_type_name'></td>
+                                        <td width="10%" ng-bind='book.roomtype_name'></td>
                                         <td width="15%" ><span ng-bind="book.checkin_date+'至'"></span><br />
                                         <span ng-bind="book.checkout_date"></span><span ng-bind="DateDiff(book.checkin_date,book.checkout_date)"></span></td>
                                         <td width="12%"><span ng-bind="book['create_time'][0]"></span><br />
@@ -103,7 +103,7 @@
                                     <td width="13%" ng-bind='check.id'></td>
                                         <td width="15%" ng-bind="check.hotel_name"></td>
 
-                                        <td width="10%" ng-bind='check.room_type_name'></td>
+                                        <td width="10%" ng-bind='check.roomtype_name'></td>
                                         <td width="15%" ><span ng-bind="check.checkin_date+'至'"></span><br />
                                         <span ng-bind="check.checkout_date"></span><span ng-bind="DateDiff(check.checkin_date,check.checkout_date)"></span></td>
                                         <td width="12%"><span ng-bind="check['create_time'][0]"></span><br />
@@ -207,7 +207,7 @@
 
                                     <td width="15%" ng-bind="query.hotel_name"></td>
 
-                                    <td width="10%" ng-bind='query.room_type_name'></td>
+                                    <td width="10%" ng-bind='query.roomtype_name'></td>
                                     <td width="15%" ><span ng-bind="query.checkin_date+'至'"></span><br />
                                     <span ng-bind="query.checkout_date"></span> <span ng-bind="DateDiff(query.checkin_date,query.checkout_date)"></span></td>
                                     <td width="12%"><span ng-bind="query['create_time'][0]"></span><br />
