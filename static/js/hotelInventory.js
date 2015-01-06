@@ -305,7 +305,7 @@
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
-				"change_num": -parseInt(tempNum),
+				"change_num": 0,
 				"price_type": parseInt(scope.currentPriceType)
 
 			}
@@ -845,7 +845,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -887,7 +887,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[0] == "-1") {
 							classStyle = "action1";
-							temp[0] == "--";
+							temp[0] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -902,7 +902,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -934,7 +934,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[0] == "-1") {
 							classStyle = "action1";
-							temp[0] == "--";
+							temp[0] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -949,7 +949,7 @@
 							classStyle = "action1 man-close";
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1";
 						};

@@ -161,7 +161,7 @@
                                        <span ng-bind="order.checkout_date"></span>
                                        <span ng-bind="DateDiff(order.checkin_date,order.checkout_date)"></span>
                                        </td>
-                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price" ng-bind="order.everyday_price+'元'"></em> </td>
+                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price" ng-bind="order.total_price+'元'"></em> </td>
                                     <td width="10%"><span ng-bind="order['create_time'][0]"></span><br />
                                          <span ng-bind="order['create_time'][1]"></span></td>    
                                     <td width="10%">

@@ -249,7 +249,7 @@
 
 									$scope.todayCheckIn[i]["status"] = "拒绝";
 
-								} else if (checkStatus == "500" || bookStatus == "600") {
+								} else if (checkStatus == "500" || checkStatus == "600") {
 
 									$scope.todayCheckIn[i]["status"] = "服务器取消";
 
@@ -338,6 +338,10 @@
 			$("#liveEndTime").val("");
 			$("#ListStarTime").val("");
 			$("#ListEndTime").val("");
+
+			$scope.finalUrl='/api/order/search/?start=0&limit='+ $scope.itemPerPage;
+
+			$scope.searchResult();
 		}
 
 
@@ -462,7 +466,7 @@
 
 									$scope.queryList[i]["status"] = "拒绝";
 
-								} else if (queryStatus == "500" || bookStatus == "600") {
+								} else if (queryStatus == "500" || queryStatus == "600") {
 
 									$scope.queryList[i]["status"] = "服务器取消";
 

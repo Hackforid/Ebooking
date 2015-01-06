@@ -256,6 +256,8 @@
 
 							$scope.orderList[i]["everyday_price"] = ($scope.orderList[i]["everyday_price"]) / 100;
 
+							$scope.orderList[i]["total_price"] = ($scope.orderList[i]["total_price"]) / 100;
+
 							var temptime = $scope.orderList[i]["create_time"].split(" ");
 							$scope.orderList[i]["create_time"] = temptime;
 
