@@ -24,6 +24,32 @@
 
 
 
+		$scope.orderPrint = function(m) {
+
+			$scope.currentOrder = m;
+
+
+			$(".header").hide();
+			$(".main-left").hide();
+			$("#ng-app").children("div").not($("#printweb")).hide();
+			$("#printweb").show();
+
+			setTimeout(function() {
+				window.print();
+
+				$("#printweb").hide();
+				$(".header").show();
+				$(".main-left").show();
+
+				$(".main").show();
+				$("#notice").show();
+			}, 0);
+
+
+		}
+
+
+
 		$scope.orderDetail = function(m) {
 
 			$scope.currentOrder = $scope.orderList[m];

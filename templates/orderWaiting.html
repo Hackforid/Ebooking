@@ -6,6 +6,76 @@
     ng-controller="orderWaitingCtrl"
     >
 
+
+<!--打印订单详情-->
+
+    <div class="print-web" id="printweb">
+  <div class="pt">
+    <div class="fl">Fax NO.：010-89897182  </div>
+    <div class="fr">TO：Terry</div>
+  </div>
+  <div class="pm">
+
+       <div class="title"><strong>预  订  单</strong><br />
+         Reservtion Form <div class="zd1"> 订单确认号(Confirmation No.)：<br /><u class="xian"></u></div> 
+         </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="53%"><span>入住人：<br /><b>Guest Name:</b></span><u class="xian2" ng-repeat="cum in currentOrder['customer_info']" ng-bind="cum['name']" ></u></td>
+    <td width="47%"><span>是否确认：<br /><b>Confirm State:</b></span><u class="xian2">&nbsp;&nbsp;&nbsp;⚘&nbsp;是&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚘&nbsp;否</u></td>
+  </tr>
+  <tr>
+    <td><span>酒店名称：<br /><b>Hotel Name:</b></span><u class="xian2" ng-bind="currentOrder['hotel_name']"></u></td>
+    <td><span>付款状态：<br />
+      <b>Payment State:</b></span><u class="xian2">&nbsp;&nbsp;&nbsp;⚘&nbsp;已付&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚘&nbsp;未付</u></td>
+  </tr>
+  <tr>
+    <td><span>房&nbsp;&nbsp;&nbsp;型：<br /><b>Cancel Rules:</b></span><u class="xian2" ng-bind="currentOrder['room_type_name']"></u></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span>价&nbsp;&nbsp;&nbsp;格：<br /><b>Price:</b></span><u class="xian2" ng-bind="currentOrder['total_price']"></u></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span>到店日期：<br /><b>Arrival Date:</b></span><u class="xian2" ng-bind="currentOrder['checkin_date']"></u></td>
+    <td><span>离店日期：<br /><b>Departure Date:</b></span><u class="xian2" ng-bind="currentOrder['checkout_date']"></u></td>
+  </tr>
+  <tr>
+    <td><span>到店时间：<br /><b>Arrival Time:</b></span><u class="xian2"></u></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span>预订时间：<br /><b>Booking Time:</b></span><u class="xian2" ng-bind="currentOrder['create_time'].join('  ')"></u></td>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+  
+  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:86%">一经预订不可取消，扣除全额房费</u></div> 
+  <div class="zd3">
+   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="53%"><span>确认人：</span><u class="xian"></u></td>
+    <td width="47%"><span>确认时间：</span><u class="xian"></u></td>
+    </tr>
+  </table>
+  </div>
+
+  
+  </div>
+  <div class="pb">备注：如有需要请传真给酒店进行确认，并建议留存备案。</div>
+
+</div>
+
+
+<!--打印订单详情-->
+
+
+
+
+
+
       <!--信息提示弹窗浮层-->     
       <div class="messageDiv" id="messageDialog" style="display:none" >
        <div class="messageBlack"></div>
@@ -106,7 +176,7 @@
                                         <input name="" type="button" value="拒绝" ng-click=refuseShow($index); class="btn-s btn-no"   />
 
                                     </td>
-                                    <td width="5%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
+                                    <td width="5%"><input ng-click="orderPrint(order)" name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
                             </table>
                         </div>  
@@ -130,7 +200,6 @@
             </div>
 
             <!--待确认订单结束-->  
-
 
 
 
@@ -169,14 +238,6 @@
 
 
 
-
-
-
-
-
-
-
-
     </div></div>
     <!--主体内容end--> 
 
@@ -190,20 +251,8 @@
 
 <%def name="end()">
 
+<link rel="stylesheet" type="text/css" href="${static_url('css/orderprint.css')}"> 
 <script src="${static_url('js/pageDirectives.js')}"></script>
 <script src="${static_url('js/orderWaiting.js')}"></script>
-<style>
-.classone{
-   width:40%;line-height:20px;
-}
-.classtwo{
-   width:60%;line-height:20px;position:absolute;left:150px;
-}
-.classthree{overflow:hidden;width:300px;float:left; position:absolute;top:55px;left:50px;padding:8px 10px;height:auto; z-index:999; background:#FFF;border:1px solid #E3E3E3; 
-text-align:left; line-height:180%; color:#666; 
--moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;}
 
-
-
-</style>
 </%def>
