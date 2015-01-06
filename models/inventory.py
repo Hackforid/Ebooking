@@ -297,20 +297,25 @@ class InventoryModel(Base):
     def add_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)
         value = getattr(self, day_key)
-        price_reserved, price_manual = value.split('|')
-        price_reserved = price_reserved if price_reserved >= 0 else 0
-        price_manual = price_manual if price_manual >=0 else 0
+        count_auto, count_manual = [int(count) for count in value.split('|')]
         if price_type == 0:
-            price_reserved = int(price_reserved) + val
-            price_reserved = price_reserved if price_reserved >= 0 else 0
-            price_reserved = price_reserved if price_reserved <= 99 else 99
+            remain_manual = count_manual
+            remain_auto = count_auto if count_auto >= 0 else 0
+            remain_auto = remain_auto + val
+            remain_auto = self.fix_inventory_count_range(remain_auto)
         else:
-            price_manual = int(price_manual) + val
-            price_manual = price_manual if price_manual >= 0 else 0
-            price_manual = price_manual if price_manual <= 99 else 99
+            remain_auto = count_auto
+            remain_manual = count_manual if count_manual >= 0 else 0
+            remain_manual = remain_manual + val
+            remain_manual = self.fix_inventory_count_range(remain_manual)
 
-        value = "{}|{}".format(price_reserved, price_manual)
+        value = "{}|{}".format(remain_auto, remain_manual)
         setattr(self, day_key, value)
+
+    def fix_inventory_count_range(self, count):
+        count = count if count >= 0 else 0
+        count = count if count <= 99 else 0
+        return count
 
     def set_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)
