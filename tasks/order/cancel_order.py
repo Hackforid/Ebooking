@@ -23,7 +23,7 @@ def cancel_order_by_server(self, order_id):
     pre_status = order.status
 
     if order.status == 0 or order.status == 100:
-        _order =cancel_before_user_confirm(session, order.id)
+        _order = cancel_before_user_confirm(session, order.id)
     elif order.status == 200:
         raise CeleryException(1000, 'illegal status')
     elif order.status == 300:

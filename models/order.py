@@ -25,6 +25,7 @@ class OrderModel(Base):
     rateplan_id = Column("ratePlanId", INTEGER, nullable=False, default=0)
     rateplan_name = Column("ratePlanName", VARCHAR(50), nullable=False)
     room_num = Column("roomNum", INTEGER, nullable=False, default=0)
+    room_num_record = Column("roomNumRecord", VARCHAR(500), nullable=False)
     currency_type = Column("currencyType", VARCHAR(10), nullable=False, default="CNY")
     pay_type = Column("payType", INTEGER, nullable=False, default=0)
     bed_type = Column("bedType", INTEGER, nullable=False, default=0)
@@ -117,6 +118,7 @@ class OrderModel(Base):
                 rateplan_id=submit_order.rateplan_id,
                 rateplan_name=submit_order.rateplan_name,
                 room_num=submit_order.room_quantity,
+                room_num_record='',
                 currency_type=submit_order.currency_type,
                 pay_type=submit_order.pay_type,
                 bed_type=submit_order.bed_type,
@@ -208,6 +210,7 @@ class OrderModel(Base):
                 rateplan_id=self.rateplan_id,
                 rateplan_name=self.rateplan_name,
                 room_num=self.room_num,
+                room_num_record=self.room_num_record,
                 currency_type=self.currency_type,
                 pay_type=self.pay_type,
                 bed_type=self.bed_type,

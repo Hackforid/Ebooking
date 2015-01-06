@@ -53,7 +53,7 @@ def get_inventory_by_date(inventories, year, month):
     else:
         return
 
-def valid_inventory(inventories, stay_days, room_quantity, type):
+def valid_inventory(inventories, stay_days, room_quantity):
     if not inventories:
         print "no inventory"
         return False
@@ -66,7 +66,7 @@ def valid_inventory(inventories, stay_days, room_quantity, type):
         if not inventory:
             print 'day {}-{} inventory not found'.format(day.year, day.month)
             return False
-        if inventory.get_day(day.day, type) < room_quantity:
+        if inventory.get_day(day.day) < room_quantity:
             print 'room not enough'
             return False
     else:
@@ -82,32 +82,41 @@ def modify_inventory(session, order):
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
-    
-    is_inventory_auto_enough = valid_inventory(inventories, stay_days, order.room_num, 0)
-    is_inventory_manual_enough = valid_inventory(inventories, stay_days, order.room_num, 1)
 
-    if not (is_inventory_auto_enough or is_inventory_manual_enough):
+    if not valid_inventory(inventories, stay_days, order.room_num):
         print 'valid inventory fail'
         order.status = 200
         session.commit()
         return order
 
-    inventory_type = 0 if is_inventory_auto_enough else 1
-
+    room_num_record = []
+    is_auto = True
+    
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
-        inventory.add_val_by_day(day.day, inventory_type, -order.room_num)
+        num_auto, num_manual = inventory.deduct_val_by_day(day.day, order.room_num)
+        if num_manual > 0:
+            is_auto = False
+        room_num_record.append((num_auto, num_manual))
 
-    if inventory_type == 0:
+    if is_auto:
         order.status = 300
         order.confirm_type = OrderModel.CONFIRM_TYPE_AUTO
     else:
         order.status = 100
         order.confirm_type = OrderModel.CONFIRM_TYPE_MANUAL
+
+    order.room_num_record = generate_room_num_record(room_num_record)
+
     session.commit()
 
     PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
+
+def generate_room_num_record(room_num_record):
+    room_num_record_str = ','.join(['{}|{}'.format(*record) for record in room_num_record])
+    print room_num_record_str
+    return room_num_record_str
 
 def get_order(session, order_id):
     return OrderModel.get_by_id(session, order_id)
