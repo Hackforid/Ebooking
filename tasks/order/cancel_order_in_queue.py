@@ -27,14 +27,21 @@ def cancel_order_after_user_confirm(self, order_id):
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
 
-    for day in stay_days:
-        inventory = get_inventory_by_date(inventories, day.year, day.month)
-        inventory.add_val_by_day(day.day, 1, order.room_num)
+    recovery_inventory(stay_days, inventories, order)
 
     order.status = 600
     session.commit()
     PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
+
+def recovery_inventory(stay_days, inventories, order):
+    room_num_record = [record.split('|') for record in order.room_num_record.split(',')]
+    room_num_record = [(int(record[0]), int(record[1])) for record in room_num_record]
+    for i, day in enumerate(stay_days):
+        inventory = get_inventory_by_date(inventories, day.year, day.month)
+        num_auto, num_manual = room_num_record[i]
+        inventory.recovery_val_by_day(day.day, num_auto, num_manual)
+
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_before_user_confirm(self, order_id):
@@ -52,9 +59,7 @@ def cancel_order_before_user_confirm(self, order_id):
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
 
-    for day in stay_days:
-        inventory = get_inventory_by_date(inventories, day.year, day.month)
-        inventory.add_val_by_day(day.day, 1, order.room_num)
+    recovery_inventory(stay_days, inventories, order)
 
     order.status = 500
     session.commit()
@@ -77,9 +82,7 @@ def cancel_order_by_user(self, order_id, reason):
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
 
-    for day in stay_days:
-        inventory = get_inventory_by_date(inventories, day.year, day.month)
-        inventory.add_val_by_day(day.day, 1, order.room_num)
+    recovery_inventory(stay_days, inventories, order)
 
     order.status = 400
     order.extra = reason

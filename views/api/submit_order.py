@@ -24,7 +24,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 
         if task.status == 'SUCCESS':
             order = task.result
-            if order.status == 200:
+            if order.status in [200, 400, 500]:
                 raise JsonException(1, 'fail')
             else:
                 self.finish_json(result=dict(

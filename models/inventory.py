@@ -246,12 +246,19 @@ class InventoryModel(Base):
         return int("{}{:0>2d}".format(year, month))
 
 
-    def get_day(self, day, type=0):
+    def get_day(self, day, type=None):
         if day < 1 or day > 31:
             return 0
         day_key = 'day' + str(day)
         value = getattr(self, day_key)
-        return int(value.split('|')[type])
+        if type:
+            return int(value.split('|')[type])
+        else:
+            prices = value.split('|')
+            auto, manual = int(prices[0]), int(prices[1])
+            auto = auto if auto >=0 else 0
+            manual = manual if auto >= 0 else 0
+            return auto + manual
 
     def get_day_count(self, day):
         if day < 1 or day > 31:
@@ -260,6 +267,40 @@ class InventoryModel(Base):
         value = getattr(self, day_key)
         counts = value.split('|')
         return int(counts[0]), int(counts[1])
+
+    def deduct_val_by_day(self, day, val):
+        day_key = 'day' + str(day)
+        value = getattr(self, day_key)
+        count_auto, count_manual = [count if count >= 0 else 0 for count in [int(count) for count in value.split('|')]]
+
+        if count_auto + count_manual < val:
+            return -1, -1
+
+        if count_auto >= val:
+            num_auto = val
+            num_manual = 0
+            remain_auto = count_auto - num_auto
+            remain_manual = count_manual
+        else:
+            num_auto = count_auto
+            num_manual = val - num_auto
+            remain_auto = 0
+            remain_manual = count_manual - num_manual
+
+        value = "{}|{}".format(remain_auto, remain_manual)
+        setattr(self, day_key, value)
+
+        return num_auto, num_manual
+
+    def recovery_val_by_day(self, day, num_auto, num_manual):
+        day_key = 'day' + str(day)
+        value = getattr(self, day_key)
+        count_auto, count_manual = [count if count >= 0 else 0 for count in [int(count) for count in value.split('|')]]
+
+        value = "{}|{}".format(count_auto + num_auto, count_manual + num_manual)
+        setattr(self, day_key, value)
+
+        return num_auto, num_manual
 
     def add_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)

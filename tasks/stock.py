@@ -231,8 +231,6 @@ class PushInventoryTask(SqlAlchemyTask):
         days = [(day.year, day.month) for day in days]
         days = {}.fromkeys(days).keys()
 
-        print '==' * 20
-        print roomtype_id, days
         inventories = InventoryModel.get_by_roomtype_and_dates(self.session, roomtype_id, days)
         self.post_inventory(inventories)
 

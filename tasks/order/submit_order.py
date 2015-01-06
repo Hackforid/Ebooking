@@ -14,6 +14,7 @@ from models.order_history import OrderHistoryModel
 from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask
 from tasks.order.submit_order_in_queue import start_order
+from tasks.stock import PushInventoryTask
 
 from exception.celery_exception import CeleryException
 
@@ -151,8 +152,7 @@ def valid_inventory(session, order):
             print 'day', day, 'not found'
             return False
 
-        if inventory.get_day(day.day, 1) < order.room_quantity\
-                and inventory.get_day(day.day, 0) < order.room_quantity:
+        if inventory.get_day(day.day) < order.room_quantity:
             print 'room not enough in {}'.format(day)
             return False
     else:
