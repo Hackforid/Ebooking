@@ -47,7 +47,7 @@
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                                 <tr ng-repeat="book in todayBook">
-                                    <td width="13%" ng-bind='book.main_order_id'></td>
+                                    <td width="13%" ng-bind='book.id'></td>
                                         <td width="15%" ng-bind='book.hotel_name'></td>
                                         <td width="10%" ng-bind='book.room_type_name'></td>
                                         <td width="15%" ><span ng-bind="book.checkin_date+'至'"></span><br />
@@ -56,8 +56,8 @@
                                          <span ng-bind="book['create_time'][1]"></span></td>
                                         <td width="8%"> <div ng-repeat="cum in book['customer_info']" ng-bind="cum['name']"><div></td>
                                         <td width="7%" ng-bind="getConfirmType(book.confirm_type)"></td>
-                                        <td width="8%"><em class="price" ng-bind="book.everyday_price"></em></td>
-                                        <td width="5%">接受</td>
+                                        <td width="8%"><em class="price" ng-bind="book.total_price"></em></td>
+                                        <td width="5%" ng-bind="book.status"></td>
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
                                                                                                                      
@@ -100,7 +100,7 @@
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow2">
                                 <tr ng-repeat="check in todayCheckIn">
-                                    <td width="13%" ng-bind='check.main_order_id'></td>
+                                    <td width="13%" ng-bind='check.id'></td>
                                         <td width="15%" ng-bind="check.hotel_name"></td>
 
                                         <td width="10%" ng-bind='check.room_type_name'></td>
@@ -110,8 +110,8 @@
                                          <span ng-bind="check['create_time'][1]"></span></td>
                                         <td width="8%"> <div ng-repeat="cum in check['customer_info']" ng-bind="cum['name']"><div></td>
                                         <td width="7%" ng-bind='getConfirmType(check.confirm_type)'></td>
-                                        <td width="8%"><em class="price" ng-bind="check.everyday_price"></em></td>
-                                        <td width="5%">接受</td>
+                                        <td width="8%"><em class="price" ng-bind="check.total_price"></em></td>
+                                        <td width="5%" ng-bind="check.status"></td>
                                        
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>
                                 </tr>
@@ -203,7 +203,7 @@
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow3">
                                 <tr ng-repeat="query in queryList">
-                                    <td width="13%" ng-bind='query.main_order_id'></td>
+                                    <td width="13%" ng-bind='query.id'></td>
 
                                     <td width="15%" ng-bind="query.hotel_name"></td>
 
@@ -214,8 +214,8 @@
                                          <span ng-bind="query['create_time'][1]"></span></td>
                                     <td width="8%"> <div ng-repeat="cum in query['customer_info']" ng-bind="cum['name']"><div></td>
                                     <td width="7%" ng-bind='getConfirmType(query.confirm_type)'></td>
-                                    <td width="8%"><em class="price" ng-bind="query.everyday_price"></em></td>
-                                    <td width="5%">接受</td>
+                                    <td width="8%"><em class="price" ng-bind="query.total_price"></em></td>
+                                    <td width="5%" ng-bind="query.status"></td>
                                                                                                                                                                                                       
                                         
                                     <td width="7%"><input name="" type="button" value="" class="btn-print" title="打印订单详情" /></td>

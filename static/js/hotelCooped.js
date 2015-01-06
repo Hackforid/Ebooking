@@ -2,6 +2,20 @@
 
 	var hotelCoopApp = angular.module('hotelCoopedApp', ['myApp.directives', 'ui.bootstrap']);
 
+
+	hotelCoopApp.config(['$httpProvider', function($httpProvider) {
+
+		if (!$httpProvider.defaults.headers.get) {
+			$httpProvider.defaults.headers.get = {};
+			// $httpProvider.defaults.headers.post = {};    
+
+		}
+
+		$httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	}]);
+
+
+
 	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.citys = [];
