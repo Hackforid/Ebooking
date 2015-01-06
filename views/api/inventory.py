@@ -28,7 +28,6 @@ class InventoryAPIHandler(BtwBaseHandler):
         start_date, end_date = self.valid_date(start_date, end_date)
         self.valid_args(price_type)
 
-
         change_task = yield gen.Task(Inventory.modify_inventory.apply_async,
                 args=[merchant_id, hotel_id, roomtype_id, price_type, change_num, start_date, end_date])
         inventories = change_task.result
