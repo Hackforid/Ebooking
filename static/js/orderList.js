@@ -13,6 +13,43 @@
 		$scope.paginationId = "pagebookNumber";
 
 
+		$scope.currentOrder;
+
+
+		$scope.orderPrint = function(m) {
+
+			$scope.currentOrder = m;
+
+
+			$(".header").hide();
+			$(".main-left").hide();
+			$("#tabcontent1").children("div").not($("#printwebbook")).hide();
+			$("#tabcontent1").children("table").hide();
+			$(".tabList").hide();
+			$("#notice").hide();
+			$("#printwebbook").show();
+
+			setTimeout(function() {
+				window.print();
+
+				$("#printwebbook").hide();
+				$(".header").show();
+				$(".main-left").show();
+				$("#tabcontent1").children("table").show();
+
+				if ($scope.total > 0) {
+					$("#pagebookInfo").show();
+				}
+
+				$(".tabList").show();
+				$("#notice").show();
+			}, 0);
+
+
+		}
+
+
+
 		$scope.getConfirmType = function getConfirmType(v) {
 			if (v == "2") {
 				return "手动确认";
@@ -154,6 +191,42 @@
 		$scope.directiveCtl = false;
 		$scope.finalUrl;
 		$scope.paginationId = "pagecheckNumber";
+
+
+
+		$scope.currentOrder;
+		$scope.orderPrint = function(m) {
+
+			$scope.currentOrder = m;
+
+
+			$(".header").hide();
+			$(".main-left").hide();
+			$("#tabcontent2").children("div").not($("#printwebcheck")).hide();
+			$("#tabcontent2").children("table").hide();
+			$(".tabList").hide();
+			$("#notice").hide();
+			$("#printwebcheck").show();
+
+			setTimeout(function() {
+				window.print();
+
+				$("#printwebcheck").hide();
+				$(".header").show();
+				$(".main-left").show();
+				$("#tabcontent2").children("table").show();
+
+				if ($scope.total > 0) {
+					$("#pagecheckInfo").show();
+				}
+
+				$(".tabList").show();
+				$("#notice").show();
+			}, 0);
+
+
+		}
+
 
 
 		$scope.getConfirmType = function getConfirmType(v) {
@@ -316,6 +389,42 @@
 		$scope.messageLive = "";
 		$scope.messageList = "";
 
+
+		$scope.currentOrder;
+		$scope.orderPrint = function(m) {
+
+			$scope.currentOrder = m;
+
+
+			$(".header").hide();
+			$(".main-left").hide();
+			$("#tabcontent3").children("div").not($("#printwebquery")).hide();
+			$("#tabcontent3").children("table").hide();
+			$(".tabList").hide();
+			$("#notice").hide();
+			$("#printwebquery").show();
+
+			setTimeout(function() {
+				window.print();
+
+				$("#printwebquery").hide();
+				$(".header").show();
+				$(".main-left").show();
+				$("#tabcontent3").children("table").show();
+
+				if ($scope.total > 0) {
+					$("#pagequeryInfo").show();
+				}
+
+				$(".tabList").show();
+				$("#notice").show();
+			}, 0);
+
+
+		}
+
+
+
 		$scope.getConfirmType = function getConfirmType(v) {
 			if (v == "2") {
 				return "手动确认";
@@ -352,7 +461,7 @@
 			$("#ListStarTime").val("");
 			$("#ListEndTime").val("");
 
-			$scope.finalUrl='/api/order/search/?start=0&limit='+ $scope.itemPerPage;
+			$scope.finalUrl = '/api/order/search/?start=0&limit=' + $scope.itemPerPage;
 
 			$scope.searchResult();
 		}
