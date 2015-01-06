@@ -21,37 +21,37 @@ class InventoryModel(Base):
     base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
     base_roomtype_id = Column("baseRoomTypeId", INTEGER, nullable=False, default=0)
     month = Column(INTEGER, nullable=False, default=0)
-    day1 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day2 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day3 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day4 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day5 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day6 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day7 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day8 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day9 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day10 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day11 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day12 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day13 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day14 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day15 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day16 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day17 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day18 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day19 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day20 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day21 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day22 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day23 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day24 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day25 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day26 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day27 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day28 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day29 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day30 = Column(VARCHAR(50), nullable=False, default="0|0")
-    day31 = Column(VARCHAR(50), nullable=False, default="0|0")
+    day1 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day2 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day3 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day4 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day5 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day6 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day7 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day8 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day9 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day10 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day11 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day12 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day13 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day14 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day15 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day16 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day17 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day18 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day19 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day20 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day21 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day22 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day23 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day24 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day25 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day26 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day27 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day28 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day29 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day30 = Column(VARCHAR(50), nullable=False, default="-1|-1")
+    day31 = Column(VARCHAR(50), nullable=False, default="-1|-1")
     is_online = Column('isOnline', BIT, nullable=False, default=0)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
 
@@ -205,9 +205,6 @@ class InventoryModel(Base):
                 else:
                     need_complete_roomtype_ids.append(roomtype_id)
 
-
-
-
     @classmethod
     def get_months(cls, n):
         today = datetime.date.today()
@@ -224,18 +221,13 @@ class InventoryModel(Base):
 
         return dates
 
-
-
-
     @classmethod
     def update(cls, session, merchant_id, hotel_id, roomtype_id, year, month, day, price_type, val):
         inventory = cls.get_by_merchant_id_and_hotel_id_and_date(session, merchant_id, hotel_id, roomtype_id, year, month)
+        val = val if val >= 0 else 0
+        val = val if val <= 99 else 99
         if not inventory:
             return
-        _val = inventory.get_day(day, price_type)
-        if _val + val < 0:
-            return
-
         inventory.set_val_by_day(day, price_type, val)
         session.commit()
 
@@ -305,18 +297,25 @@ class InventoryModel(Base):
     def add_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)
         value = getattr(self, day_key)
-        price_reserved, price_manual = value.split('|')
+        count_auto, count_manual = [int(count) for count in value.split('|')]
         if price_type == 0:
-            price_reserved = int(price_reserved) + val
-            price_reserved = price_reserved if price_reserved >= 0 else 0
-            price_reserved = price_reserved if price_reserved <= 99 else 99
+            remain_manual = count_manual
+            remain_auto = count_auto if count_auto >= 0 else 0
+            remain_auto = remain_auto + val
+            remain_auto = self.fix_inventory_count_range(remain_auto)
         else:
-            price_manual = int(price_manual) + val
-            price_manual = price_manual if price_manual >= 0 else 0
-            price_manual = price_manual if price_manual <= 99 else 99
+            remain_auto = count_auto
+            remain_manual = count_manual if count_manual >= 0 else 0
+            remain_manual = remain_manual + val
+            remain_manual = self.fix_inventory_count_range(remain_manual)
 
-        value = "{}|{}".format(price_reserved, price_manual)
+        value = "{}|{}".format(remain_auto, remain_manual)
         setattr(self, day_key, value)
+
+    def fix_inventory_count_range(self, count):
+        count = count if count >= 0 else 0
+        count = count if count <= 99 else 0
+        return count
 
     def set_val_by_day(self, day, price_type, val):
         day_key = 'day' + str(day)
