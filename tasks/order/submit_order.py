@@ -14,6 +14,7 @@ from models.order_history import OrderHistoryModel
 from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask
 from tasks.order.submit_order_in_queue import start_order
+from tasks.stock import PushInventoryTask
 
 from exception.celery_exception import CeleryException
 

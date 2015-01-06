@@ -7,6 +7,7 @@ import requests
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from tasks.order import cancel_order_in_queue as Cancel
+from tasks.stock import PushInventoryTask
 
 from models.order import OrderModel
 from models.order_history import OrderHistoryModel
@@ -29,6 +30,8 @@ def cancel_order_by_server(self, order_id):
         _order = cancel_after_user_confirm(session, order.id)
     else:
         raise CeleryException(1000, 'illegal status')
+
+    PushInventoryTask().push_inventory.delay(_order.roomtype_id)
 
     if _order.status != pre_status:
         OrderHistoryModel.set_order_status_by_server(session, _order, pre_status, _order.status)
@@ -56,6 +59,7 @@ def cancel_order_by_user(self, user, order_id, reason):
     if task.status == 'SUCCESS':
         if result.status != pre_status:
             OrderHistoryModel.set_order_status_by_user(session, user, result, pre_status, result.status)
+        PushInventoryTask().push_inventory.delay(order.roomtype_id)
         return result
     else:
         if isinstance(result, Exception):

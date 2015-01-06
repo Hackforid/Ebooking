@@ -7,6 +7,7 @@ from tasks.base_task import SqlAlchemyTask
 from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
+from tasks.stock import PushInventoryTask
 from models.order import OrderModel
 from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
@@ -105,6 +106,7 @@ def modify_inventory(session, order):
         order.confirm_type = OrderModel.CONFIRM_TYPE_MANUAL
     session.commit()
 
+    PushInventoryTask().push_inventory.delay(order.roomtype_id)
     return order
 
 def get_order(session, order_id):
