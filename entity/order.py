@@ -41,7 +41,7 @@ class SubmitOrder(object):
        self.chain_roomtype_id = o.get('chainRoomTypeId', 0)
        self.chain_rateplan_id = o.get('chainRatePlanId', 0)
        self.chain_order_id = o.get('chainOrderId', 0)
-       self.chain_total_price = o.get('chainTotalPrice', 0)
+       self.base_total_price = o.get('baseTotalPrice', 0)
        self.confirmation_no = o.get('confirmationNo', 0)
        self.guarantee_info = o.get('guaranteeInfo', '')
        self.status = 0
