@@ -134,7 +134,7 @@ class OrderModel(Base):
                 breakfast=submit_order.breakfast,
                 guarantee_info=submit_order.guarantee_info,
                 status=0,
-                total_price=submit_order.chain_total_price,
+                total_price=submit_order.base_total_price,
                 everyday_price=submit_order.base_price,
                 extra=submit_order.extra
                 )
