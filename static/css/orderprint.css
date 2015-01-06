@@ -1,0 +1,31 @@
+.print-web { top:50px;left:10px;position:absolute;font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif; margin:0;padding:0;display: none;}
+.fl { float:left}
+.fr { float:right}
+.print-web {width:1000px;margin:0 auto; font-size:14px;color:#000; text-align:left; line-height:160%;}
+.print-web table td {padding:20px 0;}
+.print-web span {float:left;padding:3px 5px 3px 0;width:94px;}
+.print-web span b { font-size:12px; font-weight:normal;}
+.print-web u { float:left;width:240px; border-bottom:1px dotted #999;font-style:normal; text-decoration:none;}
+.print-web u.xian {min-height:26px;}
+.print-web u.xian2 { min-height:34px;padding-top:10px; }
+
+.pt {  font-size:15px;padding:10px 5px;min-height:22px; overflow:auto;}
+.pt .fl {width:50%; font-weight:bold;}
+.pt .fr {width:40%; text-align:right;}
+	
+	
+.pm { border:2px solid #333;padding:50px 25px; }
+.pm .title { position:relative;height:90px; text-align:center;border-bottom:2px dashed #000;margin-bottom:15px;padding-bottom:15px;}
+.pm .title strong { font-size:26px; line-height:40px;}
+.pm .zd1 { position:absolute;right:0;top:5px;width:30%; text-align:right;}
+.pm .zd1 u.xian { width:210px;  }
+.pm .zd2 { font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif!important;font-size: 20px;font-weight:bold;border-top:1px dashed #000;height:100px;padding-top:65px;margin-top:20px;padding-bottom:10px;}
+
+.pm .zd2 span{width:100px;}
+.pm .zd3 { border-top:2px dashed #000;padding:65px 0 20px 0 ;font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif!important;font-size: 20px;font-weight:bold;}
+
+
+.pm .zd3 span{width:100px;}
+.pb { padding:10px 0; font-size:15px}
+
+.pmtable td span {font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif!important;font-size: 20px;width:100px;font-weight:bold;}

@@ -24,6 +24,32 @@
 
 
 
+		$scope.orderPrint = function(m) {
+
+			$scope.currentOrder = m;
+
+
+			$(".header").hide();
+			$(".main-left").hide();
+			$("#ng-app").children("div").not($("#printweb")).hide();
+			$("#printweb").show();
+
+			setTimeout(function() {
+				window.print();
+
+				$("#printweb").hide();
+				$(".header").show();
+				$(".main-left").show();
+
+				$(".main").show();
+				$("#notice").show();
+			}, 0);
+
+
+		}
+
+
+
 		$scope.orderDetail = function(m) {
 
 			$scope.currentOrder = $scope.orderList[m];
@@ -229,6 +255,8 @@
 							$scope.orderList[i]["customer_info"] = tempobj;
 
 							$scope.orderList[i]["everyday_price"] = ($scope.orderList[i]["everyday_price"]) / 100;
+
+							$scope.orderList[i]["total_price"] = ($scope.orderList[i]["total_price"]) / 100;
 
 							var temptime = $scope.orderList[i]["create_time"].split(" ");
 							$scope.orderList[i]["create_time"] = temptime;

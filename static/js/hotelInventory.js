@@ -81,7 +81,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -115,7 +115,7 @@
 
 			$("#openDiv1").fadeOut(500);
 			this.errmsg = ' ';
-			$("#roomNumCount").val("");
+			scope.num = "";
 		}
 
 
@@ -166,6 +166,15 @@
 				return 0;
 			}
 
+
+
+			this.errmsg = ' ';
+
+		}
+
+
+		this.roomNumCheck = function() {
+
 			var testStr = /^[0-9]*[1-9][0-9]*$/;
 			var roomNumCount = $.trim($("#roomNumCount").val());
 
@@ -179,8 +188,9 @@
 			}
 
 			this.errmsg = ' ';
-
 		}
+
+
 
 		this.addSave = function() {
 			var timeStart = $("#timeStart").val();
@@ -188,6 +198,10 @@
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomId + '/inventory/';
 
 			if (this.dateCheck(timeStart, timeEnd) == 0) {
+				return;
+			}
+
+			if (this.roomNumCheck() == 0) {
 				return;
 			}
 
@@ -202,7 +216,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -212,6 +226,8 @@
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+
+						scope.num = "";
 
 					} else {
 						this.errmsg = resp.errmsg;
@@ -234,6 +250,10 @@
 				return;
 			}
 
+			if (this.roomNumCheck() == 0) {
+				return;
+			}
+
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
@@ -245,7 +265,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -255,6 +275,8 @@
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+
+						scope.num = "";
 
 					} else {
 						this.errmsg = resp.errmsg;
@@ -283,7 +305,7 @@
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
-				"change_num": -parseInt(tempNum),
+				"change_num": 0,
 				"price_type": parseInt(scope.currentPriceType)
 
 			}
@@ -291,7 +313,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -301,6 +323,8 @@
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+
+						scope.num = "";
 
 					} else {
 						this.errmsg = resp.errmsg;
@@ -343,8 +367,123 @@
 		$scope.currentId;
 
 
-		$scope.roomDescribeInfo;
+		$scope.roomDescribeInfo = {};
 		$scope.roomBedType = ['单床', '大床', '双床', '三床', '三床-1大2单', '榻榻米', '拼床', '水床', '榻榻米双床', '榻榻米单床', '圆床', '上下铺', '大床或双床'];
+
+
+
+		$scope.allFacilityNum = {
+			"36": "大床",
+			"37": "双床",
+			"38": "单人床",
+			"39": "特殊床型",
+			"40": "其他",
+			"41": "大床1.8米",
+			"42": "大床1.5米",
+			"43": "大床2米",
+			"44": "其他",
+			"45": "双床1.2米",
+			"46": "双床1.1米",
+			"47": "双床1.3米",
+			"48": "双床1.35米",
+			"49": "其他",
+			"50": "单人床1.2米",
+			"51": "单人床1.1米",
+			"52": "单人床1.3米",
+			"53": "单人床1.35米",
+			"54": "其他",
+			"55": "三张床",
+			"56": "圆床",
+			"57": "水床",
+			"58": "上下铺",
+			"59": "榻榻米",
+			"62": "不能上网",
+			"63": "全部房间上网",
+			"64": "部分房间上网",
+			"65": "免费无线",
+			"66": "收费无线",
+			"67": "免费有线",
+			"68": "收费有线",
+			"69": "免费无线",
+			"70": "收费无线",
+			"71": "免费有线",
+			"72": "收费有线",
+			"74": "电话",
+			"76": "国内长途电话",
+			"77": "国际长途电话",
+			"78": "一次性洗漱用品",
+			"79": "不提供一次性洗漱用品",
+			"80": "免费提供一次性洗漱用品",
+			"81": "收费提供一次性洗漱用品",
+			"82": "电热水壶",
+			"84": "无窗",
+			"108": "浴缸",
+			"109": "拖鞋",
+			"110": "电视",
+			"111": "独立写字台",
+			"112": "吹风机",
+			"113": "多种规格电源插座",
+			"114": "110V电压插座",
+			"115": "浴室放大化妆镜",
+			"116": "保险箱",
+			"117": "小冰箱",
+			"118": "迷你酒吧",
+			"119": "免费瓶装水",
+			"120": "浴衣",
+			"121": "电子磁卡门锁",
+			"122": "座椅",
+			"123": "雨伞",
+			"124": "针线包",
+			"125": "熨斗/熨衣板",
+			"126": "多功能充电器",
+			"127": "办公文具",
+			"128": "无烟房",
+			"129": "可做无烟处理",
+			"130": "220V电压插座",
+			"131": "沙发",
+			"132": "咖啡机/茶具",
+			"133": "厨房",
+			"134": "电子称",
+			"135": "阳台",
+			"136": "电子闹钟",
+			"137": "洗衣机/烘干机",
+			"138": "音响设备/收音机",
+			"139": "播放机",
+			"140": "房间免费报纸",
+			"141": "微波沪",
+			"142": "电子遥控窗帘",
+			"143": "电热水器",
+			"144": "卫星频道",
+			"145": "传真机",
+			"146": "餐具",
+			"147": "提供直饮水",
+			"148": "卫生间",
+			"149": "室内卫生间",
+			"150": "公共卫生间",
+			"151": "电脑",
+			"152": "全部房间收费电脑",
+			"153": "全部房间免费电脑",
+			"154": "部分房间免费电脑",
+			"155": "洗浴间",
+			"156": "室内洗浴间",
+			"157": "公共洗浴间",
+			"248": "淋浴",
+			"249": "麻将桌",
+			"266": "大/双床",
+			"267": "大/双床",
+			"677": "有窗"
+		};
+
+
+
+		$scope.filterNum = function(n) {
+			if (n > 0) {
+				var numResult;
+				numResult = "(" + n + ")";
+				return numResult;
+			}
+		}
+
 
 
 		$scope.nameTest = function(e) {
@@ -354,20 +493,63 @@
 
 
 		$scope.roomDescribe = function roomDescribe(index) {
-			//console.log(index);
-			//console.log($scope.cooped[index]);
 
 			$scope.roomDescribeInfo = $scope.cooped[index];
 
 			var bedTypeIndex = $scope.roomDescribeInfo['bed_type'];
 			$scope.roomDescribeInfo['bed_type'] = $scope.roomBedType[bedTypeIndex];
-			//console.log($scope.roomDescribeInfo);
+
+
+			if (typeof $scope.roomDescribeInfo['facility'] === 'string') {
+				var facilityNumber = [];
+				facilityNumber = $scope.roomDescribeInfo['facility'].split(",");
+				var facilitys = [];
+
+				for (var i = 0; i < facilityNumber.length; i++) {
+					facilitys.push($scope.allFacilityNum[facilityNumber[i]]);
+
+				};
+
+				$scope.roomDescribeInfo['facility'] = facilitys;
+			}
 
 			$("#cool-roomtype").show();
 
 
 
 		}
+
+
+
+		$scope.willroomDescribe = function roomDescribe(index) {
+
+
+			$scope.roomDescribeInfo = $scope.willCoop[index];
+
+			var bedTypeIndex = $scope.roomDescribeInfo['bed_type'];
+			$scope.roomDescribeInfo['bed_type'] = $scope.roomBedType[bedTypeIndex];
+
+
+			if (typeof $scope.roomDescribeInfo['facility'] === 'string') {
+				var facilityNumber = [];
+				facilityNumber = $scope.roomDescribeInfo['facility'].split(",");
+				var facilitys = [];
+
+				for (var i = 0; i < facilityNumber.length; i++) {
+					facilitys.push($scope.allFacilityNum[facilityNumber[i]]);
+
+				};
+
+				$scope.roomDescribeInfo['facility'] = facilitys;
+			}
+
+
+			$("#cool-roomtype").show();
+
+
+		}
+
+
 
 		$scope.roomDescribeClose = function roomDescribeClose() {
 			//$scope.desResult = false;
@@ -456,7 +638,7 @@
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);
@@ -496,7 +678,7 @@
 			//console.log(url);
 			$http.get(url)
 				.success(function(resp) {
-					//console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;
@@ -663,7 +845,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -705,7 +887,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[0] == "-1") {
 							classStyle = "action1";
-							temp[0] == "--";
+							temp[0] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -720,7 +902,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -752,7 +934,7 @@
 							classStyle = "action1 man-close"
 						} else if (temp[0] == "-1") {
 							classStyle = "action1";
-							temp[0] == "--";
+							temp[0] = "--";
 						} else {
 							classStyle = "action1"
 						};
@@ -767,7 +949,7 @@
 							classStyle = "action1 man-close";
 						} else if (temp[1] == "-1") {
 							classStyle = "action1";
-							temp[1] == "--";
+							temp[1] = "--";
 						} else {
 							classStyle = "action1";
 						};
