@@ -311,6 +311,14 @@
 
 		$scope.urlCheck = function urlCheck(a) {
 
+			/*if ($scope.flag == "0" && $.trim($scope.searchName) == "" && $.trim($scope.searchStar) == "" && $.trim($scope.searchStatus) == "") {
+		
+				$scope.finalUrl = '/api/hotel/cooped/?start=0&limit=' + $scope.itemPerPage;
+				$scope.searchResult();
+				
+				return;
+			}*/
+
 			$scope.currentPage = a;
 			$scope.searchCity = $("#searchCity").val();
 			//console.log("这里是urlCheck url变化的地方");
@@ -329,7 +337,9 @@
 				if (cityId == false) {
 					$("#pageInfo").hide();
 					$scope.hotels = [];
-					return;
+
+					cityId="10000";
+					//return;
 				}
 
 

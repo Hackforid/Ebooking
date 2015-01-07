@@ -16,6 +16,26 @@
 		$scope.currentOrder;
 
 
+
+		$scope.orderDetail = function(m) {
+
+			$scope.currentOrder = m;
+
+			$("#bookhotel-detail").show();
+
+		}
+
+
+		$scope.closeDetail = function() {
+			$("#bookhotel-detail").hide();
+
+		}
+
+
+
+
+
+
 		$scope.orderPrint = function(m) {
 
 			$scope.currentOrder = m;
@@ -129,7 +149,7 @@
 								var temp = $scope.todayBook[i]["customer_info"];
 								var tempobj = eval(temp);
 								$scope.todayBook[i]["customer_info"] = tempobj;
-								$scope.todayBook[i]["everyday_price"] = ($scope.todayBook[i]["everyday_price"]) / 100;
+								//$scope.todayBook[i]["everyday_price"] = ($scope.todayBook[i]["everyday_price"]) / 100;
 								var temptime = $scope.todayBook[i]["create_time"].split(" ");
 								$scope.todayBook[i]["create_time"] = temptime;
 
@@ -195,6 +215,26 @@
 
 
 		$scope.currentOrder;
+
+
+		$scope.orderDetail = function(m) {
+
+			$scope.currentOrder = m;
+
+			$("#checkhotel-detail").show();
+
+		}
+
+
+		$scope.closeDetail = function() {
+			$("#checkhotel-detail").hide();
+
+		}
+
+
+
+
+
 		$scope.orderPrint = function(m) {
 
 			$scope.currentOrder = m;
@@ -318,7 +358,7 @@
 								var temp = $scope.todayCheckIn[i]["customer_info"];
 								var tempobj = eval(temp);
 								$scope.todayCheckIn[i]["customer_info"] = tempobj;
-								$scope.todayCheckIn[i]["everyday_price"] = ($scope.todayCheckIn[i]["everyday_price"]) / 100;
+								//$scope.todayCheckIn[i]["everyday_price"] = ($scope.todayCheckIn[i]["everyday_price"]) / 100;
 								var temptime = $scope.todayCheckIn[i]["create_time"].split(" ");
 								$scope.todayCheckIn[i]["create_time"] = temptime;
 
@@ -391,6 +431,33 @@
 
 
 		$scope.currentOrder;
+
+
+
+$scope.orderDetail = function(m) {
+
+	console.log(m);
+
+			$scope.currentOrder = m;
+
+			$("#queryhotel-detail").show();
+			
+
+		}
+
+
+		$scope.closeDetail = function() {
+			$("#queryhotel-detail").hide();
+
+		}
+
+
+
+
+
+
+
+
 		$scope.orderPrint = function(m) {
 
 			$scope.currentOrder = m;
@@ -577,7 +644,7 @@
 								var temp = $scope.queryList[i]["customer_info"];
 								var tempobj = eval(temp);
 								$scope.queryList[i]["customer_info"] = tempobj;
-								$scope.queryList[i]["everyday_price"] = ($scope.queryList[i]["everyday_price"]) / 100;
+								//$scope.queryList[i]["everyday_price"] = ($scope.queryList[i]["everyday_price"]) / 100;
 								var temptime = $scope.queryList[i]["create_time"].split(" ");
 								$scope.queryList[i]["create_time"] = temptime;
 
