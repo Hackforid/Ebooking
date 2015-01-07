@@ -102,6 +102,7 @@ class PushRatePlanTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_rateplan(self, rateplan_id, with_cancel_rule=True, with_roomrate=True):
+        print "<< push rateplan {}>>".format(rateplan_id)
         from models.rate_plan import RatePlanModel
         from models.room_rate import RoomRateModel
 
@@ -137,11 +138,11 @@ class PushRatePlanTask(SqlAlchemyTask):
         rateplan_data = self.generate_cancel_rule_data(rateplan)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
-        print data
+        print "<<push rateplan {}>> data:{}".format(rateplan.id, data)
 
         url = API['STOCK'] + '/stock/update_cancel_rule'
         r = requests.post(url, data)
-        print r.text
+        print "<<push rateplan {}>> response:{}".format(rateplan.id, r.text)
 
     def post_roomrate(self, rateplan, roomrate):
         roomrate_data = self.generate_roomrate_data(rateplan, roomrate)
@@ -188,7 +189,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         rule = {}
         rule['cancel_days'] = rateplan.cancel_days
         rule['cancel_time'] = 0
-        rule['cancel_type'] = rateplan.cancel_type
+        rule['cancel_type'] = 2 # 罚款取消
         rule['punish_type'] = rateplan.punish_type
         rule['punish_value'] = rateplan.punish_value
         rule['start_date'] = rateplan.start_date
