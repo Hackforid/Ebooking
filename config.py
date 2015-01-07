@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 Config = {
-    'db': 'mysql+mysqlconnector://btw:btw@10.171.249.95:3306/devine_ebooking?charset=utf8',
     'mysql-connector': 'mysql+mysqlconnector://btw:btw@10.171.249.95:3306/devine_ebooking?charset=utf8',
 }
 

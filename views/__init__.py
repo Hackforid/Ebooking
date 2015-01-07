@@ -6,12 +6,6 @@ from mako import exceptions
 
 class BaseHandler(RequestHandler):
 
-    def initialize(self):
-        self.db = self.application.DB_Session()
-
-    def on_finish(self):
-        self.db.close()
-
     def render(self, template_name, **kwargs):
         lookup = self.application.template_lookup
 
