@@ -29,7 +29,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             else:
                 self.finish_json(result=dict(
                     order_id=order.id,
-                    wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO else 1,
+                    wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO or order.status == 300 else 1,
                     ))
         else:
             if isinstance(task.result, CeleryException):

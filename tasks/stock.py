@@ -274,8 +274,7 @@ class PushInventoryTask(SqlAlchemyTask):
             month = int("{}{:0>2d}".format(day.year, day.month))
             for inventory in inventories:
                 if inventory.month == month:
-                    auto, manual = inventory.get_day_count(day.day)
-                    manual_confirm_count.append(str(auto + manual))
+                    manual_confirm_count.append(str(inventory.get_day(day.day)))
                     break
             day = day + datetime.timedelta(days=1)
 
