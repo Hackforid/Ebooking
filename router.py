@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from views.login import LoginHandler, LogoutHandler
+from views.login import LoginHandler, LogoutHandler, HelloWorldHandler
 from views.user import UserManageHandler
 from views.hotel_will_coop import HotelWillCoopHandler
 from views.hotel_cooped import HotelCoopedHandler
@@ -67,4 +67,6 @@ handlers = [
         (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
         (r"/api/order/search/?", OrderSearchAPIHandler),
         ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
+
+        ("/api/test/helloworld", HelloWorldHandler),
 ]
