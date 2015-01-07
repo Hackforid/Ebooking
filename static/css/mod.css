@@ -104,7 +104,7 @@
 .messageDiv .hotel-detail .con  {font-size:12px; }
 .messageDiv .hotel-detail table td {  }
 .messageDiv .hotel-detail label  { clear:both;  display:block;  line-height:190%;padding-bottom:7px;}
-.messageDiv .hotel-detail .cm1 { height:65px;padding-top:15px;width:96%;margin:0 auto;margin-bottom:15px;border-bottom:1px solid #eee; }
+.messageDiv .hotel-detail .cm1 { height:65px;/* padding-top:15px; */width:96%;margin:0 auto;margin-bottom:15px;border-bottom:1px solid #eee; }
 .messageDiv .hotel-detail .cm1 label {padding-bottom:4px;}
 .messageDiv .hotel-detail .cm2 {height:260px;width:96%;margin:0 auto; overflow:auto; } 
 .messageDiv .hotel-detail .a-orange {margin:0 4px;}
