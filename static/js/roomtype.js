@@ -243,6 +243,7 @@
 						$("#openDiv1").fadeOut(500);
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
 						scope.dateCheck(scope.monthvalue);
+						$("#lowprice").val("");
 
 					} else {
 						this.errmsg = resp.errmsg;
