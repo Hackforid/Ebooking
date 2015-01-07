@@ -174,7 +174,7 @@
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
-						//console.log(resp);
+						console.log(resp);
 						$scope.hotels = resp.result.hotels;
 
 						$scope.itemPerPage = resp.result.limit;
