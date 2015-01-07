@@ -64,6 +64,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
                 if base['id'] == cooped.base_hotel_id:
                     base['base_hotel_id'] = base['id']
                     base['id'] = cooped.id
+                    base['is_online'] = cooped.is_online
                     break
 
     @gen.coroutine
