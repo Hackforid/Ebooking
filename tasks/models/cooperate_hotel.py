@@ -14,8 +14,8 @@ def get_by_id(task_self, id):
     return CooperateHotelModel.get_by_id(task_self.session, id)
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def get_by_merchant_id(task_self, merchant_id):
-    return CooperateHotelModel.get_by_merchant_id(task_self.session, merchant_id)
+def get_by_merchant_id(task_self, merchant_id, is_online=None):
+    return CooperateHotelModel.get_by_merchant_id(task_self.session, merchant_id, is_online)
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def new_hotel_cooprate(self, merchant_id, hotel_id):
