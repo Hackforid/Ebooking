@@ -28,7 +28,9 @@ def confirm_order_by_user(self, user, order_id):
     pre_status = order.status
     if order.merchant_id != user.merchant_id:
         raise CeleryException(100, 'merchant not valid')
-    if order.status != 100:
+    if order.status in [100, 300]:
+        return order
+    elif order.status != 100:
         raise CeleryException(200, 'illegal status')
 
     if callback_order_server(order_id):

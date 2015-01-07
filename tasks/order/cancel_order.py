@@ -28,6 +28,8 @@ def cancel_order_by_server(self, order_id):
         raise CeleryException(1000, 'illegal status')
     elif order.status == 300:
         _order = cancel_after_user_confirm(session, order.id)
+    elif order.status in [400, 500, 600]:
+        return order
     else:
         raise CeleryException(1000, 'illegal status')
 
