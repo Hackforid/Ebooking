@@ -47,6 +47,9 @@ class OrderModel(Base):
     create_time = Column("createTime", TIMESTAMP)
     update_time = Column("updateTime", TIMESTAMP)
     confirm_type = Column("confirmType", TINYINT(1), nullable=False, default=0)
+    cancel_type = Column("cancelType", TINYINT(4, unsigned=True), nullable=False, default=1)
+    punish_type = Column("punishType", TINYINT(4, unsigned=True), nullable=False, default=0)
+    punish_value = Column("punishValue", INTEGER(unsigned=True), nullable=False, default=0)
 
     CONFIRM_TYPE_INIT = 0
     CONFIRM_TYPE_AUTO = 1
@@ -136,7 +139,10 @@ class OrderModel(Base):
                 status=0,
                 total_price=submit_order.base_total_price,
                 everyday_price=submit_order.base_price,
-                extra=submit_order.extra
+                extra=submit_order.extra,
+                punish_type=submit_order.punish_type,
+                punish_value=submit_order.punish_value,
+                cancel_type=submit_order.cancel_type
                 )
         session.add(order)
         session.commit()
@@ -231,4 +237,7 @@ class OrderModel(Base):
                 extra=self.extra,
                 create_time=self.create_time,
                 confirm_type=self.confirm_type,
+                cancel_type=self.cancel_type,
+                punish_type=self.punish_type,
+                punish_value=self.punish_value,
                 )
