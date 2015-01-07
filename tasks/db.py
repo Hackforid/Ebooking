@@ -8,6 +8,8 @@ from config import Config
 
 engine = create_engine(
             Config['mysql-connector'], encoding='utf-8', echo=True,
-            pool_recycle=3600, pool_size=50)
+            pool_recycle=3600, pool_size=50,
+#            strategy='threadlocal'
+            )
 
-Session = sessionmaker(bind=engine, expire_on_commit=False)
+Session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False))
