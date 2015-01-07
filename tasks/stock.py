@@ -12,12 +12,13 @@ from tasks.base_task import SqlAlchemyTask
 
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
-from config import CHAIN_ID, API
+from config import CHAIN_ID, API, IS_PUSH_TO_STOCK
 
 class PushHotelTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_hotel(self, hotel_id):
+        print "<<push hotel {}>> start".format(hotel_id) 
         from models.cooperate_hotel import CooperateHotelModel
         from models.cooperate_roomtype import CooperateRoomTypeModel
 
@@ -35,13 +36,15 @@ class PushHotelTask(SqlAlchemyTask):
         self.post_hotel(hotel_data)
 
     def post_hotel(self, hotel_data):
+        if not IS_PUSH_TO_STOCK:
+            return
         track_id = self.generate_track_id(hotel_data['id'])
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        print params
+        print u"<<push hotel {}>> push data {}".format(hotel_data['id'], params)
         url = API['STOCK'] + '/stock/update_hotel'
         r = requests.post(url, data=params)
-        print r.text
+        print "<<push hotel {}>> response {}".format(hotel_data['id'], r.text)
 
     def generate_track_id(self, hotel_id):
         return "{}|{}".format(hotel_id, time.time())
@@ -101,6 +104,7 @@ class PushRatePlanTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_rateplan(self, rateplan_id, with_cancel_rule=True, with_roomrate=True):
+        print "<< push rateplan {}>>".format(rateplan_id)
         from models.rate_plan import RatePlanModel
         from models.room_rate import RoomRateModel
 
@@ -120,6 +124,8 @@ class PushRatePlanTask(SqlAlchemyTask):
 
 
     def post_rateplan(self, rateplan, roomrate):
+        if not IS_PUSH_TO_STOCK:
+            return
         rateplan_data = self.generate_rateplan_date(rateplan, roomrate)
 
         track_id = self.generate_track_id(rateplan_data['rate_plan_id'])
@@ -133,16 +139,20 @@ class PushRatePlanTask(SqlAlchemyTask):
         print r.text
 
     def post_cancel_rule(self, rateplan):
+        if not IS_PUSH_TO_STOCK:
+            return
         rateplan_data = self.generate_cancel_rule_data(rateplan)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
-        print data
+        print "<<push rateplan {}>> data:{}".format(rateplan.id, data)
 
         url = API['STOCK'] + '/stock/update_cancel_rule'
         r = requests.post(url, data)
-        print r.text
+        print "<<push rateplan {}>> response:{}".format(rateplan.id, r.text)
 
     def post_roomrate(self, rateplan, roomrate):
+        if not IS_PUSH_TO_STOCK:
+            return
         roomrate_data = self.generate_roomrate_data(rateplan, roomrate)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
@@ -187,7 +197,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         rule = {}
         rule['cancel_days'] = rateplan.cancel_days
         rule['cancel_time'] = 0
-        rule['cancel_type'] = rateplan.cancel_type
+        rule['cancel_type'] = 2 # 罚款取消
         rule['punish_type'] = rateplan.punish_type
         rule['punish_value'] = rateplan.punish_value
         rule['start_date'] = rateplan.start_date
@@ -235,6 +245,8 @@ class PushInventoryTask(SqlAlchemyTask):
         self.post_inventory(inventories)
 
     def post_inventory(self, inventories):
+        if not IS_PUSH_TO_STOCK:
+            return
         if not inventories:
             print 'no inventoris'
             return
