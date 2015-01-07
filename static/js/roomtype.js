@@ -343,7 +343,7 @@
 			var url = "/api/hotel/" + _hotelId + "/roomtype/?simple=1";
 			$http.get(url)
 				.success(function(resp) {
-					//console.log(resp)
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.roomtypes = resp.result.cooped_roomtypes;

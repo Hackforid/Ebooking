@@ -237,7 +237,7 @@
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					//	console.log(resp);
+						console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
 

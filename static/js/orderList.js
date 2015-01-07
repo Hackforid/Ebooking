@@ -274,7 +274,7 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					//console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayCheckIn = resp.result.orders;
 
@@ -548,7 +548,7 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					//console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.queryList = resp.result.orders;
 

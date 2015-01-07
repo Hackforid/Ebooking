@@ -232,7 +232,7 @@
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							//console.log(resp);
+							console.log(resp);
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
