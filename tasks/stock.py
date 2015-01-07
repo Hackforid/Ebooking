@@ -18,6 +18,7 @@ class PushHotelTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_hotel(self, hotel_id):
+        print "<<push hotel {}>>".format(hotel_id) 
         from models.cooperate_hotel import CooperateHotelModel
         from models.cooperate_roomtype import CooperateRoomTypeModel
 
@@ -38,10 +39,10 @@ class PushHotelTask(SqlAlchemyTask):
         track_id = self.generate_track_id(hotel_data['id'])
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        print params
+        print u"push data {}".format(params)
         url = API['STOCK'] + '/stock/update_hotel'
         r = requests.post(url, data=params)
-        print r.text
+        print "response {}".format(r.text)
 
     def generate_track_id(self, hotel_id):
         return "{}|{}".format(hotel_id, time.time())
