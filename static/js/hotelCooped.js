@@ -43,11 +43,200 @@
 
 		$scope.currentHotel;
 
+		$scope.currentHotelIndex;
+
+
+
+		$scope.hotelFacilitys = {
+			"3": "免费宽带",
+			"4": "收费宽带",
+			"5": "免费停车场",
+			"6": "收费停车场",
+			"15": "专职行李员",
+			"16": "擦鞋服务",
+			"17": "行李寄存",
+			"18": "票务服务",
+			"19": "外币兑换服务",
+			"20": "夜床服务",
+			"21": "快速入住服务",
+			"22": "免费班车接送",
+			"23": "代客泊车服务",
+			"24": "24小时前台接待服务",
+			"25": "雨伞租借服务",
+			"26": "秘书服务",
+			"27": "书吧",
+			"28": "放映厅",
+			"29": "公共音响系统",
+			"158": "棋牌室",
+			"159": "桑拿浴室",
+			"160": "健身中心",
+			"161": "美容美发室",
+			"162": "卡拉OK厅",
+			"164": "台球室",
+			"165": "SPA",
+			"166": "足浴/足疗",
+			"167": "乒乓球室",
+			"168": "按摩保健",
+			"169": "网球场",
+			"170": "夜总会",
+			"171": "休闲会所",
+			"172": "私家沙滩",
+			"173": "篮球场",
+			"174": "温泉",
+			"175": "羽毛球馆",
+			"176": "歌舞厅",
+			"177": "保龄球馆",
+			"178": "垂钓",
+			"179": "壁球室",
+			"180": "海边娱乐",
+			"181": "儿童乐园",
+			"182": "水上运动",
+			"183": "电子游戏室",
+			"184": "网吧",
+			"185": "沙弧球馆",
+			"186": "排球场",
+			"187": "桌上游戏",
+			"188": "康乐中心",
+			"189": "日光浴场",
+			"190": "射击",
+			"191": "空中花园",
+			"192": "游船游艇",
+			"193": "采摘园",
+			"194": "攀岩",
+			"195": "停车",
+			"196": "无停车场",
+			"197": "免费停车",
+			"198": "收费停车",
+			"199": "电梯",
+			"200": "无电梯",
+			"201": "有电梯",
+			"202": "公共区域上网",
+			"203": "不能上网",
+			"206": "前台保险柜",
+			"208": "会议设施",
+			"209": "自助取款机",
+			"210": "免费旅游交通图",
+			"211": "茶室",
+			"212": "商品部",
+			"213": "安全消防系统",
+			"214": "大堂吧",
+			"215": "公共区域闭路电视监控系统",
+			"216": "残障人客房",
+			"217": "咖啡厅",
+			"218": "酒吧",
+			"219": "电子结账系统",
+			"220": "大堂免费报纸",
+			"221": "无烟楼层",
+			"222": "无障碍通道",
+			"223": "行政酒廊",
+			"224": "24小时热水",
+			"225": "中餐厅",
+			"226": "西餐厅",
+			"227": "大堂提供上网电脑",
+			"228": "烧烤",
+			"229": "雪茄吧",
+			"230": "休息区",
+			"231": "轮椅",
+			"232": "公共区域空调",
+			"233": "日餐厅",
+			"234": "中西自助餐厅",
+			"235": "旋转餐厅",
+			"236": "宴会厅",
+			"237": "医疗支援",
+			"238": "邮政服务",
+			"239": "婴儿或儿童看护",
+			"240": "叫车服务",
+			"241": "房间消毒",
+			"243": "租借笔记本电脑",
+			"244": "多种语言服务人员",
+			"245": "自行车租借服务",
+			"246": "管家服务",
+			"247": "婚宴服务",
+			"251": "高尔夫"
+		};
+
+		$scope.changeStatus = function(id) {
+
+
+			var radioBox = $("[name='status']");
+			var statusRemark;
+
+
+			if ($(radioBox[0]).is(':checked')) {
+				statusRemark = 1;
+			} else if ($(radioBox[1]).is(':checked')) {
+
+				statusRemark = 0;
+
+			}
+
+			var url = "/api/hotel/cooped/" + id + "/online/" + statusRemark + "/";
+			console.log(url);
+			$http.put(url)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						//console.log($scope.hotels[index]);
+						$scope.hotels[$scope.currentHotelIndex]['is_online'] = resp.result.cooperate_hotel.is_online;
+						$("#hotel-detail").hide();
+
+					}
+				})
+				.error(function() {});
+
+
+
+		}
+
+
+
+		$scope.checkBook = function(a, b) {
+			var checkBookResult;
+			if (a == "0") {
+				checkBookResult = "不允许外国人入住";
+
+			} else {
+				checkBookResult = "允许外国人入住";
+			}
+			if (b == "0") {
+				checkBookResult = checkBookResult + "预定不需要身份证";
+			} else {
+
+				checkBookResult = checkBookResult + "预定需要身份证";
+			}
+
+			return checkBookResult;
+
+		}
+
+
 
 		$scope.hotelDetail = function(m) {
 
+			$scope.currentHotelIndex = m;
+
 			$scope.currentHotel = $scope.hotels[m];
-			//console.log($scope.currentHotel);
+			console.log($scope.currentHotel);
+
+			if (typeof $scope.currentHotel['facilities'] === 'string') {
+
+				var facilityNumber = [];
+
+				facilityNumber = $scope.currentHotel['facilities'].split(",");
+				var facilitys = [];
+
+				for (var i = 0; i < facilityNumber.length; i++) {
+					if ($scope.hotelFacilitys[facilityNumber[i]] != undefined) {
+						facilitys.push($scope.hotelFacilitys[facilityNumber[i]]);
+					}
+
+				};
+
+				$scope.currentHotel['facilities'] = facilitys;
+
+			}
+
+
 			$("#hotel-detail").show();
 
 		}
