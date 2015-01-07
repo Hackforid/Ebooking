@@ -243,6 +243,7 @@
 						$("#openDiv1").fadeOut(500);
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
 						scope.dateCheck(scope.monthvalue);
+						$("#lowprice").val("");
 
 					} else {
 						this.errmsg = resp.errmsg;
@@ -272,7 +273,15 @@
 		$scope.dayPriceSum = {};
 		$scope.currentindex = "";
 
-		$scope.addChangeP = function addChangeP(d, m, c) {
+		$scope.currentHotelDetail = "";
+
+		$scope.addChangeP = function addChangeP(d, m, c, n) {
+
+			console.log($scope.currentRoomType);
+			console.log(n);
+
+			$scope.currentHotelDetail = n;
+
 
 			var day = new Date();
 			var currentDay = day.getDate();
@@ -409,7 +418,7 @@
 
 			$http.get(url)
 				.success(function(resp) {
-					//console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.rateplans = resp.result.rateplans;
 						$scope.roomrates = resp.result.roomrates;
@@ -468,28 +477,121 @@
 
 			for (var i = 0; i < ($scope.roomrates.length); i++) {
 				var dayprice = [];
-				var temptwo = {};
+				var dayPriceArr = {};
 				var tempdaysum = new Date(year, month, 0).getDate();
 
+				var classstyle;
+				var classPrice;
+				var tempprice;
+				var planid;
+
+
 				dayprice = $scope.roomrates[i]["month" + month].split("|", tempdaysum);
+
 
 				if (monthvalue == 1) {
 
 					for (var a = 0; a < daynum - 1; a++) {
-						dayprice[a] = "-1"
+						classPrice = {
+							"classstyle": "stop",
+							"dayprice": "--"
+						};
+						dayPriceArr[a] = classPrice;
+
 					};
 
+
+					for (var j = daynum - 1; j < dayprice.length; j++) {
+
+						if (dayprice[j] == "-1") {
+							tempprice = "--";
+							classstyle = "action5";
+
+						} else if (dayprice[j] == "0") {
+							tempprice = dayprice[j];
+							classstyle = "action1 man-close";
+
+						} else {
+							tempprice = dayprice[j] / 100;
+							classstyle = "action5";
+
+						}
+						classPrice = {
+							"classstyle": classstyle,
+							"dayprice": tempprice
+						};
+						dayPriceArr[j] = classPrice;
+					}
+
+
+
 				} else if (monthvalue == $scope.months.length) {
-					for (var o = daynum; o < ninetysum; o++) {
-						dayprice[o] = "-1"
+
+
+					for (var o = daynum; o < dayprice.length; o++) {
+						classPrice = {
+							"classstyle": "stop",
+							"dayprice": "--"
+						};
+						dayPriceArr[o] = classPrice;
+
 					};
+
+
+					for (var j = 0; j < daynum; j++) {
+
+						if (dayprice[j] == "-1") {
+							tempprice = "--";
+							classstyle = "action5";
+
+						} else if (dayprice[j] == "0") {
+
+							tempprice = dayprice[j];
+							classstyle = "action1 man-close";
+
+
+						} else {
+							tempprice = dayprice[j] / 100;
+							classstyle = "action5";
+
+						}
+						classPrice = {
+							"classstyle": classstyle,
+							"dayprice": tempprice
+						};
+						dayPriceArr[j] = classPrice;
+					}
+
+
+				} else {
+
+					for (var j = 0; j < dayprice.length; j++) {
+
+						if (dayprice[j] == "-1") {
+							tempprice = "--";
+							classstyle = "action5";
+
+						} else if (dayprice[j] == "0") {
+							tempprice = dayprice[j];
+							classstyle = "action1 man-close";
+
+						} else {
+							tempprice = dayprice[j] / 100;
+							classstyle = "action5";
+
+						}
+						classPrice = {
+							"classstyle": classstyle,
+							"dayprice": tempprice
+						};
+						dayPriceArr[j] = classPrice;
+					}
+
 
 				}
 
-				for (var j = 0; j < dayprice.length; j++) {
-					var classstyle;
-					var temp;
-					var tempprice;
+				/*for (var j = 0; j < dayprice.length; j++) {
+					
 					if (dayprice[j] == "-1") {
 						tempprice = "--";
 						classstyle = "stop";
@@ -502,10 +604,10 @@
 						"dayprice": tempprice
 					};
 					temptwo[j] = temp;
-				}
-				var planid = $scope.roomrates[i].rate_plan_id;
+				}*/
+				planid = $scope.roomrates[i].rate_plan_id;
 
-				$scope.dayPriceSum[planid] = temptwo;
+				$scope.dayPriceSum[planid] = dayPriceArr;
 			}
 
 			daynum = new Date(year, month, 0).getDate();
