@@ -262,8 +262,8 @@ border-radius:0; background:none;}
 .main-room .form .table03 { font-family: "Microsoft YaHei";}
 .main-room .form .table03 th strong { color:#23A7F5; font-weight:normal;}
 .main-room .form .table03 th strong.today { color:#F30; font-weight:bold;}
-.main-room .form .table03 td { cursor:pointer; position:relative;top:0;left:0; line-height:36px;}
-.main-room .form .table03 td span { display:block!important;width:auto;min-width:26px;height:36px;}
+.main-room .form .table03 td { cursor:pointer; position:relative;top:0;left:0; line-height:36px; width: 31px; height:36px; }
+.main-room .form .table03 td span { display:block!important;width:auto;min-width:26px;/* height:36px; */line-height: 12px; word-break: break-all;}
 .main-room .form .table03 td div { position:absolute;top:34px;left:0; float:left; z-index:99; }
 .main-room .form .action1 { background:#B1F88F;}.main-room .form .action1:hover { } 
 .main-room .form .action2 {}
