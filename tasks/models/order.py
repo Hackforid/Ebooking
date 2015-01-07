@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from constants import QUEUE_ORDER
@@ -18,7 +20,11 @@ def get_today_book_orders(self, merchant_id, start, limit):
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_today_checkin_orders(self, merchant_id, start, limit):
+    t0 = time.time()
     orders = OrderModel.get_today_checkin_orders(self.session, merchant_id, start, limit)
+    t1 = time.time()
+    print '===' * 10
+    print 'cost' + str(t1-t0)
     return orders
 
 @app.task(base=SqlAlchemyTask, bind=True)
