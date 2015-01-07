@@ -48,4 +48,7 @@ class SubmitOrder(object):
        self.status_msg = o.get('statusMsg', '')
        self.extra = o.get('extra', '')
        self.merchant_id = 0
+       self.cancel_type = 0
+       self.punish_type = 0
+       self.punish_value = 0
 
