@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from views.base import BtwBaseHandler
+from views import BaseHandler
 from models.user import UserModel
 
 from tools.auth import auth_login
