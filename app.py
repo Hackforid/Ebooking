@@ -12,9 +12,6 @@ from tornado.options import define, options
 
 from mako.lookup import TemplateLookup
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from router import handlers
 from config import Config
 
@@ -47,12 +44,6 @@ class Application(tornado.web.Application):
                 default_filters=['decode.utf8'],
                 encoding_errors='replace',
                 )
-
-        # db
-        engine = create_engine(
-                Config['db'], encoding='utf-8', echo=True)
-        self.DB_Session = sessionmaker(bind=engine)
-
 
 def main():
     tornado.options.parse_command_line()
