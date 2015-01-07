@@ -35,3 +35,8 @@ class LogoutHandler(BtwBaseHandler):
     def get(self):
         self.clear_all_cookies()
         self.redirect("/login/")
+
+class HelloWorldHandler(BtwBaseHandler):
+
+    def get(self):
+        self.finish('hello world')
