@@ -13,3 +13,5 @@ API = {
 
 
 CHAIN_ID = 6
+
+IS_PUSH_TO_STOCK = False

@@ -12,7 +12,7 @@ from tasks.base_task import SqlAlchemyTask
 
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
-from config import CHAIN_ID, API
+from config import CHAIN_ID, API, IS_PUSH_TO_STOCK
 
 class PushHotelTask(SqlAlchemyTask):
 
@@ -36,6 +36,8 @@ class PushHotelTask(SqlAlchemyTask):
         self.post_hotel(hotel_data)
 
     def post_hotel(self, hotel_data):
+        if not IS_PUSH_TO_STOCK:
+            return
         track_id = self.generate_track_id(hotel_data['id'])
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
@@ -122,6 +124,8 @@ class PushRatePlanTask(SqlAlchemyTask):
 
 
     def post_rateplan(self, rateplan, roomrate):
+        if not IS_PUSH_TO_STOCK:
+            return
         rateplan_data = self.generate_rateplan_date(rateplan, roomrate)
 
         track_id = self.generate_track_id(rateplan_data['rate_plan_id'])
@@ -135,6 +139,8 @@ class PushRatePlanTask(SqlAlchemyTask):
         print r.text
 
     def post_cancel_rule(self, rateplan):
+        if not IS_PUSH_TO_STOCK:
+            return
         rateplan_data = self.generate_cancel_rule_data(rateplan)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
@@ -145,6 +151,8 @@ class PushRatePlanTask(SqlAlchemyTask):
         print "<<push rateplan {}>> response:{}".format(rateplan.id, r.text)
 
     def post_roomrate(self, rateplan, roomrate):
+        if not IS_PUSH_TO_STOCK:
+            return
         roomrate_data = self.generate_roomrate_data(rateplan, roomrate)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
@@ -237,6 +245,8 @@ class PushInventoryTask(SqlAlchemyTask):
         self.post_inventory(inventories)
 
     def post_inventory(self, inventories):
+        if not IS_PUSH_TO_STOCK:
+            return
         if not inventories:
             print 'no inventoris'
             return
