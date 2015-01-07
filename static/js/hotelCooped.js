@@ -341,8 +341,8 @@
 
 			}
 
-			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
-				url = url + "&status=" + $scope.searchStatus;
+			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "2") {
+				url = url + "&is_online=" + $scope.searchStatus;
 
 			}
 			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
@@ -352,7 +352,7 @@
 
 
 			$scope.finalUrl = encodeURI(url);
-			//console.log($scope.finalUrl);
+			console.log($scope.finalUrl);
 
 		}
 
