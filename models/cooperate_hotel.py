@@ -28,11 +28,13 @@ class CooperateHotelModel(Base):
             .first()
 
     @classmethod
-    def get_by_merchant_id(cls, session, merchant_id):
-        return session.query(CooperateHotelModel)\
+    def get_by_merchant_id(cls, session, merchant_id, is_online=None):
+        query = session.query(CooperateHotelModel)\
             .filter(CooperateHotelModel.merchant_id == merchant_id)\
-            .filter(CooperateHotelModel.is_delete == 0)\
-            .all()
+            .filter(CooperateHotelModel.is_delete == 0)
+        if is_online is not None:
+            query = query.filter(CooperateHotelModel.is_online == is_online)
+        return query.all()
 
     @classmethod
     def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):

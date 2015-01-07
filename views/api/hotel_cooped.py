@@ -26,8 +26,9 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         name = self.get_query_argument('name', None)
         city_id = self.get_query_argument('city_id', None)
         star = self.get_query_argument('star', None)
+        is_online = self.get_query_argument('is_online', None)
 
-        hotels, total = yield self.get_will_coop_hotels(self.current_user.merchant_id, start, limit, name, city_id, star)
+        hotels, total = yield self.get_cooped_hotels(self.current_user.merchant_id, start, limit, name, city_id, star, is_online)
         if hotels is not None and total is not None:
             self.finish_json(result=dict(
                 hotels=hotels,
@@ -39,8 +40,8 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise JsonException(500, 'query error')
 
     @gen.coroutine
-    def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, star):
-        cooped_base_hotels = yield self.get_cooped_base_hotels(merchant_id)
+    def get_cooped_hotels(self, merchant_id, start, limit, name, city_id, star, is_online):
+        cooped_base_hotels = yield self.get_cooped_base_hotels(merchant_id, is_online)
         cooped_base_hotel_ids = [hotel.base_hotel_id for hotel in cooped_base_hotels]
         if not cooped_base_hotel_ids:
             raise gen.Return(([], 0))
@@ -54,8 +55,8 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise gen.Return((None, None))
 
     @gen.coroutine
-    def get_cooped_base_hotels(self, merchant_id):
-        cooped_base_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id])
+    def get_cooped_base_hotels(self, merchant_id, is_online):
+        cooped_base_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id, is_online])
         raise gen.Return([] if not cooped_base_hotels.result else cooped_base_hotels.result)
 
     def merge_base_hotel_with_coops(self, base_hotels, cooped_hotels):
@@ -64,6 +65,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
                 if base['id'] == cooped.base_hotel_id:
                     base['base_hotel_id'] = base['id']
                     base['id'] = cooped.id
+                    base['is_online'] = cooped.is_online
                     break
 
     @gen.coroutine
