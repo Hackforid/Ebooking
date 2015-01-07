@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from gevent import monkey
-monkey.patch_all()
+#from gevent import monkey
+#monkey.patch_all()
 
 import celery
 from tasks.db import Session
@@ -14,7 +14,7 @@ class SqlAlchemyTask(celery.Task):
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print 'after_return'
-        self._session.close()
+        self._session.remove()
 
     def on_failure(self, *args, **kwargs):
         print 'on_failure'
