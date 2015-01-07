@@ -1,6 +1,21 @@
 (function() {
 
 	var orderWaitingApp = angular.module('orderWaitingApp', ['myApp.directives']);
+
+
+	orderWaitingApp.config(['$httpProvider', function($httpProvider) {
+
+		if (!$httpProvider.defaults.headers.get) {
+			$httpProvider.defaults.headers.get = {};
+			// $httpProvider.defaults.headers.post = {};    
+
+		}
+
+		$httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	}]);
+
+
+
 	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
 
 
@@ -144,8 +159,8 @@
 				})
 				.error(function() {
 
-					$scope.messageBox = 'network error';
-					$("#messageDialog").show();
+					console.log('network error');
+
 
 				})
 
@@ -181,8 +196,7 @@
 				})
 				.error(function() {
 
-					$scope.messageBox = 'network error';
-					$("#messageDialog").show();
+					console.log('network error');
 
 				})
 
@@ -237,13 +251,13 @@
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-						console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.orderList = resp.result.orders;
 
 						$scope.total = resp.result.total;
 						if ($scope.total != 0) {
-							$("#pageInfo").show();
+							$("#pageInfo").show(); $("#orderPoint").show();
 						} else {
 							$("#pageInfo").hide();
 						}
@@ -272,14 +286,15 @@
 
 					} else {
 
-						$scope.messageBox = resp.errmsg;
-						$("#messageDialog").show();
+						console.log(resp.errmsg);
+
+						//$scope.messageBox = resp.errmsg;
+						//$("#messageDialog").show();
 					}
 				})
 				.error(function() {
 
-					$scope.messageBox = 'network error';
-					$("#messageDialog").show();
+					console.log('network error');
 				})
 
 		}

@@ -338,7 +338,7 @@
 					$("#pageInfo").hide();
 					$scope.hotels = [];
 
-					cityId="10000";
+					cityId = "10000";
 					//return;
 				}
 
@@ -402,8 +402,8 @@
 				})
 				.error(function() {
 
-					$scope.messageBox = "酒店列表读取失败";
-					$("#acceptDialog").show();
+
+					console.log("酒店列表读取失败");
 
 
 				});

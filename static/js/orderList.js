@@ -1,6 +1,21 @@
 (function() {
 
 	var orderListApp = angular.module('orderListApp', ['myApp.directives']);
+
+
+	orderListApp.config(['$httpProvider', function($httpProvider) {
+
+		if (!$httpProvider.defaults.headers.get) {
+			$httpProvider.defaults.headers.get = {};
+			// $httpProvider.defaults.headers.post = {};    
+
+		}
+
+		$httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	}]);
+
+
+
 	orderListApp.controller('orderListBookCtrl', ['$scope', '$http', function($scope, $http) {
 
 		$scope.todayBook = {};
@@ -30,9 +45,6 @@
 			$("#bookhotel-detail").hide();
 
 		}
-
-
-
 
 
 
@@ -183,11 +195,11 @@
 						$scope.directiveCtl = true;
 
 					} else {
-						alert(resp.errmsg);
+						console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 
 		}
@@ -230,8 +242,6 @@
 			$("#checkhotel-detail").hide();
 
 		}
-
-
 
 
 
@@ -393,11 +403,11 @@
 
 
 					} else {
-						alert(resp.errmsg);
+						console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 
 		}
@@ -434,14 +444,14 @@
 
 
 
-$scope.orderDetail = function(m) {
+		$scope.orderDetail = function(m) {
 
-	console.log(m);
+			console.log(m);
 
 			$scope.currentOrder = m;
 
 			$("#queryhotel-detail").show();
-			
+
 
 		}
 
@@ -450,11 +460,6 @@ $scope.orderDetail = function(m) {
 			$("#queryhotel-detail").hide();
 
 		}
-
-
-
-
-
 
 
 
@@ -678,11 +683,11 @@ $scope.orderDetail = function(m) {
 						$scope.directiveCtl = true;
 
 					} else {
-						alert(resp.errmsg);
+						console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 
 		}

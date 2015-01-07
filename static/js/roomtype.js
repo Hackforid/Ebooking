@@ -2,6 +2,20 @@
 
 	var ratePlanApp = angular.module('ratePlanApp', []);
 
+
+	ratePlanApp.config(['$httpProvider', function($httpProvider) {
+
+		if (!$httpProvider.defaults.headers.get) {
+			$httpProvider.defaults.headers.get = {};
+			// $httpProvider.defaults.headers.post = {};    
+
+		}
+
+		$httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	}]);
+
+
+
 	ratePlanApp.filter('orderObjectBy', function() {
 		return function(input) {
 
@@ -76,7 +90,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 		}
 
@@ -123,7 +137,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 		};
 
@@ -250,7 +264,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 
 		}
@@ -360,11 +374,11 @@
 							$scope.currentRoomType = $scope.roomtypes[0];
 						}
 					} else {
-						alert(resp.errmsg);
+						console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 		}
 
