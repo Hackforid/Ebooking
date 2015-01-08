@@ -20,7 +20,7 @@
 
 
 		$scope.orderList = {};
-		$scope.refuseReson = "";
+		$scope.refuseReason = "";
 		$scope.currentIndex = "";
 
 
@@ -168,18 +168,32 @@
 
 		$scope.refuseOrder = function() {
 
-			if ($.trim($scope.refuseReson) == "" || $scope.refuseReson == undefined) {
-				alert("不能为空");
+			if ($.trim($scope.refuseReason) == "" || $scope.refuseReason == undefined) {
+				$scope.messageBox = "拒绝理由不能为空";
 				return;
 
 			}
+
+
+			var checkResult = $scope.refuseReason;
+
+			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+
+			if (resultLen > 100) {
+				$scope.messageBox = "拒绝理由不能超过100字符";
+				return;
+			}
+
+			$scope.messageBox = " ";
+
+
 
 			var url = "/api/order/" + $scope.orderList[$scope.currentIndex]["id"] + "/cancel/";
 
 			//console.log(url);
 
 			$http.post(url, {
-					"reason": $scope.refuseReson
+					"reason": $scope.refuseReason
 				})
 				.success(function(resp) {
 					//	console.log(resp);
@@ -257,7 +271,8 @@
 
 						$scope.total = resp.result.total;
 						if ($scope.total != 0) {
-							$("#pageInfo").show(); $("#orderPoint").show();
+							$("#pageInfo").show();
+							$("#orderPoint").show();
 						} else {
 							$("#pageInfo").hide();
 						}
