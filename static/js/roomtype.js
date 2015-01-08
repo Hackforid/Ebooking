@@ -63,16 +63,30 @@
 				return;
 			}
 
+
+			var checkResult = this.name;
+
+			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+
+			if (resultLen > 20) {
+				this.errmsg = "名称不能超过20个字符";
+				return;
+			}
+
+			
+
+
 			this.errmsg = '';
 			//console.log(this.name + this.mealType + this.punishType);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
-			//console.log(url);
+			console.log(url);
 			var params = {
 				'name': this.name,
 				'meal_num': parseInt(this.mealType),
 				'punish_type': parseInt(this.punishType)
 			};
+			console.log(params);
 
 			http.post(url, params)
 				.success(function(resp) {
