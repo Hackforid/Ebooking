@@ -311,6 +311,14 @@
 
 		$scope.urlCheck = function urlCheck(a) {
 
+			/*if ($scope.flag == "0" && $.trim($scope.searchName) == "" && $.trim($scope.searchStar) == "" && $.trim($scope.searchStatus) == "") {
+		
+				$scope.finalUrl = '/api/hotel/cooped/?start=0&limit=' + $scope.itemPerPage;
+				$scope.searchResult();
+				
+				return;
+			}*/
+
 			$scope.currentPage = a;
 			$scope.searchCity = $("#searchCity").val();
 			//console.log("这里是urlCheck url变化的地方");
@@ -329,7 +337,9 @@
 				if (cityId == false) {
 					$("#pageInfo").hide();
 					$scope.hotels = [];
-					return;
+
+					cityId = "10000";
+					//return;
 				}
 
 
@@ -341,8 +351,8 @@
 
 			}
 
-			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
-				url = url + "&status=" + $scope.searchStatus;
+			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "2") {
+				url = url + "&is_online=" + $scope.searchStatus;
 
 			}
 			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
@@ -352,7 +362,7 @@
 
 
 			$scope.finalUrl = encodeURI(url);
-			//console.log($scope.finalUrl);
+			console.log($scope.finalUrl);
 
 		}
 
@@ -392,8 +402,8 @@
 				})
 				.error(function() {
 
-					$scope.messageBox = "酒店列表读取失败";
-					$("#acceptDialog").show();
+
+					console.log("酒店列表读取失败");
 
 
 				});
