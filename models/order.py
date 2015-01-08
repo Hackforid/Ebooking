@@ -184,10 +184,8 @@ class OrderModel(Base):
     @classmethod
     def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
         import time
-        t0 = time.time()
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
-        t1 = time.time()
         query = session.query(OrderModel)\
                 .filter(OrderModel.merchant_id == merchant_id,
                         OrderModel.checkin_date >= today,
@@ -195,18 +193,12 @@ class OrderModel(Base):
                         OrderModel.status.in_([100, 300, 400, 500, 600])
                         )
         total = query.count()
-        t2 = time.time()
         if start:
             query = query.offset(start)
         if limit:
             query = query.limit(limit)
 
         all = query.all()
-        t3 = time.time()
-
-        print "===" * 20
-        print "query cost {} {} {}".format(t1-t0, t2-t1, t3-t2)
-
         return all, total
 
     def confirm_by_user(self, session):
