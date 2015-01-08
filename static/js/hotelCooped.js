@@ -155,6 +155,48 @@
 			"251": "高尔夫"
 		};
 
+
+
+		$scope.mapshow = function() {
+			//$("#hotel-detail").hide();
+			$("#mapDetail").show();
+
+			$("#mapShowDiv").append("<div id='map" + $scope.currentHotel['id'] + "' style='width:600px;height:400px'></div>");
+
+			var xShow = $scope.currentHotel['glog'];
+			var yShow = $scope.currentHotel['glat'];
+
+			var mp = new BMap.Map(('map' + $scope.currentHotel['id']));
+
+			mp.centerAndZoom(new BMap.Point(xShow, yShow), 14);
+
+			//在地图上面描点
+			var marker = new BMap.Marker(new BMap.Point(xShow, yShow)); // 创建标注
+			mp.addOverlay(marker);
+			$("#mapDetail").show();
+
+			// setTimeout(function(){$("#mapShowDiv").find("*").remove();},5000);
+
+		}
+
+
+
+		$scope.closeMapDetail = function() {
+			$("#mapDetail").hide();
+			$("#mapShowDiv").find("*").remove();
+		}
+
+
+
+		function loadJScript() {
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = "http://api.map.baidu.com/api?v=1.4";
+			document.body.appendChild(script);
+		}
+
+
+
 		$scope.changeStatus = function(id) {
 
 
