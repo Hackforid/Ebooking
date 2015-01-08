@@ -109,11 +109,14 @@
    <div class="detail">
        <div class="head"><h1>请输入拒绝理由</h1></div>       
        <div class="con">
-           <p style="width:80%;margin:10px auto;"> <textarea ng-model="refuseReson" name="" cols="" rows="" style="width:100%"></textarea></p>
+           <p style="width:80%;margin:10px auto;"> <textarea ng-model="refuseReason" name="" cols="" rows="" style="width:100%"></textarea></p>
+         
+            <p style="color:red;margin-left:36px" ng-bind="messageBox"></p>
           <p class="action" style=" text-align:center">
           <input name="确定" type="button" value="确定" ng-click="refuseOrder();" />
           <input name="取消" type="button" value="取消" ng-click=refuseHide(); class="btn-bai" />
           </p>
+         
        </div>
    </div> 
 </div>   
