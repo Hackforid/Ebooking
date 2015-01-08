@@ -2,6 +2,20 @@
 
 	var hotelInventoryApp = angular.module('hotelInventoryApp', []);
 
+
+	hotelInventoryApp.config(['$httpProvider', function($httpProvider) {
+
+		if (!$httpProvider.defaults.headers.get) {
+			$httpProvider.defaults.headers.get = {};
+			// $httpProvider.defaults.headers.post = {};    
+
+		}
+
+		$httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	}]);
+
+
+
 	hotelInventoryApp.filter('orderObjectBy', function() {
 		return function(input) {
 
@@ -95,7 +109,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 
 		}
@@ -235,7 +249,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 
 
@@ -284,7 +298,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 
 		}
@@ -332,7 +346,7 @@
 					}
 				})
 				.error(function() {
-					this.errmsg = '网络错误';
+					console.log('network error');
 				})
 
 
@@ -651,7 +665,7 @@
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 		}
 
@@ -689,11 +703,11 @@
 						$scope.dateCheck($scope.monthvalue);
 
 					} else {
-						alert(resp.errmsg);
+						console.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					alert('network error');
+					console.log('network error');
 				})
 		}
 

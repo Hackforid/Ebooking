@@ -30,7 +30,7 @@
       <b>Payment State:</b></span><u class="xian2">&nbsp;&nbsp;&nbsp;⚘&nbsp;已付&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚘&nbsp;未付</u></td>
   </tr>
   <tr>
-    <td><span>房&nbsp;&nbsp;&nbsp;型：<br /><b>Cancel Rules:</b></span><u class="xian2" ng-bind="currentOrder['room_type_name']"></u></td>
+    <td><span>房&nbsp;&nbsp;&nbsp;型：<br /><b>Cancel Rules:</b></span><u class="xian2" ng-bind="currentOrder['roomtype_name']"></u></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
@@ -51,7 +51,7 @@
   </tr>
   </table>
   
-  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:86%">经预订不可取消，扣除全额房费</u></div> 
+  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:86%" ng-bind="currentOrder['cancel_type']"></u></div> 
   <div class="zd3">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -156,7 +156,7 @@
                                
                                     <td width="10%"  style="text-decoration: underline;position:relative"><a href="javascript:void(0)" ng-click="orderDetail($index)" id={{"orderConfimId-"+$index}} ng-bind="order.main_order_id"></a></td>
                                     <td width="15%" ng-bind="order.hotel_name"></td>
-                                    <td width="10%"><span ng-bind="order.room_type_name"></span><br /><span ng-bind="order.room_num+'间'"></span></td>    
+                                    <td width="10%"><span ng-bind="order.roomtype_name"></span><br /><span ng-bind="order.room_num+'间'"></span></td>    
                                     <td width="15%"><span ng-bind="order.checkin_date+'至'"></span><br />
                                        <span ng-bind="order.checkout_date"></span>
                                        <span ng-bind="DateDiff(order.checkin_date,order.checkout_date)"></span>
@@ -213,25 +213,38 @@
            
            <div class="cm2" style="height:350px">
              
-              <label><strong>订单确认号：</strong><span ng-bind="currentOrder['main_order_id']"></span></label>
-              <label><strong>酒店名称：</strong><span ng-bind="currentOrder['hotel_name']"></span></label>
-              <label><strong>房型：</strong><span ng-bind="currentOrder['room_type_name']"></span></label>
-              <label><strong>入离时间：</strong><span ng-bind="currentOrder['checkin_date']"></span></label>
-              <label><strong>预定时间：</strong><span ng-bind="currentOrder['create_time'].join('  ')"></span></label>
-              <label><strong>入住人：</strong><span ng-bind="currentOrder['hotel_name']"></span></label>
-              <label><strong>联系人：</strong><span ng-bind="currentOrder['contact_name']"></span></label>
-              <label><strong>联系电话：</strong><span ng-bind="currentOrder['contact_mobile']"></span></label>
-              <label><strong>取消规则：</strong><span ng-bind="currentOrder['']"></span></label>
-              <label><strong>价格代码名称：</strong><span ng-bind="currentOrder['']"></span></label>
-              <label><strong>每日价格：</strong><span ng-bind="currentOrder['everyday_price']"></span></label>
-              <label><strong>总价：</strong><span ng-bind="currentOrder['total_price']"></span></label>
-              <label><strong>备注：</strong><span ng-bind="currentOrder['']"></span></label>
+               <table width="100%">
+           <tr><td style="width:50%"><strong>订单确认号：</strong></td><td style="width:50%"><span ng-bind="currentOrder['id']"></span></td></tr>
+           <tr><td style="width:50%"><strong>酒店名称：</strong></td><td style="width:50%"><span ng-bind="currentOrder['hotel_name']"></span></td></tr>
+           <tr><td style="width:50%"><strong>房型：</strong></td><td style="width:50%"><span ng-bind="currentOrder['roomtype_name']"></span></td></tr>
+           <tr><td style="width:50%"><strong>入离时间：</strong></td><td style="width:50%"><span ng-bind="currentOrder['checkin_date']"></span></td></tr>
+
+
+            <tr><td style="width:50%"><strong>预定时间：</strong></td><td style="width:50%"><span ng-bind="currentOrder['create_time'].join('  ')"></span></td></tr>
+           <tr><td style="width:50%"><strong>入住人：</strong></td><td style="width:50%">
+
+
+           <span ng-repeat="cum in currentOrder['customer_info']" ng-bind="cum['name']"></span>
+
+
+           </td></tr>
+           <tr><td style="width:50%"><strong>联系人：</strong></td><td style="width:50%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
+           <tr><td style="width:50%"><strong>联系电话：</strong></td><td style="width:50%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
+
+             <tr><td style="width:50%"><strong>取消规则：</strong></td><td style="width:50%"><span ng-bind="currentOrder['cancel_type']"></span></td></tr>
+           <tr><td style="width:50%"><strong>价格代码名称：</strong></td><td style="width:50%"><span ng-bind="currentOrder['']"></span></td></tr>
+           <tr><td style="width:50%"><strong>每日价格：</strong></td><td style="width:50%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
+           <tr><td style="width:50%"><strong>总价：</strong></td><td style="width:50%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
+           <tr><td style="width:50%"><strong>备注：</strong></td><td style="width:50%"><span ng-bind="currentOrder['']"></span></td></tr>
+
+          
+           </table>
               
            </div>
           
        </div>
    </div> 
-</div></div> 
+</div>
  <!--订单详情浮层结束-->    
 
 
