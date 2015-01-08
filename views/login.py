@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from tornado import gen
+
 from views.base import BtwBaseHandler
 from views import BaseHandler
-from models.user import UserModel
+from tasks.models.user import get_user_by_merchantid_username_and_password
 
 from tools.auth import auth_login
 from tools.request_tools import get_and_valid_arguments
@@ -12,14 +14,15 @@ class LoginHandler(BtwBaseHandler):
     def get(self):
         self.render("index.html")
 
+    @gen.coroutine
     def post(self):
         args = self.get_json_arguments()
 
         merchant_id, username, password = get_and_valid_arguments(args,
                 'merchant_id', 'username', 'password')
 
-        user = UserModel.get_user_by_merchantid_username_and_password(
-                self.db, merchant_id, username, password)
+        user = (yield gen.Task(get_user_by_merchantid_username_and_password.apply_async,
+                args=[merchant_id, username, password])).result
 
         if user:
             self.set_secure_cookie("username", user.username, expires_days=0.02)
