@@ -328,6 +328,8 @@
 
 			$scope.currentindex = m;
 
+			$(".div1").hide();
+
 			$("#" + d).after("<div class='div1'><input name='' type='button' value='修改房价' class='btn-number' /></div>").show(0, function() {
 				$(".btn-number").click(function() {
 					$("#openDiv1").show();
