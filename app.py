@@ -13,7 +13,7 @@ from tornado.options import define, options
 from mako.lookup import TemplateLookup
 
 from router import handlers
-from config import Config
+from config import Config, LISTENER_IP
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
