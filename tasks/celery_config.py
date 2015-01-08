@@ -3,9 +3,13 @@
 
 from datetime import timedelta
 from celery.schedules import crontab
+import config
 
-BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
-CELERY_RESULT_BACKEND = "amqp://admin:admin@localhost:5672/ebooking"
+BROKER_URL = config.BROKER_URL
+CELERY_RESULT_BACKEND = config.CELERY_RESULT_BACKEND
+CELERY_ACCEPT_CONTENT = ['pickle']
+BROKER_POOL_LIMIT = 100
+CELERYD_PREFETCH_MULTIPLIER = 2
 CELERY_IMPORTS = (
     'tasks.test', 'tasks.stock',
                 'tasks.models.cooperate_hotel', 'tasks.models.cooperate_roomtype',

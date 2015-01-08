@@ -2,7 +2,6 @@
 
 Config = {
     'mysql-connector': 'mysql+mysqlconnector://btw:btw@10.171.249.95:3306/devine_ebooking?charset=utf8',
-    #'mysql-connector': 'mysql+mysqldb://root:root@192.168.10.15:3306/devine_ebooking?charset=utf8',
 }
 
 API = {
@@ -15,3 +14,6 @@ API = {
 CHAIN_ID = 6
 
 IS_PUSH_TO_STOCK = True
+
+BROKER_URL = "amqp://devine:devine@10.251.251.192:5672/ebooking"
+CELERY_RESULT_BACKEND = "amqp://:devine:devine@10.251.251.192:5672/ebooking"
