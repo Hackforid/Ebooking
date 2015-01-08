@@ -104,9 +104,7 @@
 					})
 					.error(function() {
 
-						$scope.messageBox = "网络错误";
-
-						$("#acceptDialog").show();
+						console.log('network error');
 
 					});
 
@@ -134,7 +132,9 @@
 					if (cityId == false) {
 						$("#pageInfo").hide();
 						$scope.hotels = [];
-						return;
+
+						cityId = "10000";
+						//return;
 					}
 
 
@@ -259,8 +259,8 @@
 
 					})
 					.error(function() {
-						$scope.messageBox = "酒店列表读取失败";
-						$("#acceptDialog").show();
+
+						console.log("酒店列表读取失败");
 
 					});
 
@@ -293,9 +293,8 @@
 					})
 					.error(function() {
 
-						$scope.messageBox = "网络错误";
 
-						$("#acceptDialog").show();
+						console.log("网络错误");
 
 					});
 

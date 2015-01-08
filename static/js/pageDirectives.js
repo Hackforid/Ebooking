@@ -118,9 +118,15 @@ angular.module('myApp.directives', []).directive('pageInfo', function() {
 
       });
 
-      scope.$watch('finalUrl', function() {
+      scope.$watch('finalUrl', function(newValue, oldValue) {
         //console.log("这里是url变化时候产生的watch");
         //console.log(scope.finalUrl);
+
+
+        if (newValue == oldValue) {
+         // setPage();
+          return;
+        }
         scope.searchResult();
 
       });
