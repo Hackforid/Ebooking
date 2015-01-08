@@ -314,7 +314,7 @@ class InventoryModel(Base):
 
     def fix_inventory_count_range(self, count):
         count = count if count >= 0 else 0
-        count = count if count <= 99 else 0
+        count = count if count <= 99 else 99
         return count
 
     def set_val_by_day(self, day, price_type, val):
