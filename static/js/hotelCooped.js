@@ -513,3 +513,16 @@
 	}])
 
 })()
+
+
+
+function loadScript() {　
+	console.log("loadScript开始");
+
+	var script = document.createElement("script");　
+
+	script.src = "http://api.map.baidu.com/api?v=1.4&callback=''";　
+
+	document.body.appendChild(script);
+}
+window.onload = loadScript;
