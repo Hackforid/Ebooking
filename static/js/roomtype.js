@@ -124,15 +124,15 @@
 
 		this.eachhide = function(index) {
 			var roomRateName;
-			roomRateName=scope.rateplans[index].name;
+			roomRateName = scope.rateplans[index].name;
 
-			$(("#roomheadinput"+index)).val(roomRateName);
+			$(("#roomheadinput" + index)).val(roomRateName);
 
 			var punishValue;
-			punishValue=scope.rateplans[index].punish_type;
+			punishValue = scope.rateplans[index].punish_type;
 			console.log(punishValue);
 
-			$(("#roomheadpunish"+index)).val(punishValue);
+			$(("#roomheadpunish" + index)).val(punishValue);
 
 
 			var tempmealsum = scope.roomrates[index].meal1.split("|", 1);
@@ -141,18 +141,16 @@
 
 			$("div.eachroom").eq(index).css("display", "none");
 
-
-
-
+			scope.inputErrMessage = " ";
 
 		}
 		this.eachshow = function(index) {
 
 			$("div.eachroom").eq(index).css("display", "block");
 
-				var punishValue;
-			punishValue=scope.rateplans[index].punish_type;
-			$(("#roomheadpunish"+index)).val(punishValue);
+			var punishValue;
+			punishValue = scope.rateplans[index].punish_type;
+			$(("#roomheadpunish" + index)).val(punishValue);
 
 
 			var tempmealsum = scope.roomrates[index].meal1.split("|", 1);
@@ -160,6 +158,17 @@
 
 		}
 		this.save = function(index) {
+
+			var checkResult = $.trim($("#roomheadinput" + index).val());
+			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+
+			if (resultLen > 20) {
+				scope.inputErrMessage = "名称不能超过20个字符";
+				return;
+			}
+
+
+
 			this.errmsg = '';
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/' + scope.rateplans[index].id;
 			//console.log(url);
@@ -178,8 +187,24 @@
 						scope.rateplans[index] = resp.result.rateplan;
 
 						scope.dateCheck(scope.monthvalue);
+
+
+						scope.inputErrMessage = " ";
 					} else {
-						this.errmsg = resp.errmsg;
+
+
+						if (resp.errcode = "2001") {
+							scope.inputErrMessage = "名称输入错误";
+						} else if (resp.errcode = "2002") {
+							scope.inputErrMessage = "名称长度错误";
+						} else if (resp.errcode = "2003") {
+							scope.inputErrMessage = "参数错误";
+						} else if (resp.errcode = "2004") {
+							scope.inputErrMessage = "参数错误";
+						}
+
+
+
 					}
 				})
 				.error(function() {
@@ -336,6 +361,11 @@
 		$scope.errMessage = "";
 
 		$scope.currentHotelDetail = "";
+
+
+		$scope.inputErrMessage = "";
+
+
 
 		$scope.addChangeP = function addChangeP(d, m, c, n) {
 
