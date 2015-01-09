@@ -9,6 +9,5 @@ from constants import PERMISSIONS
 class HotelInventoryHandler(BtwBaseHandler):
 
     @auth_login()
-    @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory)
     def get(self, hotel_id):
         self.render("hotelInventory.html", hotel_id=hotel_id)

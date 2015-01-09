@@ -9,6 +9,5 @@ from constants import PERMISSIONS
 class HotelCoopedHandler(BtwBaseHandler):
 
     @auth_login()
-    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_cooperated_hotel)
     def get(self):
         self.render("hotelCoop.html")

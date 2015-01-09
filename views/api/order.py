@@ -143,13 +143,14 @@ class OrderSearchAPIHandler(BtwBaseHandler):
         order_id = self.get_query_argument('order_id', None)
         hotel_name = self.get_query_argument('hotel_name', None)
         checkin_date_start = self.get_query_argument('checkin_date_start', None)
-        checkin_date_end = self.get_query_argument('checkin_date_start', None)
+        checkin_date_end = self.get_query_argument('checkin_date_end', None)
         customer = self.get_query_argument('customer', None)
         order_status = self.get_query_argument('order_status', None)
         create_time_start = self.get_query_argument('create_time_start', None)
         create_time_end = self.get_query_argument('create_time_end', None)
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
+
         
         if order_status:
             order_status = order_status.split(',')
