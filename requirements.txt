@@ -7,4 +7,5 @@ tornado-celery
 python-dateutil
 gevent
 simplejson
-rabbitmq-server
+librabbitmq
+requests

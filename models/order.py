@@ -76,7 +76,10 @@ class OrderModel(Base):
             date = datetime.datetime.strptime(checkout_date, '%Y-%m-%d')
             query = query.filter(OrderModel.checkout_date == date.date())
         if status is not None:
-            query = query.filter(OrderModel.status == status)
+            if isinstance(status, list):
+                query = query.filter(OrderModel.status.in_(status))
+            else:
+                query = query.filter(OrderModel.status == status)
         if create_time_start:
             date = datetime.datetime.strptime(create_time_start, '%Y-%m-%d')
             query = query.filter(OrderModel.create_time >= date)
@@ -183,6 +186,7 @@ class OrderModel(Base):
 
     @classmethod
     def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
+        import time
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
         query = session.query(OrderModel)\
@@ -197,7 +201,8 @@ class OrderModel(Base):
         if limit:
             query = query.limit(limit)
 
-        return query.all(), total
+        all = query.all()
+        return all, total
 
     def confirm_by_user(self, session):
         self.status = 300

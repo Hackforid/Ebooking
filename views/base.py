@@ -37,8 +37,10 @@ class BtwBaseHandler(BaseHandler):
             #self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
             self.set_secure_cookie('username', username)
             self.set_secure_cookie('merchant_id', merchant_id)
-        self.current_user = (yield gen.Task(User.get_user_by_merchantid_username.apply_async,
-                args=[merchant_id, username])).result
+        task = yield gen.Task(User.get_user_by_merchantid_username.apply_async,
+                args=[merchant_id, username])
+        if task.status == 'SUCCESS':
+            self.current_user = task.result
         raise gen.Return(self.current_user)
 
     def render(self, template_name, **kwargs):
@@ -49,7 +51,6 @@ class BtwBaseHandler(BaseHandler):
             super(BtwBaseHandler, self).render(template_name, **kwargs) 
 
     def _handle_request_exception(self, e):
-        self.db.rollback()
         if isinstance(e, JsonException):
             print e.tojson()
             self.finish_json(errcode=e.errcode, errmsg=e.errmsg)
