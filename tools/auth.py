@@ -29,7 +29,7 @@ def auth_permission(permissions, json=False):
                 if json:
                     self.finish_json(errcode=401, errmsg="permission denied")
                 else:
-                    self.finish('permission denied')
+                    self.redirect(self.get_login_url())
         return _
     return _decorator
 

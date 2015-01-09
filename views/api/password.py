@@ -12,7 +12,7 @@ class PasswordAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
-    @auth_permission(PERMISSIONS.update_password, json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_password, json=True)
     def put(self):
         print '==' * 20
         args = self.get_json_arguments()

@@ -3,17 +3,19 @@
 from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 import tasks.models.cooperate_hotel as CooperateHotel
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
+from constants import PERMISSIONS
 
 class HotelCoopAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.choose_hotel, json=True)
     def post(self, hotel_id):
         merchant_id = self.current_user.merchant_id
         coop_task = yield gen.Task(CooperateHotel.new_hotel_cooprate.apply_async, args=[merchant_id, hotel_id])
@@ -34,6 +36,7 @@ class HotelCoopsAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.choose_hotel, json=True)
     def post(self):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()

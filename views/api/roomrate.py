@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, date
 from tornado import gen
 from tornado.escape import json_encode, json_decode, url_escape
 
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
@@ -13,14 +13,13 @@ from exception.celery_exception import CeleryException
 
 import tasks.models.room_rate as  RoomRate
 
-
-import tcelery
-tcelery.setup_nonblocking_producer()
+from constants import PERMISSIONS
 
 class RoomRateAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, roomrate_id):
         args = self.get_json_arguments()
         start_date, end_date, price = get_and_valid_arguments(args,
