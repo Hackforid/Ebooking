@@ -56,7 +56,7 @@ class OrderModel(Base):
     CONFIRM_TYPE_MANUAL = 2
 
     @classmethod
-    def search(cls, session, id=None, hotel_name=None, checkin_date=None, checkout_date=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
+    def search(cls, session, id=None, hotel_name=None, checkin_date_start=None, checkin_date_end=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
         if id:
             order = cls.get_by_id(session, id)
             if order:
@@ -69,12 +69,12 @@ class OrderModel(Base):
             query = query.filter(OrderModel.hotel_name.like(u'%{}%'.format(hotel_name)))
         if customer:
             query = query.filter(OrderModel.customer_info.like(u'%{}%'.format(customer)))
-        if checkin_date:
-            date = datetime.datetime.strptime(checkin_date, '%Y-%m-%d')
-            query = query.filter(OrderModel.checkin_date == date.date())
-        if checkout_date:
-            date = datetime.datetime.strptime(checkout_date, '%Y-%m-%d')
-            query = query.filter(OrderModel.checkout_date == date.date())
+        if checkin_date_start:
+            date = datetime.datetime.strptime(checkin_date_start, '%Y-%m-%d')
+            query = query.filter(OrderModel.checkin_date >= date.date())
+        if checkin_date_end:
+            date = datetime.datetime.strptime(checkin_date_end, '%Y-%m-%d')
+            query = query.filter(OrderModel.checkout_date <= date.date())
         if status is not None:
             if isinstance(status, list):
                 query = query.filter(OrderModel.status.in_(status))
@@ -85,6 +85,7 @@ class OrderModel(Base):
             query = query.filter(OrderModel.create_time >= date)
         if create_time_end:
             date = datetime.datetime.strptime(create_time_end, '%Y-%m-%d')
+            date = date + datetime.timedelta(days=1)
             query = query.filter(OrderModel.create_time <= date)
 
         total = query.count()
@@ -186,7 +187,6 @@ class OrderModel(Base):
 
     @classmethod
     def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
-        import time
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
         query = session.query(OrderModel)\

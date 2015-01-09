@@ -142,8 +142,8 @@ class OrderSearchAPIHandler(BtwBaseHandler):
 
         order_id = self.get_query_argument('order_id', None)
         hotel_name = self.get_query_argument('hotel_name', None)
-        checkin_date = self.get_query_argument('checkin_date', None)
-        checkout_date = self.get_query_argument('checkout_date', None)
+        checkin_date_start = self.get_query_argument('checkin_date_start', None)
+        checkin_date_end = self.get_query_argument('checkin_date_start', None)
         customer = self.get_query_argument('customer', None)
         order_status = self.get_query_argument('order_status', None)
         create_time_start = self.get_query_argument('create_time_start', None)
@@ -155,7 +155,7 @@ class OrderSearchAPIHandler(BtwBaseHandler):
             order_status = order_status.split(',')
 
         task = yield gen.Task(Order.search.apply_async,
-                args=[order_id, hotel_name, checkin_date, checkout_date, customer, order_status, create_time_start, create_time_end, start, limit])
+                args=[order_id, hotel_name, checkin_date_start, checkin_date_end, customer, order_status, create_time_start, create_time_end, start, limit])
         if task.status == 'SUCCESS':
             orders, total = task.result
             orders = orders if orders is not None else  []
