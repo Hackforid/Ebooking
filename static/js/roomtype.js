@@ -134,6 +134,11 @@
 
 			$(("#roomheadpunish"+index)).val(punishValue);
 
+
+			var tempmealsum = scope.roomrates[index].meal1.split("|", 1);
+			$("#roomheadmeal" + index).val(tempmealsum[0]);
+
+
 			$("div.eachroom").eq(index).css("display", "none");
 
 

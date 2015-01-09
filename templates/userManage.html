@@ -22,10 +22,10 @@
                 <div class="main-mod main-user">
                     <div class="content">
 
-                        <div class="tab-menu">
+                        <div class="tab-menu" style="height:auto">
                             <ul>
-                                <li ng-repeat="user in users" ng-click="showSelectUser(user.id)" ng-bind="user.username" ng-class="selected[user.id]"></li>
-                                <li ng-click="showAddUser()" ng-class="selected[0]"><a class="add-one">+</a></li>
+                                <li style="margin-top:10px" ng-repeat="user in users" ng-click="showSelectUser(user.id)" ng-bind="user.username" ng-class="selected[user.id]"></li>
+                                <li style="margin-top:10px" ng-click="showAddUser()" ng-class="selected[0]"><a class="add-one">+</a></li>
                             </ul>
                         </div>
 
