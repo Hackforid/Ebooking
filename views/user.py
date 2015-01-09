@@ -3,8 +3,7 @@
 from tornado import gen
 from base import BtwBaseHandler
 from tornado.escape import json_encode
-from tools.auth import auth_login
-from tools.auth import auth_permission
+from tools.auth import auth_login, auth_permission
 from constants import PERMISSIONS
 from tasks.models.user import get_users_by_merchant_id
 
