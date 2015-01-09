@@ -19,3 +19,5 @@ BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
 CELERY_RESULT_BACKEND = "amqp://:admin:admin@localhost:5672/ebooking"
 
 LISTENER_IP = "0.0.0.0"
+
+PASSWORD_SALT = "ah%235^2jh135f"
