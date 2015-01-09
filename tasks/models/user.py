@@ -27,3 +27,7 @@ def add_user(self, merchant_id, username, password, department, mobile, authorit
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_user_by_merchantid_username_and_password(self, merchant_id, username, password):
     return UserModel.get_user_by_merchantid_username_and_password(self.session, merchant_id, username, password)
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def update_password(self, merchant_id, username, password):
+        return UserModel.update_password(self.session, merchant_id, username, password)
