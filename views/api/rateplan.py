@@ -64,13 +64,13 @@ class RatePlanAPIHandler(BtwBaseHandler):
 
     def valid_new_rateplan_args(self, name, meal_num, punish_type):
         if not isinstance(name, basestring):
-            raise JsonException(errcode=1000, errmsg="wrong name")
+            raise JsonException(errcode=2001, errmsg="wrong name")
         if len(name) > 20:
-            raise JsonException(errcode=1003, errmsg="wrong name length")
+            raise JsonException(errcode=2002, errmsg="wrong name length")
         if punish_type not in [0, 1, 2, 3, 4]:
-            raise JsonException(errcode=1001, errmsg="wrong punish_type")
+            raise JsonException(errcode=2003, errmsg="wrong punish_type")
         if meal_num not in [-1, 0, 1, 2, 100]:
-            raise JsonException(errcode=1002, errmsg="wrong meal_num")
+            raise JsonException(errcode=2004, errmsg="wrong meal_num")
 
 
 class RatePlanModifyAPIHandler(BtwBaseHandler):
@@ -100,8 +100,8 @@ class RatePlanModifyAPIHandler(BtwBaseHandler):
         if not name:
             raise JsonException(errcode=2001, errmsg="illege name")
         if len(name) > 20:
-            raise JsonException(errcode=1003, errmsg="wrong name length")
+            raise JsonException(errcode=2002, errmsg="wrong name length")
         if meal_num < 0:
-            raise JsonException(errcode=2001, errmsg="illege meal_num")
+            raise JsonException(errcode=2003, errmsg="illege meal_num")
         if punish_type not in [0, 1, 2, 3, 4]:
-            raise JsonException(errcode=2001, errmsg="illege punishtype")
+            raise JsonException(errcode=2004, errmsg="illege punishtype")
