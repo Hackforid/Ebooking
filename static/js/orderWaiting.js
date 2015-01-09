@@ -39,6 +39,20 @@
 
 
 
+		$scope.getCancelStatus = function(m) {
+
+			if (m == "0") {
+				return "不可取消";
+			} else if (m == "1") {
+				return "自由取消";
+			} else if (m == "2") {
+				return "提前取消";
+			}
+
+		}
+
+
+
 		$scope.orderPrint = function(m) {
 
 			$scope.currentOrder = m;
