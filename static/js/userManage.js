@@ -90,7 +90,7 @@
             var submit = {};
             submit['merchant_id'] = $scope.selectUser.merchant_id;
             submit['username'] = $scope.selectUser.username;
-            submit['password'] = $scope.selectUser.password;
+            submit['password'] = hex_md5($scope.selectUser.password);
             submit['department'] = $scope.selectUser.department;
             submit['mobile'] = $scope.selectUser.mobile;
             submit['email'] = $scope.selectUser.email;
@@ -197,8 +197,8 @@
             var submit = {};
             submit['merchant_id'] = $scope.addUser.merchant_id;
             submit['username'] = $scope.addUser.username;
-            submit['password'] = $scope.addUser.password;
-            submit['re_password'] = $scope.addUser.re_password;
+            submit['password'] = hex_md5($scope.addUser.password);
+            submit['re_password'] = hex_md5($scope.addUser.re_password);
             submit['department'] = $scope.addUser.department;
             submit['mobile'] = $scope.addUser.mobile;
             submit['authority'] = 0;

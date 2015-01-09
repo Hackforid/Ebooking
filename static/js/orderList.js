@@ -662,7 +662,7 @@
 			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
 
 				if ($scope.searchStatus == "500") {
-					url = url + "&order_status=" + $scope.searchStatus + "&order_status=600";
+					url = url + "&order_status=" + $scope.searchStatus + ",600";
 				} else {
 					url = url + "&order_status=" + $scope.searchStatus;
 				}
