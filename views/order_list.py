@@ -9,7 +9,6 @@ from constants import PERMISSIONS
 class OrderListHandler(BtwBaseHandler):
 
     @auth_login()
-    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order)
     def get(self):
         self.render("orderList.html")
 

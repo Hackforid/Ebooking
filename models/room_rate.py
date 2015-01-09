@@ -82,6 +82,7 @@ class RoomRateModel(Base):
 
     @classmethod
     def get_by_rateplan(cls, session, rate_plan_id):
+        print locals()
         return session.query(RoomRateModel)\
                 .filter(RoomRateModel.rate_plan_id == rate_plan_id)\
                 .filter(RoomRateModel.is_delete == 0)\

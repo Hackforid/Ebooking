@@ -74,7 +74,7 @@ class OrderModel(Base):
             query = query.filter(OrderModel.checkin_date >= date.date())
         if checkin_date_end:
             date = datetime.datetime.strptime(checkin_date_end, '%Y-%m-%d')
-            query = query.filter(OrderModel.checkout_date <= date.date())
+            query = query.filter(OrderModel.checkin_date <= date.date())
         if status is not None:
             if isinstance(status, list):
                 query = query.filter(OrderModel.status.in_(status))
