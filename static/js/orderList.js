@@ -122,17 +122,38 @@
 
 		}
 
+		
+
+		function dateTimeChecker(a, b, c) {
+			var day = new Date();
+
+			day.setFullYear(a);
+			day.setMonth(b);
+			day.setDate(c);
+
+			var dayTime = day.getTime();
+			return dayTime;
+
+		}
+
+
+
 		$scope.DateDiff = function DateDiff(startDate, endDate) {
 			var splitDate, startTime, endTime, iDays;
 			splitDate = startDate.split("-");
-			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			splitDate = endDate.split("-");
-			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
 
 			var daysResult = "( " + iDays + "晚 )";
 			return daysResult;
 		}
+
+
+
+
+
 
 
 
@@ -334,12 +355,26 @@
 		}
 
 
+		function dateTimeChecker(a, b, c) {
+			var day = new Date();
+
+			day.setFullYear(a);
+			day.setMonth(b);
+			day.setDate(c);
+
+			var dayTime = day.getTime();
+			return dayTime;
+
+		}
+
+
+
 		$scope.DateDiff = function DateDiff(startDate, endDate) {
 			var splitDate, startTime, endTime, iDays;
 			splitDate = startDate.split("-");
-			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			splitDate = endDate.split("-");
-			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
 
 			var daysResult = "( " + iDays + "晚 )";
@@ -565,12 +600,27 @@
 
 		}
 
+
+		function dateTimeChecker(a, b, c) {
+			var day = new Date();
+
+			day.setFullYear(a);
+			day.setMonth(b);
+			day.setDate(c);
+
+			var dayTime = day.getTime();
+			return dayTime;
+
+		}
+
+
+
 		$scope.DateDiff = function DateDiff(startDate, endDate) {
 			var splitDate, startTime, endTime, iDays;
 			splitDate = startDate.split("-");
-			startTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			splitDate = endDate.split("-");
-			endTime = new Date(splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]);
+			endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
 			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
 
 			var daysResult = "( " + iDays + "晚 )";
