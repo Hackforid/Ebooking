@@ -10,6 +10,7 @@
 			$scope.password = null;
 			$scope.errMsg = null;
 
+
 			window.document.onkeydown = enterRefresh;
 
 			function enterRefresh(evt) {
@@ -25,6 +26,7 @@
 
 			$scope.login = function() {
 				var url = "/login/";
+				$scope.password=hex_md5($scope.password);
 				var params = {
 					'merchant_id': $scope.merchantId,
 					'username': $scope.username,
