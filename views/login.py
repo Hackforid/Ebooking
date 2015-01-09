@@ -17,6 +17,7 @@ class LoginHandler(BtwBaseHandler):
     @gen.coroutine
     def post(self):
         args = self.get_json_arguments()
+        print "<<user login>> {}".format(args)
 
         merchant_id, username, password = get_and_valid_arguments(args,
                 'merchant_id', 'username', 'password')

@@ -18,4 +18,4 @@ IS_PUSH_TO_STOCK = False
 BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
 CELERY_RESULT_BACKEND = "amqp://:admin:admin@localhost:5672/ebooking"
 
-LISTENER_IP = "127.0.0.1"
+LISTENER_IP = "0.0.0.0"
