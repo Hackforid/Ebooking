@@ -13,94 +13,104 @@
     userManageApp.controller('userInfoController', ['$scope', '$http', '$location', function($scope, $http, $location) {
 
         function initSelectUser(data) {
-            for(var i=0;i<data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
                 var user = data[i];
-                user.auths={};
-                user.auth_all=false;
+                user.auths = {};
+                user.auth_all = false;
                 auth = user.authority;
-                for(var j=0;j<10;j++) {
+                for (var j = 0; j < 10; j++) {
                     user.auths[j] = false;
                 }
-                for(var j=0;j<10;j++) {
-                    if((auth & (1<<j))>0) {
+                for (var j = 0; j < 10; j++) {
+                    if ((auth & (1 << j)) > 0) {
                         user.auths[j] = true;
                     }
                 }
-                if(auth == 1023 || auth == 1022) {
-                    user.auth_all=true;
+                if (auth == 1023 || auth == 1022) {
+                    user.auth_all = true;
                 }
             }
             $scope.users = angular.copy(userList);
             $scope.selectUser = angular.copy(userList[0]);
             $scope.tmpUser = {};
             $scope.selected = {};
-            $scope.isShow=true;
-            $scope.selectBadMobile=false;
-            $scope.selectBadDepartment=false;
-            $scope.selectBadPassword=false;
-            if($scope.selectUser.authority%2==1) {
-                $scope.isShow=false;
+            $scope.isShow = true;
+            $scope.selectBadMobile = false;
+            $scope.selectBadDepartment = false;
+            $scope.selectBadPassword = false;
+            if ($scope.selectUser.authority % 2 == 1) {
+                $scope.isShow = false;
             }
-            for (var i=0; i<$scope.users.length; i++) {
+            for (var i = 0; i < $scope.users.length; i++) {
                 $scope.tmpUser[$scope.users[i].id] = angular.copy($scope.users[i]);
                 $scope.selected[$scope.users[i].id] = '';
             }
         }
         initSelectUser(userList);
 
-        $scope.showSelect=true;
+        $scope.showSelect = true;
         $scope.showAdd = false;
         $scope.selected[$scope.selectUser.id] = 'active';
-        $scope.selected[0]='';
+        $scope.selected[0] = '';
 
         $scope.showSelectUser = function(id) {
             $scope.showSelect = true;
             $scope.showAdd = false;
             $scope.selectUser = $scope.tmpUser[id];
-            if($scope.selectUser.authority%2==1) {
-                $scope.isShow=false;
+            if ($scope.selectUser.authority % 2 == 1) {
+                $scope.isShow = false;
             } else {
-                $scope.isShow=true;
+                $scope.isShow = true;
             }
 
-            for(var i=0; i<$scope.users.length; i++) {
+            for (var i = 0; i < $scope.users.length; i++) {
                 $scope.selected[$scope.users[i].id] = '';
             }
             $scope.selected[$scope.selectUser.id] = 'active';
-            $scope.selected[0]='';
+            $scope.selected[0] = '';
         };
 
         $scope.submitUpdate = function() {
-            var good=true;
-            if(!phoneChecker($scope.selectUser.mobile)) {
+            var good = true;
+            if (!phoneChecker($scope.selectUser.mobile)) {
                 $scope.selectBadMobile = true;
-                good=false;
+                good = false;
             }
-            if(!$scope.selectUser.department) {
+            if (!$scope.selectUser.department) {
                 $scope.selectBadDepartment = true;
-                good=false;
+                good = false;
             }
-            if(($scope.selectUser.password) && ($scope.selectUser.password.length <6 || $scope.selectUser.password.length >20)) {
+            if (($scope.selectUser.password) && ($scope.selectUser.password.length < 6 || $scope.selectUser.password.length > 20)) {
                 $scope.selectBadPassword = true;
                 good = false;
             }
-            if(!good) {
+            if (!good) {
                 return;
             }
             var submit = {};
             submit['merchant_id'] = $scope.selectUser.merchant_id;
             submit['username'] = $scope.selectUser.username;
-            submit['password'] = hex_md5($scope.selectUser.password);
+
+            if ($.trim($scope.selectUser.password).length != 0) {
+
+                submit['password'] = hex_md5($scope.selectUser.password);
+            } else {
+                submit['password'] = $scope.selectUser.password;
+
+            }
+
+
+
             submit['department'] = $scope.selectUser.department;
             submit['mobile'] = $scope.selectUser.mobile;
             submit['email'] = $scope.selectUser.email;
-            submit['authority']=0;
-            for(var i=0;i<10;i++) {
-                if($scope.selectUser.auths[i]) {
-                    submit['authority'] += (1<<i);
+            submit['authority'] = 0;
+            for (var i = 0; i < 10; i++) {
+                if ($scope.selectUser.auths[i]) {
+                    submit['authority'] += (1 << i);
                 }
             }
-            if($scope.selectUser.is_valid=='1') {
+            if ($scope.selectUser.is_valid == '1') {
                 submit['is_valid'] = 1;
             } else {
                 submit['is_valid'] = 0;
@@ -108,18 +118,18 @@
 
             $http.put("/api/userManage/", submit)
                 .success(function(response) {
-                    if (response.errcode==0) {
-                        for(var i=0;i<$scope.users.length;i++) {
-                            if($scope.users[i].id == $scope.selectUser.id) {
+                    if (response.errcode == 0) {
+                        for (var i = 0; i < $scope.users.length; i++) {
+                            if ($scope.users[i].id == $scope.selectUser.id) {
                                 $scope.users[i] = angular.copy($scope.selectUser);
                                 break;
                             }
                         }
                         $scope.tmpUser[$scope.selectUser.id] = $scope.selectUser;
                         alert("修改成功");
-                        $scope.selectUser.password=null;
+                        $scope.selectUser.password = null;
                     } else {
-                        if (response.errcode==301) {
+                        if (response.errcode == 301) {
                             alert('修改成功，请重新登陆');
                             window.location = response.errmsg;
                         } else {
@@ -133,8 +143,8 @@
         };
 
         $scope.cancelUpdate = function() {
-            for(var i=0; i<$scope.users.length; i++) {
-                if($scope.users[i].id == $scope.selectUser.id) {
+            for (var i = 0; i < $scope.users.length; i++) {
+                if ($scope.users[i].id == $scope.selectUser.id) {
                     $scope.tmpUser[$scope.users[i].id] = angular.copy($scope.users[i]);
                     $scope.selectUser = $scope.tmpUser[$scope.users[i].id];
                     break;
@@ -147,7 +157,7 @@
             $scope.addUser.merchant_id = $scope.users[0].merchant_id;
             $scope.addUser.auths = {};
             $scope.addUser.is_valid = 1;
-            for(var i=1;i<10;i++) {
+            for (var i = 1; i < 10; i++) {
                 $scope.addUser.auths[i] = false;
             }
             $scope.addUser.auths[0] = false;
@@ -163,35 +173,35 @@
         $scope.showAddUser = function() {
             $scope.showSelect = false;
             $scope.showAdd = true;
-            for(var i=0; i<$scope.users.length; i++) {
+            for (var i = 0; i < $scope.users.length; i++) {
                 $scope.selected[$scope.users[i].id] = '';
             }
-            $scope.selected[0]='active';
+            $scope.selected[0] = 'active';
         };
 
         $scope.submitAdd = function() {
-            var good=true;
-            if(!$scope.addUser.username || $scope.addUser.username.length <2 || $scope.addUser.username > 20) {
+            var good = true;
+            if (!$scope.addUser.username || $scope.addUser.username.length < 2 || $scope.addUser.username > 20) {
                 $scope.addBadUsername = true;
                 good = false;
             }
-            if(!$scope.addUser.password || !$scope.addUser.re_password || $scope.addUser.password != $scope.addUser.re_password) {
+            if (!$scope.addUser.password || !$scope.addUser.re_password || $scope.addUser.password != $scope.addUser.re_password) {
                 $scope.addBadPassword = true;
                 good = false;
             }
-            if(($scope.addUser.password) && ($scope.addUser.password.length <6 || $scope.addUser.password.length >20)) {
+            if (($scope.addUser.password) && ($scope.addUser.password.length < 6 || $scope.addUser.password.length > 20)) {
                 $scope.addBadPassword = true;
                 good = false;
             }
-            if(!$scope.addUser.department) {
+            if (!$scope.addUser.department) {
                 $scope.addBadDepartment = true;
-                good=false;
+                good = false;
             }
-            if(!phoneChecker($scope.addUser.mobile)) {
+            if (!phoneChecker($scope.addUser.mobile)) {
                 $scope.addBadMobile = true;
-                good=false;
+                good = false;
             }
-            if(!good) {
+            if (!good) {
                 return;
             }
             var submit = {};
@@ -202,23 +212,23 @@
             submit['department'] = $scope.addUser.department;
             submit['mobile'] = $scope.addUser.mobile;
             submit['authority'] = 0;
-            for(var i=1; i<10; i++) {
+            for (var i = 1; i < 10; i++) {
                 if ($scope.addUser.auths[i]) {
-                    submit['authority'] += (1<<i);
+                    submit['authority'] += (1 << i);
                 }
             }
-            if($scope.addUser.is_valid=='1') {
+            if ($scope.addUser.is_valid == '1') {
                 submit['is_valid'] = 1;
             } else {
                 submit['is_valid'] = 0;
             }
             $http.post("/api/userManage/", submit)
                 .success(function(response) {
-                    if (response.errcode==0) {
+                    if (response.errcode == 0) {
                         alert('添加成功');
                         $http.get("/api/userManage")
-                            .success(function(response){
-                                if(response.errcode==0) {
+                            .success(function(response) {
+                                if (response.errcode == 0) {
                                     initSelectUser(response.result);
                                 } else {
                                     window.location = "/userManage";
@@ -236,8 +246,8 @@
 
 
         $scope.selectAllAuth = function(user) {
-            for(var i=1;i<10;i++) {
-                if(!user.auth_all) {
+            for (var i = 1; i < 10; i++) {
+                if (!user.auth_all) {
                     user.auths[i] = true;
                 } else {
                     user.auths[i] = false;
@@ -245,13 +255,13 @@
             }
         };
 
-        $scope.changeAuth = function (user, id) {
-            if(id<1 || id>9) {
+        $scope.changeAuth = function(user, id) {
+            if (id < 1 || id > 9) {
                 user.auths[id] = !user.auths[id];
                 return;
             }
-            user.authority ^= (1<<id);
-            if(user.authority == 1023 || user.authority == 1022) {
+            user.authority ^= (1 << id);
+            if (user.authority == 1023 || user.authority == 1022) {
                 user.auth_all = true;
             } else {
                 user.auth_all = false;

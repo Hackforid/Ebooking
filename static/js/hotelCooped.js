@@ -452,8 +452,8 @@
 
 					} else {
 
-						$scope.messageBox = resp.errmsg;
-						$("#acceptDialog").show();
+						//$scope.messageBox = resp.errmsg;
+						//$("#acceptDialog").show();
 
 					}
 

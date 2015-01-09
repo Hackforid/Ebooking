@@ -116,9 +116,9 @@
 
 						} else {
 
-							$scope.messageBox = resp.errmsg;
+							//$scope.messageBox = resp.errmsg;
 
-							$("#acceptDialog").show();
+							//$("#acceptDialog").show();
 						}
 
 					})
@@ -277,8 +277,8 @@
 
 						} else {
 
-							$scope.messageBox = resp.errmsg;
-							$("#acceptDialog").show();
+							//$scope.messageBox = resp.errmsg;
+							//$("#acceptDialog").show();
 						}
 
 					})
@@ -310,9 +310,9 @@
 
 						} else {
 
-							$scope.messageBox = resp.errmsg;
+							//$scope.messageBox = resp.errmsg;
 
-							$("#acceptDialog").show();
+							//$("#acceptDialog").show();
 						}
 					})
 					.error(function() {
