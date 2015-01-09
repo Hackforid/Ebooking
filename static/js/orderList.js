@@ -3,6 +3,22 @@
 	var orderListApp = angular.module('orderListApp', ['myApp.directives']);
 
 
+	orderListApp.directive('ngEnter', function() {
+		return function(scope, element, attrs) {
+			element.bind("keydown keypress", function(event) {
+				if (event.which === 13) {
+					scope.$apply(function() {
+						scope.$eval(attrs.ngEnter);
+					});
+
+					event.preventDefault();
+				}
+			});
+		};
+	});
+
+
+
 	orderListApp.config(['$httpProvider', function($httpProvider) {
 
 		if (!$httpProvider.defaults.headers.get) {
@@ -30,6 +46,19 @@
 
 		$scope.currentOrder;
 
+
+
+		$scope.getCancelStatus = function(m) {
+
+			if (m == "0") {
+				return "不可取消";
+			} else if (m == "1") {
+				return "自由取消";
+			} else if (m == "2") {
+				return "提前取消";
+			}
+
+		}
 
 
 		$scope.orderDetail = function(m) {
@@ -227,6 +256,20 @@
 
 
 		$scope.currentOrder;
+
+
+
+		$scope.getCancelStatus = function(m) {
+
+			if (m == "0") {
+				return "不可取消";
+			} else if (m == "1") {
+				return "自由取消";
+			} else if (m == "2") {
+				return "提前取消";
+			}
+
+		}
 
 
 		$scope.orderDetail = function(m) {
@@ -444,6 +487,20 @@
 
 
 
+		$scope.getCancelStatus = function(m) {
+
+			if (m == "0") {
+				return "不可取消";
+			} else if (m == "1") {
+				return "自由取消";
+			} else if (m == "2") {
+				return "提前取消";
+			}
+
+		}
+
+
+
 		$scope.orderDetail = function(m) {
 
 			console.log(m);
@@ -533,6 +590,9 @@
 			$("#ListStarTime").val("");
 			$("#ListEndTime").val("");
 
+			$scope.messageList = " ";
+			$scope.messageLive = " ";
+
 			$scope.finalUrl = '/api/order/search/?start=0&limit=' + $scope.itemPerPage;
 
 			$scope.searchResult();
@@ -548,6 +608,18 @@
 			var ListEndTime = $("#ListEndTime").val();
 			$scope.messageLive = "";
 			$scope.messageList = "";
+
+			if ((liveStarTime != "" && liveEndTime == "") || (liveEndTime != "" && liveStarTime == "")) {
+				$scope.messageLive = "日期不能为空";
+				return;
+			}
+
+			if ((ListStarTime != "" && ListEndTime == "") || (ListEndTime != "" && ListStarTime == "")) {
+				$scope.messageList = "日期不能为空";
+				return;
+			}
+
+
 
 			if (liveStarTime > liveEndTime) {
 				$scope.messageLive = "起始日期大于结束日期";
@@ -587,7 +659,7 @@
 
 			}
 
-			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined) {
+			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "0") {
 
 				if ($scope.searchStatus == "500") {
 					url = url + "&order_status=" + $scope.searchStatus + "&order_status=600";
@@ -617,7 +689,7 @@
 
 		$scope.searchResult = function searchResult() {
 
-			//console.log($scope.finalUrl);
+			console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					console.log(resp);

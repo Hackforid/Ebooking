@@ -30,15 +30,15 @@
             <div class="search-div">
                 <div class="content">
                     <div class="divone"><div class="c">
-                            <label><strong>酒店名称：</strong><input name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+                            <label><strong>酒店名称：</strong><input ng-enter="urlCheck(1)" name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
                             <label><strong>城市：</strong></label>
                            
                             <label>
-                            <input  style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
+                            <input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
                             </label>
 
 
-                            <label><strong>星级：</strong><select name="" class="input-s" ng-model="searchStar" >
+                            <label><strong>星级：</strong><select ng-enter="urlCheck(1)" name="" class="input-s" ng-model="searchStar" >
 
                                 <option value="0">不限</option>
                                 <option value="1">一星级</option>
@@ -48,7 +48,7 @@
                                 <option value="5">五星级</option>
                                 
                             </select></label>
-                            <label><strong>状态：</strong><select name="" class="input-s"  ng-model="searchStatus">
+                            <label><strong>状态：</strong><select ng-enter="urlCheck(1)" name="" class="input-s"  ng-model="searchStatus">
                                     <option value="2">不限</option>
                                     <option value="1">正常</option>
                                     <option value="0">暂停</option>
@@ -112,6 +112,27 @@
 
 
 
+
+          <!--百度地图-->     
+<div class="messageDiv" id="mapDetail" style="display:none;z-index:9999">
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail">
+       <div class="head"><h1>百度地图</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="closeMapDetail()">X</p>
+       <div id="mapShowDiv" class="con">
+          
+            
+          
+       </div>
+   </div> 
+</div>
+ <!--百度地图-->  
+      
+
+
+
+
+
         <!--酒店弹窗浮层-->     
 <div class="messageDiv" id="hotel-detail" style=" display:none">
    <div class="messageBlack"></div>
@@ -125,7 +146,7 @@
     <td align="left" width="70%">
     
     <label><strong>酒店名称：</strong><span ng-bind="currentHotel['name']"></span>
-              <a href="javascript:void(0)" class="a-orange">[ 百度地图 ]</a></label>
+              <a href="javascript:void(0)" ng-click="mapshow()" class="a-orange">[ 百度地图 ]</a></label>
      <label><strong>运营状态：</strong><input type="radio" name="status" value = "normal" ng-checked="currentHotel['is_online']">正常&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="status" value = "pause" ng-checked="!currentHotel['is_online']">暂停</label>      
     </td>
     <td align="right" width="30%"><input name="" type="button" value="保存更改" ng-click="changeStatus(currentHotel['id'])"/></td>
@@ -159,6 +180,8 @@
 </%def>
 
 <%def name="end()">
+
+<script src="http://api.map.baidu.com/api?v=1.4" type="text/javascript"></script> 
 
     <script src="${static_url('js/ui-bootstrap-tpls.js')}"></script>
     <link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}"> 
