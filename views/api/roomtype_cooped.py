@@ -7,7 +7,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
 from config import API
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.url import add_get_params
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
@@ -18,13 +18,13 @@ import tasks.models.cooperate_roomtype as CooperateRoom
 from tasks.models import cooperate_hotel as CooperateHotel
 import tasks.models.inventory as Inventory
 
-import tcelery
-tcelery.setup_nonblocking_producer()
+from constants import PERMISSIONS
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def get(self, hotel_id):
         today = datetime.today()
         year = self.get_query_argument('year', today.year)
@@ -135,6 +135,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def post(self, hotel_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
@@ -161,6 +162,7 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def put(self, hotel_id, roomtype_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
