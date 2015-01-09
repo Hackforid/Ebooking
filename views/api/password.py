@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from views.base import BtwBaseHandler
-from tools.auth import auth_login
-from tools.auth import auth_permission
+from tools.auth import auth_login, auth_permission, md5_password
 from tools.request_tools import get_and_valid_arguments
 from models.user import UserModel
 from constants import PERMISSIONS
@@ -14,6 +13,7 @@ class PasswordAPIHandler(BtwBaseHandler):
         args = self.get_json_arguments()
         old_password, password, re_password = get_and_valid_arguments(args, 'old_password', 'password', 're_password')
 
+        old_password = md5_password(old_password)
         if self.current_user.password != old_password:
             self.finish_json(1, u'旧密码不正确')
             return
@@ -26,7 +26,7 @@ class PasswordAPIHandler(BtwBaseHandler):
             self.finish_json(1, u'两次密码不一致')
             return
 
-        if password == self.current_user.password:
+        if md5_password(password) == self.current_user.password:
             self.finish_json(1, u'新密码和旧密码相同')
             return
 
