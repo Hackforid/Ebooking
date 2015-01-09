@@ -2,8 +2,8 @@
 from views.base import BtwBaseHandler
 from tools.auth import auth_login, auth_permission, md5_password
 from tools.request_tools import get_and_valid_arguments
-from models.user import UserModel
 from constants import PERMISSIONS
+from tasks.models.user import update_password
 
 class PasswordAPIHandler(BtwBaseHandler):
 
@@ -30,7 +30,11 @@ class PasswordAPIHandler(BtwBaseHandler):
             self.finish_json(1, u'新密码和旧密码相同')
             return
 
-        UserModel.update_password(self.db, self.current_user.merchant_id, self.current_user.username, password)
-        self.clear_cookie('username')
-        self.clear_cookie('merchant_id')
-        self.finish_json(0, '修改成功')
+        task = yield gen(update_password.apply_async,
+                args=[self.current_user.merchant_id, self.current_user.username, password])
+        if task.status == 'SUCCESS':
+            self.clear_cookie('username')
+            self.clear_cookie('merchant_id')
+            self.finish_json(0, '修改成功')
+        else:
+            self.finish_json(1000, 'error')

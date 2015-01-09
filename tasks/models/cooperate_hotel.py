@@ -31,7 +31,7 @@ def new_hotel_cooprate(self, merchant_id, hotel_id):
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def new_hotel_cooprates(self, merchant_id, hotel_ids):
-    return CooperateHotelModel.new_hotel_cooprates(self.session, merchant_id, hotel_id, is_online)
+    return CooperateHotelModel.new_hotel_cooprates(self.session, merchant_id, hotel_ids)
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def change_hotel_online_status(self, merchant_id, hotel_id, is_online):
