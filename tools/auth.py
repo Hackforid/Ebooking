@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import hashlib
+from config import PASSWORD_SALT
+
 
 def auth_login(json=False):
     def _decorator(fn):
@@ -29,3 +32,11 @@ def auth_permission(permissions, json=False):
                     self.finish('permission denied')
         return _
     return _decorator
+
+def md5_password(password):
+    pwd = "{}|{}".format(password, PASSWORD_SALT)
+    m = hashlib.md5()
+    m.update(pwd)
+    return m.hexdigest()
+
+

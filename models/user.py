@@ -6,6 +6,7 @@ from tornado.util import ObjectDict
 from models import Base
 from sqlalchemy import Column, DateTime
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
+from tools.auth import md5_password
 
 
 class UserModel(Base):
@@ -38,6 +39,7 @@ class UserModel(Base):
 
     @classmethod
     def get_user_by_merchantid_username_and_password(cls, session, merchant_id, username, password):
+        password = md5_password(password)
         return session.query(UserModel)\
             .filter(UserModel.merchant_id == merchant_id, UserModel.username == username, UserModel.password == password,
                     UserModel.is_delete == 0, UserModel.is_valid == 1)\
@@ -51,6 +53,8 @@ class UserModel(Base):
 
     @classmethod
     def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, is_valid):
+        if password:
+            password = md5_password(password)
         user = cls.get_user_by_merchantid_username(session, merchant_id, username)
         if user:
             if password:
@@ -65,6 +69,7 @@ class UserModel(Base):
 
     @classmethod
     def update_password(cls, session, merchant_id, username, password):
+        password = md5_password(password)
         user = cls.get_user_by_merchantid_username(session, merchant_id, username)
         if user:
             user.password = password
@@ -72,6 +77,7 @@ class UserModel(Base):
 
     @classmethod
     def add_user(cls, session, merchant_id, username, password, department, mobile, authority, is_valid):
+        password = md5_password(password)
         user = UserModel(merchant_id=merchant_id, username=username, nickname='', password=password, department=department,
                          mobile=mobile, email='', authority=authority, is_valid=is_valid)
         session.add(user)
