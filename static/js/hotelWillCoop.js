@@ -54,6 +54,8 @@
 			$scope.messageBox;
 			$scope.paginationId = "pageNumber";
 
+			$scope.checkStatus=false;
+
 
 			//$scope.cityList = [];
 			$scope.getHotelStar = function(m) {
@@ -109,6 +111,8 @@
 							$scope.messageBox = "合作成功";
 
 							$("#acceptDialog").show();
+
+							$scope.searchResult();
 
 						} else {
 
@@ -226,6 +230,8 @@
 
 			$scope.conditionReset = function conditionReset() {
 
+				$scope.checkStatus=false;
+
 				$scope.searchName = "";
 				//$scope.searchCity = "";
 				$("#searchCity").val("");
@@ -244,7 +250,9 @@
 
 			$scope.searchResult = function searchResult() {
 
-				//console.log($scope.finalUrl);
+				//console.log("数据库请求");
+
+				console.log($scope.finalUrl);
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
