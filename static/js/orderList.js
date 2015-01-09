@@ -47,6 +47,17 @@
 		$scope.currentOrder;
 
 
+		$scope.resonStatusCheck = function(a, b) {
+
+			if (a == "拒绝") {
+				return b;
+			} else {
+				return "无";
+			}
+
+
+		}
+
 
 		$scope.getCancelStatus = function(m) {
 
@@ -277,6 +288,18 @@
 
 
 		$scope.currentOrder;
+
+
+		$scope.resonStatusCheck = function(a, b) {
+
+			if (a == "拒绝") {
+				return b;
+			} else {
+				return "无";
+			}
+
+
+		}
 
 
 
@@ -519,6 +542,18 @@
 
 
 		$scope.currentOrder;
+
+
+		$scope.resonStatusCheck = function(a, b) {
+
+			if (a == "拒绝") {
+				return b;
+			} else {
+				return "无";
+			}
+
+
+		}
 
 
 
