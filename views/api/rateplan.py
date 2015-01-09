@@ -4,7 +4,7 @@ from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
@@ -12,15 +12,14 @@ from exception.celery_exception import CeleryException
 
 import tasks.models.rate_plan as RatePlanModel
 
-
-import tcelery
-tcelery.setup_nonblocking_producer()
+from constants import PERMISSIONS 
 
 
 class RatePlanAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def post(self, hotel_id, roomtype_id):
         args = self.get_json_arguments()
         name, meal_num, punish_type = get_and_valid_arguments(
@@ -44,6 +43,7 @@ class RatePlanAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def get(self, hotel_id, roomtype_id):
         merchant_id = self.current_user.merchant_id
 
@@ -75,6 +75,7 @@ class RatePlanModifyAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, rateplan_id):
         args = self.get_json_arguments()
         name, meal_num, punish_type = get_and_valid_arguments(args,

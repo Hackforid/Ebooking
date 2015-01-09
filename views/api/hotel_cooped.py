@@ -5,13 +5,14 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
 from config import API
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
 from tasks.models.cooperate_hotel import get_by_merchant_id, change_hotel_online_status
+from constants import PERMISSIONS
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -20,6 +21,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_cooperated_hotel, json=True)
     def get(self):
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
@@ -119,6 +121,7 @@ class HotelCoopOnlineAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_cooperated_hotel, json=True)
     def put(self, hotel_id, is_online):
         merchant_id = self.current_user.merchant_id
         is_online = int(is_online)

@@ -3,7 +3,7 @@
 from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
-from tools.auth import auth_login
+from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
@@ -13,10 +13,13 @@ from tasks.models import order as Order
 from tasks.order import submit_order as SubmitOrder
 from tasks.order import cancel_order as CancelOrder
 
+from constants import PERMISSIONS
+
 class OrderWaitingAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
         start = self.get_query_argument('start', 0)
@@ -41,6 +44,7 @@ class OrderUserConfirmAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
     def post(self, order_id):
         merchant_id = self.current_user.merchant_id
 
@@ -60,6 +64,7 @@ class OrderUserCancelAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
     def post(self, order_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
@@ -82,6 +87,7 @@ class OrderUserCancelAPIHandler(BtwBaseHandler):
 class OrderTodayBookListAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     @auth_login(json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
@@ -106,6 +112,7 @@ class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
         start = self.get_query_argument('start', 0)
@@ -129,6 +136,7 @@ class OrderSearchAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     def get(self):
         merchant_id = self.current_user.merchant_id
 
