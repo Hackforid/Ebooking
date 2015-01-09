@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from constants import QUEUE_ORDER

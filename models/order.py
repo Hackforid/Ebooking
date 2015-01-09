@@ -183,6 +183,7 @@ class OrderModel(Base):
 
     @classmethod
     def get_today_checkin_orders(cls, session, merchant_id, start=None, limit=None):
+        import time
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
         query = session.query(OrderModel)\
@@ -197,7 +198,8 @@ class OrderModel(Base):
         if limit:
             query = query.limit(limit)
 
-        return query.all(), total
+        all = query.all()
+        return all, total
 
     def confirm_by_user(self, session):
         self.status = 300

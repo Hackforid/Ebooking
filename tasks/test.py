@@ -23,3 +23,7 @@ class Test(object):
             print i
             time.sleep(1)
         return num + 3
+
+@app.task
+def helloworld():
+    return 'hello world'

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+#from gevent import monkey
+#monkey.patch_all()
+
 import celery
-from sqlalchemy.orm import scoped_session
-from db import db_session
+from tasks.db import Session
 
 class SqlAlchemyTask(celery.Task):
 
@@ -11,14 +13,14 @@ class SqlAlchemyTask(celery.Task):
     _session = None
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        print 'after_return'
-        db_session.remove()
+        self._session.remove()
 
     def on_failure(self, *args, **kwargs):
         print 'on_failure'
 
     @property
     def session(self):
-        print 'get db session'
-        return db_session
+        if self._session == None:
+            self._session = Session
+        return self._session
 

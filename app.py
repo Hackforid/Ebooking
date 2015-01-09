@@ -12,11 +12,8 @@ from tornado.options import define, options
 
 from mako.lookup import TemplateLookup
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from router import handlers
-from config import Config
+from config import Config, LISTENER_IP
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -48,16 +45,10 @@ class Application(tornado.web.Application):
                 encoding_errors='replace',
                 )
 
-        # db
-        engine = create_engine(
-                Config['db'], encoding='utf-8', echo=True)
-        self.DB_Session = sessionmaker(bind=engine)
-
-
 def main():
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(options.port)
+    http_server.listen(options.port, address=LISTENER_IP)
     tornado.ioloop.IOLoop.instance().start()
 
 
