@@ -24,18 +24,19 @@ def get_by_id(task_self, id):
 def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type):
     room = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
     if not room:
-        raise CeleryException(errcode=1000, errmsg='room not exist')
+        raise CeleryException(errcode=404, errmsg='room not exist')
 
     rate_plan = RatePlanModel.get_by_merchant_hotel_room_name(
         self.session, merchant_id, hotel_id, roomtype_id, name)
     if rate_plan:
-        return CeleryException(errcode=405, errmsg="name exist")
+        raise CeleryException(errcode=405, errmsg="name exist")
 
     new_rateplan = RatePlanModel.new_rate_plan(self.session,
         merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type)
     new_roomrate = RoomRateModel.new_roomrate(self.session, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num)
 
     PushRatePlanTask().push_rateplan.delay(new_rateplan.id)
+    print new_rateplan, new_roomrate
     return new_rateplan, new_roomrate
 
 
