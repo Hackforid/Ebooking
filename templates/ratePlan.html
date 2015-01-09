@@ -57,7 +57,7 @@
                                             <option value="100">按人头早餐</option>                                                                                                      
                                         </select>
                                     </label>
-                                    <label>取消时：<select id={{"roomheadpunish"+$index}} ng-model="rateplan.punish_type" 
+                                    <label>取消时：<select id={{"roomheadpunish"+$index}}  
                                     name="" class="input-s"  >                                                                                  
                                              <option value="0">不扣任何费用</option>
                                             <option value="1">扣首晚房费</option>
@@ -182,7 +182,7 @@
                      </select></td>
   </tr>
 </table>
-<p  style="margin-left:17px;color:red"  ng-bind="newRatePlanDialog.errmsg"></p>
+<p  style="margin-left:17px;color:red"  ng-bind="errMessage"></p>
           
           <p class="action" style=" text-align:center">
               <input name="" type="button" value="保存"  ng-click="newRatePlanDialog.save()"/>
