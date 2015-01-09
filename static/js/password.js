@@ -55,9 +55,9 @@
                 return;
             }
             var submit = {};
-            submit['old_password'] = $scope.old_password;
-            submit['password'] = $scope.password;
-            submit['re_password'] = $scope.re_password;
+            submit['old_password'] = hex_md5($scope.old_password);
+            submit['password'] = hex_md5($scope.password);
+            submit['re_password'] = hex_md5($scope.re_password);
             $http.put("/api/password", submit)
                 .success(function (response) {
                     if (response.errcode==0) {
