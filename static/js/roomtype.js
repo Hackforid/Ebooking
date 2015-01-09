@@ -51,7 +51,7 @@
 			this.name = '';
 			this.mealType = 0;
 			this.punishType = 0;
-			this.errmsg = '';
+			scope.errMessage = '';
 			$("#newRatePlanDialog").fadeIn(500);
 		}
 		this.close = function() {
@@ -59,7 +59,7 @@
 		}
 		this.save = function() {
 			if (!this.name) {
-				this.errmsg = '请输入有效名称';
+				scope.errMessage = '请输入有效名称';
 				return;
 			}
 
@@ -69,14 +69,13 @@
 			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
 
 			if (resultLen > 20) {
-				this.errmsg = "名称不能超过20个字符";
+				scope.errMessage = "名称不能超过20个字符";
 				return;
 			}
 
-			
 
 
-			this.errmsg = '';
+			scope.errMessage = '';
 			//console.log(this.name + this.mealType + this.punishType);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
@@ -90,7 +89,7 @@
 
 			http.post(url, params)
 				.success(function(resp) {
-					//	console.log(resp);
+					console.log(resp);
 					if (resp.errcode == 0) {
 
 						scope.roomrates.push(resp.result.roomrate);
@@ -99,7 +98,15 @@
 						$("#newRatePlanDialog").fadeOut(500);
 
 					} else {
-						this.errmsg = resp.errmsg;
+						//this.errmsg = resp.errmsg;
+
+						//console.log(resp.errcode);
+						if (resp.errcode == "405") {
+							scope.errMessage = "名字已经存在";
+						}
+						if (resp.errcode == "404") {
+							scope.errMessage = "没有可用房型";
+						}
 
 					}
 				})
@@ -116,13 +123,33 @@
 		this.errmsg = '';
 
 		this.eachhide = function(index) {
+			var roomRateName;
+			roomRateName=scope.rateplans[index].name;
+
+			$(("#roomheadinput"+index)).val(roomRateName);
+
+			var punishValue;
+			punishValue=scope.rateplans[index].punish_type;
+			console.log(punishValue);
+
+			$(("#roomheadpunish"+index)).val(punishValue);
 
 			$("div.eachroom").eq(index).css("display", "none");
+
+
+
+
 
 		}
 		this.eachshow = function(index) {
 
 			$("div.eachroom").eq(index).css("display", "block");
+
+				var punishValue;
+			punishValue=scope.rateplans[index].punish_type;
+			$(("#roomheadpunish"+index)).val(punishValue);
+
+
 			var tempmealsum = scope.roomrates[index].meal1.split("|", 1);
 			$("#roomheadmeal" + index).val(tempmealsum[0]);
 
@@ -300,6 +327,8 @@
 		$scope.dayWeekSum = [];
 		$scope.dayPriceSum = {};
 		$scope.currentindex = "";
+
+		$scope.errMessage = "";
 
 		$scope.currentHotelDetail = "";
 

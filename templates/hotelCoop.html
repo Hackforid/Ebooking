@@ -147,7 +147,7 @@
     
     <label><strong>酒店名称：</strong><span ng-bind="currentHotel['name']"></span>
               <a href="javascript:void(0)" ng-click="mapshow()" class="a-orange">[ 百度地图 ]</a></label>
-     <label><strong>运营状态：</strong><input type="radio" name="status" value = "normal" ng-checked="currentHotel['is_online']">正常&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="status" value = "pause" ng-checked="!currentHotel['is_online']">暂停</label>      
+     <strong>运营状态：</strong><input type="radio" name="status" value = "normal" ng-checked="currentHotel['is_online']">正常&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="status" value = "pause" ng-checked="!currentHotel['is_online']">暂停      
     </td>
     <td align="right" width="30%"><input name="" type="button" value="保存更改" ng-click="changeStatus(currentHotel['id'])"/></td>
   </tr>

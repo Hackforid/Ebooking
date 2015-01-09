@@ -695,12 +695,12 @@
 			}
 
 			if ($.trim(liveStarTime) != "" && liveStarTime != undefined) {
-				url = url + "&checkin_date=" + liveStarTime;
+				url = url + "&checkin_date_start=" + liveStarTime;
 
 			}
 
 			if ($.trim(liveEndTime) != "" && liveEndTime != undefined) {
-				url = url + "&checkout_date=" + liveEndTime;
+				url = url + "&checkin_date_end=" + liveEndTime;
 
 			}
 
