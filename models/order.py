@@ -76,7 +76,10 @@ class OrderModel(Base):
             date = datetime.datetime.strptime(checkout_date, '%Y-%m-%d')
             query = query.filter(OrderModel.checkout_date == date.date())
         if status is not None:
-            query = query.filter(OrderModel.status == status)
+            if isinstance(status, list):
+                query = query.filter(OrderModel.status.in_(status))
+            else:
+                query = query.filter(OrderModel.status == status)
         if create_time_start:
             date = datetime.datetime.strptime(create_time_start, '%Y-%m-%d')
             query = query.filter(OrderModel.create_time >= date)

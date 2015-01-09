@@ -142,6 +142,9 @@ class OrderSearchAPIHandler(BtwBaseHandler):
         create_time_end = self.get_query_argument('create_time_end', None)
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
+        
+        if order_status:
+            order_status = order_status.split(',')
 
         task = yield gen.Task(Order.search.apply_async,
                 args=[order_id, hotel_name, checkin_date, checkout_date, customer, order_status, create_time_start, create_time_end, start, limit])
