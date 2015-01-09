@@ -42,10 +42,6 @@ class UserManageAPIHandler(BtwBaseHandler):
         else:
             password = None
 
-        if password and (len(password) < 6 or len(password) > 20):
-            self.finish_json(1, u'请填写长度6-20位的正确密码')
-            return
-
         if not self.mobile_check(mobile):
             self.finish_json(1, u'请填写正确手机号')
             return
