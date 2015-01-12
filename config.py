@@ -21,3 +21,5 @@ CELERY_RESULT_BACKEND = "amqp://:admin:admin@localhost:5672/ebooking"
 LISTENER_IP = "0.0.0.0"
 
 PASSWORD_SALT = "google"
+
+COOKIE_SALT = "you never know me"
