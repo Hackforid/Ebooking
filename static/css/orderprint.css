@@ -1,6 +1,6 @@
 .print-web { top:50px;left:10px;position:absolute;font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif; margin:0;padding:0;display: none;}
-.fl { float:left}
-.fr { float:right}
+.fl { float:left;font-size:20px;}
+.fr { float:right;padding-right: 80px;font-size:20px;}
 .print-web {width:1000px;margin:0 auto; font-size:14px;color:#000; text-align:left; line-height:160%;}
 .print-web table td {padding:20px 0;}
 .print-web span {float:left;padding:3px 5px 3px 0;width:94px;}
@@ -29,3 +29,5 @@
 .pb { padding:10px 0; font-size:15px}
 
 .pmtable td span {font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif!important;font-size: 20px;width:100px;font-weight:bold;}
+
+.quickresponse{height:100px;width:100px;position:relative;left:900px}
