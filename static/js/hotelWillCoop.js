@@ -54,7 +54,7 @@
 			$scope.messageBox;
 			$scope.paginationId = "pageNumber";
 
-			$scope.checkStatus=false;
+			$scope.checkStatus = false;
 
 
 			//$scope.cityList = [];
@@ -95,8 +95,19 @@
 					})
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							//console.log(resp);
+							console.log(resp);
 							var hotelResult = resp.result.hotel_cooprate;
+
+
+							if (hotelResult.length != 0)
+
+							{
+								$scope.messageBox = "合作成功";
+								$("#acceptDialog").show();
+							}
+
+
+
 							for (var i = 0; i < $scope.hotels.length; i++) {
 								for (var j = 0; j < hotelResult.length; j++) {
 									if ($scope.hotels[i]["id"] == hotelResult[j]["base_hotel_id"]) {
@@ -108,9 +119,7 @@
 								};
 							};
 
-							$scope.messageBox = "合作成功";
 
-							$("#acceptDialog").show();
 
 							$scope.searchResult();
 
@@ -230,7 +239,7 @@
 
 			$scope.conditionReset = function conditionReset() {
 
-				$scope.checkStatus=false;
+				$scope.checkStatus = false;
 
 				$scope.searchName = "";
 				//$scope.searchCity = "";
