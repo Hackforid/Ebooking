@@ -127,7 +127,7 @@ input[type="button"].btn-print:hover,.btn-print:hover {border:0;height:18px;widt
 
 .header .left {width:300px; }
 .header .left img { float:left;margin-top:15px;}
-.header .left img.img1 {padding-left:20px;width:290px!important;}
+.header .left img.img1 {padding-left:20px;width:450px!important;}
 
 .header .right {width:400px;padding-right:5px;}
 .header .right-menu { font-family: "Microsoft YaHei";}
@@ -154,7 +154,7 @@ border-left:0px solid #E1E1E1; border-top:0px solid #305C9A;}
 .admin-info .fl .img-head {position:absolute;top:0;left:0; z-index:98;width:60px;height:60px;}
 .admin-info .fr { cursor:pointer;text-align:left;font-size:14px;font-family: "Microsoft YaHei";width:90px; position:relative;height:65px; overflow:hidden
 ;margin-top:13px; color:#FFF; line-height:200%;background:url(../image/icon-left.png) no-repeat right -450px;}
-.admin-info .fr strong { font-size:16px;}
+.admin-info .fr strong { font-size:13px;}
 
 .person-menu { display:none;position:absolute; z-index:99; top:0;left:170px;width:185px;height:86px; background:#F99500;font-family: "Microsoft YaHei";}
 .person-menu ul { margin:0;padding:0;}
