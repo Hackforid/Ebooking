@@ -11,7 +11,7 @@ from config import Config
 engine = create_engine(
             Config['mysql-connector'], encoding='utf-8',
             pool_recycle=3600, pool_size=20,
-#            strategy='threadlocal'
+            echo=True
             )
 
 Session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False))
