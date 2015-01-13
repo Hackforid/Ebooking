@@ -6,6 +6,42 @@ $(document).ready(function() {
 
   //$(".menu1").find("a").click(function(){console.log($(this).parent());$(this).parent().addclass("active");alert("1");});
 
+  var nameCheckValue = $.trim($("#userNameCheck").html());
+  var nameLength = nameCheckValue.replace(/[\u4e00-\u9fa5]/g, "aa").length;
+  if (nameLength > 6) {
+
+    var cordCount = 0;
+    var realName = "";
+    for (var i = 0; i < 6; i++) {
+      var singleCode = nameCheckValue.substring(i, i + 1);
+
+      if (/[\u4e00-\u9fa5]/.test(singleCode)) {
+
+        cordCount = cordCount + 2;
+        realName = realName + singleCode;
+        if (cordCount > 4) {
+          break;
+        }
+
+      } else {
+        cordCount = cordCount + 1;
+        realName = realName + singleCode;
+        if (cordCount > 6) {
+          break;
+        }
+
+      }
+
+    };
+    realName = realName + "...";
+
+    console.log(realName);
+    $("#userNameCheck").html(realName);
+
+  }
+
+
+
   function waitingQuery() {
     $.ajax({
       url: '/api/order/waiting/?start=0',
