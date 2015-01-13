@@ -240,7 +240,7 @@ background: url(../image/price-tips.gif) no-repeat 220px 7px;}
 .main-room .form {padding:20px 0;width:100%;  }
 .main-room .form .roomhead { position:relative;height:50px; display:block; text-align:left; }
 .main-room .form .roomhead>h1 { margin:0;padding:0;float:left;line-height:32px; width:auto; font-size:14px;color:#333; cursor:pointer;font-weight:bold;padding:0 20px; padding-left:30px;
-border:1px solid #D5D5D5;/* background:url(../image/icon-left.png) no-repeat left -860px; */
+border:1px solid #D5D5D5; background:url(../image/icon-left.png) no-repeat left -860px; 
 -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;/* overflow:hidden;max-width:200px; */
 text-overflow:ellipsis;
 -o-text-overflow:ellipsis;
