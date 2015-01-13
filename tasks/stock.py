@@ -12,14 +12,13 @@ from tasks.base_task import SqlAlchemyTask
 
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
-from tools.log import Log
 from config import CHAIN_ID, API, IS_PUSH_TO_STOCK
 
 class PushHotelTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_hotel(self, hotel_id):
-        Log.info("<<push hotel {}>> start".format(hotel_id))
+        self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
         from models.cooperate_roomtype import CooperateRoomTypeModel
 
@@ -42,10 +41,10 @@ class PushHotelTask(SqlAlchemyTask):
         track_id = self.generate_track_id(hotel_data['id'])
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        Log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
+        self.log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
         url = API['STOCK'] + '/stock/update_hotel'
         r = requests.post(url, data=params)
-        Log.info("<<push hotel {}>> response {}".format(hotel_data['id'], r.text))
+        self.log.info("<<push hotel {}>> response {}".format(hotel_data['id'], r.text))
 
     def generate_track_id(self, hotel_id):
         return "{}|{}".format(hotel_id, time.time())
@@ -105,14 +104,14 @@ class PushRatePlanTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_rateplan(self, rateplan_id, with_cancel_rule=True, with_roomrate=True):
-        Log.info("<< push rateplan {}>>".format(rateplan_id))
+        self.log.info("<< push rateplan {}>>".format(rateplan_id))
         from models.rate_plan import RatePlanModel
         from models.room_rate import RoomRateModel
 
         rateplan = RatePlanModel.get_by_id(self.session, rateplan_id)
         roomrate = RoomRateModel.get_by_rateplan(self.session, rateplan_id)
         if not rateplan or not roomrate:
-            Log.info('not found')
+            self.log.info('not found')
             return
 
         self.post_rateplan(rateplan, roomrate)
@@ -134,10 +133,10 @@ class PushRatePlanTask(SqlAlchemyTask):
         params = {'track_id': track_id,
                 'data': json_encode(data)
                 }
-        Log.info(params)
+        self.log.info(params)
         url = API['STOCK'] + '/stock/update_rate_plan'
         r = requests.post(url, data=params)
-        Log.info(r.text)
+        self.log.info(r.text)
 
     def post_cancel_rule(self, rateplan):
         if not IS_PUSH_TO_STOCK:
@@ -145,11 +144,11 @@ class PushRatePlanTask(SqlAlchemyTask):
         rateplan_data = self.generate_cancel_rule_data(rateplan)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
-        Log.info("<<push rateplan {}>> data:{}".format(rateplan.id, data))
+        self.log.info("<<push rateplan {}>> data:{}".format(rateplan.id, data))
 
         url = API['STOCK'] + '/stock/update_cancel_rule'
         r = requests.post(url, data)
-        Log.info("<<push rateplan {}>> response:{}".format(rateplan.id, r.text))
+        self.log.info("<<push rateplan {}>> response:{}".format(rateplan.id, r.text))
 
     def post_roomrate(self, rateplan, roomrate):
         if not IS_PUSH_TO_STOCK:
@@ -157,11 +156,11 @@ class PushRatePlanTask(SqlAlchemyTask):
         roomrate_data = self.generate_roomrate_data(rateplan, roomrate)
         track_id = self.generate_track_id(rateplan.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
-        Log.info(data)
+        self.log.info(data)
 
         url = API['STOCK'] + '/stock/update_room_rate'
         r = requests.post(url, data)
-        Log.info(r.text)
+        self.log.info(r.text)
 
 
 
@@ -249,19 +248,19 @@ class PushInventoryTask(SqlAlchemyTask):
         if not IS_PUSH_TO_STOCK:
             return
         if not inventories:
-            Log.info('no inventoris')
+            self.log.info('no inventoris')
             return
         inventory_data = self.generate_inventory_data(inventories)
         track_id = generate_track_id(inventories[0].roomtype_id)
 
         params = {'track_id': track_id,
                 'data': json_encode({'list': [inventory_data]})}
-        Log.info(params)
+        self.log.info(params)
 
         url = API['STOCK'] + '/stock/update_inventory'
 
         r = requests.post(url, data=params)
-        Log.info(r.text)
+        self.log.info(r.text)
 
 
     def generate_inventory_data(self, inventories):

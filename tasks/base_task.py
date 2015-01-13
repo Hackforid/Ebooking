@@ -4,6 +4,7 @@
 #monkey.patch_all()
 
 import celery
+from celery.utils.log import get_task_logger
 from tasks.db import Session
 
 class SqlAlchemyTask(celery.Task):
@@ -23,4 +24,8 @@ class SqlAlchemyTask(celery.Task):
         if self._session == None:
             self._session = Session
         return self._session
+
+    @property
+    def log(self):
+        return get_task_logger('%s.%s' % (__name__, self.__class__.__name__))
 
