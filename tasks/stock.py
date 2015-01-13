@@ -13,10 +13,11 @@ from tasks.base_task import SqlAlchemyTask
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from config import CHAIN_ID, API, IS_PUSH_TO_STOCK
+from constants import QUEUE_STOCK_PUSH
 
 class PushHotelTask(SqlAlchemyTask):
 
-    @app.task(filter=task_method, ignore_result=True)
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_hotel(self, hotel_id):
         self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
@@ -102,7 +103,7 @@ class PushHotelTask(SqlAlchemyTask):
 
 class PushRatePlanTask(SqlAlchemyTask):
 
-    @app.task(filter=task_method, ignore_result=True)
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_rateplan(self, rateplan_id, with_cancel_rule=True, with_roomrate=True):
         self.log.info("<< push rateplan {}>>".format(rateplan_id))
         from models.rate_plan import RatePlanModel
@@ -232,8 +233,9 @@ class PushRatePlanTask(SqlAlchemyTask):
 
 class PushInventoryTask(SqlAlchemyTask):
 
-    @app.task(filter=task_method, ignore_result=True)
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_inventory(self, roomtype_id):
+        self.log.info("<< push inventory (roomtype {})>>".format(roomtype_id))
         from models.inventory import InventoryModel
 
         start_day = datetime.date.today()
