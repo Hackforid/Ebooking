@@ -605,6 +605,10 @@
 
 			setTimeout(function() {
 				window.print();
+								
+
+				$(".search-div").show();
+				$(".choose-div").show();
 
 				$("#printwebquery").hide();
 				$(".header").show();
