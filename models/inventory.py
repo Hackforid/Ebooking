@@ -249,7 +249,7 @@ class InventoryModel(Base):
             prices = value.split('|')
             auto, manual = int(prices[0]), int(prices[1])
             auto = auto if auto >=0 else 0
-            manual = manual if auto >= 0 else 0
+            manual = manual if manual >= 0 else 0
             return auto + manual
 
     def get_day_count(self, day):
