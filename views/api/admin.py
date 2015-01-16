@@ -3,7 +3,7 @@
 from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
-from tools.auth import auth_login, auth_permission
+from tools.auth import auth_login, auth_permission, need_btw_admin
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 import tasks.models.cooperate_hotel as CooperateHotel
@@ -18,6 +18,8 @@ from mixin.request_mixin import CeleryTaskMixin
 class AdminMerchantAPIHandler(BtwBaseHandler, CeleryTaskMixin):
 
     @gen.coroutine
+    @auth_login(json=True)
+    @need_btw_admin(json=True)
     def get(self):
 
         task = yield gen.Task(Merchant.get_merchant_list.apply_async)
@@ -31,6 +33,8 @@ class AdminMerchantAPIHandler(BtwBaseHandler, CeleryTaskMixin):
 class AdminMerchantModifyAPIHandler(BtwBaseHandler, CeleryTaskMixin):
 
     @gen.coroutine
+    @auth_login(json=True)
+    @need_btw_admin(json=True)
     def post(self):
         args = self.get_json_arguments()
         merchant, root_pwd, admin_pwd = get_and_valid_arguments(args, 'merchant', 'root_pwd', 'admin_pwd')
@@ -48,6 +52,8 @@ class AdminMerchantModifyAPIHandler(BtwBaseHandler, CeleryTaskMixin):
             ))
 
     @gen.coroutine
+    @auth_login(json=True)
+    @need_btw_admin(json=True)
     def put(self):
         args = self.get_json_arguments()
         merchant, = get_and_valid_arguments(args, 'merchant')

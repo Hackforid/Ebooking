@@ -28,7 +28,7 @@
 
                     <div class="person-menu">
                         <ul>
-							% if user.username == 'admin':
+							% if user.username in ['admin', 'root']:
                             <li class="icon-admin"><a href="/userManage/" target="_blank">用户管理</a></li>
 							% endif
                             <li class="icon-password"><a href="/password/" target="_blank">修改密码</a></li>

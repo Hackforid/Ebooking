@@ -41,3 +41,30 @@ def md5_password(password):
 
 
 
+def no_monomer_hotel(json=False):
+    def _decorator(fn):
+        def _(self, *args, **kwargs):
+
+            if self.merchant.type != self.merchant.TYPE_MONOMER_HOTEL:
+                return fn(self, *args, **kwargs)
+            else:
+                if json:
+                    self.finish_json(errcode=100, errmsg="no permission")
+                else:
+                    self.redirect(self.get_login_url())
+        return _
+    return _decorator
+
+def need_btw_admin(json=False):
+    def _decorator(fn):
+        def _(self, *args, **kwargs):
+
+            if self.merchant.id == 1:
+                return fn(self, *args, **kwargs)
+            else:
+                if json:
+                    self.finish_json(errcode=100, errmsg="no permission")
+                else:
+                    self.redirect(self.get_login_url())
+        return _
+    return _decorator

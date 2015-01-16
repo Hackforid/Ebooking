@@ -96,7 +96,7 @@ class UserManageAPIHandler(BtwBaseHandler):
         if not mobile:
             self.finish_json(1, u'请输入手机号')
             return
-        if authority % 2 == 1:
+        if authority & PERMISSIONS.admin or authority & PERMISSIONS.root:
             self.finish_json(1, u'不允许添加管理员用户')
             return
 

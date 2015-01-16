@@ -51,10 +51,12 @@ class UserModel(Base):
             .first()
 
     @classmethod
-    def get_users_by_merchant_id(cls, session, merchant_id):
-        return session.query(UserModel)\
-            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete == 0)\
-            .all()
+    def get_users_by_merchant_id(cls, session, merchant_id, hide_root=True):
+        query = session.query(UserModel)\
+            .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete == 0)
+        if hide_root:
+            query = query.filter(UserModel.type != cls.TYPE_ROOT)
+        return query.all()
 
     @classmethod
     def new_admin_root_user(cls, session, merchant_id, admin_pwd, root_pwd):

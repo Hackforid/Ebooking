@@ -73,7 +73,9 @@
                                             <p><input name="select_auth1" type="checkbox" ng-click="changeAuth(selectUser, 1)" ng-model="selectUser.auths[1]"/>待确认订单</p>
                                             <p><input name="select_auth2" type="checkbox" ng-click="changeAuth(selectUser, 2)" ng-model="selectUser.auths[2]"/>订单查询</p>
                                             <p><input name="select_auth3" type="checkbox" ng-click="changeAuth(selectUser, 3)" ng-model="selectUser.auths[3]"/>已合作酒店</p>
+											% if merchant.type != merchant.TYPE_MONOMER_HOTEL:
                                             <p><input name="select_auth4" type="checkbox" ng-click="changeAuth(selectUser, 4)" ng-model="selectUser.auths[4]"/>可合作酒店</p>
+											% endif
                                             <p><input name="select_auth5" type="checkbox" ng-click="changeAuth(selectUser, 5)" ng-model="selectUser.auths[5]"/>房量房态</p>
                                             <p><input name="select_auth6" type="checkbox" ng-click="changeAuth(selectUser, 6)" ng-model="selectUser.auths[6]"/>房价金额</p>
                                             <p><input name="select_auth7" type="checkbox" ng-click="changeAuth(selectUser, 7)" ng-model="selectUser.auths[7]"/>订单统计</p>
@@ -138,7 +140,9 @@
                                             <p><input name="add_auth1" type="checkbox" ng-click="changeAuth(addUser, 1)" ng-model="addUser.auths[1]"/>待确认订单</p>
                                             <p><input name="add_auth2" type="checkbox" ng-click="changeAuth(addUser, 2)" ng-model="addUser.auths[2]"/>订单查询</p>
                                             <p><input name="add_auth3" type="checkbox" ng-click="changeAuth(addUser, 3)" ng-model="addUser.auths[3]"/>已合作酒店</p>
+											% if merchant.type != merchant.TYPE_MONOMER_HOTEL:
                                             <p><input name="add_auth4" type="checkbox" ng-click="changeAuth(addUser, 4)" ng-model="addUser.auths[4]"/>可合作酒店</p>
+											% endif
                                             <p><input name="add_auth5" type="checkbox" ng-click="changeAuth(addUser, 5)" ng-model="addUser.auths[5]"/>房量房态</p>
                                             <p><input name="add_auth6" type="checkbox" ng-click="changeAuth(addUser, 6)" ng-model="addUser.auths[6]"/>房价金额</p>
                                             <p><input name="add_auth7" type="checkbox" ng-click="changeAuth(addUser, 7)" ng-model="addUser.auths[7]"/>订单统计</p>
