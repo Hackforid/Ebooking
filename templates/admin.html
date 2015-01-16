@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+		<script src="${static_url('js/angular.js')}"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link href="${static_url('css/admin.css')}" rel="stylesheet" type="text/css" >
+    </head>
+
+    <body ng-app="adminApp" ng-controller="merchantCtrl">
+
+        <nav class="nav navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="nav-header">
+                    <a class="navbar-brand" href="#"><b>商户管理</b></a>
+                </div>
+                <div class="collapse navbar-collapse navbar-right">
+                    <button type="button" class="btn btn-primary navbar-btn" ng-click="openMerchantModal()">添加</button>
+                </div>
+
+            </div>
+        </nav>
+        <div class="container">
+
+            <table class="table">
+                <tr>
+                    <th>客户编号</th>
+                    <th>名称</th>
+                    <th>身份</th>
+                    <th>操作</th>
+                </tr>
+                <tr ng-repeat="merchant in merchants">
+                    <td>{{merchant.id}}</td>
+                    <td>{{merchant.name}}</td>
+                    <td>{{getMerchantTypeName(merchant.type)}}</td>
+                    <td><button class="btn btn-default" type="button" ng-click="openMerchantModal(merchant)">修改</button></td>
+                </tr>
+            </table>
+
+        </div>
+
+
+	    <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
+	    <script src="${static_url('js/ui-bootstrap-tpls-0.12.0.min.js')}"></script>
+        <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
+	    <script src="${static_url('js/admin.js')}"></script>
+	    <script src="${static_url('js/md5.js')}"></script>
+
+
+        <script type="text/ng-template" id="merchantModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title">{{title}}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{errmsg}}</p>
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">名称:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="name" ng-model="merchant.name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">身份:</label>
+                        <div class="col-lg-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="merchantType" ng-model="merchant.type" value=1>单体酒店
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="merchantType" ng-model="merchant.type" value=0>旅行社
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">商户管理员:</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static">admin</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">密码:</label>
+                        <div class="col-lg-10">
+                            <input type="password" class="form-control" placeholder="name" ng-model="admin.password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">后台管理员:</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static">root</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">密码:</label>
+                        <div class="col-lg-10">
+                            <input type="password" class="form-control" placeholder="name" ng-model="root.password">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">保存</button>
+                <button class="btn btn-warning" ng-click="cancel()">取消</button>
+            </div>
+        </script>
+    </body>
+</html>
