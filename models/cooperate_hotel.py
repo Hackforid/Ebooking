@@ -19,6 +19,7 @@ class CooperateHotelModel(Base):
     base_hotel_id = Column("baseHotelId", INTEGER, nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
+    is_suspend = Column('isSuspend', BIT, nullable=False, default=0)
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -82,10 +83,19 @@ class CooperateHotelModel(Base):
             session.commit()
         return coop
 
+    @classmethod
+    def set_suspend_by_merchant_id(cls, session, merchant_id, is_suspend, auto_commit=False):
+        session.query(CooperateHotelModel)\
+            .filter(CooperateHotelModel.merchant_id == merchant_id, CooperateHotelModel.is_delete == 0)\
+            .update({CooperateHotelModel.is_suspend: is_suspend})
+        if auto_commit:
+            session.commit()
+
     def todict(self):
         return ObjectDict(
             id=self.id,
             merchant_id=self.merchant_id,
             base_hotel_id=self.base_hotel_id,
             is_online=self.is_online,
+            is_suspend=self.is_suspend,
         )

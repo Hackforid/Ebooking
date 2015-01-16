@@ -48,6 +48,32 @@ adminApp.controller('merchantCtrl', ['$scope', '$http', '$modal', function($scop
 		}
 	}
 
+	$scope.getMerchantSuspendState = function(is_suspend) {
+		if (is_suspend == 0) {
+			return '正常';
+		} else {
+			return '暂停';
+		}
+	}
+
+	$scope.getMerchantSuspendButtonText = function(is_suspend) {
+		if (is_suspend == 0) {
+			return '暂停';
+		} else {
+			return '恢复';
+		}
+	}
+
+	$scope.suspendMerchant = function(merchant) {
+		is_suspend = merchant.is_suspend == 0 ? 1 : 0;
+		var url = '/api/admin/merchant/' + merchant.id + '/suspend/' + is_suspend;
+		$http.put(url)
+			.success(function(resp) {
+				if (resp.errcode == 0) {
+					loadMerchants();
+				}
+			});
+	}
 
 
 

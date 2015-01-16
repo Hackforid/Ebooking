@@ -18,6 +18,31 @@ from constants import QUEUE_STOCK_PUSH
 class PushHotelTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
+    def push_hotel_by_merchant_id(self, merchant_id):
+        self.log.info("<<push hotel by merchant {}>> start".format(merchant_id))
+        from models.cooperate_hotel import CooperateHotelModel
+        hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id)
+        hotel_list = [{'chain_id': CHAIN_ID, "hotel_id": hotel.id, "is_valid": self.cal_hotel_is_valid(hotel)} for hotel in hotels]
+
+        self.post_hotels(merchant_id, hotel_list)
+
+    def cal_hotel_is_valid(self, hotel):
+        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 else 0
+
+    def post_hotels(self, merchant_id, hotel_list):
+        if not IS_PUSH_TO_STOCK:
+            return
+        track_id = self.generate_track_id(merchant_id)
+        data = {'list': hotel_list, 'type': 1}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+        self.log.info(u"<<push hotel by merchant {}>> push data {}".format(merchant_id, params))
+        url = API['STOCK'] + '/stock/update_state'
+        r = requests.post(url, data=params)
+        self.log.info("<<push hotel by merchant {}>> response {}".format(merchant_id, r.text))
+
+
+
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_hotel(self, hotel_id):
         self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
@@ -63,7 +88,7 @@ class PushHotelTask(SqlAlchemyTask):
         data['chain_id'] = CHAIN_ID
         data['id'] = hotel.id
         data['name'] = base_hotel['name']
-        data['is_valid'] = hotel.is_online
+        data['is_valid'] = self.cal_hotel_is_valid(hotel)
         data['city_id'] = base_hotel['city_id']
         data['district_id'] = base_hotel['district_id']
         data['address'] = base_hotel['address']
