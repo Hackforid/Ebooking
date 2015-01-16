@@ -4,8 +4,9 @@ from tornado.util import ObjectDict
 
 from models import Base
 from sqlalchemy import Column, DateTime
-from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
+from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT, TINYINT
 from tools.auth import md5_password
+from constants import PERMISSIONS
 
 
 class UserModel(Base):
@@ -17,14 +18,19 @@ class UserModel(Base):
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     username = Column(VARCHAR(50), nullable=False)
-    nickname = Column(VARCHAR(50), nullable=False)
+    nickname = Column(VARCHAR(50), nullable=False, default='')
     password = Column(VARCHAR(50), nullable=False)
-    department = Column(VARCHAR(50), nullable=False)
-    mobile = Column(VARCHAR(50), nullable=False)
-    email = Column(VARCHAR(50), nullable=False)
+    department = Column(VARCHAR(50), nullable=False, default='')
+    mobile = Column(VARCHAR(50), nullable=False, default='')
+    email = Column(VARCHAR(50), nullable=False, default='')
     authority = Column(BIGINT, nullable=False, default=0)
     is_valid = Column('isValid', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
+    type = Column(TINYINT(1), nullable=False, default=0)
+
+    TYPE_NORMAL = 0
+    TYPE_ADMIN = 1
+    TYPE_ROOT = 2
 
     @classmethod
     def get_user_by_id(cls, session, id):
@@ -49,6 +55,16 @@ class UserModel(Base):
         return session.query(UserModel)\
             .filter(UserModel.merchant_id == merchant_id, UserModel.is_delete == 0)\
             .all()
+
+    @classmethod
+    def new_admin_root_user(cls, session, merchant_id, admin_pwd, root_pwd):
+        admin_pwd = md5_password(admin_pwd)
+        root_pwd = md5_password(root_pwd)
+        admin = UserModel(merchant_id=merchant_id, username='admin', password=admin_pwd, authority=PERMISSIONS.admin, type=cls.TYPE_ADMIN)
+        root = UserModel(merchant_id=merchant_id, username='root', password=root_pwd, authority=PERMISSIONS.root | PERMISSIONS.admin, type=cls.TYPE_ROOT)
+        session.add_all([admin, root])
+        session.commit()
+        return admin, root
 
     @classmethod
     def update_user(cls, session, merchant_id, username, password, department, mobile, email, authority, is_valid):

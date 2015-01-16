@@ -5,6 +5,7 @@ from tasks.base_task import SqlAlchemyTask
 from constants import QUEUE_ORDER
 
 from models.user import UserModel
+from models.merchant import MerchantModel
 
 
 @app.task(base=SqlAlchemyTask, bind=True)
@@ -31,3 +32,9 @@ def get_user_by_merchantid_username_and_password(self, merchant_id, username, pa
 @app.task(base=SqlAlchemyTask, bind=True)
 def update_password(self, merchant_id, username, password):
     return UserModel.update_password(self.session, merchant_id, username, password)
+
+@app.task(base=SqlAlchemyTask, bind=True)
+def get_login_user(self, merchant_id, username):
+    user = UserModel.get_user_by_merchantid_username(self.session, merchant_id, username)
+    merchant = MerchantModel.get_by_id(self.session, merchant_id)
+    return merchant, user

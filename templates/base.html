@@ -22,13 +22,13 @@
                         </div>
                         <div class="fr">
                             欢迎回来！<br/>
-							<strong id="userNameCheck">${user.get('username')}</strong>
+							<strong id="userNameCheck">${user.username}</strong>
                         </div>
                     </div>
 
                     <div class="person-menu">
                         <ul>
-							% if user.get('username') == 'admin':
+							% if user.username == 'admin':
                             <li class="icon-admin"><a href="/userManage/" target="_blank">用户管理</a></li>
 							% endif
                             <li class="icon-password"><a href="/password/" target="_blank">修改密码</a></li>
@@ -66,7 +66,9 @@
                     <dl class="menu2">       
                         <dt><u class="icon-dt"></u>合作酒店管理</dt>
                         <dd><a href="/hotel/cooped/"><u class="icon4"></u>已合作酒店</a></dd>
+						% if merchant.type == merchant.TYPE_TRAVEL_AGENCY or user.type == user.TYPE_ROOT:
                         <dd><a href="/hotel/willcoop/"><u class="icon5"></u>可合作酒店</a></dd>                
+						% endif
                     </dl>
 
                   <!--  <dl class="menu3">      

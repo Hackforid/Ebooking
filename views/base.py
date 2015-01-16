@@ -13,16 +13,18 @@ from exception.json_exception import JsonException, JsonDecodeError
 from tools.json import json_encode
 
 from tasks.models import user as User
+from mixin.request_mixin import CeleryTaskMixin
 
 import tcelery
 tcelery.setup_nonblocking_producer()
 
 
-class BtwBaseHandler(BaseHandler):
+class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
 
     def initialize(self):
         super(BtwBaseHandler, self).initialize()
         self.current_user = None
+        self.merchant = None
 
     @gen.coroutine
     def prepare(self):
@@ -33,20 +35,18 @@ class BtwBaseHandler(BaseHandler):
         username = self.get_secure_cookie('username')
         merchant_id = self.get_secure_cookie('merchant_id')
         if username and merchant_id:
-            #self.set_secure_cookie('username', username, expires_days=0.02)
-            #self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
-            self.set_secure_cookie('username', username)
-            self.set_secure_cookie('merchant_id', merchant_id)
-        task = yield gen.Task(User.get_user_by_merchantid_username.apply_async,
+            self.set_secure_cookie('username', username, expires_days=0.02)
+            self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
+            task = yield gen.Task(User.get_login_user.apply_async,
                 args=[merchant_id, username])
-        if task.status == 'SUCCESS':
-            self.current_user = task.result
+            if task.status == 'SUCCESS':
+                self.merchant, self.current_user = task.result
         raise gen.Return(self.current_user)
 
     def render(self, template_name, **kwargs):
         kwargs['current_user'] = self.current_user
         if self.current_user:
-            super(BtwBaseHandler, self).render(template_name, user=self.current_user.todict(), **kwargs) 
+            super(BtwBaseHandler, self).render(template_name, merchant=self.merchant, user=self.current_user, **kwargs) 
         else:
             super(BtwBaseHandler, self).render(template_name, **kwargs) 
 
