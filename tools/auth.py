@@ -45,7 +45,7 @@ def no_monomer_hotel(json=False):
     def _decorator(fn):
         def _(self, *args, **kwargs):
 
-            if self.merchant.type != self.merchant.TYPE_MONOMER_HOTEL:
+            if self.merchant.type != self.merchant.TYPE_MONOMER_HOTEL or self.current_user.type == self.current_user.TYPE_ROOT:
                 return fn(self, *args, **kwargs)
             else:
                 if json:
