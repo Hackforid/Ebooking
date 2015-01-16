@@ -23,6 +23,10 @@ from views.api.submit_order import SubmitOrderAPIHandler, CancelOrderAPIHander
 from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler, InventoryCompleteAPIHandler
 from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler, OrderUserConfirmAPIHandler, OrderUserCancelAPIHandler, OrderSearchAPIHandler
+
+from views.admin import AdminHandler
+from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler
+
 handlers = [
         (r"/?", OrderWaitingHandler),
         (r"/login/?", LoginHandler),
@@ -69,6 +73,10 @@ handlers = [
         (r"/api/order/search/?", OrderSearchAPIHandler),
         ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
 
-        ("/api/test/helloworld", HelloWorldHandler),
-        ("/api/test/helloworld/celery", HelloWorldCeleryHandler),
+        (r"/api/test/helloworld", HelloWorldHandler),
+        (r"/api/test/helloworld/celery", HelloWorldCeleryHandler),
+
+        (r"/admin/?", AdminHandler),
+        (r"/api/admin/merchant/all/?", AdminMerchantAPIHandler),
+        (r"/api/admin/merchant/modify/?", AdminMerchantModifyAPIHandler),
 ]

@@ -5,7 +5,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
 from config import API
-from tools.auth import auth_login, auth_permission
+from tools.auth import auth_login, auth_permission, no_monomer_hotel
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from tasks.models.cooperate_hotel import get_by_merchant_id
@@ -17,6 +17,7 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     @auth_login(json=True)
+    @no_monomer_hotel(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.choose_hotel, json=True)
     def get(self):
         start = self.get_query_argument('start', 0)
