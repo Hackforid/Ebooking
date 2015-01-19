@@ -6,6 +6,7 @@ import datetime
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from tasks.stock import PushHotelTask, PushInventoryTask
+from tasks.poi import POIPushRoomTypeTask
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 from models.cooperate_hotel import CooperateHotelModel
@@ -43,8 +44,10 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
                 merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id)
 
     PushHotelTask().push_hotel.delay(hotel_id)
+    
     for coop in coops:
         PushInventoryTask().push_inventory(coop.id)
+        POIPushRoomTypeTask().push_roomtype(coop.id)
         create_default_rateplan(coop)
 
     return coops

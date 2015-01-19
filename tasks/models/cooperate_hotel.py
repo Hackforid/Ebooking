@@ -4,6 +4,7 @@
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 from tasks.stock import PushHotelTask
+from tasks.poi import POIPushHotelTask
 
 from models.cooperate_hotel import CooperateHotelModel
 from exception.celery_exception import CeleryException
@@ -26,6 +27,7 @@ def new_hotel_cooprate(self, merchant_id, hotel_id):
     coop = CooperateHotelModel.new_hotel_cooprate(self.session, merchant_id, hotel_id)
 
     PushHotelTask().push_hotel.delay(coop.id)
+    POIPushHotelTask().push_hotel(coop.id)
 
     return coop
 

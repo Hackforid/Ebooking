@@ -15,7 +15,7 @@ from tools.json import json_encode
 from tools.log import Log
 from config import CHAIN_ID, API
 
-class PushHotelTask(SqlAlchemyTask):
+class POIPushHotelTask(SqlAlchemyTask):
 
     @app.task(filter=task_method, ignore_result=True)
     def push_hotel(self, hotel_id):
@@ -42,8 +42,36 @@ class PushHotelTask(SqlAlchemyTask):
         return data
 
     def post_hotel(self, hotel_data):
-        Log.info(u"<<push hotel>> push request {}".format(hotel_data))
-        url = API['POI'] + '/stock/update_hotel'
-        r = requests.post(url, json=hotel_data)
-        Log.info("<<push hotel>> response {}".format(r.text))
+        Log.info(u"<<POI push hotel mapping>> push request {}".format(hotel_data))
+        url = API['POI'] + '/api/push/ebooking/hotel/'
+        r = requests.post(url, data=json_encode(hotel_data))
+        Log.info("<<POI push hotel mapping>> response {}".format(r.text))
 
+class POIPushRoomTypeTask(SqlAlchemyTask):
+
+    @app.task(filter=task_method, ignore_result=True)
+    def push_roomtype(self, roomtype_id):
+        Log.info("<<POI push room mapping {}>> start".format(roomtype_id))
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+
+        room = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
+        if not room:
+            Log.error("no roomtype")
+            return
+
+        room_data = self.generate_data(room)
+        self.post_room(room_data)
+
+
+    def generate_data(self, room):
+        data = {}
+        data['chain_hotel_id'] = room.hotel_id
+        data['chain_roomtype_id'] = room.id
+        data['main_roomtype_id'] = room.base_roomtype_id
+        return data
+        
+    def post_room(self, room_data):
+        Log.info(u"<<POI push roomtype mapping>> push request {}".format(room_data))
+        url = API['POI'] + '/api/push/ebooking/room/'
+        r = requests.post(url, data=json_encode(room_data))
+        Log.info("<<POI push roomtype mapping>> response {}".format(r.text))
