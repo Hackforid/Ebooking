@@ -56,14 +56,14 @@ class OrderModel(Base):
     CONFIRM_TYPE_MANUAL = 2
 
     @classmethod
-    def search(cls, session, id=None, hotel_name=None, checkin_date_start=None, checkin_date_end=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
+    def search(cls, session, merchant_id, id=None, hotel_name=None, checkin_date_start=None, checkin_date_end=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
         if id:
             order = cls.get_by_id(session, id)
             if order:
                 return [order], 1
             else:
                 return None, 0
-        query = session.query(OrderModel)
+        query = session.query(OrderModel).filter(OrderModel.merchant_id==merchant_id)
 
         if hotel_name:
             query = query.filter(OrderModel.hotel_name.like(u'%{}%'.format(hotel_name)))

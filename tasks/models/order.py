@@ -24,6 +24,6 @@ def get_today_checkin_orders(self, merchant_id, start, limit):
     return orders
 
 @app.task(base=SqlAlchemyTask, bind=True)
-def search(self, id=None, hotel_name=None, checkin_date_start=None, checkin_date_end=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
-    return OrderModel.search(self.session, id, hotel_name, checkin_date_start, checkin_date_end, customer, status, create_time_start, create_time_end, start, limit)
+def search(self, merchant_id, id=None, hotel_name=None, checkin_date_start=None, checkin_date_end=None, customer=None, status=None, create_time_start=None, create_time_end=None, start=None, limit=None):
+    return OrderModel.search(self.session, merchant_id, id, hotel_name, checkin_date_start, checkin_date_end, customer, status, create_time_start, create_time_end, start, limit)
 
