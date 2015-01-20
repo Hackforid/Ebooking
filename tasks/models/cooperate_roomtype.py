@@ -46,8 +46,8 @@ def new_roomtype_coops(task_self, merchant_id, hotel_id, roomtype_ids):
     PushHotelTask().push_hotel.delay(hotel_id)
     
     for coop in coops:
-        PushInventoryTask().push_inventory(coop.id)
-        POIPushRoomTypeTask().push_roomtype(coop.id)
+        PushInventoryTask().push_inventory.delay(coop.id)
+        POIPushRoomTypeTask().push_roomtype.delay(coop.id)
         create_default_rateplan(coop)
 
     return coops

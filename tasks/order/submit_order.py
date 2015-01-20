@@ -15,6 +15,7 @@ from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask
 from tasks.order.submit_order_in_queue import start_order
 from tasks.stock import PushInventoryTask
+from tasks.sms import send_order_sms
 
 from exception.celery_exception import CeleryException
 
@@ -36,8 +37,7 @@ def confirm_order_by_user(self, user, order_id):
         if order.status != pre_status:
             OrderHistoryModel.set_order_status_by_user(session, user, order, pre_status, order.status)
         return order
-    else:
-        raise CeleryException(1000, 'callback order server fail')
+    else: raise CeleryException(1000, 'callback order server fail')
 
 def callback_order_server(order_id):
     url = API['ORDER'] + '/order/ebooking/update'
@@ -97,6 +97,7 @@ def submit_order(self, order_json):
     task = start_order.apply_async(args=[order.id])
     result = task.get()
     if task.status == 'SUCCESS':
+        send_order_sms.delay(result.merchant_id, result.hotel_name, result.id, result.confirm_type)
         return result
     else:
         raise result
