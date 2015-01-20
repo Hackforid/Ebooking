@@ -323,7 +323,21 @@
 						for (var i = 0; i < $scope.orderList.length; i++) {
 
 							var temp = $scope.orderList[i]["customer_info"];
-							var tempobj = eval(temp);
+
+							var tempobj;
+
+							try{
+
+								tempobj = eval(temp);
+
+							}catch(e){
+
+								tempobj=[{"name":" "}];
+
+
+							}
+
+							
 							$scope.orderList[i]["customer_info"] = tempobj;
 
 							$scope.orderList[i]["everyday_price"] = ($scope.orderList[i]["everyday_price"]) / 100;
