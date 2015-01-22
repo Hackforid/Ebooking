@@ -11,8 +11,6 @@ API = {
 }
 
 
-CHAIN_ID = 6
-
 IS_PUSH_TO_STOCK = False
 
 BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
