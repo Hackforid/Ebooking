@@ -12,8 +12,8 @@ from tasks.base_task import SqlAlchemyTask
 
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
-from config import CHAIN_ID, API, IS_PUSH_TO_STOCK
-from constants import QUEUE_STOCK_PUSH
+from config import API, IS_PUSH_TO_STOCK
+from constants import QUEUE_STOCK_PUSH, CHAIN_ID
 
 class PushHotelTask(SqlAlchemyTask):
 
