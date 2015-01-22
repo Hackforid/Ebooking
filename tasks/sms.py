@@ -26,6 +26,7 @@ def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
         content = u"【商旅分销管理系统】尊敬的用户您好，系统收到了[{}]的待确认订单，订单号:{}，请尽快处理。".format(hotel_name, order_id)
 
     Log.info(u">> send sms to {} : {}".format(phone, content))
+    
     send_sms([phone], content)
 
 def send_sms(phones, content):
