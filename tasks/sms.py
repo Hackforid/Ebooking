@@ -15,17 +15,22 @@ from tools.log import Log
 
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
 def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
-    Log.info(">>> send sms")
+    Log.info(u">>> send sms to merchant {} hotel {} order_id {} confirm type {}".format(merchant_id, hotel_name, order_id, confirm_type))
     user =UserModel.get_user_by_merchantid_username(self.session, merchant_id, 'admin')
     if not user:
+        Log.info("send sms no user(order {})".format(order_id))
         return
     phone = user.mobile
+    if not phone:
+        Log.info("send sms no phone(order {})".format(order_id))
+        return
     if confirm_type == OrderModel.CONFIRM_TYPE_AUTO:
         content = u"【商旅分销管理系统】尊敬的用户您好，系统收到了[{}]的自动确认订单，订单号:{}，请予以关注。".format(hotel_name, order_id)
     elif confirm_type == OrderModel.CONFIRM_TYPE_MANUAL:
         content = u"【商旅分销管理系统】尊敬的用户您好，系统收到了[{}]的待确认订单，订单号:{}，请尽快处理。".format(hotel_name, order_id)
 
-    Log.info(u">> send sms to {} : {}".format(phone, content))
+    Log.info(">> send sms to {}".format(phone))
+    Log.info(u">> sms content: {}".format(content))
     
     send_sms([phone], content)
 
