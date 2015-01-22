@@ -45,7 +45,7 @@ def change_hotel_online_status(self, merchant_id, hotel_id, is_online):
         raise CeleryException(404, 'hotel not found')
 
     hotel.is_online = is_online
-    print hotel.todict()
     self.session.commit()
 
+    PushHotelTask().push_hotel.delay(hotel.id)
     return hotel
