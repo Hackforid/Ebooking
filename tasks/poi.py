@@ -13,7 +13,8 @@ from tasks.base_task import SqlAlchemyTask
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from tools.log import Log
-from config import CHAIN_ID, API
+from config import API
+from constants import CHAIN_ID
 
 class POIPushHotelTask(SqlAlchemyTask):
 
