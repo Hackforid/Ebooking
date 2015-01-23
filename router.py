@@ -26,6 +26,7 @@ from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler
 
 from views.admin import AdminHandler
 from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler, AdminMerchantSuspendAPIHandler
+from views.api.merchant import MerchantListAPIHandler
 
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -80,4 +81,6 @@ handlers = [
         (r"/api/admin/merchant/all/?", AdminMerchantAPIHandler),
         (r"/api/admin/merchant/modify/?", AdminMerchantModifyAPIHandler),
         (r"/api/admin/merchant/(?P<merchant_id>\d+)/suspend/(?P<is_suspend>\d+)/?", AdminMerchantSuspendAPIHandler),
+
+        (r"/api/merchant/all/?", MerchantListAPIHandler),
 ]

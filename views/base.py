@@ -23,12 +23,16 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
 
     def initialize(self):
         super(BtwBaseHandler, self).initialize()
+        self.db = self.application.DB_Session()
         self.current_user = None
         self.merchant = None
 
     @gen.coroutine
     def prepare(self):
         yield self.get_current_user()
+
+    def on_finish(self):
+        self.db.close()
 
     @gen.coroutine
     def get_current_user(self):
