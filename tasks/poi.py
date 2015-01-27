@@ -4,6 +4,7 @@ import requests
 import json
 import time
 import datetime
+import traceback
 
 from celery.contrib.methods import task_method
 
@@ -76,3 +77,30 @@ class POIPushRoomTypeTask(SqlAlchemyTask):
         url = API['POI'] + '/api/push/ebooking/room/'
         r = requests.post(url, data=json_encode(room_data))
         Log.info("<<POI push roomtype mapping>> response {}".format(r.text))
+
+class POIPushTask(SqlAlchemyTask):
+
+    @app.task(filter=task_method, ignore_result=True)
+    def push_all(self):
+        Log.info("<<POI push all>> start")
+
+        from models.merchant import MerchantModel
+        merchants = MerchantModel.get_all(self.session)
+        for merchant in merchants:
+            try:
+                self.push_by_merchant(merchant)
+            except Exception as e:
+                Log.debug(traceback.format_exc())
+
+        
+    def push_by_merchant(self, merchant):
+        from models.cooperate_hotel import CooperateHotelModel
+        hotels =  CooperateHotelModel.get_by_merchant_id(self.session, merchant.id)
+
+        for hotel in hotels:
+            self.push_by_hotel(mechant, hotel)
+
+    def push_by_hotel(self, merchant, hotel):
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id)
+

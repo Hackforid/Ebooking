@@ -24,8 +24,8 @@ Make a config like sample/config
 
 
 ## Run  
-``celery -A tasks.celery_app worker  -l debug -n worker1``  
-``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER``  
+``celery -A tasks.celery_app worker  -l debug -n worker1 -c 10 -P gevent``  
+``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER -c 1 -P gevent``  
 ``python app.py``  
 
 ## API  

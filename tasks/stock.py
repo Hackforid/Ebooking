@@ -199,7 +199,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['hotel_id'] = rateplan.hotel_id
         data['rate_plan_id'] = rateplan.id
         data['name'] = rateplan.name
-        data['rate_type'] = 0
+        data['rate_type'] = 1
         data['pay_type'] = rateplan.pay_type
         data['stay_days'] = rateplan.stay_days
         data['ahead_days'] = rateplan.ahead_days
