@@ -14,7 +14,8 @@ class SqlAlchemyTask(celery.Task):
     _session = None
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        self._session.remove()
+        if self._session:
+            self._session.remove()
 
     def on_failure(self, *args, **kwargs):
         print 'on_failure'
