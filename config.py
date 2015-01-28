@@ -12,6 +12,7 @@ API = {
 
 
 IS_PUSH_TO_STOCK = False
+IS_PUSH_TO_POI = False
 
 BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
 CELERY_RESULT_BACKEND = "amqp://:admin:admin@localhost:5672/ebooking"
