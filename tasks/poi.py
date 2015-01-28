@@ -146,4 +146,3 @@ class POIPushTask(SqlAlchemyTask):
 def push_poi(self):
     Log.info('push all to poi')
     POIPushTask().push_all.delay()
-    return

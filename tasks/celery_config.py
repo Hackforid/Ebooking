@@ -24,4 +24,8 @@ CELERYBEAT_SCHEDULE = {
             'task': 'tasks.models.inventory.complete_in_four_months',
             'schedule': crontab(hour=0, minute=0),
             },
+        'push_all_to_poi': {
+            'task': 'tasks.poi.push_poi',
+            'schedule': crontab(hour=0, minute=0),
+            },
 }
