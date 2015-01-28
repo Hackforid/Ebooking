@@ -14,7 +14,7 @@ from tasks.base_task import SqlAlchemyTask
 from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from tools.log import Log
-from config import API
+from config import API, IS_PUSH_TO_POI
 from constants import CHAIN_ID
 
 class POIPushHotelTask(SqlAlchemyTask):
@@ -22,6 +22,10 @@ class POIPushHotelTask(SqlAlchemyTask):
     @app.task(filter=task_method, ignore_result=True)
     def push_hotel(self, hotel_id):
         Log.info("<<POI push hotel mapping {}>> start".format(hotel_id))
+        if not IS_PUSH_TO_POI:
+            return
+
+
         from models.cooperate_hotel import CooperateHotelModel
         from models.merchant import MerchantModel
 
@@ -54,6 +58,8 @@ class POIPushRoomTypeTask(SqlAlchemyTask):
     @app.task(filter=task_method, ignore_result=True)
     def push_roomtype(self, roomtype_id):
         Log.info("<<POI push room mapping {}>> start".format(roomtype_id))
+        if not IS_PUSH_TO_POI:
+            return
         from models.cooperate_roomtype import CooperateRoomTypeModel
 
         room = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
@@ -83,6 +89,8 @@ class POIPushTask(SqlAlchemyTask):
     @app.task(filter=task_method, ignore_result=True)
     def push_all(self):
         Log.info("<<POI push all>> start")
+        if not IS_PUSH_TO_POI:
+            return
 
         from models.merchant import MerchantModel
         merchants = MerchantModel.get_all(self.session)
