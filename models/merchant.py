@@ -19,6 +19,7 @@ class MerchantModel(Base):
     type = Column(TINYINT(3), nullable=False, default=0)
     is_online = Column('isOnline', BIT, nullable=False, default=1)
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
+    is_suspend = Column('isSuspend', BIT, nullable=False, default=0)
 
     TYPE_TRAVEL_AGENCY = 0
     TYPE_MONOMER_HOTEL = 1
@@ -54,4 +55,5 @@ class MerchantModel(Base):
                 type=self.type,
                 is_online=self.is_online,
                 is_delete=self.is_delete,
+                is_suspend=self.is_suspend,
                 )

@@ -7,6 +7,8 @@ from constants import QUEUE_ORDER
 from models.user import UserModel
 from models.merchant import MerchantModel
 
+from exception.celery_exception import CeleryException
+
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_users_by_merchant_id(self, merchant_id):
@@ -35,6 +37,10 @@ def update_password(self, merchant_id, username, password):
 
 @app.task(base=SqlAlchemyTask, bind=True)
 def get_login_user(self, merchant_id, username):
-    user = UserModel.get_user_by_merchantid_username(self.session, merchant_id, username)
     merchant = MerchantModel.get_by_id(self.session, merchant_id)
+    user = UserModel.get_user_by_merchantid_username(self.session, merchant_id, username)
+    if not merchant:
+        raise CeleryException(errcode=404, errmsg="merchent not found")
+    if not user:
+        raise CeleryException(errcode=405, errmsg="user not fount")
     return merchant, user

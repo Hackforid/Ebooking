@@ -156,7 +156,7 @@ class OrderSearchAPIHandler(BtwBaseHandler):
             order_status = order_status.split(',')
 
         task = yield gen.Task(Order.search.apply_async,
-                args=[order_id, hotel_name, checkin_date_start, checkin_date_end, customer, order_status, create_time_start, create_time_end, start, limit])
+                args=[merchant_id, order_id, hotel_name, checkin_date_start, checkin_date_end, customer, order_status, create_time_start, create_time_end, start, limit])
         if task.status == 'SUCCESS':
             orders, total = task.result
             orders = orders if orders is not None else  []

@@ -69,3 +69,19 @@ class AdminMerchantModifyAPIHandler(BtwBaseHandler, CeleryTaskMixin):
         self.finish_json(result=dict(
             merchant=merchant.todict(),
             ))
+
+class AdminMerchantSuspendAPIHandler(BtwBaseHandler, CeleryTaskMixin):
+
+
+    @gen.coroutine
+    @auth_login(json=True)
+    #@need_btw_admin(json=True)
+    def put(self, merchant_id, is_suspend):
+
+        task = yield gen.Task(Merchant.suspend_merchant.apply_async,
+                args=[merchant_id, is_suspend])
+
+        merchant = self.process_celery_task(task)
+        self.finish_json(result=dict(
+            merchant=merchant.todict(),
+            ))

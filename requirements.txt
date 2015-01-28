@@ -8,4 +8,4 @@ python-dateutil
 gevent
 simplejson
 librabbitmq
-requests
+requests==2.5.1

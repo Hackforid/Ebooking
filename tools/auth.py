@@ -8,7 +8,7 @@ def auth_login(json=False):
     def _decorator(fn):
         def _(self, *args, **kwargs):
 
-            if self.current_user:
+            if self.current_user and (self.merchant.id == 1 or self.merchant.is_suspend == 0):
                 return fn(self, *args, **kwargs)
             else:
                 if json:

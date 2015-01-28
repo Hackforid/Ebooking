@@ -29,13 +29,18 @@
                     <th>客户编号</th>
                     <th>名称</th>
                     <th>身份</th>
+					<th>状态</th>
                     <th>操作</th>
                 </tr>
                 <tr ng-repeat="merchant in merchants">
                     <td>{{merchant.id}}</td>
                     <td>{{merchant.name}}</td>
                     <td>{{getMerchantTypeName(merchant.type)}}</td>
-                    <td><button class="btn btn-default" type="button" ng-click="openMerchantModal(merchant)">修改</button></td>
+					<td>{{getMerchantSuspendState(merchant.is_suspend)}}</td>
+                    <td>
+						<button class="btn btn-default" type="button" ng-click="openMerchantModal(merchant)">修改</button>
+						<a ng-click="suspendMerchant(merchant)">{{getMerchantSuspendButtonText(merchant.is_suspend)}}</a>
+					</td>
                 </tr>
             </table>
 

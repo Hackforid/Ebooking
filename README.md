@@ -19,10 +19,13 @@ as http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html
 ``sudo rabbitmqctl add_vhost ebooking``  
 ``sudo rabbitmqctl set_permissions -p ebooking admin ".*" ".*" ".*"``  
 
+## Config  
+Make a config like sample/config
+
 
 ## Run  
-``celery -A tasks.celery_app worker  -l debug -n worker1``  
-``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER``  
+``celery -A tasks.celery_app worker  -l debug -n worker1 -c 10 -P gevent``  
+``celery -A tasks.celery_app worker  -l debug -n worker2 -Q ORDER -c 1 -P gevent``  
 ``python app.py``  
 
 ## API  
