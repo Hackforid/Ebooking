@@ -76,6 +76,8 @@ def submit_order(self, order_json):
     submit_order.cancel_type = rate_plan.cancel_type
     submit_order.punish_type = rate_plan.punish_type
     submit_order.punish_value = rate_plan.punish_value
+    submit_order.guarantee_type = rate_plan.guarantee_type
+    submit_order.guarantee_start_time = rate_plan.guarantee_start_time
 
     order = create_order(session, submit_order)
     if not order:

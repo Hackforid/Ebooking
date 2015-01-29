@@ -199,7 +199,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['hotel_id'] = rateplan.hotel_id
         data['rate_plan_id'] = rateplan.id
         data['name'] = rateplan.name
-        data['rate_type'] = 1
+        data['rate_type'] = self.get_rate_type(rateplan)
         data['pay_type'] = rateplan.pay_type
         data['stay_days'] = rateplan.stay_days
         data['ahead_days'] = rateplan.ahead_days
@@ -211,6 +211,9 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['start_date'] = rateplan.start_date
         data['end_date'] = rateplan.end_date
         return data
+
+    def get_rate_type(self, rateplan):
+        return rateplan.pay_type
 
     def generate_cancel_rule_data(self, rateplan):
         data = {}

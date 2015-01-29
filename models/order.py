@@ -50,6 +50,8 @@ class OrderModel(Base):
     cancel_type = Column("cancelType", TINYINT(4, unsigned=True), nullable=False, default=1)
     punish_type = Column("punishType", TINYINT(4, unsigned=True), nullable=False, default=0)
     punish_value = Column("punishValue", INTEGER(unsigned=True), nullable=False, default=0)
+    guarantee_start_time = Column("guaranteeStartTime", TIME, default="00:00:00")
+    guarantee_type = Column("guaranteeType", TINYINT(4), nullable=False, default=0)
 
     CONFIRM_TYPE_INIT = 0
     CONFIRM_TYPE_AUTO = 1
@@ -115,6 +117,7 @@ class OrderModel(Base):
     
     @classmethod
     def new_order(cls, session, submit_order):
+        from models.rate_plan import  RatePlanModel
         order = OrderModel(
                 main_order_id=submit_order.id,
                 merchant_id=submit_order.merchant_id,
@@ -148,6 +151,9 @@ class OrderModel(Base):
                 punish_value=submit_order.punish_value,
                 cancel_type=submit_order.cancel_type
                 )
+        if submit_order.pay_type == RatePlanModel.PAY_TYPE_ARRIVE:
+            order.guarantee_type = submit_order.guarantee_type
+            order.guarantee_start_time = submit_order.guarantee_start_time
         session.add(order)
         session.commit()
 
@@ -245,4 +251,6 @@ class OrderModel(Base):
                 cancel_type=self.cancel_type,
                 punish_type=self.punish_type,
                 punish_value=self.punish_value,
+                guarantee_type=self.guarantee_type,
+                guarantee_start_time=self.guarantee_start_time,
                 )
