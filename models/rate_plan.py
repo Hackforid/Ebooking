@@ -15,6 +15,9 @@ class RatePlanModel(Base):
     __table_args__ = {
         'mysql_charset': 'utf8', 'mysql_engine': 'InnoDB'}
 
+    PAY_TYPE_ARRIVE = 0
+    PAY_TYPE_PRE = 1
+
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     merchant_id = Column("merchantId", INTEGER, nullable=False, default=0)
     hotel_id = Column("hotelId", INTEGER, nullable=False, default=0)
@@ -30,7 +33,7 @@ class RatePlanModel(Base):
     cancel_time = Column("cancelTime", TIME, nullable=False, default="18:00:00")
     punish_type = Column("punishType", TINYINT(4, unsigned=True), nullable=False, default=0)
     punish_value = Column("punishValue", INTEGER(unsigned=True), nullable=False, default=0)
-    guarantee_start_time = Column("guaranteeStartTime", TIME)
+    guarantee_start_time = Column("guaranteeStartTime", TIME, default="00:00:00")
     guarantee_type = Column("guaranteeType", TINYINT(4), nullable=False, default=0)
     guarantee_count = Column("guaranteeCount", TINYINT(4), nullable=False, default=0)
     start_date = Column("startDate", DATE, nullable=False, default='1990-09-21')
@@ -58,9 +61,13 @@ class RatePlanModel(Base):
 
 
     @classmethod
-    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type):
+    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type, pay_type=None, guarantee_type=None, guarantee_start_time=None):
 
-        rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type)
+        if pay_type == cls.PAY_TYPE_PRE:
+            rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type)
+        else:
+            rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type, pay_type=pay_type, guarantee_start_time=guarantee_start_time, guarantee_type=guarantee_type)
+
         session.add(rateplan)
         session.commit()
         return rateplan
@@ -92,6 +99,7 @@ class RatePlanModel(Base):
                 cancel_time=self.cancel_time,
                 punish_type=self.punish_type,
                 punish_value=self.punish_value,
+                guarantee_start_time=self.guarantee_start_time,
                 guarantee_type=self.guarantee_type,
                 guarantee_count=self.guarantee_count,
                 start_date=self.start_date,
