@@ -51,4 +51,6 @@ class SubmitOrder(object):
        self.cancel_type = 0
        self.punish_type = 0
        self.punish_value = 0
+       self.guarantee_type = 0
+       self.guarantee_start_time = '00:00:00'
 
