@@ -34,3 +34,7 @@ Make a config like sample/config
 *is_online* in [0, 1]  
 return cooped hotel info  
 
+**添加 RatePlan**
+``/api/hotel/{hotel_id}/roomtype/{roomtype_id}/``  
+[POST]  
+
