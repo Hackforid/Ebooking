@@ -5,7 +5,7 @@ Config = {
 }
 
 API = {
-    'POI': 'http://121.41.112.197:9001',
+    'POI': 'http://admin.betterwood.com',
     'STOCK': 'http://121.41.23.128:8080/stock2',
     'ORDER': 'http://121.40.120.72:8080/',
 }
