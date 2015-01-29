@@ -1,6 +1,6 @@
 (function() {
 
-	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myApp.directives', 'ui.bootstrap']);
+	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myhotelApp.directives', 'ui.bootstrap']);
 
 
 
@@ -279,7 +279,11 @@
 
 							$scope.hotels = resp.result.hotels;
 
-							$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+							//$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+							$scope.pageCount = resp.result.hotels.length;
+
+
 
 							$scope.directiveCtl = true;
 							//console.log("数据库操作");

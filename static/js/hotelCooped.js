@@ -1,6 +1,6 @@
 (function() {
 
-	var hotelCoopApp = angular.module('hotelCoopedApp', ['myApp.directives', 'ui.bootstrap']);
+	var hotelCoopApp = angular.module('hotelCoopedApp', ['myhotelApp.directives', 'ui.bootstrap']);
 
 
 	hotelCoopApp.directive('ngEnter', function() {
@@ -445,7 +445,9 @@
 						}
 
 
-						$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+						//$scope.pageCount = Math.ceil(($scope.total) / ($scope.itemPerPage));
+
+						$scope.pageCount = resp.result.hotels.length;
 
 						$scope.directiveCtl = true;
 

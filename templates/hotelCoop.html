@@ -91,7 +91,7 @@
 
                            <span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
                                 
-                            <span><span ng-bind="'共'+total+'条，每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">                                                                                                      
+                            <span><span ng-bind="'每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">                                                                                                      
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -187,6 +187,6 @@
     <link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}"> 
 
 
-    <script src="${static_url('js/pageDirectives.js')}"></script>
+    <script src="${static_url('js/hotelPageDirectives.js')}"></script>
     <script src="${static_url('js/hotelCooped.js')}"></script>
 </%def>
