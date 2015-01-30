@@ -72,6 +72,7 @@ def submit_order(self, order_json):
     if not rate_plan:
         raise CeleryException(300, 'no rate plan')
 
+    submit_order.pay_type = rate_plan.pay_type
     submit_order.merchant_id = rate_plan.merchant_id
     submit_order.cancel_type = rate_plan.cancel_type
     submit_order.punish_type = rate_plan.punish_type

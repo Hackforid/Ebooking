@@ -246,7 +246,6 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['hotel_id'] = str(rateplan.hotel_id)
         data['room_type_id'] = str(rateplan.roomtype_id)
         data['rate_plan_id'] = str(rateplan.id)
-        data['pay_type'] = self.get_pay_type(rateplan) 
 
         data['instant_confirm'] = '|'.join([str(0) for i in xrange(90)])
         meal_num = roomrate.get_meal()
