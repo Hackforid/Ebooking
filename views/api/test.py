@@ -19,9 +19,9 @@ class HelloWorldHandler(BtwBaseHandler):
     def get(self):
         self.finish('hello world')
 
-class HelloWorldCeleryHandler(BaseHandler):
+class HelloWorldCeleryHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get(self):
-        task = yield gen.Task(Test.helloworld.apply_async)
-        self.finish(task.result)
+        print 'helloworld'
+        Test.helloworld.delay()

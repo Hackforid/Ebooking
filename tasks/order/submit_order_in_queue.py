@@ -3,7 +3,7 @@
 import datetime
 
 from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask
+from tasks.base_task import SqlAlchemyTask, OrderTask
 from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
@@ -13,7 +13,7 @@ from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
+@app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def start_order(self, order_id):
     session = self.session
     order = get_order(session, order_id)

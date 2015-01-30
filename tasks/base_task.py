@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#from gevent import monkey
-#monkey.patch_all()
-
 import celery
 from celery.utils.log import get_task_logger
 from tasks.db import Session
@@ -17,8 +14,9 @@ class SqlAlchemyTask(celery.Task):
         if self._session:
             self._session.remove()
 
-    def on_failure(self, *args, **kwargs):
-        print 'on_failure'
+    def on_failure(self, exception, *args, **kwargs):
+        if self._session:
+            self._session.rollback()
 
     @property
     def session(self):
@@ -30,3 +28,7 @@ class SqlAlchemyTask(celery.Task):
     def log(self):
         return get_task_logger('%s.%s' % (__name__, self.__class__.__name__))
 
+class OrderTask(SqlAlchemyTask):
+
+    def log_order(self):
+        pass

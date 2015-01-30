@@ -77,7 +77,7 @@ handlers = [
         ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
 
         (r"/api/test/helloworld", HelloWorldHandler),
-        (r"/api/test/helloworld/celery", HelloWorldCeleryHandler),
+        (r"/api/test/helloworld/celery/?", HelloWorldCeleryHandler),
 
         (r"/admin/?", AdminHandler),
         (r"/api/admin/merchant/all/?", AdminMerchantAPIHandler),
