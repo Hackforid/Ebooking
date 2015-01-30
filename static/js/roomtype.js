@@ -47,17 +47,39 @@
 		this.punishType = 0;
 		this.errmsg = '';
 
+		this.priceType = "0";
+
+		this.priceTypeShow = true;
+		this.lastArriveTime = "";
+		this.firstcheckStatus = false;
+		this.holecheckStatus = false;
+		this.guaranteeStatus = "";
+		this.lastTime = "";
+
+
+
 		this.open = function() {
 			this.name = '';
 			this.mealType = 0;
 			this.punishType = 0;
 			scope.errMessage = '';
+			this.firstcheckStatus = false;
+			this.holecheckStatus = false;
+			this.lastArriveTime = "";
+
+
 			$("#newRatePlanDialog").fadeIn(500);
 		}
 		this.close = function() {
 			$("#newRatePlanDialog").fadeOut(500);
 		}
 		this.save = function() {
+
+			this.guaranteeStatus = "";
+			this.lastTime = "";
+
+
+
 			if (!this.name) {
 				scope.errMessage = '请输入有效名称';
 				return;
@@ -74,8 +96,56 @@
 			}
 
 
+			if (this.priceType == "0") {
+				console.log("现付");
+
+				var testStr = /^\d+$/;
+				this.lastTime = $.trim(this.lastArriveTime);
+
+				if (this.lastTime == "" || this.lastTime == null) {
+					scope.errMessage = "最晚到店时间不能为空";
+					return;
+
+				}
+
+				if (testStr.test(this.lastTime) == false || parseInt(this.lastTime) > 23) {
+					scope.errMessage = "最晚到店时间为0-23点间的整数";
+					return;
+
+				}
+
+				if (this.firstcheckStatus == true) {
+
+					this.guaranteeStatus = "1";
+
+				}
+
+				if (this.holecheckStatus == true) {
+
+					this.guaranteeStatus = "2";
+
+				}
+
+				if (this.firstcheckStatus == false && this.holecheckStatus == false) {
+
+					this.guaranteeStatus = "0";
+
+				}
+
+				this.lastTime = this.lastTime + ":00:00";
+
+			}
+
+
+			//console.log(this.priceType);
+			//console.log(this.guaranteeStatus);
+			//console.log(this.lastTime);
+
 
 			scope.errMessage = '';
+
+
+
 			//console.log(this.name + this.mealType + this.punishType);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
@@ -83,7 +153,11 @@
 			var params = {
 				'name': this.name,
 				'meal_num': parseInt(this.mealType),
-				'punish_type': parseInt(this.punishType)
+				'punish_type': parseInt(this.punishType),
+				'guarantee_start_time': this.lastTime,
+				'guarantee_type': parseInt(this.guaranteeStatus),
+				'pay_type': parseInt(this.priceType)
+
 			};
 			console.log(params);
 
@@ -122,15 +196,43 @@
 		this.http = http;
 		this.errmsg = '';
 
+
+
+		this.lastArriveTime = "";
+		this.firstcheckStatus = false;
+		this.holecheckStatus = false;
+		this.guaranteeStatus = "";
+		this.lastTime = "";
+		this.currentPayType = "";
+
+
+		this.checkTime = function(time) {
+			if (time != null && time != undefined && $.trim(time) != "") {
+				/*ng-model="rateplan.guarantee_start_time"*/
+				/*ng-bind="roomHeadPlanDialog.checkTime(rateplan.guarantee_start_time)"*/
+
+				var currentLastTime = time.split(":");
+
+
+				return parseInt(currentLastTime[0]);
+			}
+
+
+		}
+
+
+
 		this.eachhide = function(index) {
 			var roomRateName;
 			roomRateName = scope.rateplans[index].name;
+
+
 
 			$(("#roomheadinput" + index)).val(roomRateName);
 
 			var punishValue;
 			punishValue = scope.rateplans[index].punish_type;
-			console.log(punishValue);
+
 
 			$(("#roomheadpunish" + index)).val(punishValue);
 
@@ -139,14 +241,28 @@
 			$("#roomheadmeal" + index).val(tempmealsum[0]);
 
 
-			$("div.eachroom").eq(index).css("display", "none");
+			$("div.changePriceType").eq(index).hide(); //css("display", "none");
 
 			scope.inputErrMessage = " ";
 
 		}
 		this.eachshow = function(index) {
 
-			$("div.eachroom").eq(index).css("display", "block");
+			var currentGuarType = scope.rateplans[index].guarantee_type;
+
+			if (currentGuarType == "1") {
+
+				this.firstcheckStatus = true;
+
+			} else if (currentGuarType == "2") {
+
+				this.holecheckStatus = true;
+
+			}
+
+			this.lastArriveTime = this.checkTime(scope.rateplans[index].guarantee_start_time);
+
+			$("div.changePriceType").eq(index).css("display", "block");
 
 			var punishValue;
 			punishValue = scope.rateplans[index].punish_type;
@@ -159,7 +275,22 @@
 		}
 		this.save = function(index) {
 
+			this.currentPayType = scope.rateplans[index].pay_type;
+
+			this.guaranteeStatus = "";
+			this.lastTime = "";
+
 			var checkResult = $.trim($("#roomheadinput" + index).val());
+
+
+			if (checkResult == "" || checkResult == null) {
+
+				scope.inputErrMessage = "名称不能为空";
+				return;
+
+			}
+
+
 			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
 
 			if (resultLen > 20) {
@@ -169,19 +300,89 @@
 
 
 
+			if (this.currentPayType == "0") {
+				console.log("现付");
+
+				var testStr = /^\d+$/;
+				this.lastTime = $.trim(this.lastArriveTime);
+
+				if (this.lastTime == "" || this.lastTime == null) {
+					scope.inputErrMessage = "最晚到店时间不能为空";
+					return;
+
+				}
+
+				if (testStr.test(this.lastTime) == false || parseInt(this.lastTime) > 23) {
+					scope.inputErrMessage = "最晚到店时间为0-23点间的整数";
+					return;
+
+				}
+
+				if (this.firstcheckStatus == true) {
+
+					this.guaranteeStatus = "1";
+
+				}
+
+				if (this.holecheckStatus == true) {
+
+					this.guaranteeStatus = "2";
+
+				}
+
+				if (this.firstcheckStatus == false && this.holecheckStatus == false) {
+
+					this.guaranteeStatus = "0";
+
+				}
+
+				this.lastTime = this.lastTime + ":00:00";
+
+			}
+
+
+			//console.log(this.currentPayType);
+			//console.log(this.guaranteeStatus);
+			//console.log(this.lastTime);
+
+
+
 			this.errmsg = '';
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/' + scope.rateplans[index].id;
 			//console.log(url);
-			var params = {
-				"name": ($("#roomheadinput" + index).val()),
-				"meal_num": parseInt($("#roomheadmeal" + index).val()),
-				"punish_type": parseInt($("#roomheadpunish" + index).val())
-			};
+			var params;
+			if (this.currentPayType == "0") {
+				params = {
+					"name": ($("#roomheadinput" + index).val()),
+					"meal_num": parseInt($("#roomheadmeal" + index).val()),
+					"punish_type": parseInt($("#roomheadpunish" + index).val()),
+					'guarantee_start_time': this.lastTime,
+					'guarantee_type': parseInt(this.guaranteeStatus),
+					'pay_type': parseInt(this.currentPayType)
+
+
+
+				};
+			} else if (this.currentPayType == "1") {
+
+				params = {
+					"name": ($("#roomheadinput" + index).val()),
+					"meal_num": parseInt($("#roomheadmeal" + index).val()),
+					"punish_type": parseInt($("#roomheadpunish" + index).val()),
+
+
+				};
+
+			}
+
+
+
+			console.log(params);
 			http.put(url, params)
 				.success(function(resp) {
 					//console.log(resp);
 					if (resp.errcode == 0) {
-						$("div.eachroom").eq(index).css("display", "none");
+						$("div.changePriceType").eq(index).css("display", "none");
 
 						scope.roomrates[index] = resp.result.roomrate;
 						scope.rateplans[index] = resp.result.rateplan;
@@ -192,7 +393,7 @@
 						scope.inputErrMessage = " ";
 					} else {
 
-
+						console.log(resp);
 						if (resp.errcode = "2001") {
 							scope.inputErrMessage = "名称输入错误";
 						} else if (resp.errcode = "2002") {
@@ -364,6 +565,31 @@
 
 
 		$scope.inputErrMessage = "";
+
+
+
+		$scope.$watch('newRatePlanDialog.priceType', function(newValue, oldValue) {
+
+			if (newValue == oldValue) {
+				return;
+
+			}
+
+			if ($scope.newRatePlanDialog.priceType == "0") {
+
+				$scope.newRatePlanDialog.priceTypeShow = true;
+
+			}
+			if ($scope.newRatePlanDialog.priceType == "1") {
+				$scope.newRatePlanDialog.priceTypeShow = false;
+
+				$scope.newRatePlanDialog.firstcheckStatus = false;
+				$scope.newRatePlanDialog.holecheckStatus = false;
+				$scope.newRatePlanDialog.lastArriveTime = "";
+
+			}
+
+		});
 
 
 

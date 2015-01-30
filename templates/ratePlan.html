@@ -47,32 +47,91 @@
                             >
                             <div class="roomhead" ><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>
                              
-                                <div class="eachroom" style="display:none">
+                             
 
-                                    <label>名称：<input id={{"roomheadinput"+$index}} ng-value="rateplan.name" > </label>
-                                    <label>早餐数：<select id={{"roomheadmeal"+$index}} name="" class="input-s"  >
+
+
+
+                                  <!--修改价格类别浮层-->    
+<div class="messageDiv changePriceType" id="" style=" display:none">
+   <div class="messageBlack"></div>
+   <div class="detail piliang-room" style="width:400px;margin-left:-200px;">
+       <div class="head"><h1>修改价格类别</h1></div>
+       <div class="con">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="55px">名　称：</td>
+    <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
+  </tr>
+
+  <tr>
+    <td >类型：</td>
+    <td><select disabled name="" class="input-s"  ng-model="rateplan.pay_type" >
+                       <option value="0">现付</option>
+                       <option value="1">预付</option>                      
+                     </select></td>
+  </tr>
+
+  <tr>
+    <td >早餐数：</td>
+    <td>
+        <select id={{"roomheadmeal"+$index}} name="" class="input-s"  >
                                             <option value="0">无早餐</option>
                                             <option value="1">一份早餐</option>
                                             <option value="2">两份早餐</option>
-                                            <option value="100">按人头早餐</option>                                                                                                      
+                                            <option value="100">按人头早餐</option>  
                                         </select>
-                                    </label>
-                                    <label>取消时：<select id={{"roomheadpunish"+$index}}  
-                                    name="" class="input-s"  >                                                                                  
+
+    </td>
+  </tr>
+  <tr>
+    <td>取消时：</td>
+    <td><select id={{"roomheadpunish"+$index}}  
+                                    name="" class="input-s"  >                       
                                              <option value="0">不扣任何费用</option>
                                             <option value="1">扣首晚房费</option>
                                             <option value="2">扣全部房费</option>
                                           <!--  <option value="3">扣定额</option> -->
                                           <!-- <option value="4">扣全额房费百分比</option> -->
-                                        </select>
-                                    </label>
+                                        </select></td>
+  </tr>
+
+  <tr ng-show="!rateplan.pay_type">
+    <td>担保：</td>
+    <td>最晚到店时间：<input ng-model="roomHeadPlanDialog.lastArriveTime"  style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
+
+    <input type="radio" name="" ng-checked="roomHeadPlanDialog.firstcheckStatus" ng-click="roomHeadPlanDialog.firstcheckStatus=!roomHeadPlanDialog.firstcheckStatus;roomHeadPlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="roomHeadPlanDialog.holecheckStatus" ng-click="roomHeadPlanDialog.holecheckStatus=!roomHeadPlanDialog.holecheckStatus;roomHeadPlanDialog.firstcheckStatus=false" value = "pause">全额担保
 
 
-                                    <label><input name="" type="button" value="保存" class="btn-s" ng-click="roomHeadPlanDialog.save($index);" />
-                                        <input name="" type="button" value="取消" ng-click="roomHeadPlanDialog.eachhide($index);" class="btn-s btn-bai"  /></label>
+    </td>
+  </tr>
 
-                                      <label>  <span style="color:red" ng-bind="inputErrMessage"></span></label>
-                                </div>
+
+</table>
+<p  style="margin-left:17px;color:red"  ng-bind="inputErrMessage"></p>
+          
+          <p class="action" style=" text-align:center">
+              <input name="" type="button" value="保存"  ng-click="roomHeadPlanDialog.save($index);"/>
+          <input name="" type="button" value="取消" class="btn-bai" ng-click="roomHeadPlanDialog.eachhide($index);"  />
+          </p>
+ 
+       </div>
+   </div> 
+</div>   
+ <!--修改价格类别弹窗浮层end-->  
+
+
+
+
+
+
+
+
+
+
+
+
+
                             </div>
 
 
@@ -156,14 +215,23 @@
 <!--增加价格类别浮层-->    
 <div class="messageDiv" id="newRatePlanDialog" style=" display:none">
    <div class="messageBlack"></div>
-   <div class="detail piliang-room" style="width:300px;margin-left:-150px;">
+   <div class="detail piliang-room" style="width:400px;margin-left:-200px;">
        <div class="head"><h1>增加价格类别</h1></div>
        <div class="con">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="100">名　称：</td>
+    <td width="55px">名　称：</td>
     <td><input type="text"  value="" class="input-t" ng-model="newRatePlanDialog.name"  /></td>
   </tr>
+
+  <tr>
+    <td >类型：</td>
+    <td><select name="" class="input-s"  ng-model="newRatePlanDialog.priceType">
+                       <option value="0">现付</option>
+                       <option value="1">预付</option>                      
+                     </select></td>
+  </tr>
+
   <tr>
     <td >早餐数：</td>
     <td><select name="" class="input-s"  ng-model="newRatePlanDialog.mealType">
@@ -183,6 +251,18 @@
                   <!--  <option value="4">扣全额房费百分比</option> -->
                      </select></td>
   </tr>
+
+  <tr ng-show="newRatePlanDialog.priceTypeShow">
+    <td>担保：</td>
+    <td>最晚到店时间：<input ng-model="newRatePlanDialog.lastArriveTime" style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
+
+    <input type="radio" name="" ng-checked="newRatePlanDialog.firstcheckStatus" ng-click="newRatePlanDialog.firstcheckStatus=!newRatePlanDialog.firstcheckStatus;newRatePlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="newRatePlanDialog.holecheckStatus" ng-click="newRatePlanDialog.holecheckStatus=!newRatePlanDialog.holecheckStatus;newRatePlanDialog.firstcheckStatus=false" value = "pause">全额担保
+
+
+    </td>
+  </tr>
+
+
 </table>
 <p  style="margin-left:17px;color:red"  ng-bind="errMessage"></p>
           
