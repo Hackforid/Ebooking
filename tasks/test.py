@@ -4,6 +4,9 @@
 
 
 from tasks.celery_app import app
+from tasks.base_task import SqlAlchemyTask
+from models.merchant import MerchantModel
+from exception.celery_exception import CeleryException
 
 @app.task
 def tt(num):
@@ -24,6 +27,10 @@ class Test(object):
             time.sleep(1)
         return num + 3
 
-@app.task
-def helloworld():
-    return 'hello world'
+@app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
+def helloworld(self):
+    print 'helloworld'
+    merchants = MerchantModel.get_all(self.session)
+    raise CeleryException(errcode=100, errmsg='he')
+
+    return merchants

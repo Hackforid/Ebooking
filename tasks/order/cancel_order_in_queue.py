@@ -3,7 +3,7 @@
 import datetime
 
 from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask
+from tasks.base_task import SqlAlchemyTask, OrderTask
 from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
@@ -12,7 +12,7 @@ from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
+@app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_after_user_confirm(self, order_id):
     session = self.session
     order = get_order(session, order_id)
@@ -43,7 +43,7 @@ def recovery_inventory(stay_days, inventories, order):
         inventory.recovery_val_by_day(day.day, num_auto, num_manual)
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
+@app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_before_user_confirm(self, order_id):
     session = self.session
     order = get_order(session, order_id)
@@ -67,7 +67,7 @@ def cancel_order_before_user_confirm(self, order_id):
     return order
 
 
-@app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
+@app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def cancel_order_by_user(self, order_id, reason):
     session = self.session
     order = get_order(session, order_id)

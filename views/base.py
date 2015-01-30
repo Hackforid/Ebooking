@@ -55,6 +55,7 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
             super(BtwBaseHandler, self).render(template_name, **kwargs) 
 
     def _handle_request_exception(self, e):
+        self.db.rollback()
         if isinstance(e, JsonException):
             print e.tojson()
             self.finish_json(errcode=e.errcode, errmsg=e.errmsg)

@@ -5,7 +5,7 @@ import datetime
 import requests
 
 from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask
+from tasks.base_task import SqlAlchemyTask, OrderTask
 from tasks.order import cancel_order_in_queue as Cancel
 from tasks.stock import PushInventoryTask
 
@@ -15,7 +15,7 @@ from exception.celery_exception import CeleryException
 from config import API
 
 
-@app.task(base=SqlAlchemyTask, bind=True)
+@app.task(base=OrderTask, bind=True)
 def cancel_order_by_server(self, order_id):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
@@ -39,7 +39,7 @@ def cancel_order_by_server(self, order_id):
         OrderHistoryModel.set_order_status_by_server(session, _order, pre_status, _order.status)
     return _order
 
-@app.task(base=SqlAlchemyTask, bind=True)
+@app.task(base=OrderTask, bind=True)
 def cancel_order_by_user(self, user, order_id, reason):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)

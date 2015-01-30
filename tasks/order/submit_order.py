@@ -12,7 +12,7 @@ from models.inventory import InventoryModel
 from models.rate_plan import RatePlanModel
 from models.order_history import OrderHistoryModel
 from models.order import OrderModel
-from tasks.base_task import SqlAlchemyTask
+from tasks.base_task import SqlAlchemyTask, OrderTask
 from tasks.order.submit_order_in_queue import start_order
 from tasks.stock import PushInventoryTask
 from tasks.sms import send_order_sms
@@ -22,7 +22,7 @@ from exception.celery_exception import CeleryException
 from entity.order import SubmitOrder
 from config import API
 
-@app.task(base=SqlAlchemyTask, bind=True)
+@app.task(base=OrderTask, bind=True)
 def confirm_order_by_user(self, user, order_id):
     session = self.session
     order = OrderModel.get_by_id(session, order_id)
@@ -55,7 +55,7 @@ def generate_track_id(order_id):
     return "{}|{}".format(order_id, time.time())
 
 
-@app.task(base=SqlAlchemyTask, bind=True)
+@app.task(base=OrderTask, bind=True)
 def submit_order(self, order_json):
     print order_json
     session = self.session
@@ -72,6 +72,7 @@ def submit_order(self, order_json):
     if not rate_plan:
         raise CeleryException(300, 'no rate plan')
 
+    submit_order.pay_type = rate_plan.pay_type
     submit_order.merchant_id = rate_plan.merchant_id
     submit_order.cancel_type = rate_plan.cancel_type
     submit_order.punish_type = rate_plan.punish_type

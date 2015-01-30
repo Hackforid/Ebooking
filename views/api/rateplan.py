@@ -10,7 +10,6 @@ from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
-from exception.celery_exception import CeleryException
 
 from tasks.stock import PushRatePlanTask
 
@@ -120,7 +119,7 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         rate_plan = RatePlanModel.get_by_merchant_hotel_room_name(
             self.db, merchant_id, hotel_id, roomtype_id, name)
         if rate_plan:
-            raise CeleryException(errcode=405, errmsg="name exist")
+            raise JsonException(errcode=405, errmsg="name exist")
 
         new_rateplan = RatePlanModel.new_rate_plan(self.db,
                                                    merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type, pay_type, guarantee_type, guarantee_start_time)

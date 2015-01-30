@@ -155,7 +155,7 @@ class RoomRateModel(Base):
         month0, month1 = start_date.month, end_date.month
         if month0 == month1:
             day0, day1 = start_date.day, end_date.day
-            self.change_price(price, month0, start_date, end_date)
+            self.change_price(price, month0, start_date.day, end_date.day)
         else:
             for month in range(month0, month1 + 1):
                 if month == month0:
@@ -177,7 +177,7 @@ class RoomRateModel(Base):
     def get_updated_price(self, prices, price, start, end):
         prices = prices.split('|')
         price = str(price)
-        for i in range(start.day, end.day+1):
+        for i in range(start, end+1):
             prices[i-1] = price
 
         return '|'.join(prices)
