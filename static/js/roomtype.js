@@ -570,10 +570,10 @@
 		$scope.inputErrMessage = "";
 
 
-		$scope.currentCheckPayType=function(type){
-			if(type=="0"){
+		$scope.currentCheckPayType = function(type) {
+			if (type == "0") {
 				return "现付底价";
-			}else if(type=="1"){
+			} else if (type == "1") {
 				return "预付底价";
 			}
 
