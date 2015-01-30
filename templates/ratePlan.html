@@ -64,13 +64,13 @@
     <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
   </tr>
 
-  <!--<tr>
+  <tr>
     <td >类型：</td>
-    <td><select name="" class="input-s"  ng-model="">
+    <td><select disabled name="" class="input-s"  ng-model="rateplan.pay_type" >
                        <option value="0">现付</option>
                        <option value="1">预付</option>                      
                      </select></td>
-  </tr>-->
+  </tr>
 
   <tr>
     <td >早餐数：</td>
@@ -96,15 +96,15 @@
                                         </select></td>
   </tr>
 
-  <!--<tr ng-show="roomHeadPlanDialog.priceTypeShow">
+  <tr ng-show="!rateplan.pay_type">
     <td>担保：</td>
-    <td>最晚到店时间：<input ng-model="roomHeadPlanDialog.lastArriveTime" style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
+    <td>最晚到店时间：<input ng-model="roomHeadPlanDialog.lastArriveTime"  style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
 
     <input type="radio" name="" ng-checked="roomHeadPlanDialog.firstcheckStatus" ng-click="roomHeadPlanDialog.firstcheckStatus=!roomHeadPlanDialog.firstcheckStatus;roomHeadPlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="roomHeadPlanDialog.holecheckStatus" ng-click="roomHeadPlanDialog.holecheckStatus=!roomHeadPlanDialog.holecheckStatus;roomHeadPlanDialog.firstcheckStatus=false" value = "pause">全额担保
 
 
     </td>
-  </tr>-->
+  </tr>
 
 
 </table>
