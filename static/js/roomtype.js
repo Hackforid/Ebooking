@@ -47,9 +47,9 @@
 		this.punishType = 0;
 		this.errmsg = '';
 
-		this.priceType = "0";
+		this.priceType = "1";
 
-		this.priceTypeShow = true;
+		this.priceTypeShow = false;
 		this.lastArriveTime = "";
 		this.firstcheckStatus = false;
 		this.holecheckStatus = false;
@@ -66,6 +66,8 @@
 			this.firstcheckStatus = false;
 			this.holecheckStatus = false;
 			this.lastArriveTime = "";
+
+			this.priceType = "1";
 
 
 			$("#newRatePlanDialog").fadeIn(500);
@@ -572,9 +574,19 @@
 
 		$scope.currentCheckPayType = function(type) {
 			if (type == "0") {
-				return "现付底价";
+				return "现付卖价";
 			} else if (type == "1") {
 				return "预付底价";
+			}
+
+		}
+
+
+		$scope.changPriceCheckPayType = function(type) {
+			if (type == "0") {
+				return "现付";
+			} else if (type == "1") {
+				return "预付";
 			}
 
 		}
