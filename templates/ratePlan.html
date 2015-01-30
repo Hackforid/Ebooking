@@ -145,7 +145,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                    <td class="table-title">预付底价</td>
+                                    <td class="table-title" ng-bind="currentCheckPayType(rateplan.pay_type)"></td>
                                     <td class={{v.classstyle}} ng-repeat="(id,v) in dayPriceSum[rateplan.id] | orderObjectBy:''">                <span id={{rateplan.id+"-"+$index}} ng-click=addChangeP((rateplan.id+"-"+$index),index,($index),(rateplan)); ng-bind="v.dayprice"></span></td>          
                                     </tr>
                                 </tbody>

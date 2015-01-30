@@ -248,6 +248,9 @@
 		}
 		this.eachshow = function(index) {
 
+			this.firstcheckStatus = false;
+			this.holecheckStatus = false;
+
 			var currentGuarType = scope.rateplans[index].guarantee_type;
 
 			if (currentGuarType == "1") {
@@ -565,6 +568,16 @@
 
 
 		$scope.inputErrMessage = "";
+
+
+		$scope.currentCheckPayType=function(type){
+			if(type=="0"){
+				return "现付底价";
+			}else if(type=="1"){
+				return "预付底价";
+			}
+
+		}
 
 
 
