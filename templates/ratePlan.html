@@ -183,7 +183,7 @@
   </tr>
   <tr>
     <td >价格类别：</td> 
-    <td ng-bind="currentHotelDetail['name']+'-预付'"></td>
+    <td ng-bind="currentHotelDetail['name']+'-'+changPriceCheckPayType(currentHotelDetail['pay_type'])"></td>
   </tr>
   <tr>
     <td>日期：</td>
@@ -191,7 +191,7 @@
                      <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" readonly="readonly"/></td>
   </tr>
   <tr>
-    <td>底价：</td>
+    <td>价格：</td>
     <td><input id="lowprice" name="" type="text" class="input-t" value="" placeholder="输入数字" /></td>
   </tr>
 </table>
