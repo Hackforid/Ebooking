@@ -124,6 +124,18 @@ class InventoryModel(Base):
                 .all()
 
     @classmethod
+    def get_by_merchant_and_dates(cls, session, merchant_id, days):
+        '''
+        days as [(year, months),]
+        '''
+        months = [InventoryModel.combin_year_month(day[0], day[1]) for day in days]
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.merchant_id == merchant_id)\
+                .filter(InventoryModel.month.in_(months))\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
+
+    @classmethod
     def get_by_roomtype_and_dates(cls, session, roomtype_id, days):
         '''
         days as [(year, months),]

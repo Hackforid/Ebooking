@@ -16,7 +16,8 @@ from exception.json_exception import JsonException
 
 from tasks.poi import POIPushTask
 from tasks.models.merchant import get_merchant_list
-from tasks.stock import PushHotelTask
+from tasks.stock import PushHotelTask, PushInventoryTask, PushRatePlanTask
+from tasks.stock import push_all_to_stock 
 
 
 class POIPushAllAPIHandler(BtwBaseHandler):
@@ -33,5 +34,5 @@ class StockPushAllAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin, json=True)
     def get(self):
-        PushHotelTask().push_all.delay()
+        push_all_to_stock.delay()
         self.finish_json(errcode=0, result=[])
