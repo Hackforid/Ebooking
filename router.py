@@ -28,7 +28,7 @@ from views.admin import AdminHandler
 from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler, AdminMerchantSuspendAPIHandler
 from views.api.merchant import MerchantListAPIHandler
 
-from views.api.poi import POIPushAllAPIHandler
+from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
 
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -87,4 +87,5 @@ handlers = [
         (r"/api/merchant/all/?", MerchantListAPIHandler),
 
         (r"/api/poi/push/all/?", POIPushAllAPIHandler),
+        (r"/api/stock/push/all/?", StockPushAllAPIHandler),
 ]

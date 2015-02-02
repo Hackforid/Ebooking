@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import requests
 import json
 import time
 import datetime
@@ -14,11 +13,14 @@ from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from config import API, IS_PUSH_TO_STOCK
 from constants import QUEUE_STOCK_PUSH, CHAIN_ID
+from tools.net import req
 
 class PushHotelTask(SqlAlchemyTask):
 
+    LEN_HOTEL = 40
+
     @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
-    def push_hotel_by_merchant_id(self, merchant_id):
+    def push_hotel_suspend_by_merchant_id(self, merchant_id):
         self.log.info("<<push hotel by merchant {}>> start".format(merchant_id))
         from models.cooperate_hotel import CooperateHotelModel
         hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id)
@@ -37,29 +39,50 @@ class PushHotelTask(SqlAlchemyTask):
         params = {'track_id': track_id, 'data': json.dumps(data)}
         self.log.info(u"<<push hotel by merchant {}>> push data {}".format(merchant_id, params))
         url = API['STOCK'] + '/stock/update_state'
-        r = requests.post(url, data=params)
+        r = req.post(url, data=params)
         self.log.info("<<push hotel by merchant {}>> response {}".format(merchant_id, r.text))
 
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
+    def push_all(self):
+        if not IS_PUSH_TO_STOCK:
+            return
+
+        from models.merchant import MerchantModel
+        merchants = MerchantModel.get_all(self.session)
+        for merchant in merchants:
+            self.log.info("=== push merchant {} ===".format(merchant.id))
+            self.push_by_merchant(merchant)
+
+    def push_by_merchant(self, merchant):
+        from models.cooperate_hotel import CooperateHotelModel as Hotel
+        hotels = Hotel.get_by_merchant_id(self.session, merchant.id)
+        hotel_datas = [self.get_hotel_data(hotel) for hotel in hotels]
+        hotel_data_list = [hotel_datas[i : self.LEN_HOTEL] for i in range(0, len(hotel_datas), self.LEN_HOTEL)] 
+        for hotel_datas in hotel_data_list:
+            self.post_hotels(hotel_datas)
 
 
     @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_hotel(self, hotel_id):
         self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
-        from models.cooperate_roomtype import CooperateRoomTypeModel
-
         hotel = CooperateHotelModel.get_by_id(self.session, hotel_id)
         if not hotel:
             return
 
-        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel_id)
+        hotel_data = self.get_hotel_data(hotel)
+        self.post_hotel(hotel_data)
 
+    def get_hotel_data(self, hotel):
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id)
         base_hotel, base_roomtypes = self.fetch_base_hotel_and_roomtypes(hotel.base_hotel_id)
         if not base_hotel:
             return
 
-        hotel_data = self.generate_data(hotel, roomtypes, base_hotel, base_roomtypes)
-        self.post_hotel(hotel_data)
+        hotel_data = self.generate_hotel_data(hotel, roomtypes, base_hotel, base_roomtypes)
+        return hotel_data
+
 
     def post_hotel(self, hotel_data):
         if not IS_PUSH_TO_STOCK:
@@ -69,21 +92,26 @@ class PushHotelTask(SqlAlchemyTask):
         params = {'track_id': track_id, 'data': json.dumps(data)}
         self.log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
         url = API['STOCK'] + '/stock/update_hotel'
-        r = requests.post(url, data=params)
+        r = req.post(url, data=params)
         self.log.info("<<push hotel {}>> response {}".format(hotel_data['id'], r.text))
 
-    def generate_track_id(self, hotel_id):
+    def post_hotels(self, hotel_datas):
+        if not IS_PUSH_TO_STOCK:
+            return
+        if not hotel_datas:
+            return
+        track_id = self.generate_track_id()
+        data = {'list': hotel_datas}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+        self.log.info(u"<<push hotels>> push data {}".format(params))
+        url = API['STOCK'] + '/stock/update_hotel'
+        r = req.post(url, data=params)
+        self.log.info("<<push hotels>> response {}".format(r.text))
+
+    def generate_track_id(self, hotel_id=0):
         return "{}|{}".format(hotel_id, time.time())
 
-    def fetch_base_hotel(self, base_hotel_id):
-        url = API['POI'] + "/api/hotel/" + str(base_hotel_id)
-        r = requests.get(url)
-        if r.status_code == 200:
-            result = r.json()
-            if result['errorcode'] == 0:
-                return result['result']['hotel']
-
-    def generate_data(self, hotel, roomtypes, base_hotel, base_roomtypes):
+    def generate_hotel_data(self, hotel, roomtypes, base_hotel, base_roomtypes):
         data = {}
         data['chain_id'] = CHAIN_ID
         data['id'] = hotel.id
@@ -114,11 +142,9 @@ class PushHotelTask(SqlAlchemyTask):
                     break
         return rooms
 
-
-
     def fetch_base_hotel_and_roomtypes(self, hotel_id):
         url = API['POI'] + "/api/hotel/" + str(hotel_id) + "/roomtype/"
-        r = requests.get(url)
+        r = req.get(url)
         if r.status_code == 200:
             result = r.json()
             if result['errcode'] == 0:
@@ -161,7 +187,7 @@ class PushRatePlanTask(SqlAlchemyTask):
                 }
         self.log.info(params)
         url = API['STOCK'] + '/stock/update_rate_plan'
-        r = requests.post(url, data=params)
+        r = req.post(url, data=params)
         self.log.info(r.text)
 
     def post_cancel_rule(self, rateplan):
@@ -173,7 +199,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         self.log.info("<<push rateplan {}>> data:{}".format(rateplan.id, data))
 
         url = API['STOCK'] + '/stock/update_cancel_rule'
-        r = requests.post(url, data)
+        r = req.post(url, data)
         self.log.info("<<push rateplan {}>> response:{}".format(rateplan.id, r.text))
 
     def post_roomrate(self, rateplan, roomrate):
@@ -185,7 +211,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         self.log.info(data)
 
         url = API['STOCK'] + '/stock/update_room_rate'
-        r = requests.post(url, data)
+        r = req.post(url, data)
         self.log.info(r.text)
 
 
@@ -291,7 +317,7 @@ class PushInventoryTask(SqlAlchemyTask):
 
         url = API['STOCK'] + '/stock/update_inventory'
 
-        r = requests.post(url, data=params)
+        r = req.post(url, data=params)
         self.log.info(r.text)
 
 

@@ -50,6 +50,6 @@ def suspend_merchant(self, merchant_id, is_suspend):
 
     self.session.commit()
 
-    PushHotelTask().push_hotel_by_merchant_id(merchant_id)
+    PushHotelTask().push_hotel_suspend_by_merchant_id(merchant_id)
     return merchant
 
