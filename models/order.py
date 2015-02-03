@@ -52,6 +52,8 @@ class OrderModel(Base):
     punish_value = Column("punishValue", INTEGER(unsigned=True), nullable=False, default=0)
     guarantee_start_time = Column("guaranteeStartTime", TIME, default="00:00:00")
     guarantee_type = Column("guaranteeType", TINYINT(4), nullable=False, default=0)
+    ota_id = Column('otaId', INTEGER, nullable=False, default=0)
+    ota_name = Column('otaName', VARCHAR(50), nullable=False, default='')
 
     CONFIRM_TYPE_INIT = 0
     CONFIRM_TYPE_AUTO = 1
@@ -99,7 +101,26 @@ class OrderModel(Base):
 
         return query.all(), total
 
+    @classmethod
+    def get_success_order_by_checkout_date_in_month(self, session, merchant_id, year, month, pay_type, ota_id=None):
+        date_start = datetime.date(year, month, 1)
+        if month == 12:
+            month = 1
+            year = year + 1
+        else:
+            month = month + 1
+        date_end = datetime.date(year, month, 1)
+        
+        query = session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id)\
+                .filter(OrderModel.status == 300)\
+                .filter(OrderModel.checkout_date >= date_start,
+                        OrderModel.checkout_date < date_end)\
+                .filter(OrderModel.pay_type == pay_type)
+        if ota_id is not None:
+            query = query.filter(OrderModel.ota_id == ota_id)
 
+        return query.all()
 
     @classmethod
     def get_by_id(cls, session, id):
@@ -149,7 +170,9 @@ class OrderModel(Base):
                 extra=submit_order.extra,
                 punish_type=submit_order.punish_type,
                 punish_value=submit_order.punish_value,
-                cancel_type=submit_order.cancel_type
+                cancel_type=submit_order.cancel_type,
+                ota_id=submit_order.ota_id,
+                ota_name=submit_order.ota_name
                 )
         if submit_order.pay_type == RatePlanModel.PAY_TYPE_ARRIVE:
             order.guarantee_type = submit_order.guarantee_type
@@ -253,4 +276,6 @@ class OrderModel(Base):
                 punish_value=self.punish_value,
                 guarantee_type=self.guarantee_type,
                 guarantee_start_time=self.guarantee_start_time,
+                ota_id=self.ota_id,
+                ota_name=self.ota_name,
                 )

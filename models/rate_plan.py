@@ -59,6 +59,13 @@ class RatePlanModel(Base):
                 .filter(RatePlanModel.is_delete == 0)\
                 .first()
 
+    @classmethod
+    def get_by_merchant(cls, session, merchant_id):
+        return session.query(RatePlanModel)\
+                .filter(RatePlanModel.merchant_id == merchant_id)\
+                .filter(RatePlanModel.is_delete == 0)\
+                .all()
+
 
     @classmethod
     def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type, pay_type=None, guarantee_type=None, guarantee_start_time=None):

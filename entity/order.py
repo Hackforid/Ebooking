@@ -16,6 +16,7 @@ class SubmitOrder(object):
        self.rateplan_id = o.get('ratePlanId', 0)
        self.rateplan_name = o.get('ratePlanName', '')
        self.ota_id = o.get('otaId', 0)
+       self.ota_name = o.get('otaName', '')
        self.ota_order_id = o.get('otaOrderId', 0)
        self.ota_msg_desc = o.get('ota_msg_desc', '')
        self.currency_type = o.get('currencyType', 0)
