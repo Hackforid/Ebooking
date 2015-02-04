@@ -117,70 +117,71 @@ var ChartInit = function(scope, http) {
                 myChart.setOption(option);
 
 
-                 if(scope.otavalueOrder.length!=0){
-                myChart = ec.init(document.getElementById(scope.pieId));
+                if (scope.otavalueOrder.length != 0) {
+                    myChart = ec.init(document.getElementById(scope.pieId));
 
-                option = {
+                    option = {
 
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        x: 'right',
-                        data: scope.otaWays
-                    },
-                    toolbox: {
-                        show: false,
-                        feature: {
-                            mark: {
-                                show: true
-                            },
-                            dataView: {
-                                show: true,
-                                readOnly: false
-                            },
-                            magicType: {
-                                show: true,
-                                type: ['pie', 'funnel'],
-                                option: {
-                                    funnel: {
-                                        x: '25%',
-                                        width: '50%',
-                                        funnelAlign: 'left',
-                                        max: 1548
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'right',
+                            data: scope.otaWays
+                        },
+                        toolbox: {
+                            show: false,
+                            feature: {
+                                mark: {
+                                    show: true
+                                },
+                                dataView: {
+                                    show: true,
+                                    readOnly: false
+                                },
+                                magicType: {
+                                    show: true,
+                                    type: ['pie', 'funnel'],
+                                    option: {
+                                        funnel: {
+                                            x: '25%',
+                                            width: '50%',
+                                            funnelAlign: 'left',
+                                            max: 1548
+                                        }
                                     }
+                                },
+                                restore: {
+                                    show: true
+                                },
+                                saveAsImage: {
+                                    show: true
                                 }
-                            },
-                            restore: {
-                                show: true
-                            },
-                            saveAsImage: {
-                                show: true
                             }
-                        }
-                    },
-                    calculable: true,
-                    series: [{
-                        name: '访问来源',
-                        type: 'pie',
-                        radius: '55%',
-                        center: ['50%', '60%'],
-                        data: scope.otavalueOrder
-                    }],
+                        },
+                        calculable: true,
+                        series: [{
+                            name: '访问来源',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: scope.otavalueOrder
+                        }],
 
 
-                    color: [
-                        '#63B8FF', '#ff7f50', '#7FFF00', '#FFFF00', '#6495ed',
-                        '#ff69b4', '#cd5c5c', '#ffa500',
-                        '#1e90ff', '#ff6347', '#00fa9a', '#ffd700',
-                        '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
-                    ]
+                        color: [
+                            '#63B8FF', '#ff7f50', '#7FFF00', '#FFFF00', '#6495ed',
+                            '#ff69b4', '#cd5c5c', '#ffa500',
+                            '#1e90ff', '#ff6347', '#00fa9a', '#ffd700',
+                            '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
+                        ]
 
 
-                };
-                myChart.setOption(option);}
+                    };
+                    myChart.setOption(option);
+                }
 
 
                 if (scope.pieId == "pietwo") {
