@@ -10,11 +10,6 @@ from models.cooperate_roomtype import CooperateRoomTypeModel
 
 from constants import QUEUE_ORDER
 
-@app.task(base=SqlAlchemyTask, bind=True)
-def get_by_merchant_id_and_hotel_id_and_date(task_self, merchant_id, hotel_id, year, month):
-    return InventoryModel.get_by_merchant_id_and_hotel_id_and_date(task_self.session,
-            merchant_id, hotel_id, year, month)
-
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
 def modify_inventory(self, merchant_id, hotel_id, roomtype_id, price_type, change_num, start_date, end_date):

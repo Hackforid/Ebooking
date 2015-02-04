@@ -15,11 +15,14 @@ from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
 import tasks.models.cooperate_roomtype as CooperateRoom
-from tasks.models import cooperate_hotel as CooperateHotel
-import tasks.models.inventory as Inventory
 
 from constants import PERMISSIONS
 from models.cooperate_hotel import CooperateHotelModel
+from models.cooperate_roomtype import CooperateRoomTypeModel
+from models.inventory import InventoryModel
+from tasks.poi import POIPushRoomTypeTask
+
+from tasks.stock import PushHotelTask, PushInventoryTask
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -36,16 +39,16 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         hotel = self.get_hotel(hotel_id)
 
         base_hotel, base_roomtypes = yield self.get_all_roomtype(hotel.base_hotel_id)
-        cooped_roomtypes = yield self.get_cooped_rooms(hotel_id)
+        cooped_roomtypes = self.get_cooped_rooms(hotel_id)
 
         base_cooped, base_will_coop = self.seperate_roomtype(base_roomtypes, cooped_roomtypes)
-
         self.valid_date(year, month)
 
         if not simple:
-            inventorys = (yield gen.Task(Inventory.get_by_merchant_id_and_hotel_id_and_date.apply_async,
-                args=[self.current_user.merchant_id, hotel_id, year, month])).result
+            inventorys = InventoryModel.get_by_merchant_id_and_hotel_id_and_date(self.db,
+                    self.current_user.merchant_id, hotel_id, year, month)
             self.merge_inventory(base_cooped, inventorys)
+
 
         self.merge_cooped_info(base_cooped, cooped_roomtypes)
 
@@ -55,18 +58,9 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
             will_coop_roomtypes=base_will_coop,
             ))
 
-    @gen.coroutine
     def get_cooped_rooms(self, hotel_id):
-        task = yield gen.Task(CooperateRoom.get_by_hotel_id.apply_async, args=[hotel_id])
-        if not task.result:
-            raise gen.Return([])
-        if task.status == 'SUCCESS':
-            if task.result[0].merchant_id == self.current_user.merchant_id:
-                raise gen.Return(task.result)
-            else:
-                raise JsonException(errorcode=1000, errmsg='merchant not valid')
-        else:
-            raise JsonException(errorcode=2001, errmsg='load room fail')
+        coops = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel_id)
+        return coops
 
     def get_hotel(self, hotel_id):
         return CooperateHotelModel.get_by_id(self.db, hotel_id)
@@ -129,7 +123,6 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
         return cooped, will_coop
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def post(self, hotel_id):
@@ -140,17 +133,38 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         if not roomtype_ids:
             raise JsonException(errcode=2001, errmsg="need id")
 
-        task = yield gen.Task(CooperateRoom.new_roomtype_coops.apply_async,
-            args=[merchant_id, hotel_id, roomtype_ids])
-        if task.status == 'SUCCESS':
-            self.finish_json(result=dict(
-                cooped_roomtypes=[coop.todict() for coop in task.result],
-                ))
-        else:
-            if isinstance(task.result, CeleryException):
-                raise JsonException(errcode=1000, errmsg=task.result.errmsg)
-            else:
-                raise JsonException(errcode=2000, errmsg='server error')
+        coops = self.new_roomtype_coops(merchant_id, hotel_id, roomtype_ids)
+        self.finish_json(result=dict(
+            cooped_roomtypes=[coop.todict() for coop in coops],
+            ))
+
+    def new_roomtype_coops(self, merchant_id, hotel_id, roomtype_ids):
+        hotel = CooperateHotelModel.get_by_id(self.db, hotel_id)
+        if not hotel:
+            raise JsonException(1000, 'hotel not found')
+        if hotel.merchant_id != merchant_id:
+            raise JsonException(2000, 'merchant not valid')
+
+
+        coops = CooperateRoomTypeModel.get_by_merchant_hotel_base_rooms_id(self.db,
+                merchant_id, hotel_id, roomtype_ids)
+        if coops:
+            raise JsonException(1000, 'room has cooped')
+
+        coops = CooperateRoomTypeModel.new_roomtype_coops(self.db,
+                merchant_id, hotel.id,  hotel.base_hotel_id, roomtype_ids)
+
+        for coop in coops:
+            InventoryModel.insert_in_four_month(self.db,
+                    merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id)
+
+        PushHotelTask().push_hotel.delay(hotel_id)
+        
+        for coop in coops:
+            PushInventoryTask().push_inventory.delay(coop.id)
+            POIPushRoomTypeTask().push_roomtype.delay(coop.id)
+
+        return coops
 
 
 
@@ -166,12 +180,20 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
                 "prefix_name", "remark_name")
 
 
-        task = yield gen.Task(CooperateRoom.modify_cooped_roomtype.apply_async,
-                args=[merchant_id, hotel_id, roomtype_id, prefix_name, remark_name])
-        result = task.result
-        if isinstance(result, CeleryException):
-            raise JsonException(errcode=1002, errmsg=result.errmsg)
-        else:
-            self.finish_json(result=dict(
-                cooped_roomtype=result.todict(),
-                ))
+        room = self.modify_cooped_roomtype(merchant_id, hotel_id, roomtype_id, prefix_name, remark_name)
+        self.finish_json(result=dict(
+            cooped_roomtype=room.todict(),
+            ))
+
+    def modify_cooped_roomtype(self, merchant_id, hotel_id, roomtype_id, prefix_name, remark_name):
+        coop = CooperateRoomTypeModel.get_by_id(self.db, roomtype_id)
+        if not coop:
+            return JsonException(404, 'coop not found')
+        if coop.merchant_id != merchant_id:
+            return JsonException(1000, 'merchant not valid')
+
+        coop.prefix_name = prefix_name
+        coop.remark_name = remark_name
+        self.db.commit()
+        return coop
+
