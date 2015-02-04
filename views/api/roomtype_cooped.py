@@ -19,6 +19,7 @@ from tasks.models import cooperate_hotel as CooperateHotel
 import tasks.models.inventory as Inventory
 
 from constants import PERMISSIONS
+from models.cooperate_hotel import CooperateHotelModel
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -32,7 +33,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         year, month = int(year), int(month)
         simple = self.get_query_argument('simple', 0)
 
-        hotel = yield self.get_hotel(hotel_id)
+        hotel = self.get_hotel(hotel_id)
 
         base_hotel, base_roomtypes = yield self.get_all_roomtype(hotel.base_hotel_id)
         cooped_roomtypes = yield self.get_cooped_rooms(hotel_id)
@@ -67,13 +68,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         else:
             raise JsonException(errorcode=2001, errmsg='load room fail')
 
-    @gen.coroutine
     def get_hotel(self, hotel_id):
-        task = yield gen.Task(CooperateHotel.get_by_id.apply_async, args=[hotel_id])
-        if task.status == 'SUCCESS':
-            raise gen.Return(task.result)
-        else:
-            raise JsonException(errorcode=2000, errmsg='hotel not found')
+        return CooperateHotelModel.get_by_id(self.db, hotel_id)
 
     def merge_cooped_info(self, base_rooms, cooped_rooms):
         if not cooped_rooms:

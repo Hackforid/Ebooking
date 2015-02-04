@@ -12,7 +12,7 @@ BROKER_POOL_LIMIT = 100
 CELERYD_PREFETCH_MULTIPLIER = 2
 CELERY_IMPORTS = (
     'tasks.test', 'tasks.stock', 'tasks.poi',
-                'tasks.models.cooperate_hotel', 'tasks.models.cooperate_roomtype',
+                'tasks.models.cooperate_roomtype',
                 'tasks.models.inventory',
                 'tasks.models.order',
                 'tasks.order.submit_order', 'tasks.order.submit_order_in_queue',
