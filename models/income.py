@@ -5,7 +5,7 @@ import datetime
 from tornado.util import ObjectDict
 
 from sqlalchemy import Column
-from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT, TINYINT, DATE
+from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT, TINYINT, DATE, SMALLINT
 
 
 from models import Base
@@ -25,6 +25,8 @@ class IncomeModel(Base):
     value = Column(INTEGER, default=0, nullable=False)
     remark = Column(VARCHAR(100))
     is_delete = Column('isDelete', BIT, nullable=False, default=0)
+    year = Column(SMALLINT(4), nullable=False, default=0)
+    month = Column(TINYINT(2), nullable=False, default=0)
 
     @property
     def ota_name(self):
@@ -40,17 +42,10 @@ class IncomeModel(Base):
 
     @classmethod
     def get_in_month(self, session, merchant_id, year, month, pay_type, ota_id=None):
-        date_start = datetime.date(year, month, 1)
-        if month == 12:
-            month = 1
-            year = year + 1
-        else:
-            month = month + 1
-        date_end = datetime.date(year, month, 1)
 
         query = session.query(IncomeModel.merchant_id == merchant_id,
-                IncomeModel.create_date >= date_start,
-                IncomeModel.create_date <= date_end,
+                IncomeModel.year == year,
+                IncomeModel.month == month,
                 IncomeModel.pay_type == pay_type,
                 IncomeModel.is_delete == 0)
 
@@ -58,6 +53,21 @@ class IncomeModel(Base):
             query = query.filter(IncomeModel.ota_id == ota_id)
 
         return query.all()
+
+    @classmethod
+    def new(self, session, merchant_id, pay_type, ota_id, year, month, value, remark):
+        income = IncomeModel(merchant_id=merchant_id,
+                pay_type=pay_type,
+                ota_id=ota_id,
+                year=year,
+                month=month,
+                value=value,
+                remark=remark,
+                create_date=datetime.date.today())
+        session.add(income)
+        session.save()
+
+        return income
 
     def todict(self):
         return ObjectDict(
@@ -70,4 +80,6 @@ class IncomeModel(Base):
                 value=self.value,
                 remark=self.remark,
                 is_delete=self.is_delete,
+                year=self.year,
+                month=self.month,
                 )

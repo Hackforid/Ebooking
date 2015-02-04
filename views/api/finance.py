@@ -10,15 +10,17 @@ from config import API
 from views.base import BtwBaseHandler
 from models.order import OrderModel
 from models.income import IncomeModel
+from tools.auth import auth_login
 
 class FinanceAPIHandler(BtwBaseHandler):
 
+    @auth_login(json=True)
     def get(self):
         today = date.today()
-        year = self.get_query_argument('year', today.year)
-        month = self.get_query_argument('month', today.month)
+        year = int(self.get_query_argument('year', today.year))
+        month = int(self.get_query_argument('month', today.month))
         ota_id = self.get_query_argument('ota_id', None)
-        pay_type =self.get_query_argument('pay_type', 1)
+        pay_type = int(self.get_query_argument('pay_type', 1))
         merchant_id =self.current_user.merchant_id
 
         orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_id)
@@ -38,3 +40,13 @@ class FinanceAPIHandler(BtwBaseHandler):
     def get_income_record_in_date(self, merchant_id, year, month, pay_type, ota_id=None):
         incomes = IncomeModel.get_in_month(self.db, merchant_id, year, month, pay_type, ota_id)
         return incomes
+
+
+class IncomeAPIHandler(BtwBaseHandler):
+
+    @auth_login(json=True)
+    def post(self):
+        merchant_id =self.current_user.merchant_id
+        args = self.get_json_arguments()
+
+

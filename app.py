@@ -49,7 +49,7 @@ class Application(tornado.web.Application):
                 )
         # db
         engine = create_engine(
-                Config['mysql-connector'], encoding='utf-8', echo=False,
+                Config['mysql-connector'], encoding='utf-8', echo=True,
                 pool_recycle=600
                 )
         self.DB_Session = sessionmaker(bind=engine)
