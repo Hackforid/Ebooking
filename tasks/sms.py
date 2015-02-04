@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import requests
-import json
 
-
-from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask
 from models.user import UserModel
 from models.order import OrderModel
 
-from exception.celery_exception import CeleryException
-from tools.json import json_encode
+from tasks.celery_app import app
+from tasks.base_task import SqlAlchemyTask
+
 from tools.log import Log
 
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)

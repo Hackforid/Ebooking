@@ -11,11 +11,11 @@ from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
-from tasks.models.cooperate_hotel import get_by_merchant_id, change_hotel_online_status
 from constants import PERMISSIONS
 
-import tcelery
-tcelery.setup_nonblocking_producer()
+from models.cooperate_hotel import CooperateHotelModel
+from tasks.stock import PushHotelTask
+
 
 class HotelCoopedAPIHandler(BtwBaseHandler):
 
@@ -43,7 +43,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_cooped_hotels(self, merchant_id, start, limit, name, city_id, star, is_online):
-        cooped_base_hotels = yield self.get_cooped_base_hotels(merchant_id, is_online)
+        cooped_base_hotels = self.get_cooped_base_hotels(merchant_id, is_online)
         cooped_base_hotel_ids = [hotel.base_hotel_id for hotel in cooped_base_hotels]
         if not cooped_base_hotel_ids:
             raise gen.Return(([], 0))
@@ -56,10 +56,8 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         else:
             raise gen.Return((None, None))
 
-    @gen.coroutine
     def get_cooped_base_hotels(self, merchant_id, is_online):
-        cooped_base_hotels = yield gen.Task(get_by_merchant_id.apply_async, args=[merchant_id, is_online])
-        raise gen.Return([] if not cooped_base_hotels.result else cooped_base_hotels.result)
+        return CooperateHotelModel.get_by_merchant_id(self.db, merchant_id, is_online)
 
     def merge_base_hotel_with_coops(self, base_hotels, cooped_hotels):
         for base in base_hotels:
@@ -119,7 +117,6 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
 class HotelCoopOnlineAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_cooperated_hotel, json=True)
     def put(self, hotel_id, is_online):
@@ -127,17 +124,20 @@ class HotelCoopOnlineAPIHandler(BtwBaseHandler):
         is_online = int(is_online)
         if is_online not in [0, 1]:
             raise JsonException(errcode=500, errmsg="wrong arg: is_online")
-        task = yield gen.Task(change_hotel_online_status.apply_async, args=[merchant_id, hotel_id, is_online])
 
-        if task.status == 'SUCCESS':
-            hotel = task.result
-            self.finish_json(result=dict(
-                cooperate_hotel=hotel.todict()
-                ))
-        else:
-            e = task.result
-            if isinstance(e, CeleryException):
-                raise JsonException(errcode=e.errcode, errmsg=e.errmsg)
-            else:
-                raise JsonException(errcode=1000, errmsg='server error')
+        hotel = self.change_hotel_online_status(merchant_id, hotel_id, is_online)
 
+        self.finish_json(result=dict(
+            cooperate_hotel=hotel.todict()
+            ))
+
+    def change_hotel_online_status(self, merchant_id, hotel_id, is_online):
+        hotel = CooperateHotelModel.get_by_merchant_id_and_hotel_id(self.db, merchant_id, hotel_id)
+        if not hotel:
+            raise JsonException(404, 'hotel not found')
+
+        hotel.is_online = is_online
+        self.db.commit()
+
+        PushHotelTask().push_hotel.delay(hotel.id)
+        return hotel

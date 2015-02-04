@@ -12,6 +12,9 @@ from models.order import OrderModel
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
+import tcelery
+tcelery.setup_nonblocking_producer()
+
 class SubmitOrderAPIHandler(BtwBaseHandler):
     '''
     this api is use for server to submit order
