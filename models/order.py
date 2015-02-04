@@ -5,7 +5,7 @@ import datetime
 
 from tornado.util import ObjectDict 
 
-from tasks.models import Base
+from models import Base
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATE, TIME, TEXT, TIMESTAMP, BIGINT, TINYINT
 
