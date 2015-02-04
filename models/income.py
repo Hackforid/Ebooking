@@ -43,11 +43,12 @@ class IncomeModel(Base):
     @classmethod
     def get_in_month(self, session, merchant_id, year, month, pay_type, ota_id=None):
 
-        query = session.query(IncomeModel.merchant_id == merchant_id,
-                IncomeModel.year == year,
-                IncomeModel.month == month,
-                IncomeModel.pay_type == pay_type,
-                IncomeModel.is_delete == 0)
+        query = session.query(IncomeModel)\
+                .filter(IncomeModel.merchant_id == merchant_id,
+                    IncomeModel.year == year,
+                    IncomeModel.month == month,
+                    IncomeModel.pay_type == pay_type,
+                    IncomeModel.is_delete == 0)
 
         if ota_id is not None:
             query = query.filter(IncomeModel.ota_id == ota_id)
@@ -55,7 +56,7 @@ class IncomeModel(Base):
         return query.all()
 
     @classmethod
-    def new(self, session, merchant_id, pay_type, ota_id, year, month, value, remark):
+    def new(self, session, merchant_id, pay_type, ota_id, year, month, value, remark=None):
         income = IncomeModel(merchant_id=merchant_id,
                 pay_type=pay_type,
                 ota_id=ota_id,
@@ -65,7 +66,7 @@ class IncomeModel(Base):
                 remark=remark,
                 create_date=datetime.date.today())
         session.add(income)
-        session.save()
+        session.commit()
 
         return income
 
