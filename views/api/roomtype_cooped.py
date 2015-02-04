@@ -8,13 +8,10 @@ from tornado.escape import json_encode, json_decode, url_escape
 
 from config import API
 from tools.auth import auth_login, auth_permission
-from tools.url import add_get_params
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
-from exception.celery_exception import CeleryException
 
-import tasks.models.cooperate_roomtype as CooperateRoom
 
 from constants import PERMISSIONS
 from models.cooperate_hotel import CooperateHotelModel

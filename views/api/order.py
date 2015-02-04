@@ -15,6 +15,11 @@ from tasks.order import cancel_order as CancelOrder
 
 from constants import PERMISSIONS
 
+from models.order import OrderModel
+
+import tcelery
+tcelery.setup_nonblocking_producer()
+
 class OrderWaitingAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
@@ -24,20 +29,15 @@ class OrderWaitingAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
-        
-        task = yield gen.Task(Order.get_waiting_orders.apply_async,
-                args=[merchant_id, start, limit])
-        print task.result
-        if task.status == 'SUCCESS':
-            orders, total = task.result
-            self.finish_json(result={
-                'orders': [order.todict() for order in orders],
-                'total': total,
-                'start': start,
-                'limit': limit,
-                })
-        else:
-            raise JsonException(errcode=1000, errmsg="wrong")
+
+        orders, total = OrderModel.get_waiting_orders(self.db, merchant_id, start, limit)
+
+        self.finish_json(result={
+            'orders': [order.todict() for order in orders],
+            'total': total,
+            'start': start,
+            'limit': limit,
+            })
 
 
 class OrderUserConfirmAPIHandler(BtwBaseHandler):
@@ -93,20 +93,14 @@ class OrderTodayBookListAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
-        
-        task = yield gen.Task(Order.get_today_book_orders.apply_async,
-                args=[merchant_id, start, limit])
-        print task.result
-        if task.status == 'SUCCESS':
-            orders, total = task.result
-            self.finish_json(result={
-                'total': total,
-                'start': start,
-                'limit': limit,
-                'orders': [order.todict() for order in orders],
-                })
-        else:
-            raise JsonException(errcode=1000, errmsg="wrong")
+
+        orders, total = OrderModel.get_today_book_orders(self.db, merchant_id, start, limit)
+        self.finish_json(result={
+            'total': total,
+            'start': start,
+            'limit': limit,
+            'orders': [order.todict() for order in orders],
+            })
 
 class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
 
@@ -117,20 +111,14 @@ class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
         merchant_id = self.current_user.merchant_id
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
-        
-        task = yield gen.Task(Order.get_today_checkin_orders.apply_async,
-                args=[merchant_id, start, limit])
-        print task.result
-        if task.status == 'SUCCESS':
-            orders, total = task.result
-            self.finish_json(result={
-                'orders': [order.todict() for order in orders],
-                'total': total,
-                'start': start,
-                'limit': limit,
-                })
-        else:
-            raise JsonException(errcode=1000, errmsg="wrong")
+
+        orders, total = OrderModel.get_today_checkin_orders(self.db, merchant_id, start, limit)
+        self.finish_json(result={
+            'orders': [order.todict() for order in orders],
+            'total': total,
+            'start': start,
+            'limit': limit,
+            })
 
 class OrderSearchAPIHandler(BtwBaseHandler):
 
@@ -151,27 +139,15 @@ class OrderSearchAPIHandler(BtwBaseHandler):
         start = self.get_query_argument('start', 0)
         limit = self.get_query_argument('limit', 20)
 
-        
         if order_status:
             order_status = order_status.split(',')
 
-        task = yield gen.Task(Order.search.apply_async,
-                args=[merchant_id, order_id, hotel_name, checkin_date_start, checkin_date_end, customer, order_status, create_time_start, create_time_end, start, limit])
-        if task.status == 'SUCCESS':
-            orders, total = task.result
-            orders = orders if orders is not None else  []
-            self.finish_json(result={
-                'orders': [order.todict() for order in orders],
-                'total': total,
-                'start': start,
-                'limit': limit,
-                })
-        else:
-            raise JsonException(errcode=1000, errmsg="wrong")
-            
+        orders, total = OrderModel.search(self.db,
+                merchant_id, order_id, hotel_name, checkin_date_start, checkin_date_end, customer, order_status, create_time_start, create_time_end, start, limit)
 
-
-
-
-
-
+        self.finish_json(result={
+            'orders': [order.todict() for order in orders],
+            'total': total,
+            'start': start,
+            'limit': limit,
+            })

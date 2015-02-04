@@ -11,7 +11,6 @@ from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
-from tasks.models.cooperate_hotel import change_hotel_online_status
 from constants import PERMISSIONS
 
 from models.cooperate_hotel import CooperateHotelModel
