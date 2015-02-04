@@ -46,14 +46,17 @@ $(document).ready(function() {
     $.ajax({
       url: '/api/order/waiting/?start=0',
       success: function(data) {
-        var total = data.result.total;
-        //console.log("data");
-        // console.log(total);
-        if (total > 0) {
-          $("#orderPoint").show();
-        } else {
-          $("#orderPoint").hide();
+
+        if (data.errcode == 0) {
+          var total = data.result.total;
+          if (total > 0) {
+            $("#orderPoint").show();
+          } else {
+            $("#orderPoint").hide();
+          }
         }
+
+
       }
     });
   }
