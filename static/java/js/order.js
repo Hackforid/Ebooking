@@ -117,7 +117,7 @@ var ChartInit = function(scope, http) {
                 myChart.setOption(option);
 
 
-
+                 if(scope.otavalueOrder.length!=0){
                 myChart = ec.init(document.getElementById(scope.pieId));
 
                 option = {
@@ -180,7 +180,7 @@ var ChartInit = function(scope, http) {
 
 
                 };
-                myChart.setOption(option);
+                myChart.setOption(option);}
 
 
                 if (scope.pieId == "pietwo") {
@@ -337,7 +337,7 @@ var ChartInit = function(scope, http) {
 
 
 
-        var url = "/ebooking/order/night/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
+        var url = "/ebooking/orderStat/night/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
 
 
         // console.log(params);
@@ -504,7 +504,7 @@ var ChartInit = function(scope, http) {
                      console.log(otaNameValue);*/
 
 
-                    var pieurl = "/ebooking/order/source/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
+                    var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
 
 
                     http.get(pieurl)
