@@ -2,8 +2,6 @@
 
 import time
 
-from tornado import gen
-from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
 from tools.auth import auth_login, auth_permission
@@ -62,7 +60,6 @@ class RatePlanValidMixin(object):
 
 class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def post(self, hotel_id, roomtype_id):
@@ -91,7 +88,6 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
             roomrate=roomrate.todict(),
         ))
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def get(self, hotel_id, roomtype_id):
@@ -132,7 +128,6 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
 class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, rateplan_id):

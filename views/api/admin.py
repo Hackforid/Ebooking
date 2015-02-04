@@ -13,22 +13,20 @@ from models.user import UserModel
 from models.cooperate_hotel import CooperateHotelModel
 
 
-from mixin.request_mixin import CeleryTaskMixin
 from tasks.stock import PushHotelTask
 
-class AdminMerchantAPIHandler(BtwBaseHandler, CeleryTaskMixin):
+class AdminMerchantAPIHandler(BtwBaseHandler):
 
     @auth_login(json=True)
     @need_btw_admin(json=True)
     def get(self):
-
         merchants = MerchantModel.get_all(self.db)
         merchants = [merchant.todict() for merchant in merchants]
         self.finish_json(result=dict(
             merchants=merchants
             ))
 
-class AdminMerchantModifyAPIHandler(BtwBaseHandler, CeleryTaskMixin):
+class AdminMerchantModifyAPIHandler(BtwBaseHandler):
 
     @auth_login(json=True)
     @need_btw_admin(json=True)
@@ -81,7 +79,7 @@ class AdminMerchantModifyAPIHandler(BtwBaseHandler, CeleryTaskMixin):
 
         return merchant
 
-class AdminMerchantSuspendAPIHandler(BtwBaseHandler, CeleryTaskMixin):
+class AdminMerchantSuspendAPIHandler(BtwBaseHandler):
 
 
     @auth_login(json=True)

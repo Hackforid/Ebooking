@@ -9,7 +9,6 @@ from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
 
-from tasks.models import order as Order
 from tasks.order import submit_order as SubmitOrder
 from tasks.order import cancel_order as CancelOrder
 
@@ -22,7 +21,6 @@ tcelery.setup_nonblocking_producer()
 
 class OrderWaitingAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
     def get(self):
@@ -86,7 +84,6 @@ class OrderUserCancelAPIHandler(BtwBaseHandler):
 
 class OrderTodayBookListAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     @auth_login(json=True)
     def get(self):
@@ -104,7 +101,6 @@ class OrderTodayBookListAPIHandler(BtwBaseHandler):
 
 class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     def get(self):
@@ -122,7 +118,6 @@ class OrderTodayCheckinListAPIHandler(BtwBaseHandler):
 
 class OrderSearchAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_order, json=True)
     def get(self):
