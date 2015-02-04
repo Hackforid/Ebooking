@@ -101,7 +101,26 @@ class OrderModel(Base):
 
         return query.all(), total
 
+    @classmethod
+    def get_success_order_by_checkout_date_in_month(self, session, merchant_id, year, month, pay_type, ota_id=None):
+        date_start = datetime.date(year, month, 1)
+        if month == 12:
+            month = 1
+            year = year + 1
+        else:
+            month = month + 1
+        date_end = datetime.date(year, month, 1)
+        
+        query = session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id)\
+                .filter(OrderModel.status == 300)\
+                .filter(OrderModel.checkout_date >= date_start,
+                        OrderModel.checkout_date < date_end)\
+                .filter(OrderModel.pay_type == pay_type)
+        if ota_id is not None:
+            query = query.filter(OrderModel.ota_id == ota_id)
 
+        return query.all()
 
     @classmethod
     def get_by_id(cls, session, id):
