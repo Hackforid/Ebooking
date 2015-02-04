@@ -6,6 +6,7 @@ import json
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
+
 from models.user import UserModel
 from models.order import OrderModel
 

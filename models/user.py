@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from tornado.util import ObjectDict 
+from tornado.util import ObjectDict
 
 from models import Base
-from sqlalchemy import Column, DateTime
-from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT, TINYINT
+from sqlalchemy import Column 
+from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, BIGINT, TINYINT
 from tools.auth import md5_password
 from constants import PERMISSIONS
 
