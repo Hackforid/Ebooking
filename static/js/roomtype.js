@@ -51,9 +51,9 @@
 
 		this.priceTypeShow = false;
 		this.lastArriveTime = "";
-		this.firstcheckStatus = false;
-		this.holecheckStatus = false;
-		this.guaranteeStatus = "";
+		//this.firstcheckStatus = false;
+		//this.holecheckStatus = false;
+		this.guaranteeStatus = "1";
 		this.lastTime = "";
 
 
@@ -63,8 +63,8 @@
 			this.mealType = 0;
 			this.punishType = 0;
 			scope.errMessage = '';
-			this.firstcheckStatus = false;
-			this.holecheckStatus = false;
+			//this.firstcheckStatus = false;
+			//this.holecheckStatus = false;
 			this.lastArriveTime = "";
 
 			this.priceType = "1";
@@ -77,7 +77,7 @@
 		}
 		this.save = function() {
 
-			this.guaranteeStatus = "";
+			//this.guaranteeStatus = "";
 			this.lastTime = "";
 
 
@@ -105,34 +105,34 @@
 				this.lastTime = $.trim(this.lastArriveTime);
 
 				if (this.lastTime == "" || this.lastTime == null) {
-					scope.errMessage = "最晚到店时间不能为空";
+					scope.errMessage = "担保时间不能为空";
 					return;
 
 				}
 
 				if (testStr.test(this.lastTime) == false || parseInt(this.lastTime) > 23) {
-					scope.errMessage = "最晚到店时间为0-23点间的整数";
+					scope.errMessage = "担保时间为0-23点间的整数";
 					return;
 
 				}
 
-				if (this.firstcheckStatus == true) {
+				/*if (this.firstcheckStatus == true) {
 
 					this.guaranteeStatus = "1";
 
-				}
+				}*/
 
-				if (this.holecheckStatus == true) {
+				/*if (this.holecheckStatus == true) {
 
 					this.guaranteeStatus = "2";
 
-				}
+				}*/
 
-				if (this.firstcheckStatus == false && this.holecheckStatus == false) {
+				/*if (this.firstcheckStatus == false && this.holecheckStatus == false) {
 
 					this.guaranteeStatus = "0";
 
-				}
+				}*/
 
 				this.lastTime = this.lastTime + ":00:00";
 
@@ -201,9 +201,9 @@
 
 
 		this.lastArriveTime = "";
-		this.firstcheckStatus = false;
-		this.holecheckStatus = false;
-		this.guaranteeStatus = "";
+		//this.firstcheckStatus = false;
+		//this.holecheckStatus = false;
+		this.guaranteeStatus = "1";
 		this.lastTime = "";
 		this.currentPayType = "";
 
@@ -250,20 +250,13 @@
 		}
 		this.eachshow = function(index) {
 
-			this.firstcheckStatus = false;
-			this.holecheckStatus = false;
+			//this.firstcheckStatus = false;
+			//this.holecheckStatus = false;
 
 			var currentGuarType = scope.rateplans[index].guarantee_type;
 
-			if (currentGuarType == "1") {
-
-				this.firstcheckStatus = true;
-
-			} else if (currentGuarType == "2") {
-
-				this.holecheckStatus = true;
-
-			}
+			this.guaranteeStatus = currentGuarType;
+			
 
 			this.lastArriveTime = this.checkTime(scope.rateplans[index].guarantee_start_time);
 
@@ -282,7 +275,7 @@
 
 			this.currentPayType = scope.rateplans[index].pay_type;
 
-			this.guaranteeStatus = "";
+			
 			this.lastTime = "";
 
 			var checkResult = $.trim($("#roomheadinput" + index).val());
@@ -312,18 +305,18 @@
 				this.lastTime = $.trim(this.lastArriveTime);
 
 				if (this.lastTime == "" || this.lastTime == null) {
-					scope.inputErrMessage = "最晚到店时间不能为空";
+					scope.inputErrMessage = "担保时间不能为空";
 					return;
 
 				}
 
 				if (testStr.test(this.lastTime) == false || parseInt(this.lastTime) > 23) {
-					scope.inputErrMessage = "最晚到店时间为0-23点间的整数";
+					scope.inputErrMessage = "担保时间为0-23点间的整数";
 					return;
 
 				}
 
-				if (this.firstcheckStatus == true) {
+				/*if (this.firstcheckStatus == true) {
 
 					this.guaranteeStatus = "1";
 
@@ -333,13 +326,13 @@
 
 					this.guaranteeStatus = "2";
 
-				}
+				}*/
 
-				if (this.firstcheckStatus == false && this.holecheckStatus == false) {
+				/*if (this.firstcheckStatus == false && this.holecheckStatus == false) {
 
 					this.guaranteeStatus = "0";
 
-				}
+				}*/
 
 				this.lastTime = this.lastTime + ":00:00";
 
@@ -360,7 +353,7 @@
 				params = {
 					"name": ($("#roomheadinput" + index).val()),
 					"meal_num": parseInt($("#roomheadmeal" + index).val()),
-					"punish_type": parseInt($("#roomheadpunish" + index).val()),
+					"punish_type": 0,
 					'guarantee_start_time': this.lastTime,
 					'guarantee_type': parseInt(this.guaranteeStatus),
 					'pay_type': parseInt(this.currentPayType)
@@ -600,6 +593,9 @@
 
 			}
 
+			$scope.newRatePlanDialog.mealType="0";
+			$scope.newRatePlanDialog.punishType="0";
+
 			if ($scope.newRatePlanDialog.priceType == "0") {
 
 				$scope.newRatePlanDialog.priceTypeShow = true;
@@ -608,8 +604,8 @@
 			if ($scope.newRatePlanDialog.priceType == "1") {
 				$scope.newRatePlanDialog.priceTypeShow = false;
 
-				$scope.newRatePlanDialog.firstcheckStatus = false;
-				$scope.newRatePlanDialog.holecheckStatus = false;
+				//$scope.newRatePlanDialog.firstcheckStatus = false;
+				//$scope.newRatePlanDialog.holecheckStatus = false;
 				$scope.newRatePlanDialog.lastArriveTime = "";
 
 			}

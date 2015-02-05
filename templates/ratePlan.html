@@ -60,7 +60,7 @@
        <div class="con">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="55px">名　称：</td>
+    <td width="125px">名　称：</td>
     <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
   </tr>
 
@@ -84,7 +84,7 @@
 
     </td>
   </tr>
-  <tr>
+  <tr ng-show="rateplan.pay_type">
     <td>取消时：</td>
     <td><select id={{"roomheadpunish"+$index}}  
                                     name="" class="input-s"  >                       
@@ -97,14 +97,30 @@
   </tr>
 
   <tr ng-show="!rateplan.pay_type">
-    <td>担保：</td>
-    <td>最晚到店时间：<input ng-model="roomHeadPlanDialog.lastArriveTime"  style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
-
+    <td>几点后到店需要担保：</td>
+    <td><input ng-model="roomHeadPlanDialog.lastArriveTime" class="input-t" type="text"/>
+<!--
     <input type="radio" name="" ng-checked="roomHeadPlanDialog.firstcheckStatus" ng-click="roomHeadPlanDialog.firstcheckStatus=!roomHeadPlanDialog.firstcheckStatus;roomHeadPlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="roomHeadPlanDialog.holecheckStatus" ng-click="roomHeadPlanDialog.holecheckStatus=!roomHeadPlanDialog.holecheckStatus;roomHeadPlanDialog.firstcheckStatus=false" value = "pause">全额担保
-
+-->
 
     </td>
   </tr>
+
+
+  <tr ng-show="!rateplan.pay_type">
+    <td>No Show扣款情况：</td>
+    <td><select name="" class="input-s" ng-model="roomHeadPlanDialog.guaranteeStatus">
+                       <option value="1">扣首晚房费</option>
+                       <option value="2">扣全部房费</option>                                    
+                     </select></td>
+  </tr>
+
+
+
+
+
+
+
 
 
 </table>
@@ -220,7 +236,7 @@
        <div class="con">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="55px">名　称：</td>
+    <td width="125px">名　称：</td>
     <td><input type="text"  value="" class="input-t" ng-model="newRatePlanDialog.name"  /></td>
   </tr>
 
@@ -241,7 +257,7 @@
                        <option value="100">按人头早餐</option>
                      </select></td>
   </tr>
-  <tr>
+  <tr ng-show="!newRatePlanDialog.priceTypeShow">
     <td>取消时：</td>
     <td><select name="" class="input-s" ng-model="newRatePlanDialog.punishType" >
                        <option value="0">不扣任何费用</option>
@@ -253,14 +269,27 @@
   </tr>
 
   <tr ng-show="newRatePlanDialog.priceTypeShow">
-    <td>担保：</td>
-    <td>最晚到店时间：<input ng-model="newRatePlanDialog.lastArriveTime" style="width:32px;" type="text"/>&nbsp;点&nbsp;&nbsp;
-
+    <td>几点后到店需要担保：</td>
+    <td><input class="input-t" ng-model="newRatePlanDialog.lastArriveTime" style="" type="text"/>
+<!--
     <input type="radio" name="" ng-checked="newRatePlanDialog.firstcheckStatus" ng-click="newRatePlanDialog.firstcheckStatus=!newRatePlanDialog.firstcheckStatus;newRatePlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="newRatePlanDialog.holecheckStatus" ng-click="newRatePlanDialog.holecheckStatus=!newRatePlanDialog.holecheckStatus;newRatePlanDialog.firstcheckStatus=false" value = "pause">全额担保
-
+-->
 
     </td>
   </tr>
+
+
+  <tr ng-show="newRatePlanDialog.priceTypeShow">
+    <td>No Show扣款情况：</td>
+    <td><select name="" class="input-s" ng-model="newRatePlanDialog.guaranteeStatus">
+                       <option value="1">扣首晚房费</option>
+                       <option value="2">扣全部房费</option>                                    
+                     </select></td>
+  </tr>
+
+
+
+
 
 
 </table>
