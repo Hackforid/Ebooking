@@ -305,13 +305,13 @@
 				this.lastTime = $.trim(this.lastArriveTime);
 
 				if (this.lastTime == "" || this.lastTime == null) {
-					scope.inputErrMessage = "最晚到店时间不能为空";
+					scope.inputErrMessage = "担保时间不能为空";
 					return;
 
 				}
 
 				if (testStr.test(this.lastTime) == false || parseInt(this.lastTime) > 23) {
-					scope.inputErrMessage = "最晚到店时间为0-23点间的整数";
+					scope.inputErrMessage = "担保时间为0-23点间的整数";
 					return;
 
 				}
