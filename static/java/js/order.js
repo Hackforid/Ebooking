@@ -59,12 +59,21 @@ var ChartInit = function(scope, http) {
 
                 var option = {
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line',
+                            lineStyle: {
+                                color: '#999',
+                                width: 2,
+                                type: 'solid'
+                            }
+                        }
                     },
                     legend: {
                         data: ['订单量'],
                         orient: 'vertical',
                         x: 'right',
+                        selectedMode: false
 
                     },
                     toolbox: {
@@ -89,21 +98,31 @@ var ChartInit = function(scope, http) {
                             }
                         }
                     },
-                    calculable: true,
+                    calculable: false,
                     xAxis: [{
                         type: 'category',
                         /* show:false,*/
                         boundaryGap: false,
                         data: scope.xAxisOrder,
-                        axisLabel: {
-                            /* formatter: function(value) {
-                                 console.log(value);
-                                 return "星期" + value;
-                             }*/
+
+                        axisLine: {
+                            lineStyle: {
+                                color: '#000000',
+                                width: 1,
+                                type: 'solid'
+                            }
                         }
 
                     }],
                     yAxis: [{
+                        axisLine: {
+                            lineStyle: {
+                                color: '#000000',
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+
                         type: 'value'
                     }],
 
@@ -129,7 +148,8 @@ var ChartInit = function(scope, http) {
                         legend: {
                             orient: 'vertical',
                             x: 'right',
-                            data: scope.otaWays
+                            data: scope.otaWays,
+                            selectedMode: false
                         },
                         toolbox: {
                             show: false,
@@ -161,7 +181,7 @@ var ChartInit = function(scope, http) {
                                 }
                             }
                         },
-                        calculable: true,
+                        calculable: false,
                         series: [{
                             name: '访问来源',
                             type: 'pie',
@@ -202,12 +222,21 @@ var ChartInit = function(scope, http) {
 
         var option = {
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle: {
+                        color: '#999',
+                        width: 2,
+                        type: 'solid'
+                    }
+                }
             },
             legend: {
                 data: ['订单量'],
                 orient: 'vertical',
                 x: 'right',
+                selectedMode: false
 
             },
             toolbox: {
@@ -232,7 +261,7 @@ var ChartInit = function(scope, http) {
                     }
                 }
             },
-            calculable: true,
+            calculable: false,
             xAxis: [{
                 type: 'category',
                 /* show:false,*/
@@ -276,7 +305,8 @@ var ChartInit = function(scope, http) {
             legend: {
                 orient: 'vertical',
                 x: 'right',
-                data: scope.otaWays
+                data: scope.otaWays,
+                selectedMode: false
             },
             toolbox: {
                 show: false,
@@ -308,7 +338,7 @@ var ChartInit = function(scope, http) {
                     }
                 }
             },
-            calculable: true,
+            calculable: false,
             series: [{
                 name: '访问来源',
                 type: 'pie',
@@ -423,7 +453,7 @@ var ChartInit = function(scope, http) {
                     var yaxisValue = [];
 
 
-                    if (monthCounts > 1) {
+                    /*if (monthCounts > 1) {
                         tickCount = Math.ceil(monthCounts);
 
 
@@ -435,12 +465,12 @@ var ChartInit = function(scope, http) {
 
                         //console.log(yaxisValue);
 
-                    } else if (monthCounts < 1) {
+                    } else if (monthCounts < 1) {*/
 
-                        xaxisNumber = dataRanges;
-                        yaxisValue = dayOrders;
+                    xaxisNumber = dataRanges;
+                    yaxisValue = dayOrders;
 
-                    }
+                    //}
 
 
 
@@ -543,6 +573,14 @@ var ChartInit = function(scope, http) {
 
                                 console.log(resp);
 
+                                if (resp.errcode == 401) {
+
+                                    $("#" + scope.timeId).hide();
+
+                                    tablink();
+
+                                }
+
                             }
                         })
                         .error(function() {
@@ -554,6 +592,16 @@ var ChartInit = function(scope, http) {
                 } else {
 
                     console.log(resp);
+
+                    if (resp.errcode == 401) {
+
+                        $("#" + scope.timeId).hide();
+
+                        tablink();
+
+                    }
+
+
 
                 }
             })
@@ -592,6 +640,53 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.dateRange = "0";
 
+    $scope.timeId = "tab1time";
+
+
+
+    function jurisdictioninit() {
+
+
+        var jurisdictionurl = "/ebooking/orderStat/isAdminAuth";
+        $http.get(jurisdictionurl)
+            .success(function(resp) {
+                console.log(resp);
+
+                if (resp.errcode == 0) {
+
+                    if (resp.result.isAdmin == "false") {
+                        $("#manageMenu").hide();
+
+                    }
+                    if (resp.result.hasWillCoop == "false") {
+                        $("#willcoophotel").hide();
+
+                    }
+
+                    $("#usenameId").html(resp.result.username);
+                    $scope.chartInit.init();
+
+
+                } else {
+                    console.log(resp);
+
+                    if (resp.errcode == 301) {
+                        console.log("跳转登陆");
+
+                        window.location.href = "/login/";
+
+                    }
+
+                }
+            })
+            .error(function() {
+                console.log('network error');
+            })
+
+
+    }
+
+
 
     function checkTime(time) {
 
@@ -619,8 +714,8 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     }
 
-    $scope.chartInit.init();
-    //$scope.chartInit.chartInit();
+    // $scope.chartInit.init();
+    jurisdictioninit();
 
 
 
@@ -646,6 +741,8 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
     $scope.startTime = "";
     $scope.endTime = "";
     $scope.dateRange = "1";
+
+    $scope.timeId = "tab2time";
 
 
     function checkTime(time) {
@@ -700,17 +797,37 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     $scope.endTime = "";
     $scope.dateRange = "2";
 
+    $scope.timeId = "tab3time";
+
 
 
     $scope.searchorder = function() {
 
-        $scope.startTime = $("#time1").val();
-        $scope.endTime = $("#time2").val();
+        $scope.startTime = $.trim($("#time1").val());
+        $scope.endTime = $.trim($("#time2").val());
+
+
+
+        if ($scope.startTime == null || $scope.endTime == null || $scope.startTime == "" || $scope.endTime == "" || ($scope.startTime > $scope.endTime)) {
+            $("#tab3cometitle").hide();
+            $("#tab3ordertitle").hide();
+            $("#linethree").hide();
+            $("#piethree").hide();
+
+
+            return;
+        }
+
+
+
         console.log($scope.startTime);
         console.log($scope.endTime);
 
         $("#tab3cometitle").show();
         $("#tab3ordertitle").show();
+
+        $("#linethree").show();
+        $("#piethree").show();
 
 
         $scope.chartInit.init();

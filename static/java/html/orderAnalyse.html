@@ -38,14 +38,14 @@
            </div>
         <div class="fr">
               欢迎回来！<br />
-           <strong>张三丰</strong>
+           <strong id="usenameId">张三丰</strong>
           </div>
       </div>
       
       <div class="person-menu">
       <ul>
-          <li class="icon-admin"><a href="userManage.html" target="_blank">用户管理</a></li>
-          <li class="icon-password"><a href="modifyPwd.html" target="_blank">修改密码</a></li>
+          <li id="manageMenu" class="icon-admin"><a href="/userManage/" target="_blank">用户管理</a></li>
+          <li class="icon-password"><a href="/password/" target="_blank">修改密码</a></li>
      </ul>
       </div>
       
@@ -79,7 +79,7 @@
            <dl class="menu2">       
                <dt><u class="icon-dt"></u>合作酒店管理</dt>
                <dd><a href="/hotel/cooped/"><u class="icon4"></u>已合作酒店</a></dd>
-               <dd><a href="/hotel/willcoop/"><u class="icon5"></u>可合作酒店</a></dd>                
+               <dd id="willcoophotel"><a href="/hotel/willcoop/"><u class="icon5"></u>可合作酒店</a></dd>                
             </dl>
             
            <dl class="menu3">      
@@ -125,7 +125,7 @@
     <th width="50%">订单日期</th>
     <th width="50%">订单总量</th>
   </tr></thead>
- <tr>
+ <tr id="tab1time">
     <td width="50%" ng-bind="startTime+'至'+endTime"></td>
     <td width="50%" ng-bind="currentCounts"></td>
     
@@ -158,7 +158,7 @@
     <th width="50%">订单日期</th>
     <th width="50%">订单总量</th>
   </tr></thead>
- <tr>
+ <tr id="tab2time">
     <td width="50%" ng-bind="startTime+'至'+endTime"></td>
     <td width="50%" ng-bind="currentCounts"></td>
     
@@ -210,7 +210,7 @@
     <th width="50%">订单总量</th>
     
   </tr></thead>
- <tr>
+ <tr id="tab3time">
     <td width="50%" ng-bind="startTime+'至'+endTime"></td>
     <td width="50%" ng-bind="currentCounts"></td>
     
