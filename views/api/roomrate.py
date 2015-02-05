@@ -2,22 +2,19 @@
 
 from datetime import datetime, timedelta, date
 
-from tornado import gen
 from tornado.escape import json_encode, json_decode, url_escape
 
 from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
-from exception.celery_exception import CeleryException
-
-import tasks.models.room_rate as  RoomRate
 
 from constants import PERMISSIONS
+from models.room_rate import RoomRateModel
+from tasks.stock import PushRatePlanTask
 
 class RoomRateAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, roomrate_id):
@@ -28,7 +25,7 @@ class RoomRateAPIHandler(BtwBaseHandler):
         self.valid_price(price)
         start_date, end_date = self.valid_date(start_date, end_date)
 
-        roomrate = yield self.set_price(roomrate_id, price, start_date, end_date)
+        roomrate = self.set_price(roomrate_id, price, start_date, end_date)
         if roomrate:
             self.finish_json(result=dict(
                 roomrate=roomrate.todict(),
@@ -65,13 +62,10 @@ class RoomRateAPIHandler(BtwBaseHandler):
         if not isinstance(price, int) or price < 0 or price > 999999:
             raise JsonException(errcode=2002, errmsg="price out of range")
 
-    @gen.coroutine
     def set_price(self, roomrate_id, price, start_date, end_date):
-        task = yield gen.Task(RoomRate.set_price.apply_async,
-                args=[roomrate_id, price, start_date, end_date])
-        if isinstance(task.result, CeleryException):
-            raise JsonException(errmsg="修改失败", errcode=1001)
-
-        raise gen.Return(task.result)
+        roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date)
+        if roomrate:
+            PushRatePlanTask().push_rateplan.delay(roomrate.rate_plan_id, with_cancel_rule=False)
+        return roomrate
 
 

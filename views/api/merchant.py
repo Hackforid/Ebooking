@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from tornado import gen
-from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode
 
-from config import API
 from views.base import BtwBaseHandler
 from models.merchant import MerchantModel 
 

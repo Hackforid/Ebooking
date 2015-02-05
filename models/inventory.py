@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import datetime
 
 from tornado.util import ObjectDict
 
-from tasks.models import Base
+from models import Base
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATETIME, BIGINT
 
@@ -119,6 +121,18 @@ class InventoryModel(Base):
                 .filter(InventoryModel.merchant_id == merchant_id)\
                 .filter(InventoryModel.hotel_id == hotel_id)\
                 .filter(InventoryModel.roomtype_id == roomtype_id)\
+                .filter(InventoryModel.month.in_(months))\
+                .filter(InventoryModel.is_delete == 0)\
+                .all()
+
+    @classmethod
+    def get_by_merchant_and_dates(cls, session, merchant_id, days):
+        '''
+        days as [(year, months),]
+        '''
+        months = [InventoryModel.combin_year_month(day[0], day[1]) for day in days]
+        return session.query(InventoryModel)\
+                .filter(InventoryModel.merchant_id == merchant_id)\
                 .filter(InventoryModel.month.in_(months))\
                 .filter(InventoryModel.is_delete == 0)\
                 .all()

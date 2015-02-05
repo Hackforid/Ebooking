@@ -12,8 +12,9 @@ from exception.json_exception import JsonException, JsonDecodeError
 
 from tools.json import json_encode
 
-from tasks.models import user as User
 from mixin.request_mixin import CeleryTaskMixin
+from models.user import UserModel
+from models.merchant import MerchantModel
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -27,25 +28,21 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
         self.current_user = None
         self.merchant = None
 
-    @gen.coroutine
     def prepare(self):
-        yield self.get_current_user()
+        self.get_current_user()
 
     def on_finish(self):
         self.db.close()
 
-    @gen.coroutine
     def get_current_user(self):
         username = self.get_secure_cookie('username')
         merchant_id = self.get_secure_cookie('merchant_id')
         if username and merchant_id:
             self.set_secure_cookie('username', username, expires_days=0.02)
             self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
-            task = yield gen.Task(User.get_login_user.apply_async,
-                args=[merchant_id, username])
-            if task.status == 'SUCCESS':
-                self.merchant, self.current_user = task.result
-        raise gen.Return(self.current_user)
+            self.merchant = MerchantModel.get_by_id(self.db, merchant_id)
+            self.current_user = UserModel.get_user_by_merchantid_username(self.db, merchant_id, username)
+        return self.current_user
 
     def render(self, template_name, **kwargs):
         kwargs['current_user'] = self.current_user

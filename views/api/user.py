@@ -2,7 +2,6 @@
 import re
 
 from tornado.escape import json_encode
-from tornado import gen
 
 
 from views.base import BtwBaseHandler
@@ -11,20 +10,16 @@ from tools.auth import auth_permission
 from constants import PERMISSIONS
 from tools.request_tools import get_and_valid_arguments
 
-from tasks.models import user as User
+from models.user import UserModel
 
 class UserManageAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login()
     @auth_permission(PERMISSIONS.admin)
     def get(self):
-        task = yield gen.Task(User.get_users_by_merchant_id.apply_async,
-                args=[self.current_user.merchant_id])
-        users = task.result
+        users = UserModel.get_users_by_merchant_id(self.db, self.current_user.merchant_id)
         self.finish_json(0, u'成功', json_encode([user.todict() for user in users]))
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin, json=True)
     def put(self):
@@ -55,8 +50,7 @@ class UserManageAPIHandler(BtwBaseHandler):
             return
 
         ''' 可以管理用户 '''
-        yield gen.Task(User.update_user.apply_async,
-                args=[merchant_id, username, password, department, mobile, email, authority, is_valid])
+        UserModel.update_user(self.db, merchant_id, username, password, department, mobile, email, authority, is_valid)
 
 
 
@@ -69,7 +63,6 @@ class UserManageAPIHandler(BtwBaseHandler):
 
         self.finish_json(0, u'成功')
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin, json=True)
     def post(self):
@@ -100,13 +93,12 @@ class UserManageAPIHandler(BtwBaseHandler):
             self.finish_json(1, u'不允许添加管理员用户')
             return
 
-        user = (yield gen.Task(User.get_user_by_merchantid_username.apply_async, args=[merchant_id, username])).result
+        user = UserModel.get_user_by_merchantid_username(self.db, merchant_id, username)
 
         if user:
             self.finish_json(1, u'用户名已被使用')
         else:
-            yield gen.Task(User.add_user.apply_async,
-                    args=[merchant_id, username, password, department, mobile, authority, is_valid])
+            UserModel.add_user(self.db, merchant_id, username, password, department, mobile, authority, is_valid)
             self.finish_json(0, u'添加成功')
 
     @staticmethod

@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from tornado import gen
-
 from views.base import BtwBaseHandler
 from tools.auth import auth_login, auth_permission, md5_password
 from tools.request_tools import get_and_valid_arguments
 from constants import PERMISSIONS
-from tasks.models.user import update_password
+from models.user import UserModel
 
 class PasswordAPIHandler(BtwBaseHandler):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_password, json=True)
     def put(self):
-        print '==' * 20
         args = self.get_json_arguments()
-        print args
         old_password, password, re_password = get_and_valid_arguments(args, 'old_password', 'password', 're_password')
 
         old_password = md5_password(old_password)
@@ -41,8 +36,7 @@ class PasswordAPIHandler(BtwBaseHandler):
             self.finish_json(1, u'新密码和旧密码相同')
             return
 
-        task = yield gen.Task(update_password.apply_async,
-                args=[self.current_user.merchant_id, self.current_user.username, password])
+        UserModel.update_password(self.db, self.current_user.merchant_id, self.current_user.username, password)
 
         if task.status == 'SUCCESS':
             self.clear_cookie('username')

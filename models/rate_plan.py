@@ -5,7 +5,7 @@ import traceback
 
 from tornado.util import ObjectDict 
 
-from tasks.models import Base
+from models import Base
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import BIT, INTEGER, VARCHAR, DATE, TIME, TIMESTAMP, BIGINT, TINYINT
 
@@ -58,6 +58,13 @@ class RatePlanModel(Base):
                         RatePlanModel.name == name)\
                 .filter(RatePlanModel.is_delete == 0)\
                 .first()
+
+    @classmethod
+    def get_by_merchant(cls, session, merchant_id):
+        return session.query(RatePlanModel)\
+                .filter(RatePlanModel.merchant_id == merchant_id)\
+                .filter(RatePlanModel.is_delete == 0)\
+                .all()
 
 
     @classmethod
