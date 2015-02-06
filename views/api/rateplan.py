@@ -187,3 +187,24 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
         PushRatePlanTask().push_rateplan.delay(rateplan.id, with_roomrate=True)
         return rateplan, roomrate
+
+
+    @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
+    def delete(self, hotel_id, roomtype_id, rateplan_id):
+        rateplan = RatePlanModel.get_by_id_with_merchant(self.db, rateplan_id, self.merchant.id)
+        if not rateplan:
+            raise JsonException(1001, 'rateplan not found')
+        else:
+            rateplan.is_delete = 1
+        roomrate = RoomRateModel.get_by_rateplan(self.db, rateplan.id)
+        if roomrate:
+            roomrate.is_delete = 1
+
+        self.db.commit()
+        PushRatePlanTask().update_rateplan_valid_status.delay(rateplan.id)
+        self.finish_json(result=dict(
+            rateplan=rateplan.todict(),
+            roomrate=roomrate.todict() if roomrate else None,
+            ))
+

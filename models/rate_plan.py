@@ -43,11 +43,13 @@ class RatePlanModel(Base):
     ts_update = Column("tsUpdate", TIMESTAMP)
 
     @classmethod
-    def get_by_id(cls, session, id):
-        return session.query(RatePlanModel)\
-                .filter(RatePlanModel.id == id)\
-                .filter(RatePlanModel.is_delete == 0)\
-                .first()
+    def get_by_id(cls, session, id, with_delete=False):
+        query = session.query(RatePlanModel)\
+                .filter(RatePlanModel.id == id)
+        if with_delete:
+            return query.first()
+        else:
+            return query.filter(RatePlanModel.is_delete == 0).first()
 
     @classmethod
     def get_by_merchant_hotel_room_name(cls, session, merchant_id, hotel_id, roomtype_id, name):
@@ -65,6 +67,14 @@ class RatePlanModel(Base):
                 .filter(RatePlanModel.merchant_id == merchant_id)\
                 .filter(RatePlanModel.is_delete == 0)\
                 .all()
+
+    @classmethod
+    def get_by_id_with_merchant(cls, session, id, merchant_id):
+        return session.query(RatePlanModel)\
+                .filter(RatePlanModel.id == id)\
+                .filter(RatePlanModel.merchant_id == merchant_id)\
+                .filter(RatePlanModel.is_delete == 0)\
+                .first()
 
 
     @classmethod

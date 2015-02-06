@@ -359,6 +359,28 @@ class PushRatePlanTask(SqlAlchemyTask):
 
         return data
 
+    @app.task(filter=task_method, queue=QUEUE_STOCK_PUSH)
+    def update_rateplan_valid_status(self, rateplan_id):
+        if not IS_PUSH_TO_STOCK:
+            return
+
+        self.log.info("<< push rateplan {} update rateplan valid>>".format(rateplan_id))
+        from models.rate_plan import RatePlanModel
+
+        rateplan = RatePlanModel.get_by_id(self.session, rateplan_id, with_delete=True)
+        rateplan_data = {"chain_id": CHAIN_ID, "hotel_id": rateplan.hotel_id, "rate_plan_id": rateplan.id, "is_valid": self.cal_rateplan_isvalid(rateplan)}
+
+        track_id = self.generate_track_id(rateplan_id)
+        data = {'list': [rateplan_data], 'type': 3}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+        url = API['STOCK'] + '/stock/update_state'
+        self.log.info("<< push rateplan {} update rateplan valid request {}>>".format(rateplan_id, params))
+        r = req.post(url, data=params)
+        self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_id, r.text))
+
+
+    def cal_rateplan_isvalid(self, rateplan):
+        return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 
 class PushInventoryTask(SqlAlchemyTask):
 

@@ -81,12 +81,13 @@ class RoomRateModel(Base):
                 .first()
 
     @classmethod
-    def get_by_rateplan(cls, session, rate_plan_id):
-        print locals()
-        return session.query(RoomRateModel)\
-                .filter(RoomRateModel.rate_plan_id == rate_plan_id)\
-                .filter(RoomRateModel.is_delete == 0)\
-                .first()
+    def get_by_rateplan(cls, session, rate_plan_id, with_delete=False):
+        query = session.query(RoomRateModel)\
+                .filter(RoomRateModel.rate_plan_id == rate_plan_id)
+        if with_delete:
+            return query.first()
+        else:
+            return query.filter(RoomRateModel.is_delete == 0).first()
 
     @classmethod
     def get_by_rateplans(cls, session, rate_plan_ids):
