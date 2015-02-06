@@ -84,10 +84,9 @@ class RoomRateModel(Base):
     def get_by_rateplan(cls, session, rate_plan_id, with_delete=False):
         query = session.query(RoomRateModel)\
                 .filter(RoomRateModel.rate_plan_id == rate_plan_id)
-        if with_delete:
-            return query.first()
-        else:
-            return query.filter(RoomRateModel.is_delete == 0).first()
+        if not with_delete:
+            query = query.filter(RoomRateModel.is_delete == 0)
+        return query.first()
 
     @classmethod
     def get_by_rateplans(cls, session, rate_plan_ids):

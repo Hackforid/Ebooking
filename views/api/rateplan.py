@@ -17,6 +17,8 @@ from models.rate_plan import RatePlanModel
 from models.room_rate import RoomRateModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 
+from mixin.coop_mixin import CooperateMixin
+
 
 class RatePlanValidMixin(object):
 
@@ -126,7 +128,7 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         return new_rateplan, new_roomrate
 
 
-class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin):
+class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixin):
 
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
@@ -195,16 +197,10 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         rateplan = RatePlanModel.get_by_id_with_merchant(self.db, rateplan_id, self.merchant.id)
         if not rateplan:
             raise JsonException(1001, 'rateplan not found')
-        else:
-            rateplan.is_delete = 1
-        roomrate = RoomRateModel.get_by_rateplan(self.db, rateplan.id)
-        if roomrate:
-            roomrate.is_delete = 1
 
-        self.db.commit()
-        PushRatePlanTask().update_rateplan_valid_status.delay(rateplan.id)
+        self.delete_rateplan(rateplan)
+
         self.finish_json(result=dict(
             rateplan=rateplan.todict(),
-            roomrate=roomrate.todict() if roomrate else None,
             ))
 

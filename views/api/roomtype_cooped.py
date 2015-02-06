@@ -12,6 +12,7 @@ from tools.request_tools import get_and_valid_arguments
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
+from mixin.coop_mixin import CooperateMixin
 
 from constants import PERMISSIONS
 from models.cooperate_hotel import CooperateHotelModel
@@ -165,9 +166,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
 
 
-class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
+class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
 
-    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def put(self, hotel_id, roomtype_id):
@@ -193,4 +193,16 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler):
         coop.remark_name = remark_name
         self.db.commit()
         return coop
+
+    @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
+    def delete(self, hotel_id, roomtype_id):
+        room = CooperateRoomTypeModel.get_by_merchant_hotel_and_id(self.db, self.merchant.id, hotel_id, roomtype_id)
+        if not room:
+            raise JsonException(1001, 'roomtype not found')
+
+        self.delete_roomtype(room)
+
+        self.finish_json(result=dict(
+            roomtype=room.todict()))
 

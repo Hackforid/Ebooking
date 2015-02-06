@@ -46,10 +46,18 @@ class RatePlanModel(Base):
     def get_by_id(cls, session, id, with_delete=False):
         query = session.query(RatePlanModel)\
                 .filter(RatePlanModel.id == id)
+        if not with_delete:
+            query = query.filter(RatePlanModel.is_delete == 0)
+        return query.first()
+
+    @classmethod
+    def get_by_ids(cls, session, ids, with_delete=False):
+        query = session.query(RatePlanModel)\
+                .filter(RatePlanModel.id.in_(ids))
         if with_delete:
-            return query.first()
+            return query.all()
         else:
-            return query.filter(RatePlanModel.is_delete == 0).first()
+            return query.filter(RatePlanModel.is_delete == 0).all()
 
     @classmethod
     def get_by_merchant_hotel_room_name(cls, session, merchant_id, hotel_id, roomtype_id, name):
@@ -62,11 +70,19 @@ class RatePlanModel(Base):
                 .first()
 
     @classmethod
-    def get_by_merchant(cls, session, merchant_id):
+    def get_by_roomtype(cls, session, roomtype_id):
         return session.query(RatePlanModel)\
-                .filter(RatePlanModel.merchant_id == merchant_id)\
+                .filter(RatePlanModel.roomtype_id == roomtype_id)\
                 .filter(RatePlanModel.is_delete == 0)\
                 .all()
+
+    @classmethod
+    def get_by_merchant(cls, session, merchant_id, with_delete=False):
+        query = session.query(RatePlanModel)\
+                .filter(RatePlanModel.merchant_id == merchant_id)
+        if not with_delete:
+            query = query.filter(RatePlanModel.is_delete == 0)
+        return query.all()
 
     @classmethod
     def get_by_id_with_merchant(cls, session, id, merchant_id):
