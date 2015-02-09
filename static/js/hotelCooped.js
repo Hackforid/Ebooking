@@ -5,7 +5,7 @@
 
 	hotelCoopApp.directive('ngEnter', function() {
 		return function(scope, element, attrs) {
-			element.bind("keydown keypress", function(event) {
+			element.bind("keydown keypress", function(event) { 
 				if (event.which === 13) {
 					scope.$apply(function() {
 						scope.$eval(attrs.ngEnter);
@@ -170,6 +170,48 @@
 			"247": "婚宴服务",
 			"251": "高尔夫"
 		};
+
+
+		$scope.confirmCancel=false;
+		$scope.cancelIndex;
+
+		$scope.confirmOk=function(){ 
+
+			
+			var url="/api/hotel/cooped/"+$scope.hotels[$scope.cancelIndex].id;
+
+			console.log(url);
+
+			$http({method: 'DELETE', url: url})
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+
+						$scope.hotels.splice($scope.cancelIndex,1);
+
+						$scope.confirmCancel=false;
+						
+						
+					} else {
+						console.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					console.log('network error');
+				})
+
+
+
+		}
+
+		$scope.cancelBtn=function(index){
+			//console.log(index);
+			$scope.confirmCancel=true;
+			$scope.cancelIndex=index;
+
+		}
+
+
 
 
 

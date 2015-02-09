@@ -571,7 +571,6 @@
 
 		$scope.confirmOk=function(){
 
-			
 
 			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.rateplans[$scope.cancelIndex].roomtype_id+"/rateplan/"+$scope.rateplans[$scope.cancelIndex].id;
 
@@ -581,8 +580,10 @@
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+						$scope.rateplans.splice($scope.cancelIndex,1);
+						$scope.confirmCancel=false;
 						
-					} else {
+					} else { 
 						console.log(resp.errmsg);
 					}
 				})
@@ -595,21 +596,11 @@
 		}
 
 		$scope.cancelBtn=function(index){
-			console.log(index);
+			//console.log(index);
 			$scope.confirmCancel=true;
 			$scope.cancelIndex=index;
 
-
-
 		}
-
-
-
-
-
-
-
-
 
 
 
