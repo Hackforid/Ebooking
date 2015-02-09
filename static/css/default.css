@@ -2,6 +2,10 @@
 /* 样式表说明：default.css是当用户登录后台管理系统后，公共模板页面的css */
 /* 初始化 */
 
+ [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+ }
+
 html {font-family: sans-serif;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%}
 body { font-family: "Microsoft YaHei",Tahoma,SimSun , sans-serif; margin:0;padding:0; font-size:14px;color:#333; background:#E6E8EA url(../image/bg-leftmenu.jpg) repeat-y -50px 0; line-height:100%;}
 

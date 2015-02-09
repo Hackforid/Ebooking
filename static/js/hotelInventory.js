@@ -490,6 +490,48 @@
 
 
 
+		$scope.confirmCancel=false;
+		$scope.cancelIndex;
+
+		$scope.confirmOk=function(){ 
+
+			
+			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.cooped[$scope.cancelIndex].cooped_roomtype_id+"/cooped";
+
+			console.log(url);
+
+			$http({method: 'DELETE', url: url})
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+
+						$scope.willCoop.push($scope.cooped[$scope.cancelIndex]);
+						$scope.cooped.splice($scope.cancelIndex,1);
+						$scope.confirmCancel=false;
+						
+					} else {
+						console.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					console.log('network error');
+				})
+
+
+
+		}
+
+		$scope.cancelBtn=function(index){
+			//console.log(index);
+			$scope.confirmCancel=true;
+			$scope.cancelIndex=index;
+
+		}
+
+
+
+
+
 		$scope.filterNum = function(n) {
 			if (n > 0) {
 				var numResult;

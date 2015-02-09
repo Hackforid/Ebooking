@@ -8,6 +8,31 @@
 <div class="notice" id="notice"><h2 ng-bind="'当前酒店：'+hotel.name"></h2></div>
 <!--导航条end-->  
 
+
+
+ <!--删除提示-->     
+            <div class="messageDiv"  ng-show="confirmCancel" ng-cloak>
+                <div class="messageBlack"></div> 
+                    <div class="detail">
+                    <div class="head"><h1>提示</h1></div>
+                    <div class="con">
+                        <p class="f16" style=" text-align:center;padding:30px 0;">确认要删除吗？</p>
+                        <p class="action" style=" text-align:center">
+                        <input name="确认" type="button" value="确认"  ng-click="confirmOk()" class=""/>
+                        <input name="取消" type="button" value="取消"  ng-click="confirmCancel=false;" class="btn-bai"/>
+                        </p>
+                    </div>
+                </div> 
+            </div>  
+
+ <!--删除提示-->   
+
+
+
+
+
+
+
 <!--主体内容-->  
 <div class="main"
     ><div class="p15">
@@ -39,7 +64,7 @@
                       <div class="form form1"
                         ng-repeat="room in cooped" ng-init="index=$index"
                         >
-                        <div class="roomhead"><h1 style="background:url('');padding-left:20px" ng-click="roomDescribe($index);"><span ng-bind="room.name"></span><span>--剩余房量</span></h1><span></span>
+                        <div class="roomhead"><h1 style="position:relative;background:url('');padding-left:20px" ng-click="roomDescribe($index);"><span ng-bind="room.name"></span><span>--剩余房量</span></h1><span></span>
                          <!--   <div class="eachroom" style=" display:none;background:#EBEBED">
                                 <label><span ng-bind="'房型名称：'+room.name"></span><a class="a-blue" ng-click="roomDescribe($index)">[房型详情]</a></label>
                                 <label style="line-height:30px;margin-top:10px;">自定义房型名称：<span style="display:inline-block;background:white"><input id={{"prefixId-"+$index}} ng-init="prefixName=room.prefix_name" style="" type="text"  ng-value="room.prefix_name"  ng-model="prefixName" class="input-t"  />
@@ -55,6 +80,11 @@
                                 <input name=""  ng-click="hotelHeadDialog.save($index);" type="button" value="保存" class="btn-s"  />
                                     <input name=""  ng-click="hotelHeadDialog.eachhide($index);"  type="button" value="取消" class="btn-s btn-bai"  /></label>
                             </div>-->
+
+
+                            <input type="button" ng-click="cancelBtn($index)" style="height:29px;width:60px;position:absolute;right:0px;bottom:5px;" value="删除" class="btn-bai"/>
+
+
                         </div>
 
                      
