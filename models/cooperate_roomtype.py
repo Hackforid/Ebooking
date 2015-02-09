@@ -56,11 +56,12 @@ class CooperateRoomTypeModel(Base):
         return query.all()
 
     @classmethod
-    def get_by_hotel_id(cls, session, hotel_id):
-        return session.query(CooperateRoomTypeModel)\
-                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)\
-                .filter(CooperateRoomTypeModel.is_delete == 0)\
-                .all()
+    def get_by_hotel_id(cls, session, hotel_id, with_delete=False):
+        query = session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.hotel_id == hotel_id)
+        if not with_delete:
+            query = query.filter(CooperateRoomTypeModel.is_delete == 0)
+        return query.all() 
 
     @classmethod
     def get_by_merchant_id_and_hotel_id(cls, session, merchant_id, hotel_id):

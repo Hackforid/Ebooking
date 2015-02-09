@@ -7,14 +7,33 @@ from models.room_rate import RoomRateModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 
-from tasks.stock import PushRatePlanTask, PushRoomTypeTask
+from tasks.stock import PushRatePlanTask, PushRoomTypeTask, PushHotelTask
 
 class CooperateMixin(object):
+
+    def delete_hotel(self, hotel):
+        self.delete_hotels([hotel])
+
+    def delete_hotels(self, hotels):
+        if not hotels:
+            return
+
+        for hotel in hotels:
+            self.delete_roomtypes_by_hotel(hotel)
+            hotel.is_delete = 1
+            self.db.commit()
+            PushHotelTask().push_hotel.delay(hotel.id)
+
+    def delete_roomtypes_by_hotel(self, hotel):
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel.id)
+        self.delete_roomtypes(roomtypes, notify_stock=False)
 
     def delete_roomtype(self, roomtype):
         self.delete_roomtypes([roomtype])
 
-    def delete_roomtypes(self, roomtypes):
+    def delete_roomtypes(self, roomtypes, notify_stock=True):
+        if not roomtypes:
+            return
         for roomtype in roomtypes:
             self.delete_rateplan_by_roomtype(roomtype)
             self.clear_inventoris_by_roomtype(roomtype)
@@ -24,8 +43,10 @@ class CooperateMixin(object):
             roomtype.is_delete = 1
         self.db.commit()
 
-        roomtype_ids = [roomtype.id for roomtype in roomtypes]
-        PushRoomTypeTask().update_roomtype_valid.delay(roomtype_ids)
+        #roomtype_ids = [roomtype.id for roomtype in roomtypes]
+        #PushRoomTypeTask().update_roomtype_valid.delay(roomtype_ids)
+        if notify_stock:
+            PushHotelTask().push_hotel.delay(roomtypes[0].hotel_id)
 
     def delete_rateplan(self, rateplan):
         self.delete_rateplans([rateplan])

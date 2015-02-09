@@ -53,13 +53,13 @@ class PushHotelTask(SqlAlchemyTask):
     def push_hotel_suspend_by_merchant_id(self, merchant_id):
         self.log.info("<<push hotel by merchant {}>> start".format(merchant_id))
         from models.cooperate_hotel import CooperateHotelModel
-        hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id)
+        hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id, with_delete=True)
         hotel_list = [{'chain_id': CHAIN_ID, "hotel_id": hotel.id, "is_valid": self.cal_hotel_is_valid(hotel)} for hotel in hotels]
 
         self.post_hotels_valid(merchant_id, hotel_list)
 
     def cal_hotel_is_valid(self, hotel):
-        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 else 0
+        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 and hotel.is_delete == 0 else 0
 
     def post_hotels_valid(self, merchant_id, hotel_list):
         if not IS_PUSH_TO_STOCK:
@@ -85,7 +85,7 @@ class PushHotelTask(SqlAlchemyTask):
 
     def push_by_merchant(self, merchant):
         from models.cooperate_hotel import CooperateHotelModel as Hotel
-        hotels = Hotel.get_by_merchant_id(self.session, merchant.id)
+        hotels = Hotel.get_by_merchant_id(self.session, merchant.id, with_delete=True)
         hotel_datas = [self.get_hotel_data(hotel) for hotel in hotels]
         hotel_data_list = [hotel_datas[i : i+self.LEN_HOTEL] for i in range(0, len(hotel_datas), self.LEN_HOTEL)] 
         for hotel_datas in hotel_data_list:
@@ -96,7 +96,7 @@ class PushHotelTask(SqlAlchemyTask):
     def push_hotel(self, hotel_id):
         self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
-        hotel = CooperateHotelModel.get_by_id(self.session, hotel_id)
+        hotel = CooperateHotelModel.get_by_id(self.session, hotel_id, with_delete=True)
         if not hotel:
             return
 
@@ -105,7 +105,7 @@ class PushHotelTask(SqlAlchemyTask):
 
     def get_hotel_data(self, hotel):
         from models.cooperate_roomtype import CooperateRoomTypeModel
-        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id)
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id, with_delete=True)
         base_hotel, base_roomtypes = self.fetch_base_hotel_and_roomtypes(hotel.base_hotel_id)
         if not base_hotel:
             return
@@ -167,7 +167,7 @@ class PushHotelTask(SqlAlchemyTask):
                     room['name'] = base_roomtype['name']
                     room['bed_type'] = base_roomtype['bed_type']
                     room['facilities'] = base_roomtype['facility'].replace(',', '|') if base_roomtype['facility'] else ''
-                    room['is_valid'] = roomtype.is_online
+                    room['is_valid'] = 1 if roomtype.is_delete == 0 and roomtype.is_online == 1 else 0
                     rooms.append(room)
                     break
         return rooms

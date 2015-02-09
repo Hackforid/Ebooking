@@ -5,7 +5,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import json_encode, json_decode, url_escape
 
 from config import API
-from tools.auth import auth_login, auth_permission
+from tools.auth import auth_login, auth_permission, no_monomer_hotel
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
@@ -15,6 +15,7 @@ from constants import PERMISSIONS
 
 from models.cooperate_hotel import CooperateHotelModel
 from tasks.stock import PushHotelTask
+from mixin.coop_mixin import CooperateMixin
 
 
 class HotelCoopedAPIHandler(BtwBaseHandler):
@@ -141,3 +142,20 @@ class HotelCoopOnlineAPIHandler(BtwBaseHandler):
 
         PushHotelTask().push_hotel.delay(hotel.id)
         return hotel
+
+class HotelCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
+
+    @auth_login(json=True)
+    @no_monomer_hotel(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.choose_hotel, json=True)
+    def delete(self, hotel_id):
+        hotel = CooperateHotelModel.get_by_merchant_id_and_hotel_id(self.db, self.merchant.id, hotel_id)
+        if not hotel:
+            raise JsonException(1000, u'hotel not found')
+
+        self.delete_hotel(hotel)
+
+        self.finish_json(result=dict(
+                hotel=hotel.todict()
+            )
+        )
