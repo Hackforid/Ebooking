@@ -10,8 +10,9 @@ from constants import PERMISSIONS
 from tasks.stock import PushHotelTask
 from tasks.poi import POIPushHotelTask
 from models.cooperate_hotel import CooperateHotelModel
+from mixin.coop_mixin import CooperateMixin
 
-class HotelCoopAPIHandler(BtwBaseHandler):
+class HotelCoopAPIHandler(BtwBaseHandler, CooperateMixin):
 
     @auth_login(json=True)
     @no_monomer_hotel(json=True)
@@ -24,17 +25,20 @@ class HotelCoopAPIHandler(BtwBaseHandler):
             ))
 
     def new_hotel_cooprate(self, merchant_id, hotel_id):
-        coop = CooperateHotelModel.get_by_merchant_id_and_base_hotel_id(self.db, merchant_id, hotel_id)
-        if coop:
+        coop = CooperateHotelModel.get_by_merchant_id_and_base_hotel_id(self.db, merchant_id, hotel_id, with_delete=True)
+        if coop and coop.is_delete == 0:
             raise JsonException(1000, u'已经合作')
 
-        coop = CooperateHotelModel.new_hotel_cooprate(self.db, merchant_id, hotel_id)
+        if not coop:
+            coop = CooperateHotelModel.new_hotel_cooprate(self.db, merchant_id, hotel_id)
+        else:
+            coop.is_delete = 0
+            self.db.commit()
 
         PushHotelTask().push_hotel.delay(coop.id)
         POIPushHotelTask().push_hotel.delay(coop.id)
 
         return coop
-
 
 
 class HotelCoopsAPIHandler(BtwBaseHandler):

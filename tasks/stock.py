@@ -5,7 +5,6 @@ import time
 import datetime
 
 from celery.contrib.methods import task_method
-from celery import chain
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
@@ -16,6 +15,36 @@ from config import API, IS_PUSH_TO_STOCK
 from constants import QUEUE_STOCK_PUSH, CHAIN_ID
 from tools.net import req
 
+def generate_track_id(key):
+    return "{}|{}".format(key, time.time())
+
+class PushRoomTypeTask(SqlAlchemyTask):
+
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
+    def update_roomtype_valid(self, roomtype_ids):
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+        if not IS_PUSH_TO_STOCK:
+            return
+
+        self.log.info("<<update roomtype valid {}>> start".format(roomtype_ids))
+        roomtypes = CooperateRoomTypeModel.get_by_ids(self.session, roomtype_ids, with_delete=True)
+
+        roomtype_datas = [{'chain_id': CHAIN_ID, 'hotel_id': roomtype.hotel_id, 'room_type_id': roomtype.id, 'is_valid': self.cal_roomtype_is_valid(roomtype)}
+                for roomtype in roomtypes]
+
+        track_id = generate_track_id(100)
+        data = {'list': roomtype_datas, 'type': 2}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+
+        self.log.info("<<update roomtype valid {}>> request:{}".format(roomtype_ids, params))
+
+        url = API['STOCK'] + '/stock/update_state'
+        r = req.post(url, data=params)
+        self.log.info("<<update roomtype valid {}>> response:{}".format(roomtype_ids, r.text))
+
+    def cal_roomtype_is_valid(self, roomtype):
+        return 1 if roomtype.is_online == 1 and roomtype.is_delete == 0 else 0
+
 class PushHotelTask(SqlAlchemyTask):
 
     LEN_HOTEL = 40
@@ -24,15 +53,15 @@ class PushHotelTask(SqlAlchemyTask):
     def push_hotel_suspend_by_merchant_id(self, merchant_id):
         self.log.info("<<push hotel by merchant {}>> start".format(merchant_id))
         from models.cooperate_hotel import CooperateHotelModel
-        hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id)
+        hotels = CooperateHotelModel.get_by_merchant_id(self.session, merchant_id, with_delete=True)
         hotel_list = [{'chain_id': CHAIN_ID, "hotel_id": hotel.id, "is_valid": self.cal_hotel_is_valid(hotel)} for hotel in hotels]
 
-        self.post_hotels(merchant_id, hotel_list)
+        self.post_hotels_valid(merchant_id, hotel_list)
 
     def cal_hotel_is_valid(self, hotel):
-        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 else 0
+        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 and hotel.is_delete == 0 else 0
 
-    def post_hotels(self, merchant_id, hotel_list):
+    def post_hotels_valid(self, merchant_id, hotel_list):
         if not IS_PUSH_TO_STOCK:
             return
         track_id = self.generate_track_id(merchant_id)
@@ -56,7 +85,7 @@ class PushHotelTask(SqlAlchemyTask):
 
     def push_by_merchant(self, merchant):
         from models.cooperate_hotel import CooperateHotelModel as Hotel
-        hotels = Hotel.get_by_merchant_id(self.session, merchant.id)
+        hotels = Hotel.get_by_merchant_id(self.session, merchant.id, with_delete=True)
         hotel_datas = [self.get_hotel_data(hotel) for hotel in hotels]
         hotel_data_list = [hotel_datas[i : i+self.LEN_HOTEL] for i in range(0, len(hotel_datas), self.LEN_HOTEL)] 
         for hotel_datas in hotel_data_list:
@@ -67,7 +96,7 @@ class PushHotelTask(SqlAlchemyTask):
     def push_hotel(self, hotel_id):
         self.log.info("<<push hotel {}>> start".format(hotel_id))
         from models.cooperate_hotel import CooperateHotelModel
-        hotel = CooperateHotelModel.get_by_id(self.session, hotel_id)
+        hotel = CooperateHotelModel.get_by_id(self.session, hotel_id, with_delete=True)
         if not hotel:
             return
 
@@ -76,7 +105,7 @@ class PushHotelTask(SqlAlchemyTask):
 
     def get_hotel_data(self, hotel):
         from models.cooperate_roomtype import CooperateRoomTypeModel
-        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id)
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.session, hotel.id, with_delete=True)
         base_hotel, base_roomtypes = self.fetch_base_hotel_and_roomtypes(hotel.base_hotel_id)
         if not base_hotel:
             return
@@ -138,7 +167,7 @@ class PushHotelTask(SqlAlchemyTask):
                     room['name'] = base_roomtype['name']
                     room['bed_type'] = base_roomtype['bed_type']
                     room['facilities'] = base_roomtype['facility'].replace(',', '|') if base_roomtype['facility'] else ''
-                    room['is_valid'] = roomtype.is_online
+                    room['is_valid'] = 1 if roomtype.is_delete == 0 and roomtype.is_online == 1 else 0
                     rooms.append(room)
                     break
         return rooms
@@ -167,7 +196,7 @@ class PushRatePlanTask(SqlAlchemyTask):
     def push_by_merchant(self, merchant):
         from models.rate_plan import RatePlanModel
 
-        rateplans = RatePlanModel.get_by_merchant(self.session, merchant.id)
+        rateplans = RatePlanModel.get_by_merchant(self.session, merchant.id, with_delete=True)
         rateplan_datas = [self.generate_rateplan_data(rateplan) for rateplan in rateplans]
         cancel_rule_datas =  [self.generate_cancel_rule_data(rateplan) for rateplan in rateplans]
 
@@ -184,7 +213,6 @@ class PushRatePlanTask(SqlAlchemyTask):
 
     def push_roomrate_by_rateplans(self, rateplans):
         from models.room_rate import RoomRateModel
-        
         rateplan_ids = [rateplan.id for rateplan in rateplans]
 
         roomrates= RoomRateModel.get_by_rateplans(self.session, rateplan_ids)
@@ -199,8 +227,8 @@ class PushRatePlanTask(SqlAlchemyTask):
         from models.rate_plan import RatePlanModel
         from models.room_rate import RoomRateModel
 
-        rateplan = RatePlanModel.get_by_id(self.session, rateplan_id)
-        roomrate = RoomRateModel.get_by_rateplan(self.session, rateplan_id)
+        rateplan = RatePlanModel.get_by_id(self.session, rateplan_id, with_delete=True)
+        roomrate = RoomRateModel.get_by_rateplan(self.session, rateplan_id, with_delete=True)
         if not rateplan or not roomrate:
             self.log.info('not found')
             return
@@ -306,7 +334,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['guarantee_start_time'] = rateplan.guarantee_start_time
         data['guarantee_type'] = rateplan.guarantee_type
         data['guarantee_count'] = rateplan.guarantee_count
-        data['is_valid'] = rateplan.is_online
+        data['is_valid'] = self.cal_rateplan_isvalid(rateplan)
         data['start_date'] = rateplan.start_date
         data['end_date'] = rateplan.end_date
         return data
@@ -323,7 +351,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['hotel_id'] = str(rateplan.hotel_id)
         data['room_type_id'] = str(rateplan.roomtype_id)
         data['rate_plan_id'] = str(rateplan.id)
-        data['is_valid'] = rateplan.is_online
+        data['is_valid'] = self.cal_rateplan_isvalid(rateplan)
 
         rule = {}
         rule['cancel_days'] = rateplan.cancel_days
@@ -359,6 +387,27 @@ class PushRatePlanTask(SqlAlchemyTask):
 
         return data
 
+    @app.task(filter=task_method, queue=QUEUE_STOCK_PUSH)
+    def update_rateplans_valid_status(self, rateplan_ids):
+        if not IS_PUSH_TO_STOCK:
+            return
+
+        self.log.info("<< push rateplans {} update rateplan valid>>".format(rateplan_ids))
+        from models.rate_plan import RatePlanModel
+
+        rateplans = RatePlanModel.get_by_ids(self.session, rateplan_ids, with_delete=True)
+        rateplan_datas = [{"chain_id": CHAIN_ID, "hotel_id": rateplan.hotel_id, "rate_plan_id": rateplan.id, "is_valid": self.cal_rateplan_isvalid(rateplan)} for rateplan in rateplans]
+
+        track_id = self.generate_track_id(rateplan_ids)
+        data = {'list': rateplan_datas, 'type': 3}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+        url = API['STOCK'] + '/stock/update_state'
+        self.log.info("<< push rateplan {} update rateplan valid request {}>>".format(rateplan_ids, params))
+        r = req.post(url, data=params)
+        self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.text))
+
+    def cal_rateplan_isvalid(self, rateplan):
+        return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 
 class PushInventoryTask(SqlAlchemyTask):
 
@@ -446,8 +495,6 @@ class PushInventoryTask(SqlAlchemyTask):
         return data
 
 
-def generate_track_id(key):
-    return "{}|{}".format(key, time.time())
 
 
 @app.task(ignore_result=True, queue=QUEUE_STOCK_PUSH)

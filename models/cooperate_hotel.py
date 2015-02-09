@@ -22,19 +22,21 @@ class CooperateHotelModel(Base):
     is_suspend = Column('isSuspend', BIT, nullable=False, default=0)
 
     @classmethod
-    def get_by_id(cls, session, id):
-        return session.query(CooperateHotelModel)\
-            .filter(CooperateHotelModel.id == id)\
-            .filter(CooperateHotelModel.is_delete == 0)\
-            .first()
+    def get_by_id(cls, session, id, with_delete=False):
+        query = session.query(CooperateHotelModel)\
+            .filter(CooperateHotelModel.id == id)
+        if not with_delete:
+            query = query.filter(CooperateHotelModel.is_delete == 0)
+        return query.first()
 
     @classmethod
-    def get_by_merchant_id(cls, session, merchant_id, is_online=None):
+    def get_by_merchant_id(cls, session, merchant_id, is_online=None, with_delete=False):
         query = session.query(CooperateHotelModel)\
-            .filter(CooperateHotelModel.merchant_id == merchant_id)\
-            .filter(CooperateHotelModel.is_delete == 0)
+            .filter(CooperateHotelModel.merchant_id == merchant_id)
         if is_online is not None:
             query = query.filter(CooperateHotelModel.is_online == is_online)
+        if not with_delete:
+            query = query.filter(CooperateHotelModel.is_delete == 0)
         return query.all()
 
     @classmethod
@@ -46,12 +48,14 @@ class CooperateHotelModel(Base):
             .first()
 
     @classmethod
-    def get_by_merchant_id_and_base_hotel_id(cls, session, merchant_id, base_hotel_id):
-        return session.query(CooperateHotelModel)\
+    def get_by_merchant_id_and_base_hotel_id(cls, session, merchant_id, base_hotel_id, with_delete=False):
+        query = session.query(CooperateHotelModel)\
             .filter(CooperateHotelModel.merchant_id == merchant_id)\
-            .filter(CooperateHotelModel.base_hotel_id == base_hotel_id)\
-            .filter(CooperateHotelModel.is_delete == 0)\
-            .first()
+            .filter(CooperateHotelModel.base_hotel_id == base_hotel_id)
+        if not with_delete:
+            query = query.filter(CooperateHotelModel.is_delete == 0)
+
+        return query.first()
 
     @classmethod
     def new_hotel_cooprate(cls, session, merchant_id, base_hotel_id):
