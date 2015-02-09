@@ -8,6 +8,32 @@
     <div class="notice" id="notice"><h2 ng-bind="'当前酒店：'+hotel.name"></h2></div>
     <!--导航条end-->  
 
+
+
+    
+ <!--删除提示-->     
+            <div class="messageDiv"  ng-show="confirmCancel" >
+                <div class="messageBlack"></div>
+                    <div class="detail">
+                    <div class="head"><h1>提示</h1></div>
+                    <div class="con">
+                        <p class="f16" style=" text-align:center;padding:30px 0;">确认要删除吗？</p>
+                        <p class="action" style=" text-align:center">
+                        <input name="确认" type="button" value="确认"  ng-click="confirmOk()" class=""/>
+                        <input name="取消" type="button" value="取消"  ng-click="confirmCancel=false;" class="btn-bai"/>
+                        </p>
+                    </div>
+                </div> 
+            </div>  
+
+ <!--删除提示-->   
+
+
+
+
+
+    
+
     <!--主体内容-->  
     <div class="main"><div class="p15">
 
@@ -45,7 +71,7 @@
                         <div class="form form1"
                             ng-repeat="rateplan in rateplans" ng-init="index=$index"
                             >
-                            <div class="roomhead" ><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>
+                            <div class="roomhead" style="position:relative"><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>
                              
                              
 
@@ -140,7 +166,7 @@
 
 
 
-
+<input type="button" ng-click="cancelBtn($index)" style="height:29px;width:60px;position:absolute;right:0px;bottom:5px;" value="删除" class="btn-bai"/>
 
 
 

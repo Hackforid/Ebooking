@@ -565,6 +565,57 @@
 		$scope.inputErrMessage = "";
 
 
+
+		$scope.confirmCancel=false;
+		$scope.cancelIndex;
+
+		$scope.confirmOk=function(){
+
+			
+
+			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.rateplans[$scope.cancelIndex].roomtype_id+"/rateplan/"+$scope.rateplans[$scope.cancelIndex].id;
+
+			console.log(url);
+
+			$http({method: 'DELETE', url: url})
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						
+					} else {
+						console.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					console.log('network error');
+				})
+
+
+
+		}
+
+		$scope.cancelBtn=function(index){
+			console.log(index);
+			$scope.confirmCancel=true;
+			$scope.cancelIndex=index;
+
+
+
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		$scope.currentCheckPayType = function(type) {
 			if (type == "0") {
 				return "现付卖价";

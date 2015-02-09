@@ -9,6 +9,30 @@
     ng-app="hotelCoopedApp" ng-controller="hotelCoopedContentCtrl"
     ><div class="p15">
 
+
+
+ <!--删除提示-->     
+            <div class="messageDiv"  style="display:none" >
+                <div class="messageBlack"></div>
+                    <div class="detail">
+                    <div class="head"><h1>提示</h1></div>
+                    <div class="con">
+                        <p class="f16" style=" text-align:center;padding:30px 0;">确认要解除合作关系吗？</p>
+                        <p class="action" style=" text-align:center">
+                        <input name="确认" type="button" value="确认"  ng-click="" class=""/>
+                        <input name="取消" type="button" value="取消"  ng-click="" class="btn-bai"/>
+                        </p>
+                    </div>
+                </div> 
+            </div>  
+
+ <!--删除提示-->   
+
+
+
+
+
+
          <!--酒店弹窗浮层-->     
             <div class="messageDiv" id="acceptDialog" style="display:none" >
                 <div class="messageBlack"></div>
@@ -66,11 +90,12 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                             <thead><tr>
                                     <th width="33%">酒店名称</th>
-                                    <th width="12%">星级</th>
-                                    <th width="12%">城市</th>
-                                    <th width="11%">商圈</th>                                 
-                                    <th width="11%">状态</th>
-                                    <th width="21%">维护</th>
+                                    <th width="11%">星级</th>
+                                    <th width="11%">城市</th>
+                                    <th width="10%">商圈</th>                                 
+                                    <th width="10%">状态</th>
+                                    <th width="15%">维护</th>
+                                    <th width="10%">操作</th>
                             </tr></thead>
                         </table>
 
@@ -78,11 +103,15 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
                             <tr ng-repeat="hotel in hotels">
                                 <td width="33%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
-                                <td width="12%" ng-bind="getHotelStar(hotel.star)"></td>
-                                <td width="12%" ng-bind="getCityName(hotel.city_id)"></td>
-                                <td width="11%" ng-bind="hotel['business_zone']['name']"></td>                               
-                                <td width="11%" ng-bind="getStatus(hotel.is_online)"></td>
-                                <td class="action" width="21%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+                                <td width="11%" ng-bind="getHotelStar(hotel.star)"></td>
+                                <td width="11%" ng-bind="getCityName(hotel.city_id)"></td>
+                                <td width="10%" ng-bind="hotel['business_zone']['name']"></td>                               
+                                <td width="10%" ng-bind="getStatus(hotel.is_online)"></td>
+                                <td class="action" width="15%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+
+                                <td width="10%"><a href="#" style="color:#0073B7;text-decoration: underline;">解除合作</a></td>
+
+
                             </tr>
 
                         </table>
