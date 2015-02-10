@@ -53,7 +53,7 @@ var ChartInit = function(scope, http) {
             ],
             function(ec) {
 
-                console.log(ec);
+                //console.log(ec);
 
                 var myChart = ec.init(document.getElementById(scope.lineId));
 
@@ -70,7 +70,7 @@ var ChartInit = function(scope, http) {
                         }
                     },
                     legend: {
-                        data: ['订单量'],
+                        data: ['订单量', '间夜量'],
                         orient: 'vertical',
                         x: 'right',
                         selectedMode: false
@@ -129,8 +129,13 @@ var ChartInit = function(scope, http) {
                     series: [{
                         name: '订单量',
                         type: 'line',
-                        stack: '总量',
+                        // stack: '订单量',
                         data: scope.yAxisvalueOrder
+                    }, {
+                        name: '间夜量',
+                        type: 'line',
+                        //stack: '间夜量',
+                        data: scope.totalnightCounts
                     }]
                 };
                 myChart.setOption(option);
@@ -284,6 +289,11 @@ var ChartInit = function(scope, http) {
                 type: 'line',
                 stack: '总量',
                 data: scope.yAxisvalueOrder
+            }, {
+                name: '间夜量',
+                type: 'line',
+                stack: '总量',
+                data: scope.totalnightCounts
             }]
         };
         myChart.setOption(option);
@@ -366,11 +376,13 @@ var ChartInit = function(scope, http) {
     this.init = function() {
         console.log("数据初始化");
 
+        var allOtaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
 
 
-        var url = "/ebooking/orderStat/night/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
 
+        var url = "/ebooking/orderStat/night/" + scope.dateRange + "/" + parseInt(scope.currentOtaWay) + "/start" + scope.startTime + "/end" + scope.endTime;
 
+        console.log(url);
         // console.log(params);
         http.get(url)
             .success(function(resp) {
@@ -436,7 +448,7 @@ var ChartInit = function(scope, http) {
 
                     var startTime = dataRanges[0];
                     var endTime = dataRanges[(dataRanges.length - 1)];
-                    console.log(endTime);
+                    //console.log(endTime);
 
                     scope.startTime = startTime;
                     scope.endTime = endTime;
@@ -480,36 +492,37 @@ var ChartInit = function(scope, http) {
                     };
 
 
-                    for (var i = 0; i < 10; i++) {
-                        if (orderCounts > (Math.pow(10, i)) && orderCounts < (Math.pow(10, (i + 1)))) {
+                    /* for (var i = 0; i < 10; i++) {
+                         if (orderCounts > (Math.pow(10, i)) && orderCounts < (Math.pow(10, (i + 1)))) {
 
-                            var yOrderCount = 0;
-                            var ytick = Math.pow(10, i);
-                            yaxisNumber.push(yOrderCount);
+                             var yOrderCount = 0;
+                             var ytick = Math.pow(10, i);
+                             yaxisNumber.push(yOrderCount);
 
-                            for (var j = 0; j < 10; j++) {
+                             for (var j = 0; j < 10; j++) {
 
-                                yOrderCount = parseInt(yOrderCount) + parseInt(ytick);
+                                 yOrderCount = parseInt(yOrderCount) + parseInt(ytick);
 
-                                yaxisNumber.push(yOrderCount);
-
-
-                            };
-
-                            break;
+                                 yaxisNumber.push(yOrderCount);
 
 
-                        }
-                    };
+                             };
+
+                             break;
 
 
+                         }
+                     };*/
+
+                    scope.totalnightCounts = resp.result.dayNights;
+                    console.log(scope.totalnightCounts);
                     scope.xAxisOrder = xaxisNumber;
-                    scope.yAxisOrder = yaxisNumber;
+                    //scope.yAxisOrder = yaxisNumber;
                     scope.yAxisvalueOrder = yaxisValue;
 
-                    console.log(xaxisNumber);
-                    console.log(yaxisNumber);
-                    console.log(yaxisValue);
+                    //console.log(xaxisNumber);
+                    // console.log(yaxisNumber);
+                    //console.log(yaxisValue);
 
 
                     /*饼图*/
@@ -535,9 +548,9 @@ var ChartInit = function(scope, http) {
                      console.log(otaNameValue);*/
 
 
-                    var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/start" + scope.startTime + "/end" + scope.endTime;
+                    var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/" + parseInt(scope.currentOtaWay) + "/start" + scope.startTime + "/end" + scope.endTime;
 
-
+                    console.log(pieurl);
                     http.get(pieurl)
                         .success(function(resp) {
                             console.log(resp);
@@ -546,6 +559,11 @@ var ChartInit = function(scope, http) {
                             if (resp.errcode == 0) {
 
                                 /*饼图*/
+                                /*otaOrder数据*/
+
+                                var zeroTotalOtaOrderObj = {};
+
+
 
                                 var otaOrder = resp.result.otaDatas;
                                 var otaNameValue = [];
@@ -561,11 +579,35 @@ var ChartInit = function(scope, http) {
                                     otaNameValue.push(otaObj);
                                     otaWays.push(otaOrder[i]["otaName"]);
 
+
+                                    if (otaOrder[i].otaId != 0) {
+
+
+                                        var totalOtaOrderObj = {
+                                            "orderCounts": otaOrder[i].orderCounts,
+                                            "nightCounts": otaOrder[i].roomNights,
+                                            "orders": otaOrder[i].orders,
+                                            "name": allOtaNames[otaOrder[i].otaId]
+
+                                        };
+
+                                        //console.log(totalOtaOrderObj);
+
+                                        zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
+
+                                    }
+
                                 };
+
+                                scope.totalOtaResult = zeroTotalOtaOrderObj;
+
+                                scope.currrentOtaResult = scope.totalOtaResult;
+
+                                console.log(scope.totalOtaResult);
 
                                 scope.otavalueOrder = otaNameValue;
                                 scope.otaWays = otaWays;
-                                console.log(otaNameValue);
+                                //console.log(otaNameValue);
 
                                 scope.chartInit.realchartInit();
 
@@ -622,7 +664,7 @@ var ChartInit = function(scope, http) {
 orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.xAxisOrder = [];
-    $scope.yAxisOrder = [];
+    //$scope.yAxisOrder = [];
     $scope.yAxisvalueOrder = [];
     $scope.otavalueOrder = [];
     $scope.otaWays = [];
@@ -641,6 +683,176 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
     $scope.dateRange = "0";
 
     $scope.timeId = "tab1time";
+
+
+    $scope.currentOtaWay = 0;
+
+
+    $scope.totalOtaResult = {};
+
+
+
+    $scope.totalnightCounts = [];
+
+
+
+    $scope.qorderDetail = false;
+    $scope.currentOtaOrders;
+
+    $scope.currrentOtaResult;
+
+    function conchecktime(time) {
+        time = parseInt(time);
+
+        var datevalue = new Date(time);
+        var realmonth = datevalue.getMonth() + 1;
+        var realdate = datevalue.getDate();
+        var realyear = datevalue.getFullYear();
+
+        var realhours = datevalue.getHours();
+        var realmin = datevalue.getMinutes();
+        var realsec = datevalue.getSeconds();
+
+
+        if (realmonth < 10) {
+            realmonth = "0" + realmonth;
+        }
+        if (realdate < 10) {
+            realdate = "0" + realdate;
+        }
+        if (realhours < 10) {
+            realhours = "0" + realhours;
+        }
+
+        if (realmin < 10) {
+            realmin = "0" + realmin;
+        }
+
+        if (realsec < 10) {
+            realsec = "0" + realsec;
+        }
+
+
+
+        var finaldate = realyear + "-" + realmonth + "-" + realdate + " " + realhours + ":" + realmin + ":" + realsec;
+
+        return finaldate;
+    }
+
+
+
+    $scope.orderDetail = function(k) {
+        $scope.currentOtaOrders = $scope.totalOtaResult[k];
+        $scope.qorderDetail = true;
+
+
+    }
+
+    $scope.DateDiff = function DateDiff(startDate, endDate) {
+
+        var splitDate, startTime, endTime, iDays;
+        splitDate = startDate.split("-");
+        startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        splitDate = endDate.split("-");
+        endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+        var daysResult = "( " + iDays + "晚 )";
+        return daysResult;
+    }
+
+    function dateTimeChecker(a, b, c) {
+        var day = new Date();
+
+        day.setFullYear(a);
+        day.setMonth(b);
+        day.setDate(c);
+
+        var dayTime = day.getTime();
+        return dayTime;
+
+    }
+
+    $scope.timeConvert = function(time) {
+
+        var timeFormat = conchecktime(time);
+
+        //console.log(timeFormat);        
+
+
+        var creatTime = timeFormat.split(" ");
+        return creatTime;
+
+    }
+
+    $scope.infoconvent = function(info) {
+
+        var infoobj = {};
+
+        try {
+
+            infoobj = eval(info);
+
+        } catch (e) {
+
+            infoobj = [{
+                "name": " "
+            }];
+
+        }
+
+        return infoobj;
+
+    }
+
+
+    $scope.getConfirmType = function getConfirmType(v) {
+        if (v == "2") {
+            return "手动确认";
+        } else if (v == "1") {
+            return "自动确认";
+        } else {
+            return " ";
+        }
+
+    }
+
+
+    $scope.checkStatus = function(status) {
+
+        if (status == "100") {
+
+            return "待确定";
+
+        } else if (status == "300") {
+
+            return "接受";
+
+        } else if (status == "400") {
+
+            return "拒绝";
+
+        } else if (status == "500" || status == "600") {
+
+            return "服务器取消";
+
+        } else {
+            return "";
+        }
+
+    }
+
+    $scope.searchCurrentOta = function() {
+
+        if ($scope.currentOtaWay == 0) {
+            $scope.currrentOtaResult = $scope.totalOtaResult;
+            return;
+        }
+
+
+        $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];
+
+    }
 
 
 
@@ -765,7 +977,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.xAxisOrder = [];
-    $scope.yAxisOrder = [];
+    //$scope.yAxisOrder = [];
     $scope.yAxisvalueOrder = [];
     $scope.otavalueOrder = [];
     $scope.otaWays = [];
@@ -782,6 +994,171 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
     $scope.dateRange = "1";
 
     $scope.timeId = "tab2time";
+
+    $scope.currentOtaWay = 0;
+
+
+
+    $scope.totalOtaResult = {};
+
+    $scope.qorderDetail = false;
+    $scope.currentOtaOrders;
+
+    $scope.currrentOtaResult;
+
+    function conchecktime(time) {
+        time = parseInt(time);
+
+        var datevalue = new Date(time);
+        var realmonth = datevalue.getMonth() + 1;
+        var realdate = datevalue.getDate();
+        var realyear = datevalue.getFullYear();
+
+        var realhours = datevalue.getHours();
+        var realmin = datevalue.getMinutes();
+        var realsec = datevalue.getSeconds();
+
+
+        if (realmonth < 10) {
+            realmonth = "0" + realmonth;
+        }
+        if (realdate < 10) {
+            realdate = "0" + realdate;
+        }
+        if (realhours < 10) {
+            realhours = "0" + realhours;
+        }
+
+        if (realmin < 10) {
+            realmin = "0" + realmin;
+        }
+
+        if (realsec < 10) {
+            realsec = "0" + realsec;
+        }
+
+
+
+        var finaldate = realyear + "-" + realmonth + "-" + realdate + " " + realhours + ":" + realmin + ":" + realsec;
+
+        return finaldate;
+    }
+
+
+
+    $scope.orderDetail = function(k) {
+        $scope.currentOtaOrders = $scope.totalOtaResult[k];
+        $scope.qorderDetail = true;
+
+
+    }
+
+    $scope.DateDiff = function DateDiff(startDate, endDate) {
+
+        var splitDate, startTime, endTime, iDays;
+        splitDate = startDate.split("-");
+        startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        splitDate = endDate.split("-");
+        endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+        var daysResult = "( " + iDays + "晚 )";
+        return daysResult;
+    }
+
+    function dateTimeChecker(a, b, c) {
+        var day = new Date();
+
+        day.setFullYear(a);
+        day.setMonth(b);
+        day.setDate(c);
+
+        var dayTime = day.getTime();
+        return dayTime;
+
+    }
+
+    $scope.timeConvert = function(time) {
+
+        var timeFormat = conchecktime(time);
+
+        //console.log(timeFormat);        
+
+
+        var creatTime = timeFormat.split(" ");
+        return creatTime;
+
+    }
+
+    $scope.infoconvent = function(info) {
+
+        var infoobj = {};
+
+        try {
+
+            infoobj = eval(info);
+
+        } catch (e) {
+
+            infoobj = [{
+                "name": " "
+            }];
+
+        }
+
+        return infoobj;
+
+    }
+
+
+    $scope.getConfirmType = function getConfirmType(v) {
+        if (v == "2") {
+            return "手动确认";
+        } else if (v == "1") {
+            return "自动确认";
+        } else {
+            return " ";
+        }
+
+    }
+
+
+    $scope.checkStatus = function(status) {
+
+        if (status == "100") {
+
+            return "待确定";
+
+        } else if (status == "300") {
+
+            return "接受";
+
+        } else if (status == "400") {
+
+            return "拒绝";
+
+        } else if (status == "500" || status == "600") {
+
+            return "服务器取消";
+
+        } else {
+            return "";
+        }
+
+    }
+
+    $scope.searchCurrentOta = function() {
+
+        if ($scope.currentOtaWay == 0) {
+            $scope.currrentOtaResult = $scope.totalOtaResult;
+            return;
+        }
+
+
+        $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];
+
+    }
+
 
 
     function checkTime(time) {
@@ -822,7 +1199,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.xAxisOrder = [];
-    $scope.yAxisOrder = [];
+    //$scope.yAxisOrder = [];
     $scope.yAxisvalueOrder = [];
     $scope.otavalueOrder = [];
     $scope.otaWays = [];
@@ -840,6 +1217,171 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
 
+    $scope.currentOtaWay = 0;
+
+
+    $scope.totalOtaResult = {};
+
+    $scope.qorderDetail = false;
+    $scope.currentOtaOrders;
+
+    $scope.currrentOtaResult;
+
+    function conchecktime(time) {
+        time = parseInt(time);
+
+        var datevalue = new Date(time);
+        var realmonth = datevalue.getMonth() + 1;
+        var realdate = datevalue.getDate();
+        var realyear = datevalue.getFullYear();
+
+        var realhours = datevalue.getHours();
+        var realmin = datevalue.getMinutes();
+        var realsec = datevalue.getSeconds();
+
+
+        if (realmonth < 10) {
+            realmonth = "0" + realmonth;
+        }
+        if (realdate < 10) {
+            realdate = "0" + realdate;
+        }
+        if (realhours < 10) {
+            realhours = "0" + realhours;
+        }
+
+        if (realmin < 10) {
+            realmin = "0" + realmin;
+        }
+
+        if (realsec < 10) {
+            realsec = "0" + realsec;
+        }
+
+
+
+        var finaldate = realyear + "-" + realmonth + "-" + realdate + " " + realhours + ":" + realmin + ":" + realsec;
+
+        return finaldate;
+    }
+
+
+
+    $scope.orderDetail = function(k) {
+        $scope.currentOtaOrders = $scope.totalOtaResult[k];
+        $scope.qorderDetail = true;
+
+
+    }
+
+    $scope.DateDiff = function DateDiff(startDate, endDate) {
+
+        var splitDate, startTime, endTime, iDays;
+        splitDate = startDate.split("-");
+        startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        splitDate = endDate.split("-");
+        endTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+        iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+        var daysResult = "( " + iDays + "晚 )";
+        return daysResult;
+    }
+
+    function dateTimeChecker(a, b, c) {
+        var day = new Date();
+
+        day.setFullYear(a);
+        day.setMonth(b);
+        day.setDate(c);
+
+        var dayTime = day.getTime();
+        return dayTime;
+
+    }
+
+    $scope.timeConvert = function(time) {
+
+        var timeFormat = conchecktime(time);
+
+        //console.log(timeFormat);        
+
+
+        var creatTime = timeFormat.split(" ");
+        return creatTime;
+
+    }
+
+    $scope.infoconvent = function(info) {
+
+        var infoobj = {};
+
+        try {
+
+            infoobj = eval(info);
+
+        } catch (e) {
+
+            infoobj = [{
+                "name": " "
+            }];
+
+        }
+
+        return infoobj;
+
+    }
+
+
+    $scope.getConfirmType = function getConfirmType(v) {
+        if (v == "2") {
+            return "手动确认";
+        } else if (v == "1") {
+            return "自动确认";
+        } else {
+            return " ";
+        }
+
+    }
+
+
+    $scope.checkStatus = function(status) {
+
+        if (status == "100") {
+
+            return "待确定";
+
+        } else if (status == "300") {
+
+            return "接受";
+
+        } else if (status == "400") {
+
+            return "拒绝";
+
+        } else if (status == "500" || status == "600") {
+
+            return "服务器取消";
+
+        } else {
+            return "";
+        }
+
+    }
+
+    $scope.searchCurrentOta = function() {
+
+        if ($scope.currentOtaWay == 0) {
+            $scope.currrentOtaResult = $scope.totalOtaResult;
+            return;
+        }
+
+
+        $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];
+
+    }
+
+
+
     $scope.searchorder = function() {
 
         $scope.startTime = $.trim($("#time1").val());
@@ -847,7 +1389,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-        if ($scope.startTime == null || $scope.endTime == null || $scope.startTime == "" || $scope.endTime == "" || ($scope.startTime > $scope.endTime)) {
+        if ($.trim($scope.currentOtaWay) == "" || $scope.startTime == null || $scope.endTime == null || $scope.startTime == "" || $scope.endTime == "" || ($scope.startTime > $scope.endTime)) {
             $("#tab3cometitle").hide();
             $("#tab3ordertitle").hide();
             $("#linethree").hide();
@@ -859,8 +1401,8 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-        console.log($scope.startTime);
-        console.log($scope.endTime);
+        //console.log($scope.startTime);
+        //console.log($scope.endTime);
 
         $("#tab3cometitle").show();
         $("#tab3ordertitle").show();
@@ -877,6 +1419,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     $scope.resetorder = function() {
         $("#time1").val("");
         $("#time2").val("");
+        $scope.currentOtaWay = "";
 
     }
 

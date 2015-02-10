@@ -42,6 +42,11 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.remarkErrMsg = "";
 
 
+
+	$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+
+
+
 	$scope.getConfirmType = function getConfirmType(v) {
 		if (v == "2") {
 			return "手动确认";
@@ -228,7 +233,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 							"sum": parseInt(otaInc.value) / 100,
 							"incomes": [otaInc],
-							"name": otaInc.ota_name
+							"name": $scope.otaNames[otaInc.ota_id] //otaInc.ota_name  
 
 						};
 						$scope.otaIncomes[otaInc.ota_id] = incVal;
@@ -1139,7 +1144,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 									"sum": parseInt(otaInc[i].value) / 100,
 									"incomes": [otaInc[i]],
-									"name": otaInc[i].ota_name
+									"name": $scope.otaNames[otaInc[i].ota_id] //otaInc[i].ota_name
 
 								};
 								allOtaInc[otaInc[i].ota_id] = incVal;
@@ -1174,7 +1179,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 									"sum": parseInt(otaOrd[i].total_price) / 100,
 									"orders": [otaOrd[i]],
-									"name": otaOrd[i].ota_name
+									"name": $scope.otaNames[otaOrd[i].ota_id] //otaOrd[i].ota_name
 
 								};
 								allotaOrd[otaOrd[i].ota_id] = ordVal;
