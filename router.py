@@ -31,6 +31,8 @@ from views.api.merchant import MerchantListAPIHandler
 from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
 from views.api.finance import FinanceAPIHandler, IncomeAPIHandler
 from views.finance import FinanceHandler
+from views.api.contract import ContractAPIHandler
+from views.contract import ContractHandler
 
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -94,4 +96,7 @@ handlers = [
         (r"/api/finance/?", FinanceAPIHandler),
         (r"/api/income/?", IncomeAPIHandler),
         (r"/finance/?", FinanceHandler),
+
+        (r"/api/contract/?", ContractAPIHandler),
+        (r"/contract/?", ContractHandler),
 ]
