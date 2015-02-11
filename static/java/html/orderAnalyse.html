@@ -70,19 +70,19 @@
      
        <!--左侧菜单-->   
        <div class="left-menu">
-           <dl class="menu1">
+           <dl class="menu1" style="margin-bottom: 0px;">
                <dt><u class="icon-dt"></u>订单管理</dt>
                <dd><a href="/order/waiting/"><u class="icon1"></u>待确认订单<b class="has-order">·</b></a></dd>
                <dd><a href="/order/list"><u class="icon2"></u>订单查询</a></dd>
            </dl>
            
-           <dl class="menu2" style="margin-bottom: 20px;">       
+           <dl class="menu2" style="margin-bottom: 0px;">       
                <dt><u class="icon-dt"></u>合作酒店管理</dt>
                <dd><a href="/hotel/cooped/"><u class="icon4"></u>已合作酒店</a></dd>
                <dd id="willcoophotel"><a href="/hotel/willcoop/"><u class="icon5"></u>可合作酒店</a></dd>                
             </dl>
             
-           <dl class="menu3" style="margin-bottom: 20px;">      
+           <dl class="menu3" style="margin-bottom: 0px;">      
                <dt><u class="icon-dt"></u>数据统计</dt>
                <dd class="active"><a href="orderAnalyse.html"><u class="icon3"></u>订单统计</a></dd>
                <!--<dd><a href="#"><u class="icon3"></u>间夜统计</a></dd>-->
@@ -90,10 +90,10 @@
 
             
 
-            <dl class="menu4">      
+            <dl class="menu4" style="margin-bottom: 0px;">      
                         <dt><u class="icon-dt"></u>财务统计</dt>
-                        <dd><a href="/finance/"><u class="icon3"></u>预付结算</a></dd>
-                        <dd><a href="#"><u class="icon3"></u>现付结算</a></dd>
+                        <dd><a href="/finance/prepay/"><u class="icon3"></u>预付结算</a></dd>
+                        <dd><a href="/finance/agency/"><u class="icon3"></u>现付结算</a></dd>
 
                         <dd><a href="/contract/"><u class="icon3"></u>合同管理</a></dd>
             </dl>
@@ -139,6 +139,64 @@
 
 
 
+<!--订单详情弹窗浮层-->     
+<div class="messageDiv"  style="z-index:100000" ng-show="currentOrderDetails" ng-cloak>
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail" style="width:400px;margin-left:-200px;">
+       <div class="head"><h1>订单详情</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="currentOrderDetails=false;">X</p>
+       <div class="con">
+           
+           <div class="cm2" style="height:350px">
+
+
+           <table width="100%">
+           <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+           <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+
+
+            <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
+
+
+
+
+           <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
+
+
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+
+
+
+
+           </td></tr>
+           <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
+
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
+            <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
+
+          
+           </table>
+              
+           </div>
+          
+       </div>
+   </div> 
+</div> 
+ <!--订单详情浮层结束-->   
+
+
+
+
+
+
+
 
  <!--order弹窗浮层-->     
 <div class="messageDiv"   ng-show="qorderDetail" ng-cloak>
@@ -176,9 +234,14 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
                                 <tr ng-repeat="order in currentOtaOrders.orders">
 
-                                  <td style="vertical-align: middle;" width="10%" ng-bind="order.id"></td>
+                                  <td style="vertical-align: middle;" width="10%">
+
+                                    <a href="#" ng-bind="order.id" ng-click="getCurrentOrder(order);"></a>
+                                    
+
+                                  </td>
                                     <td style="vertical-align: middle;" width="10%" ng-bind="order.hotelName"></td>
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomNum+'间'"></td>
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomTypeName"></td>
 
                                     <td style="vertical-align: middle;" width="15%"><span ng-bind="order.checkInDate+'至'"></span><br />
                                        <span ng-bind="order.checkOutDate"></span>
@@ -202,8 +265,8 @@
 
                                     </td>
 
-                                    <td width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
-                                    <td width="10%" ng-bind="checkStatus(order.status)"></td>   
+                                    <td style="vertical-align: middle;" width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="checkStatus(order.status)"></td>   
                                     
                                
                                     
@@ -270,9 +333,9 @@
                  </label>
                                                                                           
 
-                <label>
+               <!-- <label>
                   <input class="btn-s" name="" type="button" value="搜索" ng-click="searchCurrentOta()"/> <input name="" type="button" value="重置"  ng-click="currentOtaWay='';" class="btn-bai btn-s" />
-                </label>
+                </label>-->
 
 
             </div></div>
@@ -334,7 +397,7 @@
 
      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01">
  <thead><tr>
-    <th width="100%">来源分析</th>
+    <th width="100%">渠道分析</th>
   </tr></thead>
      </table>
 
@@ -347,6 +410,61 @@
                  </div>
                  
                  <div ng-controller="orderTab2AnalyseCtrl" id="tabcontent2" class="tabcon2" style=" display:none">
+
+
+
+
+<!--订单详情弹窗浮层-->     
+<div class="messageDiv"  style="z-index:100000" ng-show="currentOrderDetails" ng-cloak>
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail" style="width:400px;margin-left:-200px;">
+       <div class="head"><h1>订单详情</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="currentOrderDetails=false;">X</p>
+       <div class="con">
+           
+           <div class="cm2" style="height:350px">
+
+
+           <table width="100%">
+           <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+           <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+
+
+            <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
+
+
+
+
+           <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
+
+
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+
+
+
+
+           </td></tr>
+           <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
+
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
+            <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
+
+          
+           </table>
+              
+           </div>
+          
+       </div>
+   </div> 
+</div> 
+ <!--订单详情浮层结束-->   
 
 
 
@@ -390,9 +508,13 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
                                 <tr ng-repeat="order in currentOtaOrders.orders">
 
-                                  <td style="vertical-align: middle;" width="10%" ng-bind="order.id"></td>
+                                  <td style="vertical-align: middle;" width="10%" >
+                                    
+                                    <a href="#" ng-bind="order.id" ng-click="getCurrentOrder(order);"></a>
+
+                                  </td>
                                     <td style="vertical-align: middle;" width="10%" ng-bind="order.hotelName"></td>
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomNum+'间'"></td>
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomTypeName"></td>
 
                                     <td style="vertical-align: middle;" width="15%"><span ng-bind="order.checkInDate+'至'"></span><br />
                                        <span ng-bind="order.checkOutDate"></span>
@@ -416,8 +538,8 @@
 
                                     </td>
 
-                                    <td width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
-                                    <td width="10%" ng-bind="checkStatus(order.status)"></td>   
+                                    <td style="vertical-align: middle;" width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="checkStatus(order.status)"></td>   
                                     
                                
                                     
@@ -484,9 +606,9 @@
                  </label>
                                                                                           
 
-                <label>
+               <!-- <label>
                   <input class="btn-s" name="" type="button" value="搜索" ng-click="searchCurrentOta()"/> <input name="" type="button" value="重置"  ng-click="currentOtaWay='';" class="btn-bai btn-s" />
-                </label>
+                </label>-->
 
 
             </div></div>
@@ -553,7 +675,7 @@
 
      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01">
  <thead><tr>
-    <th width="100%">来源分析</th>
+    <th width="100%">渠道分析</th>
   </tr></thead>
      </table>
 
@@ -588,6 +710,57 @@
 
 
   
+<!--订单详情弹窗浮层-->     
+<div class="messageDiv"  style="z-index:100000" ng-show="currentOrderDetails" ng-cloak>
+   <div class="messageBlack"></div>
+   <div class="detail hotel-detail" style="width:400px;margin-left:-200px;">
+       <div class="head"><h1>订单详情</h1></div>
+       <p id="closeDiv" class="close" href="#" ng-click="currentOrderDetails=false;">X</p>
+       <div class="con">
+           
+           <div class="cm2" style="height:350px">
+
+
+           <table width="100%">
+           <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+           <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+
+
+            <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
+
+
+
+
+           <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
+
+
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+
+
+
+
+           </td></tr>
+           <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
+
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
+            <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
+
+          
+           </table>
+              
+           </div>
+          
+       </div>
+   </div> 
+</div> 
+ <!--订单详情浮层结束-->   
                   
 
 
@@ -627,9 +800,14 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
                                 <tr ng-repeat="order in currentOtaOrders.orders">
 
-                                  <td style="vertical-align: middle;" width="10%" ng-bind="order.id"></td>
+                                  <td style="vertical-align: middle;" width="10%">
+                                    
+                                    <a href="#" ng-bind="order.id" ng-click="getCurrentOrder(order);"></a>
+
+
+                                  </td>
                                     <td style="vertical-align: middle;" width="10%" ng-bind="order.hotelName"></td>
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomNum+'间'"></td>
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomTypeName"></td>
 
                                     <td style="vertical-align: middle;" width="15%"><span ng-bind="order.checkInDate+'至'"></span><br />
                                        <span ng-bind="order.checkOutDate"></span>
@@ -653,8 +831,8 @@
 
                                     </td>
 
-                                    <td width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
-                                    <td width="10%" ng-bind="checkStatus(order.status)"></td>   
+                                    <td style="vertical-align: middle;" width="10%" ng-bind='getConfirmType(order.confirmType)'></td>  
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="checkStatus(order.status)"></td>   
                                     
                                
                                     
@@ -803,7 +981,7 @@
 
      <table id="tab3cometitle" style="display:none" width="100%" border="0" cellspacing="0" cellpadding="0" class="table01">
  <thead><tr>
-    <th width="100%">来源分析</th>
+    <th width="100%">渠道分析</th>
   </tr></thead>
      </table>
 

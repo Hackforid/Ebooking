@@ -3,7 +3,7 @@
 
 
 <!--导航条--> 
-	<div class="notice" id="notice"><h2>预付结算</h2></div>
+	<div class="notice" id="notice"><h2>现付结算</h2></div>
 	<!--导航条end-->  
 
 	<!--主体内容-->  
@@ -84,8 +84,8 @@
 								<thead><tr>
 										
 										<th width="25%">渠道</th>
-										<th width="25%">应收</th>
-										<th width="25%">已收</th>
+										<th width="25%">应付</th>
+										<th width="25%">已付</th>
 										<th width="25%">合计</th>
 										
 								</tr></thead>
@@ -96,11 +96,11 @@
                                >
 								<tr ng-repeat="(k,v) in otaOrders">
 									
-                                    <td width="25%"><a href="#" ng-click="ordDetail(k,v)" ng-bind="v['name']"></a></td>
+                                    <td width="25%"><a style="color:#0073B7;" href="#" ng-click="ordDetail(k,v)" ng-bind="v['name']"></a></td>
 
                                     <td width="25%" ng-bind="v['sum']"></td>
 
-                                    <td width="25%" ><a href="#" ng-click="incDetail(k,otaIncomes[k])" ng-bind="incomeCheck(otaIncomes[k]['sum'])"></a></td>
+                                    <td width="25%" ><a href="#" style="color:#F90;" ng-click="incDetail(k,otaIncomes[k])" ng-bind="incomeCheck(otaIncomes[k]['sum'])"></a></td>
                                     <td width="25%" ng-bind="v['sum']-otaIncomes[k]['sum']"></td>
                                     
 								</tr>
@@ -163,7 +163,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
 <div class="messageDiv"   ng-show="orderDetail" ng-cloak>
    <div class="messageBlack"></div>
    <div class="detail hotel-detail" style="width:1000px;height:auto;margin-left:-500px;min-height:500px;height:500px;margin-top:-250px;"><!--tempheight-->
-       <div class="head"><h1>已收列表</h1></div>
+       <div class="head"><h1>已付列表</h1></div>
        <p id="closeDiv" class="close" href="#" ng-click="orderDetail=false">X</p>
        <div class="con" style="height:auto;min-height:200px;"><!--tempheight-->
 
@@ -316,7 +316,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
 <%def name="end()">
 
 
-    <script src="${static_url('js/finance.js')}"></script>
+    <script src="${static_url('js/financeAgency.js')}"></script>
 
     <style type="text/css">
 
