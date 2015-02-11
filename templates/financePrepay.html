@@ -163,7 +163,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
 <div class="messageDiv"   ng-show="orderDetail" ng-cloak>
    <div class="messageBlack"></div>
    <div class="detail hotel-detail" style="width:1000px;height:auto;margin-left:-500px;min-height:500px;height:500px;margin-top:-250px;"><!--tempheight-->
-       <div class="head"><h1>已收列表</h1></div>
+       <div class="head"><h1>订单列表</h1></div>
        <p id="closeDiv" class="close" href="#" ng-click="orderDetail=false">X</p>
        <div class="con" style="height:auto;min-height:200px;"><!--tempheight-->
 
@@ -197,7 +197,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
 
                                 	<td style="vertical-align: middle;" width="10%" ng-bind="order.id"></td>
                                     <td style="vertical-align: middle;" width="10%" ng-bind="order.hotel_name"></td>
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.room_num+'间'"></td>
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="order.roomtype_name"></td>
 
                                     <td style="vertical-align: middle;" width="15%"><span ng-bind="order.checkin_date+'至'"></span><br />
                                        <span ng-bind="order.checkout_date"></span>

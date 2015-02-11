@@ -41,9 +41,53 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 	$scope.remarkErrMsg = "";
 
+	$scope.currentOrder;
+	$scope.detailOrder=false;
+
 
 
 	$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+
+
+
+
+	$scope.getCurrentOrder=function(order){
+
+		$scope.currentOrder=order;
+		$scope.detailOrder=true;
+
+	}
+
+	$scope.resonStatusCheck = function(a, b) {
+
+        if (a == "拒绝") {
+            return b;
+        } else {
+            return "无";
+        }
+
+
+    }
+
+
+    $scope.getCancelStatus = function(m) {
+
+        if (m == "0") {
+            return "不可取消";
+        } else if (m == "1") {
+            return "自由取消";
+        } else if (m == "2") {
+            return "提前取消";
+        }
+
+    }
+
+
+
+
+
+
+
 
 
 
@@ -353,7 +397,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				if (resp.errcode == 0) {
 
 
-					/*数据测试
+					/*数据测试*/
 					resp = {
 						"errcode": 0,
 						"errmsg": null,
@@ -364,7 +408,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"punish_value": 0,
 								"guarantee_start_time": "00:00:00",
 								"create_time": "2015-01-22 15:28:03",
-								"contact_name": "",
+								"contact_name": "qqqqq",
 								"guarantee_info": "",
 								"ota_id": 3,
 								"breakfast": "",
@@ -374,25 +418,25 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"rateplan_id": 98,
 								"id": 92,
 								"customer_remark": "",
-								"customer_info": "",
+								"customer_info": "[{'name':'华丽'}]",
 								"status": 300,
-								"roomtype_name": "",
+								"roomtype_name": "qqqqq",
 								"customer_num": 0,
 								"hotel_id": 187,
 								"arrival_time": "18:00:00",
 								"contact_email": "",
 								"cancel_type": 1,
-								"contact_mobile": "",
+								"contact_mobile": "qqqqq",
 								"checkin_date": "2015-01-22",
 								"checkout_date": "2015-01-23",
-								"hotel_name": "",
+								"hotel_name": "qqqqqqq",
 								"everyday_price": "10000",
 								"total_price": 1000,
 								"currency_type": "0",
 								"bed_type": 0,
 								"punish_type": 0,
 								"main_order_id": 100,
-								"rateplan_name": "",
+								"rateplan_name": "qqqqq",
 								"room_num_record": "0|2",
 								"ota_name": "美团",
 								"room_num": 2
@@ -1129,7 +1173,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"id": 1
 							}]
 						}
-					};*/
+					};
 
 					/*income*/
 
