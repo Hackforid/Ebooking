@@ -30,7 +30,7 @@ from views.api.merchant import MerchantListAPIHandler
 
 from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
 from views.api.finance import FinanceAPIHandler, IncomeAPIHandler
-from views.finance import FinanceHandler
+from views.finance import FinanceAgencyHandler, FinancePrepayHandler
 from views.api.contract import ContractAPIHandler
 from views.contract import ContractHandler
 
@@ -95,7 +95,9 @@ handlers = [
         (r"/api/stock/push/all/?", StockPushAllAPIHandler),
         (r"/api/finance/?", FinanceAPIHandler),
         (r"/api/income/?", IncomeAPIHandler),
-        (r"/finance/?", FinanceHandler),
+        (r"/finance/prepay/?", FinancePrepayHandler),
+        (r"/finance/agency/?", FinanceAgencyHandler),
+
 
         (r"/api/contract/?", ContractAPIHandler),
         (r"/contract/?", ContractHandler),
