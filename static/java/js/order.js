@@ -431,6 +431,8 @@ var ChartInit = function(scope, http) {
                                 var otaObj;
                                 var otaWays = [];
 
+                                var orderWaystrue = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
                                 for (var i = 0; i < otaOrder.length; i++) {
 
                                     if (otaOrder[i].otaId != 0) {
@@ -453,11 +455,54 @@ var ChartInit = function(scope, http) {
 
                                         //console.log(totalOtaOrderObj);
 
+                                        orderWaystrue.splice(otaOrder[i].otaId, 1);
+
                                         zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
 
                                     }
 
                                 };
+
+                                orderWaystrue.splice(0, 1);
+
+                                if (scope.currentOtaWay == 0) {
+                                    for (var i = 0; i < orderWaystrue.length; i++) {
+
+                                        var totalOtaOrderObj = {
+                                            "orderCounts": 0,
+                                            "nightCounts": 0,
+                                            "orders": [],
+                                            "name": allOtaNames[orderWaystrue[i]]
+
+                                        };
+
+
+                                        zeroTotalOtaOrderObj[orderWaystrue[i]] = totalOtaOrderObj;
+
+
+                                    }
+                                } else {
+
+
+                                    if (isEmptyObject(zeroTotalOtaOrderObj)) {
+
+                                        var zeroObj = {
+
+                                            "orderCounts": 0,
+                                            "nightCounts": 0,
+                                            "orders": [],
+                                            "name": allOtaNames[scope.currentOtaWay]
+
+                                        };
+
+
+                                        zeroTotalOtaOrderObj[scope.currentOtaWay] = zeroObj;
+
+                                    }
+
+                                }
+
+
 
                                 scope.totalOtaResult = zeroTotalOtaOrderObj;
 
@@ -466,7 +511,7 @@ var ChartInit = function(scope, http) {
                                 console.log(scope.totalOtaResult);
 
 
-                                if (isEmptyObject(scope.currrentOtaResult)) {
+                                /*if (isEmptyObject(scope.currrentOtaResult)) {
 
                                     if (scope.currentOtaWay == 0) {
 
@@ -507,7 +552,7 @@ var ChartInit = function(scope, http) {
 
                                     console.log("空对象");
 
-                                }
+                                }*/
 
 
 
@@ -616,7 +661,59 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.currrentOtaResult;
 
-    function conchecktime(time) {
+    $scope.currentOrder;
+    $scope.currentOrderDetails = false;
+
+    $scope.detailInfo;
+
+    $scope.resonStatusCheck = function(a, b) {
+
+        if (a == "拒绝") {
+            return b;
+        } else {
+            return "无";
+        }
+
+
+    }
+
+
+    $scope.getCancelStatus = function(m) {
+
+        if (m == "0") {
+            return "不可取消";
+        } else if (m == "1") {
+            return "自由取消";
+        } else if (m == "2") {
+            return "提前取消";
+        }
+
+    }
+
+
+    $scope.getCurrentOrder = function(order) {
+        console.log(order);
+        $scope.currentOrder = order;
+        $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
+
+        $scope.currentOrderDetails = true;
+    }
+
+
+    $scope.$watch('currentOtaWay', function(newValue, oldValue) {
+
+        if (newValue == oldValue) {
+            return;
+
+        }
+
+        $scope.searchCurrentOta();
+
+    });
+
+
+
+    $scope.conchecktime = function conchecktime(time) {
         time = parseInt(time);
 
         var datevalue = new Date(time);
@@ -690,7 +787,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.timeConvert = function(time) {
 
-        var timeFormat = conchecktime(time);
+        var timeFormat = $scope.conchecktime(time);
 
         //console.log(timeFormat);        
 
@@ -701,6 +798,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
     }
 
     $scope.infoconvent = function(info) {
+        console.log(info);
 
         var infoobj = {};
 
@@ -935,7 +1033,61 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.currrentOtaResult;
 
-    function conchecktime(time) {
+
+
+    $scope.currentOrder;
+    $scope.currentOrderDetails = false;
+
+    $scope.detailInfo;
+
+    $scope.resonStatusCheck = function(a, b) {
+
+        if (a == "拒绝") {
+            return b;
+        } else {
+            return "无";
+        }
+
+
+    }
+
+
+    $scope.getCancelStatus = function(m) {
+
+        if (m == "0") {
+            return "不可取消";
+        } else if (m == "1") {
+            return "自由取消";
+        } else if (m == "2") {
+            return "提前取消";
+        }
+
+    }
+
+
+    $scope.getCurrentOrder = function(order) {
+        console.log(order);
+        $scope.currentOrder = order;
+        $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
+
+        $scope.currentOrderDetails = true;
+    }
+
+
+
+    $scope.$watch('currentOtaWay', function(newValue, oldValue) {
+
+        if (newValue == oldValue) {
+            return;
+
+        }
+
+        $scope.searchCurrentOta();
+
+    });
+
+
+    $scope.conchecktime = function conchecktime(time) {
         time = parseInt(time);
 
         var datevalue = new Date(time);
@@ -1009,7 +1161,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.timeConvert = function(time) {
 
-        var timeFormat = conchecktime(time);
+        var timeFormat = $scope.conchecktime(time);
 
         //console.log(timeFormat);        
 
@@ -1157,7 +1309,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-    $scope.currentOtaWay = 0;
+    $scope.currentOtaWay = "";
 
 
     $scope.totalOtaResult = {};
@@ -1167,7 +1319,49 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.currrentOtaResult;
 
-    function conchecktime(time) {
+
+
+    $scope.currentOrder;
+    $scope.currentOrderDetails = false;
+
+    $scope.detailInfo;
+
+    $scope.resonStatusCheck = function(a, b) {
+
+        if (a == "拒绝") {
+            return b;
+        } else {
+            return "无";
+        }
+
+
+    }
+
+
+    $scope.getCancelStatus = function(m) {
+
+        if (m == "0") {
+            return "不可取消";
+        } else if (m == "1") {
+            return "自由取消";
+        } else if (m == "2") {
+            return "提前取消";
+        }
+
+    }
+
+
+    $scope.getCurrentOrder = function(order) {
+        console.log(order);
+        $scope.currentOrder = order;
+        $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
+
+        $scope.currentOrderDetails = true;
+    }
+
+
+
+    $scope.conchecktime = function conchecktime(time) {
         time = parseInt(time);
 
         var datevalue = new Date(time);
@@ -1241,7 +1435,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.timeConvert = function(time) {
 
-        var timeFormat = conchecktime(time);
+        var timeFormat = $scope.conchecktime(time);
 
         //console.log(timeFormat);        
 
