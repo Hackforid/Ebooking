@@ -33,6 +33,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
                 self.finish_json(result=dict(
                     order_id=order.id,
                     wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO or order.status == 300 else 1,
+                    merchant_id=order.merchant_id,
                     ))
         else:
             if isinstance(task.result, CeleryException):
