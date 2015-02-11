@@ -25,12 +25,12 @@ class FinanceAPIHandler(BtwBaseHandler):
         today = date.today()
         year = int(self.get_query_argument('year', today.year))
         month = int(self.get_query_argument('month', today.month))
-        ota_id = self.get_query_argument('ota_id', None)
+        ota_ids = self.get_query_argument('ota_ids', None)
         pay_type = int(self.get_query_argument('pay_type', 1))
         merchant_id =self.current_user.merchant_id
 
-        orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_id)
-        incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_id)
+        orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_ids)
+        incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_ids)
 
         if pay_type == ContractModel.PAY_TYPE_ARRIVE:
             self.deal_agency(orders)
@@ -45,13 +45,13 @@ class FinanceAPIHandler(BtwBaseHandler):
         for order in orders:
             order.total_price = order.total_price * commission
 
-    def get_order_in_date(self, merchant_id, year, month, pay_type, ota_id=None):
+    def get_order_in_date(self, merchant_id, year, month, pay_type, ota_ids=None):
         orders = OrderModel.get_success_order_by_checkout_date_in_month(self.db,
-                merchant_id, year, month, pay_type, ota_id)
+                merchant_id, year, month, pay_type, ota_ids)
         return orders
 
-    def get_income_record_in_date(self, merchant_id, year, month, pay_type, ota_id=None):
-        incomes = IncomeModel.get_in_month(self.db, merchant_id, year, month, pay_type, ota_id)
+    def get_income_record_in_date(self, merchant_id, year, month, pay_type, ota_ids=None):
+        incomes = IncomeModel.get_in_month(self.db, merchant_id, year, month, pay_type, ota_ids)
         return incomes
 
     def get_commission(self, merchant_id):
