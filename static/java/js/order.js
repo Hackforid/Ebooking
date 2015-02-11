@@ -20,6 +20,15 @@ var ChartInit = function(scope, http) {
 
 
 
+    function isEmptyObject(obj) {
+        for (var n in obj) {
+            return false;
+        }
+        return true;
+    }
+
+
+
     function tablink() {
         var menucount = loadtabs.length;
         var a = 0;
@@ -142,6 +151,7 @@ var ChartInit = function(scope, http) {
 
 
                 if (scope.otavalueOrder.length != 0) {
+                    $("#" + scope.pieId).show();
                     myChart = ec.init(document.getElementById(scope.pieId));
 
                     option = {
@@ -188,7 +198,7 @@ var ChartInit = function(scope, http) {
                         },
                         calculable: false,
                         series: [{
-                            name: '访问来源',
+                            name: '渠道来源',
                             type: 'pie',
                             radius: '55%',
                             center: ['50%', '60%'],
@@ -206,10 +216,12 @@ var ChartInit = function(scope, http) {
 
                     };
                     myChart.setOption(option);
+                } else {
+                    $("#" + scope.pieId).hide();
                 }
 
 
-                if (scope.pieId == "pietwo") {
+                if (scope.pieId == "pietwo" && scope.searchFlag == 0) {
                     tablink();
                 }
 
@@ -218,157 +230,6 @@ var ChartInit = function(scope, http) {
             }
 
         );
-    }
-
-
-    this.testline = function(ec) {
-
-        var myChart = ec.init(document.getElementById('line'));
-
-        var option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    lineStyle: {
-                        color: '#999',
-                        width: 2,
-                        type: 'solid'
-                    }
-                }
-            },
-            legend: {
-                data: ['订单量'],
-                orient: 'vertical',
-                x: 'right',
-                selectedMode: false
-
-            },
-            toolbox: {
-                show: false,
-                feature: {
-                    mark: {
-                        show: true
-                    },
-                    dataView: {
-                        show: true,
-                        readOnly: false
-                    },
-                    magicType: {
-                        show: true,
-                        type: ['line', 'bar', 'stack', 'tiled']
-                    },
-                    restore: {
-                        show: true
-                    },
-                    saveAsImage: {
-                        show: true
-                    }
-                }
-            },
-            calculable: false,
-            xAxis: [{
-                type: 'category',
-                /* show:false,*/
-                boundaryGap: false,
-                data: scope.xAxisOrder,
-                axisLabel: {
-                    /* formatter: function(value) {
-                         console.log(value);
-                         return "星期" + value;
-                     }*/
-                }
-
-            }],
-            yAxis: [{
-                type: 'value'
-            }],
-
-            series: [{
-                name: '订单量',
-                type: 'line',
-                stack: '总量',
-                data: scope.yAxisvalueOrder
-            }, {
-                name: '间夜量',
-                type: 'line',
-                stack: '总量',
-                data: scope.totalnightCounts
-            }]
-        };
-        myChart.setOption(option);
-
-
-
-    }
-
-    this.testpie = function(ec) {
-
-        var myChart = ec.init(document.getElementById('main'));
-
-        var option = {
-
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-                orient: 'vertical',
-                x: 'right',
-                data: scope.otaWays,
-                selectedMode: false
-            },
-            toolbox: {
-                show: false,
-                feature: {
-                    mark: {
-                        show: true
-                    },
-                    dataView: {
-                        show: true,
-                        readOnly: false
-                    },
-                    magicType: {
-                        show: true,
-                        type: ['pie', 'funnel'],
-                        option: {
-                            funnel: {
-                                x: '25%',
-                                width: '50%',
-                                funnelAlign: 'left',
-                                max: 1548
-                            }
-                        }
-                    },
-                    restore: {
-                        show: true
-                    },
-                    saveAsImage: {
-                        show: true
-                    }
-                }
-            },
-            calculable: false,
-            series: [{
-                name: '访问来源',
-                type: 'pie',
-                radius: '55%',
-                center: ['50%', '60%'],
-                data: scope.otavalueOrder
-            }],
-
-
-            color: [
-                '#63B8FF', '#ff7f50', '#7FFF00', '#FFFF00', '#6495ed',
-                '#ff69b4', '#cd5c5c', '#ffa500',
-                '#1e90ff', '#ff6347', '#00fa9a', '#ffd700',
-                '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
-            ]
-
-
-        };
-        myChart.setOption(option);
-
     }
 
 
@@ -571,16 +432,15 @@ var ChartInit = function(scope, http) {
                                 var otaWays = [];
 
                                 for (var i = 0; i < otaOrder.length; i++) {
-                                    //console.log(otaOrder[i]["otaId"]);
-                                    otaObj = {
-                                        value: parseInt(otaOrder[i]["orderCounts"]),
-                                        name: otaOrder[i]["otaName"]
-                                    };
-                                    otaNameValue.push(otaObj);
-                                    otaWays.push(otaOrder[i]["otaName"]);
-
 
                                     if (otaOrder[i].otaId != 0) {
+                                        //console.log(otaOrder[i]["otaId"]);
+                                        otaObj = {
+                                            value: parseInt(otaOrder[i]["orderCounts"]),
+                                            name: allOtaNames[otaOrder[i].otaId]
+                                        };
+                                        otaNameValue.push(otaObj);
+                                        otaWays.push(allOtaNames[otaOrder[i].otaId]);
 
 
                                         var totalOtaOrderObj = {
@@ -605,9 +465,60 @@ var ChartInit = function(scope, http) {
 
                                 console.log(scope.totalOtaResult);
 
+
+                                if (isEmptyObject(scope.currrentOtaResult)) {
+
+                                    if (scope.currentOtaWay == 0) {
+
+                                        for (var i = 1; i < allOtaNames.length; i++) {
+
+                                            var zeroObj = {
+
+                                                "orderCounts": 0,
+                                                "nightCounts": 0,
+                                                "orders": [],
+                                                "name": allOtaNames[i]
+
+                                            };
+
+
+                                            scope.currrentOtaResult[i] = zeroObj;
+
+
+                                        };
+
+                                    } else {
+
+                                        var zeroObj = {
+
+                                            "orderCounts": 0,
+                                            "nightCounts": 0,
+                                            "orders": [],
+                                            "name": allOtaNames[scope.currentOtaWay]
+
+                                        };
+
+
+                                        scope.currrentOtaResult[scope.currentOtaWay] = zeroObj;
+
+                                    }
+
+
+
+                                    console.log("空对象");
+
+                                }
+
+
+
+                                console.log(scope.currrentOtaResult);
+
+
                                 scope.otavalueOrder = otaNameValue;
                                 scope.otaWays = otaWays;
                                 //console.log(otaNameValue);
+
+                                $("#" + scope.contentId).css("display", "block");
 
                                 scope.chartInit.realchartInit();
 
@@ -662,6 +573,10 @@ var ChartInit = function(scope, http) {
 
 
 orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.searchFlag = 0;
+
+
+    $scope.contentId = "tabcontent1";
 
     $scope.xAxisOrder = [];
     //$scope.yAxisOrder = [];
@@ -844,13 +759,23 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.searchCurrentOta = function() {
 
-        if ($scope.currentOtaWay == 0) {
-            $scope.currrentOtaResult = $scope.totalOtaResult;
+        /* if ($scope.currentOtaWay == 0) {
+             $scope.currrentOtaResult = $scope.totalOtaResult;
+             return;
+         }
+
+
+         $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];*/
+
+
+        if ($.trim($scope.currentOtaWay) == "") {
+            console.log("返回");
             return;
         }
 
 
-        $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];
+
+        $scope.chartInit.init();
 
     }
 
@@ -975,6 +900,10 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
 orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+
+    $scope.searchFlag = 0;
+
+    $scope.contentId = "tabcontent2";
 
     $scope.xAxisOrder = [];
     //$scope.yAxisOrder = [];
@@ -1149,13 +1078,21 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.searchCurrentOta = function() {
 
-        if ($scope.currentOtaWay == 0) {
-            $scope.currrentOtaResult = $scope.totalOtaResult;
+        /* if ($scope.currentOtaWay == 0) {
+             $scope.currrentOtaResult = $scope.totalOtaResult;
+             return;
+         }
+
+
+         $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];*/
+        $scope.searchFlag = 1;
+
+        if ($.trim($scope.currentOtaWay) == "") {
+            console.log("返回");
             return;
         }
 
-
-        $scope.currrentOtaResult = $scope.totalOtaResult[$scope.currentOtaWay];
+        $scope.chartInit.init();
 
     }
 
@@ -1197,6 +1134,9 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
 
 orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.searchFlag = 0;
+
+    $scope.contentId = "tabcontent3";
 
     $scope.xAxisOrder = [];
     //$scope.yAxisOrder = [];
@@ -1394,7 +1334,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
             $("#tab3ordertitle").hide();
             $("#linethree").hide();
             $("#piethree").hide();
-
+            $scope.currrentOtaResult = {};
 
             return;
         }

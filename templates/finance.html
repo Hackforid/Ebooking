@@ -3,7 +3,7 @@
 
 
 <!--导航条--> 
-	<div class="notice" id="notice"><h2>到付结算</h2></div>
+	<div class="notice" id="notice"><h2>预付结算</h2></div>
 	<!--导航条end-->  
 
 	<!--主体内容-->  
@@ -214,10 +214,10 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
 
                                     </td>
 
-                                    <td style="vertical-align: middle;" width="15%">
+                                    <td style="vertical-align: middle;" width="15%" ng-init="finalinfo=infoconvent(order.customer_info);">
 
-                                    <div ng-repeat="cum in infoconvent(order.customer_info)" ng-bind="cum['name']">
-                                    <div>
+                                    <div ng-repeat="cum in finalinfo" ng-bind="cum['name']">
+                                    </div>
 
                                     </td>
 

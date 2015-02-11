@@ -85,7 +85,7 @@
            <dl class="menu3" style="margin-bottom: 20px;">      
                <dt><u class="icon-dt"></u>数据统计</dt>
                <dd class="active"><a href="orderAnalyse.html"><u class="icon3"></u>订单统计</a></dd>
-               <dd><a href="#"><u class="icon3"></u>间夜统计</a></dd>
+               <!--<dd><a href="#"><u class="icon3"></u>间夜统计</a></dd>-->
            </dl>
 
             
@@ -93,7 +93,9 @@
             <dl class="menu4">      
                         <dt><u class="icon-dt"></u>财务统计</dt>
                         <dd><a href="/finance/"><u class="icon3"></u>预付结算</a></dd>
-                        <!--<dd><a href="#"><u class="icon3"></u>现付结算</a></dd>-->
+                        <dd><a href="#"><u class="icon3"></u>现付结算</a></dd>
+
+                        <dd><a href="/contract/"><u class="icon3"></u>合同管理</a></dd>
             </dl>
 
 
@@ -196,7 +198,7 @@
                                     <td style="vertical-align: middle;" width="15%" ng-init="finalinfo=infoconvent(order.customerInfo);">
 
                                     <div ng-repeat="cum in finalinfo" ng-bind="cum['name']">
-                                    <div>
+                                    </div>
 
                                     </td>
 
@@ -281,7 +283,7 @@
               <div class="willcoop-div" style="min-height:100px;height:auto">
           <div class="content" style="min-height:100px;height:auto"><div class="p15">
 
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" style="margin-bottom:0px;">
                 <thead><tr>
                     
                     <th width="33%">渠道</th>
@@ -344,7 +346,7 @@
                  
                  </div>
                  
-                 <div ng-controller="orderTab2AnalyseCtrl" id="tabcontent2" class="tabcon2" style=" display:block">
+                 <div ng-controller="orderTab2AnalyseCtrl" id="tabcontent2" class="tabcon2" style=" display:none">
 
 
 
@@ -410,7 +412,7 @@
                                     <td style="vertical-align: middle;" width="15%" ng-init="finalinfo=infoconvent(order.customerInfo);">
 
                                     <div ng-repeat="cum in finalinfo" ng-bind="cum['name']">
-                                    <div>
+                                    </div>
 
                                     </td>
 
@@ -495,7 +497,7 @@
               <div class="willcoop-div" style="min-height:100px;height:auto">
           <div class="content" style="min-height:100px;height:auto"><div class="p15">
 
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" style="margin-bottom:0px;">
                 <thead><tr>
                     
                     <th width="33%">渠道</th>
@@ -568,7 +570,7 @@
                  
                  
                  
-                 <div ng-controller="orderTab3AnalyseCtrl" id="tabcontent3" class="tabcon3" style=" display:block">
+                 <div ng-controller="orderTab3AnalyseCtrl" id="tabcontent3" class="tabcon3" style=" display:none">
                        
                 <!-- <div class="search-div">
                    <div class="divone">
@@ -647,7 +649,7 @@
                                     <td style="vertical-align: middle;" width="15%" ng-init="finalinfo=infoconvent(order.customerInfo);">
 
                                     <div ng-repeat="cum in finalinfo" ng-bind="cum['name']">
-                                    <div>
+                                    </div>
 
                                     </td>
 
@@ -713,7 +715,7 @@
                 </select></label>
 
 
-                <label >起始日期： <input  type="text" name="time1" id="time1" readonly="readonly" onClick="WdatePicker()"  class="input-time"/ > 至 
+                <label ><strong>起始日期：</strong> <input  type="text" name="time1" id="time1" readonly="readonly" onClick="WdatePicker()"  class="input-time"/ > 至 
                      <input  type="text" name="time2" id="time2" onClick="WdatePicker()" readonly="readonly"  class="input-time"/>
                      </label>
                     
@@ -735,7 +737,7 @@
               <div class="willcoop-div" style="min-height:100px;height:auto">
           <div class="content" style="min-height:100px;height:auto"><div class="p15">
 
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" style="margin-bottom:0px;">
                 <thead><tr>
                     
                     <th width="33%">渠道</th>

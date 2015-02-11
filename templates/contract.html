@@ -1,4 +1,203 @@
 <%inherit file="base.html" />
 <%def name="right_content()">
 
+
+<!--导航条--> 
+	<div class="notice" id="notice"><h2>合同管理</h2></div>
+	<!--导航条end-->  
+
+	<!--主体内容-->  
+	<div id="ng-app" class="main"
+        ng-app="contractApp"  ng-controller="contractAppCtrl" 
+        ><div class="p15">
+       		
+			<!--开始-->  
+			<div class="main-mod main-wcoop">
+				
+				<div class="willcoop-div">
+					<div class="content"><div class="p15">
+
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
+								<thead><tr>
+										
+										<th width="15%">客户名称</th>
+										<th width="10%">合作模式</th>
+										<th width="10%">佣金</th>
+										<th width="15%">开户名</th>
+                    					<th width="15%">开户行</th>
+                    					<th width="27%">银行账号</th>
+                    					<th width="8%">操作</th>
+                    
+										
+								</tr></thead>
+							</table> 
+
+
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" style="line-height:35px" id="tablerow"
+                               >
+								<tr ng-repeat="contracts in contracts">
+									
+                      <td width="15%" ng-bind="contracts.name"></td>
+
+                      <td width="10%" ng-bind="checkType(contracts.type)"></td>
+
+                      <td width="10%" ng-bind="checkCommission(contracts.type,contracts.commission)"></td>
+                      <td width="15%" ng-bind="contracts.bank_account_name"></td>
+                      <td width="15%" ng-bind="contracts.bank_name"></td>
+                      <td width="27%" ng-bind="contracts.bank_account_id"></td>
+                       <td width="8%"><a ng-click="change($index);" href="#" style="color:#5594D2;text-decoration: underline;">修改</a></td>
+                                    
+								</tr>
+								
+							</table>
+							  <input ng-click="addContractBtn()" type="button" value="+" class="btn-bai" style="margin-top:20px;width:32px;font-size:20px;margin-left:3px;"/>
+
+                <p style="margin-top:10px;font-size:10px;margin-left:3px;">提示：每个合作模式只有一份合同</p>
+														   
+					</div></div>
+				</div>
+
+			</div>
+			<!--结束-->  
+
+
+        
+
+ <!--增加界面开始 -->
+
+			<div class="messageDiv" ng-show="addcontract" ng-cloak>
+ 		 	 <div class="messageBlack"></div>
+ 		 	 <div class="detail piliang-room" style="width:400px;margin-left:-200px">
+  		    	<div class="head"><h1>增加</h1></div>
+    		 	  <div class="con">
+      		 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+            <tr>
+              <td width="125px">客户名称：</td>
+              <td><input ng-model="addName" class="input-t" type="text"/></td>
+            </tr>
+
+            <tr>
+              <td width="125px">合作模式：</td>
+              <td><select name="" class="input-s"  ng-model="addPayType">
+                       <option value="0">现付</option>
+                       <option value="1">预付</option>                      
+                     </select></td>
+            </tr>
+
+            <tr ng-show="moneryShow">
+              <td width="125px">佣金：</td>
+              <td><input ng-model="addMonery" class="input-t" type="text"/>&nbsp;%</td>
+            </tr>
+
+            <tr>
+              <td width="125px">开户名：</td>
+              <td><input ng-model="addBankName" class="input-t" type="text"/></td>
+            </tr>
+
+  					<tr>
+    					<td width="125px">开户行：</td>
+    					<td><input ng-model="addBank" class="input-t" type="text"/></td>
+  					</tr>
+
+  					<tr>
+    					<td >银行账号：</td>
+    					<td><input ng-model="addCard" class="input-t" type="text"/></td>
+  					</tr>
+
+				</table>
+
+        <p ng-bind="addContractMsg" style="padding-left:22px;color:red"></p>
+
+				<p style="text-align:center">
+					<input style="height: 26px;width: 60px;position:relative;top:2px;" name="" type="button" value="保存" ng-click="addCurrentContract()"/> 
+					<input name="" type="button" value="取消"  ng-click="addCancel()" class="btn-bai btn-s" style="height: 26px;width: 60px;margin-left:20px;" />
+				</p>
+     		 	 </div>
+  			 </div> 
+			</div> 
+
+
+
+  <!--增加界面结束-->
+
+
+
+ <!--修改界面开始 -->
+
+      <div class="messageDiv" ng-show="changeContract" ng-cloak>
+       <div class="messageBlack"></div>
+       <div class="detail piliang-room" style="width:400px;margin-left:-200px">
+            <div class="head"><h1>修改</h1></div>
+            <div class="con">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+            <tr>
+              <td width="125px">客户名称：</td>
+              <td><input ng-model="changeName" class="input-t" type="text"/></td>
+            </tr>
+
+            <tr>
+              <td width="125px">合作模式：</td>
+              <td><select disabled name="" class="input-s"  ng-model="changePayType">
+                       <option value="0">现付</option>
+                       <option value="1">预付</option>                      
+                     </select></td>
+            </tr>
+
+            <tr ng-show="!changePayType">
+              <td width="125px">佣金：</td>
+              <td><input ng-model="changeMonery" class="input-t" type="text"/>&nbsp;%</td>
+            </tr>
+
+            <tr>
+              <td width="125px">开户名：</td>
+              <td><input ng-model="changeBankName" class="input-t" type="text"/></td>
+            </tr>
+
+            <tr>
+              <td width="125px">开户行：</td>
+              <td><input ng-model="changeBank" class="input-t" type="text"/></td>
+            </tr>
+
+            <tr>
+              <td >银行账号：</td>
+              <td><input ng-model="changeCard" class="input-t" type="text"/></td>
+            </tr>
+
+        </table>
+
+        <p ng-bind="changeContractMsg" style="padding-left:22px;color:red"></p>
+
+        <p style="text-align:center">
+          <input style="height: 26px;width: 60px;position:relative;top:2px;" name="" type="button" value="保存" ng-click="changeCurrentContract()"/> 
+          <input name="" type="button" value="取消" ng-click="changeContract=false;changeContractMsg=''"  class="btn-bai btn-s" style="height: 26px;width: 60px;margin-left:20px;" />
+        </p>
+           </div>
+         </div> 
+      </div> 
+
+
+
+  <!--修改界面结束-->
+
+
+
+
+
+	</div></div>
+	<!--主体内容end--> 
+
+
+
 </%def>
+
+<%def name="end()">
+
+
+    <script src="${static_url('js/contract.js')}"></script>
+
+    
+   
+</%def>
+
