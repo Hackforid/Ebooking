@@ -3,8 +3,14 @@
 from views.base import BtwBaseHandler
 from tools.auth import auth_login
 
-class FinanceHandler(BtwBaseHandler):
+class FinancePrepayHandler(BtwBaseHandler):
 
     @auth_login()
     def get(self):
-        self.render("finance.html")
+        self.render("financePrepay.html")
+
+class FinanceAgencyHandler(BtwBaseHandler):
+
+    @auth_login()
+    def get(self):
+        self.render("financeAgency.html")

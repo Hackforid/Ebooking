@@ -26,7 +26,9 @@
 										<th width="15%">开户名</th>
                     					<th width="15%">开户行</th>
                     					<th width="27%">银行账号</th>
+                      % if user.username == 'root':
                     					<th width="8%">操作</th>
+                      % endif
                     
 										
 								</tr></thead>
@@ -45,12 +47,16 @@
                       <td width="15%" ng-bind="contracts.bank_account_name"></td>
                       <td width="15%" ng-bind="contracts.bank_name"></td>
                       <td width="27%" ng-bind="contracts.bank_account_id"></td>
+                      % if user.username == 'root':
                        <td width="8%"><a ng-click="change($index);" href="#" style="color:#5594D2;text-decoration: underline;">修改</a></td>
+                      % endif
                                     
 								</tr>
 								
 							</table>
+                      % if user.username == 'root':
 							  <input ng-click="addContractBtn()" type="button" value="+" class="btn-bai" style="margin-top:20px;width:32px;font-size:20px;margin-left:3px;"/>
+                      % endif
 
                 <p style="margin-top:10px;font-size:10px;margin-left:3px;">提示：每个合作模式只有一份合同</p>
 														   
