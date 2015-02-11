@@ -10,6 +10,7 @@ from config import API
 from views.base import BtwBaseHandler
 from models.order import OrderModel
 from models.income import IncomeModel
+from models.contract import ContractModel
 from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from constants import PERMISSIONS, OTA
@@ -31,11 +32,18 @@ class FinanceAPIHandler(BtwBaseHandler):
         orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_id)
         incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_id)
 
+        if pay_type == ContractModel.PAY_TYPE_ARRIVE:
+            self.deal_agency(orders)
+
         self.finish_json(result=dict(
             orders=[order.todict() for order in orders],
             incomes=[income.todict() for income in incomes],
             ))
 
+    def deal_agency(self, orders):
+        commission = self.get_commission(self.merchant.id)
+        for order in orders:
+            order.total_price = order.total_price * commission
 
     def get_order_in_date(self, merchant_id, year, month, pay_type, ota_id=None):
         orders = OrderModel.get_success_order_by_checkout_date_in_month(self.db,
@@ -45,6 +53,12 @@ class FinanceAPIHandler(BtwBaseHandler):
     def get_income_record_in_date(self, merchant_id, year, month, pay_type, ota_id=None):
         incomes = IncomeModel.get_in_month(self.db, merchant_id, year, month, pay_type, ota_id)
         return incomes
+
+    def get_commission(self, merchant_id):
+        contract = ContractModel.get_by_merchant_and_type(self.db, merchant_id, ContractModel.PAY_TYPE_ARRIVE)
+        return contract.commission / 100.0 if contract else 0
+
+
 
 
 class IncomeAPIHandler(BtwBaseHandler):
