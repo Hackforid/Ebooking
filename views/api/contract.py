@@ -24,7 +24,7 @@ class ContractAPIHandler(BtwBaseHandler):
             ))
 
     @auth_login(json=True)
-    @auth_permission(PERMISSIONS.admin | PERMISSIONS.income_statistics, json=True)
+    @auth_permission(PERMISSIONS.root, json=True)
     def post(self):
         args = self.get_json_arguments()
         commission = None
@@ -52,7 +52,7 @@ class ContractAPIHandler(BtwBaseHandler):
 
 
     @auth_login(json=True)
-    @auth_permission(PERMISSIONS.admin | PERMISSIONS.income_statistics, json=True)
+    @auth_permission(PERMISSIONS.root, json=True)
     def put(self):
         args = self.get_json_arguments()
         commission = None
