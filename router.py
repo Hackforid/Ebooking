@@ -34,6 +34,8 @@ from views.finance import FinanceAgencyHandler, FinancePrepayHandler
 from views.api.contract import ContractAPIHandler
 from views.contract import ContractHandler
 
+from views.api.pms import PMSNewOrderAPIHandler
+
 handlers = [
         (r"/?", OrderWaitingHandler),
         (r"/login/?", LoginHandler),
@@ -101,4 +103,6 @@ handlers = [
 
         (r"/api/contract/?", ContractAPIHandler),
         (r"/contract/?", ContractHandler),
+
+        (r"/api/inner/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
 ]

@@ -41,7 +41,7 @@ class IncomeModel(Base):
 
 
     @classmethod
-    def get_in_month(self, session, merchant_id, year, month, pay_type, ota_id=None):
+    def get_in_month(self, session, merchant_id, year, month, pay_type, ota_ids=None):
 
         query = session.query(IncomeModel)\
                 .filter(IncomeModel.merchant_id == merchant_id,
@@ -50,8 +50,8 @@ class IncomeModel(Base):
                     IncomeModel.pay_type == pay_type,
                     IncomeModel.is_delete == 0)
 
-        if ota_id is not None:
-            query = query.filter(IncomeModel.ota_id == ota_id)
+        if ota_ids is not None:
+            query = query.filter(IncomeModel.ota_id.in_(ota_ids))
 
         return query.all()
 
