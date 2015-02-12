@@ -25,7 +25,8 @@ class FinanceAPIHandler(BtwBaseHandler):
         pay_type = int(self.get_query_argument('pay_type', 1))
         merchant_id =self.current_user.merchant_id
 
-        ota_ids = json.loads(ota_ids)
+        if ota_ids:
+            ota_ids = json.loads(ota_ids)
 
         orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_ids)
         incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_ids)
