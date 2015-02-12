@@ -44,16 +44,22 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.currentOrder;
 	$scope.detailOrder=false;
 
+	$scope.detailInfo;
 
 
-	$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
 
 
+
+
+	//$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+
+	$scope.otaNames = ["全部", "去哪儿", "淘宝旅行", "美团", "携程", "艺龙", "", "", "", "百达屋"];
 
 
 	$scope.getCurrentOrder=function(order){
 
 		$scope.currentOrder=order;
+		$scope.detailInfo=$scope.infoconvent(order.customer_info);
 		$scope.detailOrder=true;
 
 	}
@@ -171,6 +177,8 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 	$scope.infoconvent = function(info) {
+
+		console.log(info);
 
 		var infoobj;
 
