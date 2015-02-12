@@ -25,8 +25,30 @@
 
 
 			$scope.login = function() {
+
+				if ($.trim($scope.merchantId) == "" || $.trim($scope.username) == "" || $.trim($scope.password) == "") {
+
+					$scope.errMsg = "输入内容不能为空";
+					return;
+
+				}
+
+
+				var testString = /^\d+$/;
+
+				var cardNumber = $.trim($scope.merchantId);
+
+				if (testString.test(cardNumber) == false) {
+
+					$scope.errMsg = "用户编码为整数";
+					return;
+
+				}
+
+
+
 				var url = "/login/";
-				$scope.password=hex_md5($scope.password);
+				$scope.password = hex_md5($scope.password);
 				var params = {
 					'merchant_id': $scope.merchantId,
 					'username': $scope.username,

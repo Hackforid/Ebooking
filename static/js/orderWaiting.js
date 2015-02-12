@@ -218,7 +218,7 @@
 
 					} else {
 
-						$scope.messageBox = resp.errmsg;
+						$scope.messageBox = "接受订单失败";
 						$("#messageDialog").show();
 					}
 				})
@@ -269,7 +269,7 @@
 
 					} else {
 
-						$scope.messageBox = resp.errmsg;
+						$scope.messageBox = "拒绝订单失败";
 						$("#messageDialog").show();
 					}
 				})
