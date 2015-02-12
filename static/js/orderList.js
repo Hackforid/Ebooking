@@ -59,15 +59,37 @@
 		}
 
 
-		$scope.getCancelStatus = function(m) {
+		$scope.getCancelStatus = function(m,n) {
+
+			var cancel;
 
 			if (m == "0") {
-				return "不可取消";
+				cancel="不可取消";
 			} else if (m == "1") {
-				return "自由取消";
+				cancel="自由取消";
 			} else if (m == "2") {
-				return "提前取消";
+				cancel="提前取消";
 			}
+
+			var punish;
+
+			if (n == "0") {
+				punish="不扣任何费用";
+			} else if (n == "1") {
+				punish="扣首晚房费";
+			} else if (n == "2") {
+				punish="扣全额房费";
+			}else if (n == "3") {
+				punish="扣定额";
+			}else if (n == "4") {
+				punish="扣全额房费百分比";
+			}
+
+			var cancelResult=cancel+",取消时"+punish;
+
+			return cancelResult;
+
+
 
 		}
 
@@ -303,15 +325,37 @@
 
 
 
-		$scope.getCancelStatus = function(m) {
+		$scope.getCancelStatus = function(m,n) {
+
+			var cancel;
 
 			if (m == "0") {
-				return "不可取消";
+				cancel="不可取消";
 			} else if (m == "1") {
-				return "自由取消";
+				cancel="自由取消";
 			} else if (m == "2") {
-				return "提前取消";
+				cancel="提前取消";
 			}
+
+			var punish;
+
+			if (n == "0") {
+				punish="不扣任何费用";
+			} else if (n == "1") {
+				punish="扣首晚房费";
+			} else if (n == "2") {
+				punish="扣全额房费";
+			}else if (n == "3") {
+				punish="扣定额";
+			}else if (n == "4") {
+				punish="扣全额房费百分比";
+			}
+
+			var cancelResult=cancel+",取消时"+punish;
+
+			return cancelResult;
+
+
 
 		}
 
@@ -557,15 +601,37 @@
 
 
 
-		$scope.getCancelStatus = function(m) {
+		$scope.getCancelStatus = function(m,n) {
+
+			var cancel;
 
 			if (m == "0") {
-				return "不可取消";
+				cancel="不可取消";
 			} else if (m == "1") {
-				return "自由取消";
+				cancel="自由取消";
 			} else if (m == "2") {
-				return "提前取消";
+				cancel="提前取消";
 			}
+
+			var punish;
+
+			if (n == "0") {
+				punish="不扣任何费用";
+			} else if (n == "1") {
+				punish="扣首晚房费";
+			} else if (n == "2") {
+				punish="扣全额房费";
+			}else if (n == "3") {
+				punish="扣定额";
+			}else if (n == "4") {
+				punish="扣全额房费百分比";
+			}
+
+			var cancelResult=cancel+",取消时"+punish;
+
+			return cancelResult;
+
+
 
 		}
 

@@ -350,7 +350,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']/100"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']/100"></span></td></tr>
