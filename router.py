@@ -68,8 +68,6 @@ handlers = [
 
         (r"/api/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/inventory/?", InventoryAPIHandler),
 
-        (r"/api/server/order/submit/?", SubmitOrderAPIHandler),
-        (r"/api/server/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
 
 
         (r"/order/waiting/?", OrderWaitingHandler),
@@ -81,7 +79,7 @@ handlers = [
         (r"/api/order/todaybook/?", OrderTodayBookListAPIHandler),
         (r"/api/order/todaycheckin/?", OrderTodayCheckinListAPIHandler),
         (r"/api/order/search/?", OrderSearchAPIHandler),
-        ("/api/inventory/complete/?", InventoryCompleteAPIHandler),
+        (r"/api/inventory/complete/?", InventoryCompleteAPIHandler),
 
         (r"/api/test/helloworld", HelloWorldHandler),
         (r"/api/test/helloworld/celery/?", HelloWorldCeleryHandler),
@@ -104,5 +102,10 @@ handlers = [
         (r"/api/contract/?", ContractAPIHandler),
         (r"/contract/?", ContractHandler),
 
-        (r"/api/inner/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
+        (r"/api/server/order/submit/?", SubmitOrderAPIHandler),
+        (r"/api/server/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
+
+        (r"/api/inner/ordersys/order/submit/?", SubmitOrderAPIHandler),
+        (r"/api/inner/ordersys/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
+        (r"/api/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
 ]
