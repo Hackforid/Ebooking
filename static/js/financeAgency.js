@@ -1421,6 +1421,8 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 	}
 
+	$(".menu4").find("dd").eq(1).addClass("active");
+
 	init();
 	$scope.urlCheck();
 

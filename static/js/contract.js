@@ -374,6 +374,8 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 
 	}
 
+	$(".menu4").find("dd").eq(2).addClass("active");
+
 	init();
 
 
