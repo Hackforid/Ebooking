@@ -188,6 +188,31 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 		}
 
 
+		if(parseInt(contractMon)>100 && $scope.addPayType == 0) {
+
+			$scope.addContractMsg = "佣金为百分比，需小于100";
+			return;
+
+		}
+
+
+
+
+
+		var testString = /^\d+$/;
+
+		var cardNumber=$.trim($scope.addCard);
+
+		if (testString.test(cardNumber) == false) {
+
+			$scope.addContractMsg = "卡号为整数";
+			return;
+
+		}
+
+
+
+
 		$scope.addContractMsg = "";
 
 
@@ -256,6 +281,31 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 			return;
 
 		}
+
+
+		if(parseInt(contractMon)>100 && $scope.changePayType == 0) {
+
+			$scope.changeContractMsg = "佣金为百分比，需小于100";
+			return;
+
+		}
+
+
+
+		var testString = /^\d+$/;
+
+		var cardNumber=$.trim($scope.changeCard);
+
+		if (testString.test(cardNumber) == false) {
+
+			$scope.changeContractMsg = "卡号为整数";
+			return;
+
+		}
+
+
+
+
 
 
 		$scope.changeContractMsg = "";

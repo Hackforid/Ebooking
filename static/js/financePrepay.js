@@ -43,7 +43,50 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 
-	$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+	$scope.currentOrder;
+	$scope.detailOrder = false;
+
+	$scope.detailInfo;
+
+
+
+	//$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+
+	$scope.otaNames = ["全部", "去哪儿", "淘宝旅行", "美团", "携程", "艺龙", "", "", "", "百达屋"];
+
+
+
+	$scope.getCurrentOrder = function(order) {
+
+		$scope.currentOrder = order;
+		$scope.detailInfo = $scope.infoconvent(order.customer_info);
+		$scope.detailOrder = true;
+
+	}
+
+	$scope.resonStatusCheck = function(a, b) {
+
+		if (a == "拒绝") {
+			return b;
+		} else {
+			return "无";
+		}
+
+
+	}
+
+
+	$scope.getCancelStatus = function(m) {
+
+		if (m == "0") {
+			return "不可取消";
+		} else if (m == "1") {
+			return "自由取消";
+		} else if (m == "2") {
+			return "提前取消";
+		}
+
+	}
 
 
 
@@ -208,12 +251,30 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 		var splitTime = inTime.split("-");
 
 
+		var currentOtaIds = [];
+		/*if($scope.currentOtaId==1){
+
+			currentOtaIds=[1,6,7,8];
+
+		}else if($scope.currentOtaId==4){
+			currentOtaIds=[4,10];
+
+		}else{
+
+			currentOtaIds.push($scope.currentOtaId);
+
+		}*/
+
+		currentOtaIds.push(parseInt($scope.currentOtaId));
+
+
+
 		var params = {
 			'remark': $.trim($scope.remarkDetail),
 			'value': accMul($.trim($scope.moneyDetail), 100),
 			'month': parseInt(splitTime[1]),
 			'year': parseInt(splitTime[0]),
-			'ota_id': parseInt($scope.currentOtaId),
+			'ota_ids': currentOtaIds, //parseInt($scope.currentOtaId),
 			'pay_type': 1
 
 		};
@@ -225,6 +286,18 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				console.log(resp);
 				if (resp.errcode == 0) {
 					var otaInc = resp.result.income;
+
+					if (otaInc.ota_id == 6 || otaInc.ota_id == 7 || otaInc.ota_id == 8) {
+
+						otaInc.ota_id = 1;
+
+					} else if (otaInc.ota_id == 10) {
+
+						otaInc.ota_id = 4;
+
+					}
+
+
 
 					if ($scope.otaIncomes[$scope.currentOtaId] == undefined || $scope.otaIncomes[$scope.currentOtaId] == null) {
 
@@ -333,12 +406,27 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 		if ($scope.searchOtaId != "0") {
 
-			url = url + "&ota_id=" + parseInt($scope.searchOtaId);
+			if ($scope.searchOtaId == 1) {
+
+				url = url + "&ota_ids=[1,6,7,8]";
+
+			} else if ($scope.searchOtaId == 4) {
+
+				url = url + "&ota_ids=[4,10]";
+
+			} else {
+
+
+				url = url + "&ota_ids=[" + $.trim($scope.searchOtaId) + "]";
+
+			}
+
+
 		}
 
 
-
-		$scope.finalUrl = url;
+		console.log(url);
+		$scope.finalUrl = encodeURI(url);
 		console.log($scope.finalUrl);
 
 		$scope.searchResult();
@@ -374,7 +462,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"rateplan_id": 98,
 								"id": 92,
 								"customer_remark": "",
-								"customer_info": "",
+								"customer_info": "[{'name':'华丽'}]",
 								"status": 300,
 								"roomtype_name": "",
 								"customer_num": 0,
@@ -442,7 +530,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:31:15",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 9,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -518,7 +606,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 8,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -556,7 +644,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 7,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -594,7 +682,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 6,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -632,7 +720,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 4,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -670,7 +758,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 0,
+								"ota_id": 1,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -708,7 +796,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 4,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -746,7 +834,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 10,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -784,7 +872,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 4,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -822,7 +910,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 4,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -860,7 +948,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 7,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -936,7 +1024,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"create_time": "2015-01-22 15:33:50",
 								"contact_name": "",
 								"guarantee_info": "",
-								"ota_id": 2,
+								"ota_id": 6,
 								"breakfast": "",
 								"roomtype_id": 105,
 								"pay_type": 1,
@@ -964,7 +1052,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"main_order_id": 103,
 								"rateplan_name": "",
 								"room_num_record": "0|2",
-								"ota_name": "淘宝旅行",
+								"ota_name": "去哪儿(酒店联盟)",
 								"room_num": 2
 							}, {
 								"confirm_type": 2,
@@ -1136,6 +1224,19 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 					var otaInc = resp.result.incomes;
 					var allOtaInc = {};
 					for (var i = 0; i < otaInc.length; i++) {
+
+						if (otaInc[i].ota_id == 6 || otaInc[i].ota_id == 7 || otaInc[i].ota_id == 8) {
+
+							otaInc[i].ota_id = 1;
+
+						} else if (otaInc[i].ota_id == 10) {
+
+							otaInc[i].ota_id = 4;
+
+						}
+
+
+
 						if (otaInc[i].ota_id != 0) {
 							if (allOtaInc[otaInc[i].ota_id] == undefined || allOtaInc[otaInc[i].ota_id] == null) {
 
@@ -1171,6 +1272,21 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 					var otaOrd = resp.result.orders;
 					var allotaOrd = {};
 					for (var i = 0; i < otaOrd.length; i++) {
+
+
+
+						if (otaOrd[i].ota_id == 6 || otaOrd[i].ota_id == 7 || otaOrd[i].ota_id == 8) {
+
+							otaOrd[i].ota_id = 1;
+
+						} else if (otaOrd[i].ota_id == 10) {
+
+							otaOrd[i].ota_id = 4;
+
+						}
+
+
+
 						if (otaOrd[i].ota_id != 0) {
 							if (allotaOrd[otaOrd[i].ota_id] == undefined || allotaOrd[otaOrd[i].ota_id] == null) {
 
