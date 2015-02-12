@@ -64,7 +64,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格代码名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
@@ -136,7 +136,7 @@
   </tr>
   </table>
   
-  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'])"></u></div> 
+  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></u></div> 
   <div class="zd3">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -241,7 +241,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格代码名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
@@ -311,7 +311,7 @@
   </tr>
   </table>
   
-  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'])"></u></div> 
+  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></u></div> 
   <div class="zd3">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -423,7 +423,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
@@ -509,7 +509,7 @@
   </tr>
   </table>
   
-  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'])"></u></div> 
+  <div class="zd2"><span> 取消规则：<br /><b>Cancel Rules:</b></span><u class="xian2" style="width:70%" ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></u></div> 
   <div class="zd3">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

@@ -494,7 +494,9 @@ var ChartInit = function(scope, http) {
 
                                         //console.log(totalOtaOrderObj);
 
-                                        orderWaystrue.splice(otaOrder[i].otaId, 1);
+                                        //orderWaystrue.splice(otaOrder[i].otaId, 1);
+
+                                         orderWaystrue[otaOrder[i].otaId]="";
 
                                         zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
 
@@ -523,6 +525,7 @@ var ChartInit = function(scope, http) {
 
 
                                     }
+                                    scope.allSumShow=true;
                                 } else {
 
 
@@ -541,6 +544,8 @@ var ChartInit = function(scope, http) {
                                         zeroTotalOtaOrderObj[scope.currentOtaWay] = zeroObj;
 
                                     }
+
+                                    scope.allSumShow=false;
 
                                 }
 
@@ -708,6 +713,39 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.detailInfo;
 
+
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+ 
+
+
     $scope.resonStatusCheck = function(a, b) {
 
         if (a == "拒绝") {
@@ -720,17 +758,39 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m) {
+    $scope.getCancelStatus = function(m,n) {
 
-        if (m == "0") {
-            return "不可取消";
-        } else if (m == "1") {
-            return "自由取消";
-        } else if (m == "2") {
-            return "提前取消";
+            var cancel;
+
+            if (m == "0") {
+                cancel="不可取消";
+            } else if (m == "1") {
+                cancel="自由取消";
+            } else if (m == "2") {
+                cancel="提前取消";
+            }
+
+            var punish;
+
+            if (n == "0") {
+                punish="不扣任何费用";
+            } else if (n == "1") {
+                punish="扣首晚房费";
+            } else if (n == "2") {
+                punish="扣全额房费";
+            }else if (n == "3") {
+                punish="扣定额";
+            }else if (n == "4") {
+                punish="扣全额房费百分比";
+            }
+
+            var cancelResult=cancel+",取消时"+punish;
+
+            return cancelResult;
+
+
+
         }
-
-    }
 
 
     $scope.getCurrentOrder = function(order) {
@@ -748,6 +808,8 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
             return;
 
         }
+
+       
 
         $scope.searchCurrentOta();
 
@@ -1082,6 +1144,41 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.detailInfo;
 
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+
+
+
+
+
+
     $scope.resonStatusCheck = function(a, b) {
 
         if (a == "拒绝") {
@@ -1094,17 +1191,39 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m) {
+    $scope.getCancelStatus = function(m,n) {
 
-        if (m == "0") {
-            return "不可取消";
-        } else if (m == "1") {
-            return "自由取消";
-        } else if (m == "2") {
-            return "提前取消";
+            var cancel;
+
+            if (m == "0") {
+                cancel="不可取消";
+            } else if (m == "1") {
+                cancel="自由取消";
+            } else if (m == "2") {
+                cancel="提前取消";
+            }
+
+            var punish;
+
+            if (n == "0") {
+                punish="不扣任何费用";
+            } else if (n == "1") {
+                punish="扣首晚房费";
+            } else if (n == "2") {
+                punish="扣全额房费";
+            }else if (n == "3") {
+                punish="扣定额";
+            }else if (n == "4") {
+                punish="扣全额房费百分比";
+            }
+
+            var cancelResult=cancel+",取消时"+punish;
+
+            return cancelResult;
+
+
+
         }
-
-    }
 
 
     $scope.getCurrentOrder = function(order) {
@@ -1368,6 +1487,37 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.detailInfo;
 
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+
+
     $scope.resonStatusCheck = function(a, b) {
 
         if (a == "拒绝") {
@@ -1380,17 +1530,39 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m) {
+    $scope.getCancelStatus = function(m,n) {
 
-        if (m == "0") {
-            return "不可取消";
-        } else if (m == "1") {
-            return "自由取消";
-        } else if (m == "2") {
-            return "提前取消";
+            var cancel;
+
+            if (m == "0") {
+                cancel="不可取消";
+            } else if (m == "1") {
+                cancel="自由取消";
+            } else if (m == "2") {
+                cancel="提前取消";
+            }
+
+            var punish;
+
+            if (n == "0") {
+                punish="不扣任何费用";
+            } else if (n == "1") {
+                punish="扣首晚房费";
+            } else if (n == "2") {
+                punish="扣全额房费";
+            }else if (n == "3") {
+                punish="扣定额";
+            }else if (n == "4") {
+                punish="扣全额房费百分比";
+            }
+
+            var cancelResult=cancel+",取消时"+punish;
+
+            return cancelResult;
+
+
+
         }
-
-    }
 
 
     $scope.getCurrentOrder = function(order) {

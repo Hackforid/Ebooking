@@ -174,7 +174,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
@@ -370,6 +370,13 @@
                     
                                     
                 </tr>
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
+                </tr>
                 
               </table>
                               
@@ -449,7 +456,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
@@ -643,6 +650,14 @@
                     
                                     
                 </tr>
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
+                </tr>
+
                 
               </table>
                               
@@ -745,7 +760,7 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactName']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contactMobile']"></span></td></tr>
 
-             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'])"></span></td></tr>
+             <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
@@ -938,6 +953,14 @@
                     <td width="33%" ><a href="#" ng-click="orderDetail(k)" ng-bind="v['orderCounts']"></a></td>
                     
                                     
+                </tr>
+
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
                 </tr>
                 
               </table>
