@@ -370,6 +370,13 @@
                     
                                     
                 </tr>
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
+                </tr>
                 
               </table>
                               
@@ -643,6 +650,14 @@
                     
                                     
                 </tr>
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
+                </tr>
+
                 
               </table>
                               
@@ -938,6 +953,14 @@
                     <td width="33%" ><a href="#" ng-click="orderDetail(k)" ng-bind="v['orderCounts']"></a></td>
                     
                                     
+                </tr>
+
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="33%"> 合计</td>
+                    <td width="33%" ng-bind="getAllOrderCounts(currrentOtaResult);"></td>
+                    <td width="33%" ng-bind="getAllNightCounts(currrentOtaResult);"></td>
+                  
                 </tr>
                 
               </table>

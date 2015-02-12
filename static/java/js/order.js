@@ -494,7 +494,9 @@ var ChartInit = function(scope, http) {
 
                                         //console.log(totalOtaOrderObj);
 
-                                        orderWaystrue.splice(otaOrder[i].otaId, 1);
+                                        //orderWaystrue.splice(otaOrder[i].otaId, 1);
+
+                                         orderWaystrue[otaOrder[i].otaId]="";
 
                                         zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
 
@@ -523,6 +525,7 @@ var ChartInit = function(scope, http) {
 
 
                                     }
+                                    scope.allSumShow=true;
                                 } else {
 
 
@@ -541,6 +544,8 @@ var ChartInit = function(scope, http) {
                                         zeroTotalOtaOrderObj[scope.currentOtaWay] = zeroObj;
 
                                     }
+
+                                    scope.allSumShow=false;
 
                                 }
 
@@ -708,6 +713,39 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.detailInfo;
 
+
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+ 
+
+
     $scope.resonStatusCheck = function(a, b) {
 
         if (a == "拒绝") {
@@ -748,6 +786,8 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
             return;
 
         }
+
+       
 
         $scope.searchCurrentOta();
 
@@ -1082,6 +1122,41 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.detailInfo;
 
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+
+
+
+
+
+
     $scope.resonStatusCheck = function(a, b) {
 
         if (a == "拒绝") {
@@ -1367,6 +1442,37 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     $scope.currentOrderDetails = false;
 
     $scope.detailInfo;
+
+
+    $scope.allSumShow=false;
+
+    $scope.getAllOrderCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['orderCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+    $scope.getAllNightCounts=function(order){
+
+        var sumCounts=0;
+        for(var i in order){
+
+            sumCounts=sumCounts+order[i]['nightCounts'];
+            
+        }
+
+        return sumCounts;
+
+    }
+
+
 
     $scope.resonStatusCheck = function(a, b) {
 

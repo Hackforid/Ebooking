@@ -104,6 +104,16 @@
                                     <td width="25%" ng-bind="v['sum']-otaIncomes[k]['sum']"></td>
                                     
 								</tr>
+
+                <tr ng-show="allSumShow" ng-cloak>
+                    <td width="25%">合计</td>
+                    <td width="25%" ng-bind="getAllSum(otaOrders);"></td>
+                    
+                    <td width="25%" ng-bind="getAllIncome(otaIncomes);"></td>
+                    <td width="25%" ng-bind="getAllSum(otaOrders)-getAllIncome(otaIncomes)"></td>
+
+
+                </tr>
 								
 							</table>
 														   

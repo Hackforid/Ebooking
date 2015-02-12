@@ -49,10 +49,42 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.detailInfo;
 
 
+	$scope.allSumShow = false;
+
+
 
 	//$scope.otaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
 
 	$scope.otaNames = ["全部", "去哪儿", "淘宝旅行", "美团", "携程", "艺龙", "", "", "", "百达屋"];
+
+
+
+	$scope.getAllSum = function(order) {
+
+		var sum = 0;
+		for (var i in order) {
+
+			sum = sum + order[i]['sum'];
+
+		}
+
+		return sum;
+
+	}
+
+
+	$scope.getAllIncome = function(income) {
+
+		var sum = 0;
+		for (var i in income) {
+
+			sum = sum + income[i]['sum'];
+
+		}
+
+		return sum;
+
+	}
 
 
 
@@ -441,8 +473,8 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				if (resp.errcode == 0) {
 
 
-					/*数据测试
-					resp = {
+					/*数据测试*/
+					/*resp = {
 						"errcode": 0,
 						"errmsg": null,
 						"result": {
@@ -1321,6 +1353,22 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 					$scope.otaIncomes;
 					$scope.otaOrders;*/
 
+					if ($scope.searchOtaId == "0") {
+
+						if (isEmptyObject($scope.otaOrders)) {
+							$scope.allSumShow = false;
+
+						} else {
+							$scope.allSumShow = true;
+
+						}
+
+
+
+					} else {
+						$scope.allSumShow = false;
+					}
+
 
 
 				} else {
@@ -1333,6 +1381,14 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 			})
 
 
+	}
+
+
+	function isEmptyObject(obj) {
+		for (var n in obj) {
+			return false;
+		}
+		return true;
 	}
 
 
