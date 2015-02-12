@@ -237,11 +237,24 @@ var ChartInit = function(scope, http) {
     this.init = function() {
         console.log("数据初始化");
 
-        var allOtaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
+        // var allOtaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
 
+        var allOtaNames = ["全部", "去哪儿", "淘宝旅行", "美团", "携程", "艺龙", "", "", "", "百达屋", ""];
 
+        var initCurrentAllWays;
 
-        var url = "/ebooking/orderStat/night/" + scope.dateRange + "/" + parseInt(scope.currentOtaWay) + "/start" + scope.startTime + "/end" + scope.endTime;
+        if (scope.currentOtaWay == 1) {
+            initCurrentAllWays = "1-6-7-8";
+
+        } else if (scope.currentOtaWay == 4) {
+            initCurrentAllWays = "4-10";
+
+        } else {
+            initCurrentAllWays = scope.currentOtaWay;
+
+        }
+
+        var url = "/ebooking/orderStat/night/" + scope.dateRange + "/" + initCurrentAllWays + "/start" + scope.startTime + "/end" + scope.endTime;
 
         console.log(url);
         // console.log(params);
@@ -408,8 +421,21 @@ var ChartInit = function(scope, http) {
                      scope.otaWays = otaWays;
                      console.log(otaNameValue);*/
 
+                    var currentAllWays;
 
-                    var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/" + parseInt(scope.currentOtaWay) + "/start" + scope.startTime + "/end" + scope.endTime;
+                    if (scope.currentOtaWay == 1) {
+                        currentAllWays = "1-6-7-8";
+
+                    } else if (scope.currentOtaWay == 4) {
+                        currentAllWays = "4-10";
+
+                    } else {
+                        currentAllWays = scope.currentOtaWay;
+
+                    }
+
+
+                    var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/" + currentAllWays + "/start" + scope.startTime + "/end" + scope.endTime;
 
                     console.log(pieurl);
                     http.get(pieurl)
@@ -431,9 +457,22 @@ var ChartInit = function(scope, http) {
                                 var otaObj;
                                 var otaWays = [];
 
-                                var orderWaystrue = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+                                var orderWaystrue = ["0", "1", "2", "3", "4", "5", "", "", "", "9"];
 
                                 for (var i = 0; i < otaOrder.length; i++) {
+
+
+                                    if (otaOrder[i].otaId == 6 || otaOrder[i].otaId == 7 || otaOrder[i].otaId == 8) {
+
+                                        otaOrder[i].otaId = 1;
+
+                                    } else if (otaOrder[i].otaId == 10) {
+
+                                        otaOrder[i].otaId = 4;
+
+                                    }
+
+
 
                                     if (otaOrder[i].otaId != 0) {
                                         //console.log(otaOrder[i]["otaId"]);
@@ -468,16 +507,19 @@ var ChartInit = function(scope, http) {
                                 if (scope.currentOtaWay == 0) {
                                     for (var i = 0; i < orderWaystrue.length; i++) {
 
-                                        var totalOtaOrderObj = {
-                                            "orderCounts": 0,
-                                            "nightCounts": 0,
-                                            "orders": [],
-                                            "name": allOtaNames[orderWaystrue[i]]
+                                        if ($.trim(orderWaystrue[i]) != "") {
 
-                                        };
+                                            var totalOtaOrderObj = {
+                                                "orderCounts": 0,
+                                                "nightCounts": 0,
+                                                "orders": [],
+                                                "name": allOtaNames[orderWaystrue[i]]
+
+                                            };
 
 
-                                        zeroTotalOtaOrderObj[orderWaystrue[i]] = totalOtaOrderObj;
+                                            zeroTotalOtaOrderObj[orderWaystrue[i]] = totalOtaOrderObj;
+                                        }
 
 
                                     }

@@ -44,7 +44,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 	$scope.currentOrder;
-	$scope.detailOrder=false;
+	$scope.detailOrder = false;
 
 	$scope.detailInfo;
 
@@ -56,46 +56,39 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 
+	$scope.getCurrentOrder = function(order) {
 
-	$scope.getCurrentOrder=function(order){
-
-		$scope.currentOrder=order;
-		$scope.detailInfo=$scope.infoconvent(order.customer_info);
-		$scope.detailOrder=true;
+		$scope.currentOrder = order;
+		$scope.detailInfo = $scope.infoconvent(order.customer_info);
+		$scope.detailOrder = true;
 
 	}
 
 	$scope.resonStatusCheck = function(a, b) {
 
-        if (a == "拒绝") {
-            return b;
-        } else {
-            return "无";
-        }
+		if (a == "拒绝") {
+			return b;
+		} else {
+			return "无";
+		}
 
 
-    }
+	}
 
 
-    $scope.getCancelStatus = function(m) {
+	$scope.getCancelStatus = function(m) {
 
-        if (m == "0") {
-            return "不可取消";
-        } else if (m == "1") {
-            return "自由取消";
-        } else if (m == "2") {
-            return "提前取消";
-        }
+		if (m == "0") {
+			return "不可取消";
+		} else if (m == "1") {
+			return "自由取消";
+		} else if (m == "2") {
+			return "提前取消";
+		}
 
-    }
-
-
+	}
 
 
-
-
-
-	
 
 	$scope.getConfirmType = function getConfirmType(v) {
 		if (v == "2") {
@@ -258,7 +251,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 		var splitTime = inTime.split("-");
 
 
-		var currentOtaIds=[];
+		var currentOtaIds = [];
 		/*if($scope.currentOtaId==1){
 
 			currentOtaIds=[1,6,7,8];
@@ -271,9 +264,9 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 			currentOtaIds.push($scope.currentOtaId);
 
 		}*/
-		
+
 		currentOtaIds.push(parseInt($scope.currentOtaId));
-		
+
 
 
 		var params = {
@@ -281,7 +274,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 			'value': accMul($.trim($scope.moneyDetail), 100),
 			'month': parseInt(splitTime[1]),
 			'year': parseInt(splitTime[0]),
-			'ota_ids': currentOtaIds,//parseInt($scope.currentOtaId),
+			'ota_ids': currentOtaIds, //parseInt($scope.currentOtaId),
 			'pay_type': 1
 
 		};
@@ -294,13 +287,13 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				if (resp.errcode == 0) {
 					var otaInc = resp.result.income;
 
-					if(otaInc.ota_id==6||otaInc.ota_id==7||otaInc.ota_id==8){
+					if (otaInc.ota_id == 6 || otaInc.ota_id == 7 || otaInc.ota_id == 8) {
 
-						otaInc.ota_id=1;
+						otaInc.ota_id = 1;
 
-					}else if(otaInc.ota_id==10){
+					} else if (otaInc.ota_id == 10) {
 
-						otaInc.ota_id=4;
+						otaInc.ota_id = 4;
 
 					}
 
@@ -413,21 +406,22 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 		if ($scope.searchOtaId != "0") {
 
-			if($scope.searchOtaId==1){
+			if ($scope.searchOtaId == 1) {
 
 				url = url + "&ota_ids=[1,6,7,8]";
 
-			}else if($scope.searchOtaId==4){
+			} else if ($scope.searchOtaId == 4) {
 
 				url = url + "&ota_ids=[4,10]";
 
-			}else{
+			} else {
 
-				url = url + "&ota_ids=" + parseInt($scope.searchOtaId);
+
+				url = url + "&ota_ids=[" + $.trim($scope.searchOtaId) + "]";
 
 			}
 
-			
+
 		}
 
 
@@ -447,7 +441,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				if (resp.errcode == 0) {
 
 
-					/*数据测试*/
+					/*数据测试
 					resp = {
 						"errcode": 0,
 						"errmsg": null,
@@ -1223,7 +1217,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								"id": 1
 							}]
 						}
-					};
+					};*/
 
 					/*income*/
 
@@ -1231,23 +1225,15 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 					var allOtaInc = {};
 					for (var i = 0; i < otaInc.length; i++) {
 
-						if(otaInc[i].ota_id==6||otaInc[i].ota_id==7||otaInc[i].ota_id==8){
+						if (otaInc[i].ota_id == 6 || otaInc[i].ota_id == 7 || otaInc[i].ota_id == 8) {
 
-						otaInc[i].ota_id=1;
+							otaInc[i].ota_id = 1;
 
-					}else if(otaInc[i].ota_id==10){
+						} else if (otaInc[i].ota_id == 10) {
 
-						otaInc[i].ota_id=4;
+							otaInc[i].ota_id = 4;
 
-					}
-
-
-
-
-
-
-
-
+						}
 
 
 
@@ -1289,18 +1275,15 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 
-						if(otaOrd[i].ota_id==6||otaOrd[i].ota_id==7||otaOrd[i].ota_id==8){
+						if (otaOrd[i].ota_id == 6 || otaOrd[i].ota_id == 7 || otaOrd[i].ota_id == 8) {
 
-						otaOrd[i].ota_id=1;
+							otaOrd[i].ota_id = 1;
 
-					}else if(otaOrd[i].ota_id==10){
+						} else if (otaOrd[i].ota_id == 10) {
 
-						otaOrd[i].ota_id=4;
+							otaOrd[i].ota_id = 4;
 
-					}
-
-
-
+						}
 
 
 
