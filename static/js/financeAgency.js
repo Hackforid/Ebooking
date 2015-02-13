@@ -64,7 +64,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 		var sum = 0;
 		for (var i in order) {
 
-			sum = sum + order[i]['sum'];
+			sum = sum + order[i]['commission'];
 
 		}
 
@@ -1348,6 +1348,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 								ordVal = {
 
 									"sum": parseInt(otaOrd[i].total_price) / 100,
+									"commission": parseInt(otaOrd[i].commission) / 100,
 									"orders": [otaOrd[i]],
 									"name": $scope.otaNames[otaOrd[i].ota_id] //otaOrd[i].ota_name
 
