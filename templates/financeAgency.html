@@ -99,10 +99,10 @@
 									
                                     <td width="25%"><a style="color:#0073B7;" href="#" ng-click="ordDetail(k,v)" ng-bind="v['name']"></a></td>
 
-                                    <td width="25%" ng-bind="v['sum']"></td>
+                                    <td width="25%" ng-bind="v['commission']"></td>
 
                                     <td width="25%" ><a href="#" style="color:#F90;" ng-click="incDetail(k,otaIncomes[k])" ng-bind="incomeCheck(otaIncomes[k]['sum'])"></a></td>
-                                    <td width="25%" ng-bind="v['sum']-otaIncomes[k]['sum']"></td>
+                                    <td width="25%" ng-bind="v['commission']-otaIncomes[k]['sum']"></td>
                                     
 								</tr>
 
@@ -221,7 +221,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
                                        <span ng-bind="DateDiff(order.checkin_date,order.checkout_date)"></span>
                                     </td>
 
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.total_price/1000)+'元'"></td>    
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.total_price/100)+'元'"></td>    
                                     <td style="vertical-align: middle;" width="10%" ng-init="ordercreatTime=timeConvert(order['create_time'])">
 
                                     <span ng-bind="ordercreatTime[0]"></span>
