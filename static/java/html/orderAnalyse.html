@@ -248,7 +248,7 @@
                                        <span ng-bind="DateDiff(order.checkInDate,order.checkOutDate)"></span>
                                     </td>
 
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.totalPrice/1000)+'元'"></td>    
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.totalPrice/100)+'元'"></td>    
                                     <td style="vertical-align: middle;" width="10%" ng-init="ordercreatTime=timeConvert(order['createTime'])">
 
                                     <span ng-bind="ordercreatTime[0]"></span>

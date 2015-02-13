@@ -220,7 +220,7 @@ color: blue;" ng-click="addDetail=true;moneyDetail='';remarkDetail='';">增加</
                                        <span ng-bind="DateDiff(order.checkin_date,order.checkout_date)"></span>
                                     </td>
 
-                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.total_price/1000)+'元'"></td>    
+                                    <td style="vertical-align: middle;" width="10%" ng-bind="(order.total_price/100)+'元'"></td>    
                                     <td style="vertical-align: middle;" width="10%" ng-init="ordercreatTime=timeConvert(order['create_time'])">
 
                                     <span ng-bind="ordercreatTime[0]"></span>
