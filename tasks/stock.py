@@ -38,7 +38,7 @@ class PushRoomTypeTask(SqlAlchemyTask):
 
         self.log.info("<<update roomtype valid {}>> request:{}".format(roomtype_ids, params))
 
-        url = API['STOCK'] + '/stock/update_state'
+        url = API['STOCK'] + '/stock/update_state?is_async=false'
         r = req.post(url, data=params)
         self.log.info("<<update roomtype valid {}>> response:{}".format(roomtype_ids, r.text))
 
@@ -68,7 +68,7 @@ class PushHotelTask(SqlAlchemyTask):
         data = {'list': hotel_list, 'type': 1}
         params = {'track_id': track_id, 'data': json.dumps(data)}
         self.log.info(u"<<push hotel by merchant {}>> push data {}".format(merchant_id, params))
-        url = API['STOCK'] + '/stock/update_state'
+        url = API['STOCK'] + '/stock/update_state?is_async=false'
         r = req.post(url, data=params)
         self.log.info("<<push hotel by merchant {}>> response {}".format(merchant_id, r.text))
 
@@ -121,7 +121,7 @@ class PushHotelTask(SqlAlchemyTask):
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
         self.log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
-        url = API['STOCK'] + '/stock/update_hotel'
+        url = API['STOCK'] + '/stock/update_hotel?is_async=false'
         r = req.post(url, data=params)
         self.log.info("<<push hotel {}>> response {}".format(hotel_data['id'], r.text))
 
@@ -134,7 +134,7 @@ class PushHotelTask(SqlAlchemyTask):
         data = {'list': hotel_datas}
         params = {'track_id': track_id, 'data': json.dumps(data)}
         self.log.info(u"<<push hotels>> push data {}".format(params))
-        url = API['STOCK'] + '/stock/update_hotel'
+        url = API['STOCK'] + '/stock/update_hotel?is_async=false'
         r = req.post(url, data=params)
         self.log.info("<<push hotels>> response {}".format(r.text))
 
@@ -253,7 +253,7 @@ class PushRatePlanTask(SqlAlchemyTask):
                 'data': json_encode(data)
                 }
         self.log.info(params)
-        url = API['STOCK'] + '/stock/update_rate_plan'
+        url = API['STOCK'] + '/stock/update_rate_plan?is_async=false'
         r = req.post(url, data=params)
         self.log.info(r.text)
 
@@ -267,7 +267,7 @@ class PushRatePlanTask(SqlAlchemyTask):
                 'data': json_encode(data)
                 }
         self.log.info(params)
-        url = API['STOCK'] + '/stock/update_rate_plan'
+        url = API['STOCK'] + '/stock/update_rate_plan?is_async=false'
         r = req.post(url, data=params)
         self.log.info(r.text)
 
@@ -279,7 +279,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
         self.log.info("<<push rateplan {}>> data:{}".format(rateplan.id, data))
 
-        url = API['STOCK'] + '/stock/update_cancel_rule'
+        url = API['STOCK'] + '/stock/update_cancel_rule?is_async=false'
         r = req.post(url, data)
         self.log.info("<<push rateplan {}>> response:{}".format(rateplan.id, r.text))
 
@@ -290,7 +290,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data = {'track_id': track_id, 'data': json_encode({'list': cancel_rule_data})}
 
         self.log.info("<<push cancel rules>> request: {}".format(data))
-        url = API['STOCK'] + '/stock/update_cancel_rule'
+        url = API['STOCK'] + '/stock/update_cancel_rule?is_async=false'
         r = req.post(url, data)
         self.log.info("<<push cancel rules>> response: {}".format(r.text))
 
@@ -302,7 +302,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
         self.log.info(data)
 
-        url = API['STOCK'] + '/stock/update_room_rate'
+        url = API['STOCK'] + '/stock/update_room_rate?is_async=false'
         r = req.post(url, data)
         self.log.info(r.text)
 
@@ -313,7 +313,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         data = {'track_id': track_id, 'data': json_encode({'list': roomrate_data})}
         self.log.info("push roomrates {}".format(data))
 
-        url = API['STOCK'] + '/stock/update_room_rate'
+        url = API['STOCK'] + '/stock/update_room_rate?is_async=false'
         r = req.post(url, data)
         self.log.info("push roomrates resp {}".format(r.text))
 
@@ -401,7 +401,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         track_id = self.generate_track_id(rateplan_ids)
         data = {'list': rateplan_datas, 'type': 3}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        url = API['STOCK'] + '/stock/update_state'
+        url = API['STOCK'] + '/stock/update_state?is_async=false'
         self.log.info("<< push rateplan {} update rateplan valid request {}>>".format(rateplan_ids, params))
         r = req.post(url, data=params)
         self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.text))
@@ -461,7 +461,7 @@ class PushInventoryTask(SqlAlchemyTask):
                 'data': json_encode({'list': [inventory_data]})}
         self.log.info(params)
 
-        url = API['STOCK'] + '/stock/update_inventory'
+        url = API['STOCK'] + '/stock/update_inventory?is_async=false'
 
         r = req.post(url, data=params)
         self.log.info(r.text)
