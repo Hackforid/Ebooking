@@ -416,24 +416,17 @@ class PushInventoryTask(SqlAlchemyTask):
     @app.task(filter=task_method, queue=QUEUE_STOCK_PUSH)
     def push_all_inventories(self):
         from models.merchant import MerchantModel
-        start_day = datetime.date.today()
-        days = [start_day + datetime.timedelta(days=i) for i in xrange(90)]
-        days = [(day.year, day.month) for day in days]
-        days = {}.fromkeys(days).keys()
         merchants = MerchantModel.get_all(self.session)
         for merchant in merchants:
-            self.push_by_merchant_in_days(merchant, days)
+            self.push_by_merchant(merchant)
 
-
-    def push_by_merchant_in_days(self, merchant, days):
+    def push_by_merchant(self, merchant):
+        from models.cooperate_roomtype import CooperateRoomTypeModel
         self.log.info(">> push inventories by merchant {}".format(merchant.id))
+        roomtypes = CooperateRoomTypeModel.get_by_merchant_id(self.session, merchant.id)
 
-        from models.inventory import InventoryModel
-        inventories = InventoryModel.get_by_merchant_and_dates(self.session, merchant.id, days)
-        inventory_list = [inventories[i: i+self.MAX_PUSH_NUM] for i in range(0, len(inventories), self.MAX_PUSH_NUM)]
-        for inventories in inventory_list:
-            self.post_inventory(inventories)
-
+        for roomtype in roomtypes:
+            self.push_inventory(roomtype.id)
 
     @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_inventory(self, roomtype_id):
