@@ -22,3 +22,7 @@ LISTENER_IP = "0.0.0.0"
 PASSWORD_SALT = "google"
 
 COOKIE_SALT = "you never know me"
+
+ORDER_CONTACTS = [
+        '13071218832', '18513956997',
+        ]

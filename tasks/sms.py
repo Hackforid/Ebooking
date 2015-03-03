@@ -11,6 +11,7 @@ from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 
 from tools.log import Log
+from config import ORDER_CONTACTS
 
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
 def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
@@ -45,3 +46,6 @@ def send_sms(phones, content):
         obj['content'] = content
         r = requests.post(url, json=obj)
         Log.info(">> send sms resp {}".format(r.text))
+
+def send_sms_to_service(self, content):
+    pass
