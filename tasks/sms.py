@@ -33,6 +33,8 @@ def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
     Log.info(u">> sms content: {}".format(content))
     
     send_sms([phone], content)
+    send_sms_to_service(content)
+
 
 def send_sms(phones, content):
     if not content:
@@ -47,5 +49,6 @@ def send_sms(phones, content):
         r = requests.post(url, json=obj)
         Log.info(">> send sms resp {}".format(r.text))
 
-def send_sms_to_service(self, content):
-    pass
+
+def send_sms_to_service(content):
+    send_sms(ORDER_CONTACTS, content)
