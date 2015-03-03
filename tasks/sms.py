@@ -33,7 +33,7 @@ def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
     Log.info(u">> sms content: {}".format(content))
     
     send_sms([phone], content)
-    send_sms_to_service(content)
+    send_sms_to_service(merchant_id, content)
 
 
 def send_sms(phones, content):
@@ -50,5 +50,6 @@ def send_sms(phones, content):
         Log.info(">> send sms resp {}".format(r.text))
 
 
-def send_sms_to_service(content):
+def send_sms_to_service(merchant_id, content):
+    content = u"merchant {} 收到新订单: {}".format(merchant_id, content)
     send_sms(ORDER_CONTACTS, content)
