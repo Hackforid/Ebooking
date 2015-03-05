@@ -31,18 +31,19 @@ class FinanceAPIHandler(BtwBaseHandler):
         orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_ids)
         incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_ids)
 
+        orders=[order.todict() for order in orders]
         if pay_type == ContractModel.PAY_TYPE_ARRIVE:
             self.deal_agency(orders)
 
         self.finish_json(result=dict(
-            orders=[order.todict() for order in orders],
+            orders=orders,
             incomes=[income.todict() for income in incomes],
             ))
 
     def deal_agency(self, orders):
         commission = self.get_commission(self.merchant.id)
         for order in orders:
-            order.total_price = order.total_price * commission
+            order['commission'] = order.total_price * commission
 
     def get_order_in_date(self, merchant_id, year, month, pay_type, ota_ids=None):
         orders = OrderModel.get_success_order_by_checkout_date_in_month(self.db,

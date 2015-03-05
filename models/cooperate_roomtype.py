@@ -101,6 +101,13 @@ class CooperateRoomTypeModel(Base):
                 .all()
 
     @classmethod
+    def get_by_merchant_id(cls, session, merchant_id):
+        return session.query(CooperateRoomTypeModel)\
+                .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
+                .filter(CooperateRoomTypeModel.is_delete == 0)\
+                .all()
+
+    @classmethod
     def new_roomtype_coops(cls, session, merchant_id, hotel_id, base_hotel_id, base_roomtype_ids):
         coops = []
         try:
