@@ -481,10 +481,10 @@ var ChartInit = function(scope, http) {
                                         if (zeroTotalOtaOrderObj[otaOrder[i].otaId] != null && zeroTotalOtaOrderObj[otaOrder[i].otaId] != undefined) {
 
 
-                                            for (var i = 0; i < otaNameValue.length; i++) {
-                                                if (otaNameValue[i]['name'] == allOtaNames[otaOrder[i].otaId]) {
+                                            for (var u = 0; u < otaNameValue.length; u++) {
+                                                if (otaNameValue[u]['name'] == allOtaNames[otaOrder[i].otaId]) {
 
-                                                    otaNameValue[i]['value'] = parseInt(otaNameValue[i]['value']) + parseInt(otaOrder[i]["orderCounts"]);
+                                                    otaNameValue[u]['value'] = parseInt(otaNameValue[u]['value']) + parseInt(otaOrder[i]["orderCounts"]);
 
                                                 }
 
