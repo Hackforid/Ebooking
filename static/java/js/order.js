@@ -476,29 +476,58 @@ var ChartInit = function(scope, http) {
 
                                     if (otaOrder[i].otaId != 0) {
                                         //console.log(otaOrder[i]["otaId"]);
-                                        otaObj = {
-                                            value: parseInt(otaOrder[i]["orderCounts"]),
-                                            name: allOtaNames[otaOrder[i].otaId]
-                                        };
-                                        otaNameValue.push(otaObj);
-                                        otaWays.push(allOtaNames[otaOrder[i].otaId]);
 
 
-                                        var totalOtaOrderObj = {
-                                            "orderCounts": otaOrder[i].orderCounts,
-                                            "nightCounts": otaOrder[i].roomNights,
-                                            "orders": otaOrder[i].orders,
-                                            "name": allOtaNames[otaOrder[i].otaId]
+                                        if (zeroTotalOtaOrderObj[otaOrder[i].otaId] != null && zeroTotalOtaOrderObj[otaOrder[i].otaId] != undefined) {
 
-                                        };
 
-                                        //console.log(totalOtaOrderObj);
+                                            for (var i = 0; i < otaNameValue.length; i++) {
+                                                if (otaNameValue[i]['name'] == allOtaNames[otaOrder[i].otaId]) {
 
-                                        //orderWaystrue.splice(otaOrder[i].otaId, 1);
+                                                    otaNameValue[i]['value'] = parseInt(otaNameValue[i]['value']) + parseInt(otaOrder[i]["orderCounts"]);
 
-                                         orderWaystrue[otaOrder[i].otaId]="";
+                                                }
 
-                                        zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
+                                            };
+
+
+                                            zeroTotalOtaOrderObj[otaOrder[i].otaId]["orderCounts"] = parseInt(zeroTotalOtaOrderObj[otaOrder[i].otaId]["orderCounts"]) + parseInt(otaOrder[i].orderCounts);
+                                            zeroTotalOtaOrderObj[otaOrder[i].otaId]["nightCounts"] = parseInt(zeroTotalOtaOrderObj[otaOrder[i].otaId]["nightCounts"]) + parseInt(otaOrder[i].roomNights);
+
+                                            for (var o = 0; o < otaOrder[i].orders.length; o++) {
+                                                zeroTotalOtaOrderObj[otaOrder[i].otaId]["orders"].push(otaOrder[i].orders[o]);
+                                            };
+
+
+
+                                        } else {
+
+
+
+                                            otaObj = {
+                                                value: parseInt(otaOrder[i]["orderCounts"]),
+                                                name: allOtaNames[otaOrder[i].otaId]
+                                            };
+                                            otaNameValue.push(otaObj);
+                                            otaWays.push(allOtaNames[otaOrder[i].otaId]);
+
+
+                                            var totalOtaOrderObj = {
+                                                "orderCounts": otaOrder[i].orderCounts,
+                                                "nightCounts": otaOrder[i].roomNights,
+                                                "orders": otaOrder[i].orders,
+                                                "name": allOtaNames[otaOrder[i].otaId]
+
+                                            };
+
+                                            //console.log(totalOtaOrderObj);
+
+                                            //orderWaystrue.splice(otaOrder[i].otaId, 1);
+
+                                            orderWaystrue[otaOrder[i].otaId] = "";
+
+                                            zeroTotalOtaOrderObj[otaOrder[i].otaId] = totalOtaOrderObj;
+                                        }
 
                                     }
 
@@ -525,7 +554,7 @@ var ChartInit = function(scope, http) {
 
 
                                     }
-                                    scope.allSumShow=true;
+                                    scope.allSumShow = true;
                                 } else {
 
 
@@ -545,7 +574,7 @@ var ChartInit = function(scope, http) {
 
                                     }
 
-                                    scope.allSumShow=false;
+                                    scope.allSumShow = false;
 
                                 }
 
@@ -715,35 +744,34 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-    $scope.allSumShow=false;
+    $scope.allSumShow = false;
 
-    $scope.getAllOrderCounts=function(order){
+    $scope.getAllOrderCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['orderCounts'];
-            
+            sumCounts = sumCounts + order[i]['orderCounts'];
+
         }
 
         return sumCounts;
 
     }
 
-    $scope.getAllNightCounts=function(order){
+    $scope.getAllNightCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['nightCounts'];
-            
+            sumCounts = sumCounts + order[i]['nightCounts'];
+
         }
 
         return sumCounts;
 
     }
 
- 
 
 
     $scope.resonStatusCheck = function(a, b) {
@@ -758,39 +786,39 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m,n) {
+    $scope.getCancelStatus = function(m, n) {
 
-            var cancel;
+        var cancel;
 
-            if (m == "0") {
-                cancel="不可取消";
-            } else if (m == "1") {
-                cancel="自由取消";
-            } else if (m == "2") {
-                cancel="提前取消";
-            }
-
-            var punish;
-
-            if (n == "0") {
-                punish="不扣任何费用";
-            } else if (n == "1") {
-                punish="扣首晚房费";
-            } else if (n == "2") {
-                punish="扣全额房费";
-            }else if (n == "3") {
-                punish="扣定额";
-            }else if (n == "4") {
-                punish="扣全额房费百分比";
-            }
-
-            var cancelResult=cancel+",取消时"+punish;
-
-            return cancelResult;
-
-
-
+        if (m == "0") {
+            cancel = "不可取消";
+        } else if (m == "1") {
+            cancel = "自由取消";
+        } else if (m == "2") {
+            cancel = "提前取消";
         }
+
+        var punish;
+
+        if (n == "0") {
+            punish = "不扣任何费用";
+        } else if (n == "1") {
+            punish = "扣首晚房费";
+        } else if (n == "2") {
+            punish = "扣全额房费";
+        } else if (n == "3") {
+            punish = "扣定额";
+        } else if (n == "4") {
+            punish = "扣全额房费百分比";
+        }
+
+        var cancelResult = cancel + ",取消时" + punish;
+
+        return cancelResult;
+
+
+
+    }
 
 
     $scope.getCurrentOrder = function(order) {
@@ -809,7 +837,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
         }
 
-       
+
 
         $scope.searchCurrentOta();
 
@@ -1145,37 +1173,33 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
     $scope.detailInfo;
 
 
-    $scope.allSumShow=false;
+    $scope.allSumShow = false;
 
-    $scope.getAllOrderCounts=function(order){
+    $scope.getAllOrderCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['orderCounts'];
-            
+            sumCounts = sumCounts + order[i]['orderCounts'];
+
         }
 
         return sumCounts;
 
     }
 
-    $scope.getAllNightCounts=function(order){
+    $scope.getAllNightCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['nightCounts'];
-            
+            sumCounts = sumCounts + order[i]['nightCounts'];
+
         }
 
         return sumCounts;
 
     }
-
-
-
-
 
 
 
@@ -1191,39 +1215,39 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m,n) {
+    $scope.getCancelStatus = function(m, n) {
 
-            var cancel;
+        var cancel;
 
-            if (m == "0") {
-                cancel="不可取消";
-            } else if (m == "1") {
-                cancel="自由取消";
-            } else if (m == "2") {
-                cancel="提前取消";
-            }
-
-            var punish;
-
-            if (n == "0") {
-                punish="不扣任何费用";
-            } else if (n == "1") {
-                punish="扣首晚房费";
-            } else if (n == "2") {
-                punish="扣全额房费";
-            }else if (n == "3") {
-                punish="扣定额";
-            }else if (n == "4") {
-                punish="扣全额房费百分比";
-            }
-
-            var cancelResult=cancel+",取消时"+punish;
-
-            return cancelResult;
-
-
-
+        if (m == "0") {
+            cancel = "不可取消";
+        } else if (m == "1") {
+            cancel = "自由取消";
+        } else if (m == "2") {
+            cancel = "提前取消";
         }
+
+        var punish;
+
+        if (n == "0") {
+            punish = "不扣任何费用";
+        } else if (n == "1") {
+            punish = "扣首晚房费";
+        } else if (n == "2") {
+            punish = "扣全额房费";
+        } else if (n == "3") {
+            punish = "扣定额";
+        } else if (n == "4") {
+            punish = "扣全额房费百分比";
+        }
+
+        var cancelResult = cancel + ",取消时" + punish;
+
+        return cancelResult;
+
+
+
+    }
 
 
     $scope.getCurrentOrder = function(order) {
@@ -1488,28 +1512,28 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     $scope.detailInfo;
 
 
-    $scope.allSumShow=false;
+    $scope.allSumShow = false;
 
-    $scope.getAllOrderCounts=function(order){
+    $scope.getAllOrderCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['orderCounts'];
-            
+            sumCounts = sumCounts + order[i]['orderCounts'];
+
         }
 
         return sumCounts;
 
     }
 
-    $scope.getAllNightCounts=function(order){
+    $scope.getAllNightCounts = function(order) {
 
-        var sumCounts=0;
-        for(var i in order){
+        var sumCounts = 0;
+        for (var i in order) {
 
-            sumCounts=sumCounts+order[i]['nightCounts'];
-            
+            sumCounts = sumCounts + order[i]['nightCounts'];
+
         }
 
         return sumCounts;
@@ -1530,39 +1554,39 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     }
 
 
-    $scope.getCancelStatus = function(m,n) {
+    $scope.getCancelStatus = function(m, n) {
 
-            var cancel;
+        var cancel;
 
-            if (m == "0") {
-                cancel="不可取消";
-            } else if (m == "1") {
-                cancel="自由取消";
-            } else if (m == "2") {
-                cancel="提前取消";
-            }
-
-            var punish;
-
-            if (n == "0") {
-                punish="不扣任何费用";
-            } else if (n == "1") {
-                punish="扣首晚房费";
-            } else if (n == "2") {
-                punish="扣全额房费";
-            }else if (n == "3") {
-                punish="扣定额";
-            }else if (n == "4") {
-                punish="扣全额房费百分比";
-            }
-
-            var cancelResult=cancel+",取消时"+punish;
-
-            return cancelResult;
-
-
-
+        if (m == "0") {
+            cancel = "不可取消";
+        } else if (m == "1") {
+            cancel = "自由取消";
+        } else if (m == "2") {
+            cancel = "提前取消";
         }
+
+        var punish;
+
+        if (n == "0") {
+            punish = "不扣任何费用";
+        } else if (n == "1") {
+            punish = "扣首晚房费";
+        } else if (n == "2") {
+            punish = "扣全额房费";
+        } else if (n == "3") {
+            punish = "扣定额";
+        } else if (n == "4") {
+            punish = "扣全额房费百分比";
+        }
+
+        var cancelResult = cancel + ",取消时" + punish;
+
+        return cancelResult;
+
+
+
+    }
 
 
     $scope.getCurrentOrder = function(order) {
