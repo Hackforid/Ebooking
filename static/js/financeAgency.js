@@ -58,6 +58,26 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.otaNames = ["全部", "去哪儿", "淘宝旅行", "美团", "携程", "艺龙", "", "", "", "百达屋"];
 
 
+	$scope.checkEveryPrice = function(price) {
+
+		if ($.trim(price) != "" && price != undefined) {
+
+			var hotelEverydayPrice = price.split(",");
+
+			for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+				hotelEverydayPrice[k] = hotelEverydayPrice[k] / 100;
+
+			};
+
+			var everyPrice = hotelEverydayPrice.join(",");
+
+			return everyPrice;
+		}
+
+	}
+
+
 
 	$scope.getAllSum = function(order) {
 

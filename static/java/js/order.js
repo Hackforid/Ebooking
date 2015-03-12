@@ -746,6 +746,32 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.allSumShow = false;
 
+
+
+
+    $scope.checkEveryPrice = function(price) {
+
+        if ($.trim(price) != "" && price != undefined) {
+
+            var hotelEverydayPrice = price.split(",");
+
+            for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+                hotelEverydayPrice[k] = hotelEverydayPrice[k] / 100;
+
+            };
+
+            var everyPrice = hotelEverydayPrice.join(",");
+
+            return everyPrice;
+        }
+
+    }
+
+
+
+
+
     $scope.getAllOrderCounts = function(order) {
 
         var sumCounts = 0;
@@ -1175,6 +1201,27 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.allSumShow = false;
 
+
+    $scope.checkEveryPrice = function(price) {
+
+        if ($.trim(price) != "" && price != undefined) {
+
+            var hotelEverydayPrice = price.split(",");
+
+            for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+                hotelEverydayPrice[k] = hotelEverydayPrice[k] / 100;
+
+            };
+
+            var everyPrice = hotelEverydayPrice.join(",");
+
+            return everyPrice;
+        }
+
+    }
+
+
     $scope.getAllOrderCounts = function(order) {
 
         var sumCounts = 0;
@@ -1513,6 +1560,27 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
     $scope.allSumShow = false;
+    
+
+    $scope.checkEveryPrice = function(price) {
+
+        if ($.trim(price) != "" && price != undefined) {
+
+            var hotelEverydayPrice = price.split(",");
+
+            for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+                hotelEverydayPrice[k] = hotelEverydayPrice[k] / 100;
+
+            };
+
+            var everyPrice = hotelEverydayPrice.join(",");
+
+            return everyPrice;
+        }
+
+    }
+
 
     $scope.getAllOrderCounts = function(order) {
 

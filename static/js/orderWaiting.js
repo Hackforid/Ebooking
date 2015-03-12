@@ -362,7 +362,22 @@
 							
 							$scope.orderList[i]["customer_info"] = tempobj;
 
-							$scope.orderList[i]["everyday_price"] = ($scope.orderList[i]["everyday_price"]) / 100;
+
+
+							var hotelEverydayPrice=$scope.orderList[i]["everyday_price"].split(",");
+							
+							for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+								hotelEverydayPrice[k]=hotelEverydayPrice[k]/100;
+								
+							};
+
+							var everyPrice=hotelEverydayPrice.join(",");
+
+
+							
+
+							$scope.orderList[i]["everyday_price"] = everyPrice;
 
 							$scope.orderList[i]["total_price"] = ($scope.orderList[i]["total_price"]) / 100;
 

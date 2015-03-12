@@ -225,8 +225,18 @@
 
 						for (var i = 0; i < $scope.todayBook.length; i++) {
 
+							var hotelEverydayPrice=$scope.todayBook[i]["everyday_price"].split(",");
+							
+							for (var k = 0; k < hotelEverydayPrice.length; k++) {
 
-							$scope.todayBook[i]["everyday_price"] = ($scope.todayBook[i]["everyday_price"]) / 100;
+								hotelEverydayPrice[k]=hotelEverydayPrice[k]/100;
+								
+							};
+
+							var everyPrice=hotelEverydayPrice.join(",");
+
+
+							$scope.todayBook[i]["everyday_price"] = everyPrice;
 
 							$scope.todayBook[i]["total_price"] = ($scope.todayBook[i]["total_price"]) / 100;
 
@@ -494,7 +504,20 @@
 						for (var i = 0; i < $scope.todayCheckIn.length; i++) {
 
 
-							$scope.todayCheckIn[i]["everyday_price"] = ($scope.todayCheckIn[i]["everyday_price"]) / 100;
+							var hotelEverydayPrice=$scope.todayCheckIn[i]["everyday_price"].split(",");
+							
+							for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+								hotelEverydayPrice[k]=hotelEverydayPrice[k]/100;
+								
+							};
+
+							var everyPrice=hotelEverydayPrice.join(",");
+
+
+							
+
+							$scope.todayCheckIn[i]["everyday_price"] = everyPrice;
 
 							$scope.todayCheckIn[i]["total_price"] = ($scope.todayCheckIn[i]["total_price"]) / 100;
 
@@ -861,7 +884,19 @@
 						for (var i = 0; i < $scope.queryList.length; i++) {
 
 
-							$scope.queryList[i]["everyday_price"] = ($scope.queryList[i]["everyday_price"]) / 100;
+							var hotelEverydayPrice=$scope.queryList[i]["everyday_price"].split(",");
+							
+							for (var k = 0; k < hotelEverydayPrice.length; k++) {
+
+								hotelEverydayPrice[k]=hotelEverydayPrice[k]/100;
+								
+							};
+
+							var everyPrice=hotelEverydayPrice.join(",");
+
+
+
+							$scope.queryList[i]["everyday_price"] = everyPrice;
 
 							$scope.queryList[i]["total_price"] = ($scope.queryList[i]["total_price"]) / 100;
 
