@@ -12,7 +12,7 @@ API = {
 
 
 IS_PUSH_TO_STOCK = False
-IS_PUSH_TO_POI = False
+IS_PUSH_TO_POI = True
 
 BROKER_URL = "amqp://admin:admin@localhost:5672/ebooking"
 CELERY_RESULT_BACKEND = "amqp://:admin:admin@localhost:5672/ebooking"
@@ -22,3 +22,7 @@ LISTENER_IP = "0.0.0.0"
 PASSWORD_SALT = "google"
 
 COOKIE_SALT = "you never know me"
+
+ORDER_CONTACTS = [
+        '13071218832', '18513956997',
+        ]

@@ -14,13 +14,13 @@ from models.order_history import OrderHistoryModel
 from models.order import OrderModel
 from tasks.base_task import SqlAlchemyTask, OrderTask
 from tasks.order.submit_order_in_queue import start_order
-from tasks.stock import PushInventoryTask
 from tasks.sms import send_order_sms
 
 from exception.celery_exception import CeleryException
 
 from entity.order import SubmitOrder
 from config import API
+from tools.log import Log
 
 @app.task(base=OrderTask, bind=True)
 def confirm_order_by_user(self, user, order_id):
@@ -37,14 +37,15 @@ def confirm_order_by_user(self, user, order_id):
         if order.status != pre_status:
             OrderHistoryModel.set_order_status_by_user(session, user, order, pre_status, order.status)
         return order
-    else: raise CeleryException(1000, 'callback order server fail')
+    else:
+        raise CeleryException(1000, 'callback order server fail')
 
 def callback_order_server(order_id):
     url = API['ORDER'] + '/order/ebooking/update'
     params = {'orderId': order_id, 'msgType': 0, 'success': True,
             'trackId': generate_track_id(order_id)}
     r = requests.post(url, data=params)
-    print r.text
+    Log.info(r.text)
     if r.status_code == 200:
         j = r.json()
         if j['errcode'] == 0:
@@ -57,13 +58,13 @@ def generate_track_id(order_id):
 
 @app.task(base=OrderTask, bind=True)
 def submit_order(self, order_json):
-    print order_json
+    Log.info(order_json)
     session = self.session
     try:
         submit_order = SubmitOrder(order_json)
     except ValueError as e:
         raise CeleryException(errcode=2000, errmsg=e.message)
-    print submit_order
+    Log.info(submit_order)
 
     if not valid_arguments(submit_order):
         raise CeleryException(200, 'invalid_arguments')
@@ -88,7 +89,7 @@ def submit_order(self, order_json):
         return order
 
     if not valid_inventory(session, submit_order):
-        print 'more room please'
+        Log.info('more room please')
         order.status = 200
         session.commit()
 
@@ -130,7 +131,7 @@ def combin_year_month(year, month):
     return int("{}{:0>2d}".format(year, month))
 
 def valid_inventory(session, order):
-    print '# valid inventory for order ', order.id
+    Log.info('# valid inventory for order {}'.format(order.id))
     stay_days = get_stay_days(order.checkin_date, order.checkout_date)
     year_months = [(day.year, day.month) for day in stay_days]
     year_months = {}.fromkeys(year_months).keys()
@@ -140,31 +141,31 @@ def valid_inventory(session, order):
         order.hotel_id, order.roomtype_id, year_months)
     
     if not inventories:
-        print "no inventory"
+        Log.info("no inventory")
         return False
 
     for inventory in inventories:
-        print inventory.todict()
+        Log.info(inventory.todict())
 
 
     for day in stay_days:
         inventory = None
         month = combin_year_month(day.year, day.month)
-        print '...finding', month
+        Log.info('...finding {}'.format(month))
 
         for _inventory in inventories:
             if _inventory.month == month:
                 inventory = _inventory
                 break
         else:
-            print 'day', day, 'not found'
+            Log.info('day {} not found'.format(day))
             return False
 
         if inventory.get_day(day.day) < order.room_quantity:
-            print 'room not enough in {}'.format(day)
+            Log.info('room not enough in {}'.format(day))
             return False
     else:
-        print 'found'
+        Log.info('found')
         return True
 
 
@@ -172,7 +173,7 @@ def create_order(session, submit_order):
     order = OrderModel.get_by_main_order_id(session, submit_order.id)
     if order:
         # callback 订单已存在
-        print 'order exist'
+        Log.info('order exist')
         return order
 
     order = OrderModel.new_order(session, submit_order)

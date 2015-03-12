@@ -28,10 +28,15 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 
         if task.status == 'SUCCESS':
             order = task.result
+            merchant = MerchantModel.get_by_id(self.db, order.merchant_id)
             if order.status in [200, 400, 500]:
-                raise JsonException(1, 'fail')
+                self.finish_json(errcode=1, errmsg="fail",
+                    result=dict(
+                        order_id=order.id,
+                        merchant=merchant.todict(),
+                    )
+                )
             else:
-                merchant = MerchantModel.get_by_id(self.db, order.merchant_id)
                 self.finish_json(result=dict(
                     order_id=order.id,
                     wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO or order.status == 300 else 1,
