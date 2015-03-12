@@ -160,7 +160,9 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
+
+           
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -171,7 +173,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
@@ -442,7 +444,7 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -453,7 +455,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
@@ -746,7 +748,7 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -757,7 +759,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
