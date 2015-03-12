@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import requests
-import json
-import time
-import datetime
 import traceback
 
 from celery.contrib.methods import task_method
@@ -11,11 +10,9 @@ from celery.contrib.methods import task_method
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask
 
-from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from tools.log import Log
 from config import API, IS_PUSH_TO_POI
-from constants import CHAIN_ID
 
 class POIPushHotelTask(SqlAlchemyTask):
 
