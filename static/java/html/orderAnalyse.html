@@ -2,6 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
+
 <title>商旅分销管理系统</title>
 <link href="/static/css/default.css" rel="stylesheet" type="text/css" >
 <link href="/static/css/mod.css" rel="stylesheet" type="text/css" >
@@ -154,7 +160,9 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
+
+           
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -165,7 +173,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
@@ -176,7 +184,7 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
            <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
@@ -436,7 +444,7 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -447,7 +455,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
@@ -458,7 +466,7 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
            <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
@@ -740,7 +748,7 @@
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']"></span></td></tr>
+           <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
             <tr><td style="width:22%"><strong>预定时间：</strong></td><td style="width:78%"><span ng-bind="conchecktime(currentOrder.createTime)"></span></td></tr>
@@ -751,7 +759,7 @@
            <tr><td style="width:22%"><strong>入住人：</strong></td><td style="width:78%" >
 
 
-           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']"></span>
+           <span ng-repeat="cum in detailInfo" ng-bind="cum['name']+'&nbsp;&nbsp'"></span>
 
 
 
@@ -762,7 +770,7 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
-           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everydayPrice']/100"></span></td></tr>
+           <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
            <tr><td style="width:22%"><strong>备注：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
