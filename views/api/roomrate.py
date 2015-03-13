@@ -47,12 +47,12 @@ class RoomRateAPIHandler(BtwBaseHandler):
             raise JsonException(errcode=2001, errmsg="invalid date: end date before start date")
 
         min_date = date.today()
-        max_date = min_date + timedelta(days=90)
+        max_date = min_date + timedelta(days=365)
 
-        if start_date.date() < min_date or start_date.date() > max_date:
+        if start_date.date() < min_date or start_date.date() >= max_date:
             raise JsonException(errcode=2001, errmsg="invalid date: start date out of range")
 
-        if end_date.date() < min_date or end_date.date() > max_date:
+        if end_date.date() < min_date or end_date.date() >= max_date:
             raise JsonException(errcode=2001, errmsg="invalid date: end date out of range")
 
         return start_date, end_date
