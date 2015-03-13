@@ -62,7 +62,7 @@ class InventoryAPIHandler(BtwBaseHandler):
             raise JsonException(errcode=2001, errmsg="invalid date: end date before start date")
 
         min_date = date.today()
-        max_date = min_date + timedelta(days=90)
+        max_date = min_date + timedelta(days=365)
 
         if start_date.date() < min_date or start_date.date() > max_date:
             raise JsonException(errcode=2001, errmsg="invalid date: start date out of range")
