@@ -12,7 +12,6 @@ from tasks.base_task import SqlAlchemyTask
 
 from tools.log import Log
 from config import ORDER_CONTACTS
-from constants import BED_TYPE
 
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
 def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
