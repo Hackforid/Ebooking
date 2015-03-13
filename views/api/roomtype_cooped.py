@@ -153,8 +153,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
                 merchant_id, hotel.id,  hotel.base_hotel_id, roomtype_ids)
 
         for coop in coops:
-            InventoryModel.insert_in_four_month(self.db,
-                    merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id)
+            InventoryModel.insert_in_months(self.db,
+                    merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id, 13)
 
         PushHotelTask().push_hotel.delay(hotel_id)
         
