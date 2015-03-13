@@ -493,6 +493,14 @@
 		$scope.confirmCancel=false;
 		$scope.cancelIndex;
 
+
+		$scope.conventIdInt=function(id){
+			
+			return (parseInt(id)+1);
+
+		}
+
+
 		$scope.confirmOk=function(){ 
 
 			
@@ -733,7 +741,7 @@
 
 		function loadHotelMsg(hotel_id) {
 			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue - 1].year + "&month=" + $scope.months[$scope.monthvalue - 1].month;
-			//console.log(url);
+			console.log(url);
 			$http.get(url)
 				.success(function(resp) {
 					console.log(resp);
