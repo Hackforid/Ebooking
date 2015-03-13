@@ -150,7 +150,7 @@
 
 			var startday = year + "-" + month + "-" + date;
 
-			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 364;
 			var ninetyday = new Date(ninetytime);
 			var ninetymonth = ninetyday.getMonth() + 1;
 			var ninetydate = ninetyday.getDate();
@@ -790,7 +790,7 @@
 			var month = day.getMonth() + 1;
 			var year = day.getFullYear();
 
-			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetytime = day.getTime() + 1000 * 60 * 60 * 24 * 364;
 			var ninetyday = new Date(ninetytime);
 			var ninetymonth = ninetyday.getMonth() + 1;
 			var monthcount = (ninetyday.getFullYear() - year) * 12 + (ninetyday.getMonth() + 1 - month) + 1;
@@ -830,7 +830,7 @@
 			day.setFullYear(year);
 			day.setMonth(month - 1);
 
-			var ninetytime = new Date().getTime() + 1000 * 60 * 60 * 24 * 90;
+			var ninetytime = new Date().getTime() + 1000 * 60 * 60 * 24 * 364;
 			var ninetyday = new Date(ninetytime);
 			var ninetyyear = ninetyday.getFullYear();
 			var ninetymonth = ninetyday.getMonth() + 1;
