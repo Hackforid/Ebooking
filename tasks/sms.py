@@ -12,14 +12,20 @@ from tasks.base_task import SqlAlchemyTask
 
 from tools.log import Log
 from config import ORDER_CONTACTS
+from constants import BED_TYPE
 
 @app.task(base=SqlAlchemyTask, bind=True, ignore_result=True)
 def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
     Log.info(u">>> send sms to merchant {} hotel {} order_id {} confirm type {}".format(merchant_id, hotel_name, order_id, confirm_type))
+
+    order = OrderModel.get_by_id(self.session, order_id)
+    breakfast_str = u'含早' if order.get_has_breakfast() else u'无早'
+
+
     if confirm_type == OrderModel.CONFIRM_TYPE_AUTO:
-        content = u"【商旅分销管理系统】尊敬的用户您好，系统收到了[{}]的自动确认订单，订单号:{}，请予以关注。".format(hotel_name, order_id)
+        content = u"尊敬的用户您好，系统收到编号{}自动确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，总价：{}，{}。订单号：{}，请及时关注。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), order.total_price / 100, breakfast_str, order_id)
     elif confirm_type == OrderModel.CONFIRM_TYPE_MANUAL:
-        content = u"【商旅分销管理系统】尊敬的用户您好，系统收到了[{}]的待确认订单，订单号:{}，请尽快处理。".format(hotel_name, order_id)
+        content = u"尊敬的用户您好，系统收到编号{}待确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，总价：{}，{}。订单号：{}，请尽快处理。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), order.total_price / 100, breakfast_str, order_id)
     send_sms_to_service(merchant_id, content)
 
     user =UserModel.get_user_by_merchantid_username(self.session, merchant_id, 'admin')
@@ -52,5 +58,5 @@ def send_sms(phones, content):
 
 
 def send_sms_to_service(merchant_id, content):
-    content = u"merchant {} 收到新订单: {}".format(merchant_id, content)
+    #content = u"merchant {} 收到新订单: {}".format(merchant_id, content)
     send_sms(ORDER_CONTACTS, content)
