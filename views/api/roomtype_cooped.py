@@ -92,7 +92,8 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         today = datetime.today()
 
         min_date = datetime(today.year, today.month, 1)
-        max_date = min_date + timedelta(days=365)
+        max_date = today + timedelta(days=365)
+        print date, min_date, max_date
         if date < min_date or date > max_date:
             raise JsonException(errcode=1003, errmsg="query date out of range")
 
