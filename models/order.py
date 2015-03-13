@@ -2,6 +2,7 @@
 
 import time
 import datetime
+import json
 
 from tornado.util import ObjectDict 
 
@@ -237,12 +238,19 @@ class OrderModel(Base):
         self.status = 300
         session.commit()
 
+    def get_has_breakfast(self):
+        if self.breakfast:
+            breakfasts = self.breakfast.split(',')
+            if breakfasts[0] != '0':
+                return True
+        return False
 
+    def get_stay_days(self):
+        return (self.checkout_date - self.checkin_date).days
 
     def todict(self):
         return ObjectDict(
-                id=self.id,
-                main_order_id=self.main_order_id,
+                id=self.id, main_order_id=self.main_order_id,
                 hotel_id=self.hotel_id,
                 hotel_name=self.hotel_name,
                 roomtype_id=self.roomtype_id,
@@ -278,4 +286,6 @@ class OrderModel(Base):
                 guarantee_start_time=self.guarantee_start_time,
                 ota_id=self.ota_id,
                 ota_name=self.ota_name,
+                stay_days=self.get_stay_days(),
+                has_breakfast=self.get_has_breakfast(),
                 )
