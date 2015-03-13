@@ -217,7 +217,7 @@
 						$("#acceptDialog").hide();
 
 					} else {
-
+						$("#acceptDialog").hide();
 						$scope.messageBox = "接受订单失败";
 						$("#messageDialog").show();
 					}
@@ -268,7 +268,7 @@
 						$("#refuseDialog").hide();
 
 					} else {
-
+						$("#refuseDialog").hide();
 						$scope.messageBox = "拒绝订单失败";
 						$("#messageDialog").show();
 					}
