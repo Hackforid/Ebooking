@@ -61,5 +61,5 @@ def get_inventory_by_date(inventories, year, month):
 @app.task(base=SqlAlchemyTask, bind=True)
 def complete_in_four_months(self):
     roomtypes = CooperateRoomTypeModel.get_all(self.session)
-    InventoryModel.insert_all_in_four_month(self.session, roomtypes)
+    InventoryModel.insert_all_in_months(self.session, roomtypes, 13)
 

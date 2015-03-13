@@ -159,16 +159,36 @@ class InventoryModel(Base):
 
 
     @classmethod
-    def insert_by_year(cls, session, merchant_id, hotel_id, roomtype_id, year):
+    def insert_by_year(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, year):
+        inventories = []
         for month in range(1,13):
             inventory = cls.get_by_merchant_hotel_roomtype_date(session, merchant_id, hotel_id, roomtype_id, year, month)
             if inventory:
                 continue
             else:
                 _month = InventoryModel.combin_year_month(year, month)
-                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month)
-                session.add(inventory)
+                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, month=_month)
+                inventories.append(inventory)
+
+        session.add_all(inventories)
         session.commit()
+        return inventories
+
+    @classmethod
+    def insert_in_months(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, months):
+        inventories = []
+        dates= cls.get_months(months)
+        for date in dates:
+            inventory = cls.get_by_merchant_hotel_roomtype_date(session, merchant_id, hotel_id, roomtype_id, date[0], date[1])
+            if inventory:
+                continue
+            else:
+                _month = InventoryModel.combin_year_month(date[0], date[1])
+                inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
+                inventories.append(inventory)
+        session.add_all(inventories)
+        session.commit()
+        return inventories
 
     @classmethod
     def insert_in_four_month(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id):
@@ -182,6 +202,25 @@ class InventoryModel(Base):
                 _month = InventoryModel.combin_year_month(date[0], date[1])
                 inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
                 inventories.append(inventory)
+        session.add_all(inventories)
+        session.commit()
+        return inventories
+
+    @classmethod
+    def insert_all_in_months(cls, session, roomtypes, months):
+
+        inventories = []
+        dates= cls.get_months(months)
+
+        for roomtype in roomtypes:
+            for date in dates:
+                inventory = cls.get_by_roomtype_id_and_date(session, roomtype.id, date[0], date[1])
+                if inventory:
+                    continue
+                else:
+                    _month = InventoryModel.combin_year_month(date[0], date[1])
+                    inventory = InventoryModel(merchant_id=roomtype.merchant_id, hotel_id=roomtype.hotel_id, roomtype_id=roomtype.id, month=_month, base_hotel_id=roomtype.base_hotel_id, base_roomtype_id=roomtype.base_roomtype_id)
+                    inventories.append(inventory)
         session.add_all(inventories)
         session.commit()
         return inventories
