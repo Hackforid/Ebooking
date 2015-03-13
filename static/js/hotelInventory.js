@@ -856,9 +856,49 @@
 			/*赋值部分*/
 			$scope.roomNum = [];
 			for (var i = 0; i < $scope.cooped.length; i++) {
-				$scope.roomNum.push($scope.cooped[i].inventory);
-			};
+				if ($scope.cooped[i].inventory != undefined && $scope.cooped[i].inventory != null) {
+					$scope.roomNum.push($scope.cooped[i].inventory);
+				} else {
+					var tempInventory = {
 
+						day1: "-1|-1",
+						day2: "-1|-1",
+						day3: "-1|-1",
+						day4: "-1|-1",
+						day5: "-1|-1",
+						day6: "-1|-1",
+						day7: "-1|-1",
+						day8: "-1|-1",
+						day9: "-1|-1",
+						day10: "-1|-1",
+						day11: "-1|-1",
+						day12: "-1|-1",
+						day13: "-1|-1",
+						day14: "-1|-1",
+						day15: "-1|-1",
+						day16: "-1|-1",
+						day17: "-1|-1",
+						day18: "-1|-1",
+						day19: "-1|-1",
+						day20: "-1|-1",
+						day21: "-1|-1",
+						day22: "-1|-1",
+						day23: "-1|-1",
+						day24: "-1|-1",
+						day25: "-1|-1",
+						day26: "-1|-1",
+						day27: "-1|-1",
+						day28: "-1|-1",
+						day29: "-1|-1",
+						day30: "-1|-1",
+						day31: "-1|-1"
+
+					};
+
+					$scope.roomNum.push(tempInventory);
+				}
+			};
+			console.log($scope.roomNum);
 			/*赋值部分*/
 
 			var tempDayNum = new Date(year, month, 0).getDate();
