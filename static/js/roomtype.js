@@ -569,6 +569,13 @@
 		$scope.confirmCancel=false;
 		$scope.cancelIndex;
 
+
+		$scope.conventIdInt=function(id){
+			
+			return (parseInt(id)+1);
+
+		}
+
 		$scope.confirmOk=function(){
 
 
@@ -833,6 +840,8 @@
 			var day = new Date();
 			var year = $scope.months[monthvalue - 1].year;
 			var month = $scope.months[monthvalue - 1].month;
+			//console.log(year);
+			//console.log(month);
 			day.setFullYear(year);
 			day.setMonth(month - 1);
 
