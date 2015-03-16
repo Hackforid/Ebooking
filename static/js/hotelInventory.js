@@ -186,6 +186,22 @@
 
 		}
 
+		function timeStartCheck(timeStart) {
+
+			var choosedTime = timeStart.split("-");
+			var currentYear = scope.months[scope.monthvalue - 1].year;
+			var currentMonth = scope.months[scope.monthvalue - 1].month;
+
+
+			if (choosedTime[0] == currentYear && parseInt(choosedTime[1]) == currentMonth) {
+												
+				return 1;
+			} else {
+				return 0;
+			}
+
+		}
+
 
 		this.roomNumCheck = function() {
 
@@ -237,9 +253,12 @@
 
 						scope.roomNum = [];
 
+					if (timeStartCheck(timeStart)) {
+						
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+					}
 
 						scope.num = "";
 
@@ -286,9 +305,12 @@
 
 						scope.roomNum = [];
 
+					if (timeStartCheck(timeStart)) {
+						
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+					}
 
 						scope.num = "";
 
@@ -334,9 +356,12 @@
 
 						scope.roomNum = [];
 
+					if (timeStartCheck(timeStart)) {
+						
 						scope.cooped[scope.currentIndex].inventory = resp.result.inventories[0];
 
 						scope.dateCheck(scope.monthvalue);
+					}
 
 						scope.num = "";
 
