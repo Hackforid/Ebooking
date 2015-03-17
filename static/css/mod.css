@@ -177,6 +177,7 @@ text-align:left; line-height:180%; color:#666;
 .main-osearch .search-div {margin-bottom:10px; } 
 .main-osearch .search-div .divone {background:#F8F8F8; overflow:auto; padding:10px 4px 6px 15px;border: 1px solid #E8ECF0;}
 .main-osearch .search-div .divone label { float:left; height:36px; font-size:12px; line-height:28px;padding-right:30px;*+width:340px;*+padding-right:0;}
+.main-osearch .search-div .divone span { float:left; height:36px; font-size:12px; line-height:28px;padding-right:30px;*+width:340px;*+padding-right:0;}
 .main-osearch .search-div .input-t { width:150px;height:24px; line-height:22px;text-indent:2px;}
 .main-osearch .search-div .input-s { width:152px;height:26px; line-height:22px;text-indent:2px;}
 .main-osearch .search-div .input-time {width:120px;height:24px; line-height:22px;}

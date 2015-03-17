@@ -134,7 +134,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b);
+			day.setMonth(b-1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();
@@ -157,11 +157,110 @@
 		}
 
 
+		function daysPlus(year, month, date) {
 
-		$scope.priceDivIn = function(index) {
+			var day = new Date();
+
+			day.setFullYear(year);
+			day.setMonth(month - 1);
+			day.setDate(date);
+
+			var dayTime = day.getTime() + 24 * 60 * 60 * 1000;
+
+			var dayPlus = new Date(dayTime);
+
+			var yearPlus = dayPlus.getFullYear();
+			var monthPlus = dayPlus.getMonth() + 1;
+			var dayPlus = dayPlus.getDate();
+
+			if (monthPlus < 10) {
+				monthPlus = "0" + monthPlus;
+			}
+			if (dayPlus < 10) {
+				dayPlus = "0" + dayPlus;
+			}
+
+			return (yearPlus + "-" + monthPlus + "-" + dayPlus);
+
+		}
 
 
-			$("#orderPrice-" + index).after("<div class='room-info'>取消规则：一经预订不可取消，扣除全额房费.<br />价格类别：普通售价<br />每日价格：<b>09-28</b>170元，<b>09-30</b>180元</div>").show(0, function() {});
+
+		$scope.priceDivIn = function(index, currentOrder) {
+
+			var startDate = currentOrder['checkin_date'];
+			var endDate = currentOrder['checkout_date'];
+
+			var splitDate, startTime, endTime, iDays, splitEndDate;
+			splitDate = startDate.split("-");
+			startTime = dateTimeChecker(splitDate[0], splitDate[1], splitDate[2]);
+			splitEndDate = endDate.split("-");
+			endTime = dateTimeChecker(splitEndDate[0], splitEndDate[1], splitEndDate[2]);
+			iDays = parseInt(Math.abs(startTime - endTime) / 1000 / 60 / 60 / 24);
+
+
+			var dayPrice = currentOrder['everyday_price'];
+			var splitPrice = dayPrice.split(",");
+
+			var priceShow = "";
+
+			var dayPriceStyle = "";
+
+			if (splitPrice.length == 1) {
+
+				for (var i = 0; i < iDays; i++) {
+
+					priceShow = priceShow + "<b style=" + dayPriceStyle + ">" + splitDate[1] + "-" + splitDate[2] + "</b>" + splitPrice + "元&nbsp;&nbsp";
+
+					if (i % 2 == 1) {
+
+						priceShow = priceShow + "<br>";
+
+						dayPriceStyle = "margin-left:60px";
+
+					} else {
+
+						dayPriceStyle = "";
+
+					}
+
+					startDate = daysPlus(splitDate[0], splitDate[1], splitDate[2]);
+
+					splitDate = startDate.split("-");
+
+				};
+
+			} else {
+
+				for (var i = 0; i < iDays; i++) {
+
+					if (splitPrice[i] != undefined) {
+
+						priceShow = priceShow + "<b style=" + dayPriceStyle + ">" + splitDate[1] + "-" + splitDate[2] + "</b>" + splitPrice[i] + "元&nbsp;&nbsp";
+
+						if (i % 2 == 1) {
+
+							priceShow = priceShow + "<br>";
+							dayPriceStyle = "margin-left:60px";
+
+						} else {
+
+							dayPriceStyle = "";
+
+						}
+
+						startDate = daysPlus(splitDate[0], splitDate[1], splitDate[2]);
+
+						splitDate = startDate.split("-");
+					}
+
+				};
+
+			}
+
+			var priceDiv = "<div class='room-info'>取消规则：" + $scope.getCancelStatus(currentOrder['cancel_type'], currentOrder['punish_type']) + "<br />价格类别：" + currentOrder['rateplan_name'] + "<br />每日价格：" + priceShow + "</div>";
+
+			$("#orderPrice-" + index).after(priceDiv).show(0, function() {});
 
 		}
 
@@ -332,6 +431,7 @@
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
+						
 						$scope.orderList = resp.result.orders;
 
 						$scope.total = resp.result.total;

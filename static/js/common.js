@@ -90,7 +90,21 @@ $(document).ready(function() {
     $(".person-menu").hide(0);
   });
 
+  /*qq*/
 
+  $("#qqOnline").click(function() {
+    $("#qqContact").show();
+    $("#qqOnline").css("background-color", "white");
+    $("#qqOnline").css("border-left", "1px solid #ccc");
+    $("#qqOnline").css("border-right", "1px solid #ccc");
+
+  });
+  $("#qqOnline").mouseleave(function() {
+    $("#qqContact").hide();
+    $("#qqOnline").css("background-color", "#FAFAFA");
+    $("#qqOnline").css("border-left", "none");
+    $("#qqOnline").css("border-right", "none");
+  });
 
   //新手引导弹窗
   $("#guide-btn").click(function() {

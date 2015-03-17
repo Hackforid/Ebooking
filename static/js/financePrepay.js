@@ -216,7 +216,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 		var day = new Date();
 
 		day.setFullYear(a);
-		day.setMonth(b);
+		day.setMonth(b-1);
 		day.setDate(c);
 
 		var dayTime = day.getTime();
