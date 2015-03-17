@@ -161,7 +161,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b);
+			day.setMonth(b-1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();
@@ -436,7 +436,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b);
+			day.setMonth(b-1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();
@@ -611,6 +611,54 @@
 		$scope.currentOrder;
 
 
+		$('#liveStarTime').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
+		$('#liveEndTime').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
+		$('#ListStarTime').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
+		$('#ListEndTime').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
 		$scope.resonStatusCheck = function(a, b) {
 
 			if (a == "拒绝") {
@@ -733,7 +781,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b);
+			day.setMonth(b-1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();

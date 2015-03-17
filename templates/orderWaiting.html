@@ -166,7 +166,7 @@
                                        <span ng-bind="order.checkout_date"></span>
                                        <span ng-bind="DateDiff(order.checkin_date,order.checkout_date)"></span>
                                        </td>
-                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index); ng-mouseleave=priceDivOut($index); class="price" ng-bind="order.total_price+'元'"></em> </td>
+                                    <td width="10%" class="po"><em id={{"orderPrice-"+$index}} ng-mouseover=priceDivIn($index,order); ng-mouseleave=priceDivOut($index); class="price" ng-bind="order.total_price+'元'"></em> </td>
                                     <td width="10%"><span ng-bind="order['create_time'][0]"></span><br />
                                          <span ng-bind="order['create_time'][1]"></span></td>    
                                     <td width="10%">
@@ -236,8 +236,8 @@
            <tr><td style="width:22%"><strong>联系人：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>联系电话：</strong></td><td style="width:78%"><span ng-bind="currentOrder['contact_mobile']"></span></td></tr>
 
-             <tr ng-if="currentOrder['pay_type'] == 1"><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="currentOrder['cancel_type']"></span></td></tr>
-           <tr><td style="width:22%"><strong>价格代码名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['']"></span></td></tr>
+             <tr ng-if="currentOrder['pay_type'] == 1"><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
+           <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
 

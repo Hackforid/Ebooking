@@ -150,6 +150,14 @@ border-left:0px solid #E1E1E1; border-top:0px solid #305C9A;}
 .header .right-menu li.icon-guide:hover { background-position:11px -811px;}
 .header .right-menu li.icon-help:hover { background-position:20px -990px; }
 
+/* qq悬浮 */
+.qq{clear:both;display:none;width:240px;border-top:1px solid #ccc;border-right:1px solid #ccc;border-left:1px solid #ccc;border-bottom:1px solid #ccc;position:absolute;top:86px;right:0px;background:white;font-size:12px;}
+.qq img{margin-top: 5px;margin-bottom: 5px;margin-left: 15px;}
+.qq span{/* position: relative;bottom: 12px; */}
+.qq a{display: inline!important;}
+.qq .borderdis{background:white;height:1px;width:68px;position:absolute;left:95px;border:1px solid white;top:-1px;}
+
+
 /* 页头用户信息菜单 */
 .header .admin-info {float:left; background:#FFA700;height:86px;width:170px; overflow:hidden;}
 .no-bg .header .admin-info { }

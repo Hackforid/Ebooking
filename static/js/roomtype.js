@@ -569,6 +569,32 @@
 		$scope.confirmCancel=false;
 		$scope.cancelIndex;
 
+		$('#timeStart').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
+		$('#timeEnd').datepicker({
+
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			orientation: "top auto",
+			autoclose: true,
+			enableOnReadonly: true,
+			showOnFocus: true
+
+
+		});
+
+
+
 
 		$scope.conventIdInt=function(id){
 			
@@ -721,8 +747,8 @@
 					}
 
 					var inputCurrent = day.getFullYear() + "-" + month + "-" + date;*/
-					$("#timeStart").val(inputCurrent);
-					$("#timeEnd").val(inputCurrent);
+					$("#timeStart").val(inputCurrent).datepicker('update');
+					$("#timeEnd").val(inputCurrent).datepicker('update');
 
 				});
 			});

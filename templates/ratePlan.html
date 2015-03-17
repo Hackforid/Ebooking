@@ -231,8 +231,8 @@
   </tr>
   <tr>
     <td>日期：</td>
-    <td><input type="text" name="timeStart" id="timeStart" onClick="WdatePicker()"  class="input-time" readonly="readonly"/ > 至 
-                     <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" readonly="readonly"/></td>
+    <td><input type="text" name="timeStart" id="timeStart"  class="input-time" readonly="readonly"/ > 至 
+                     <input type="text" name="timeEnd" id="timeEnd"  class="input-time" readonly="readonly"/></td>
   </tr>
   <tr>
     <td>价格：</td>
@@ -241,8 +241,8 @@
 </table>
 <p style="padding-left:32px;color:red" ng-bind="roomRatePlanDialog.errmsg"></p>
           <p class="action" style=" text-align:center">
-          <input name="" type="button" value="保存" class="btn" ng-click="roomRatePlanDialog.save()" />
-          <input name="" type="button" value="取消" class="btn btn-bai" ng-click="roomRatePlanDialog.close()" />
+          <input name="" type="button" value="保存"  ng-click="roomRatePlanDialog.save()" />
+          <input name="" type="button" value="取消" class="btn-bai" ng-click="roomRatePlanDialog.close()" />
           </p>
        </div>
    </div> 
@@ -341,6 +341,14 @@
     <script>
         var hotelId = ${hotel_id};
     </script>
+
+
+    <link rel="stylesheet" type="text/css" href="${static_url('css/bootstrap-datepicker3.css')}">
+
+    <script type="text/javascript" src="${static_url('js/bootstrap.min.js')}"></script>
+    <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.js')}"></script>
+    <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.zh-CN.min.js')}"></script>
+
     <script src="${static_url('js/roomtype.js')}"></script>
 </%def>
 

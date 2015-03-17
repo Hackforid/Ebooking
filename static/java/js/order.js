@@ -935,7 +935,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b);
+        day.setMonth(b-1);
         day.setDate(c);
 
         var dayTime = day.getTime();
@@ -1126,7 +1126,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
         var day = new Date();
-        day.setMonth((date[1] + 1));
+        day.setMonth((date[1] - 1));
         day.setFullYear(date[0]);
         day.setDate(date[2]);
         var totaltime = day.getTime();
@@ -1383,7 +1383,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b);
+        day.setMonth(b-1);
         day.setDate(c);
 
         var dayTime = day.getTime();
@@ -1488,7 +1488,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
 
         var day = new Date();
-        day.setMonth((date[1] + 1));
+        day.setMonth((date[1] - 1));
         day.setFullYear(date[0]);
         day.setDate(date[2]);
         var totaltime = day.getTime();
@@ -1560,6 +1560,31 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
     $scope.allSumShow = false;
+
+
+    $('#time1').datepicker({
+
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            orientation: "top auto",
+            autoclose: true,
+            enableOnReadonly: true,
+            showOnFocus: true
+
+
+    });
+
+    $('#time2').datepicker({
+
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            orientation: "top auto",
+            autoclose: true,
+            enableOnReadonly: true,
+            showOnFocus: true
+
+
+    });
     
 
     $scope.checkEveryPrice = function(price) {
@@ -1731,7 +1756,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b);
+        day.setMonth(b-1);
         day.setDate(c);
 
         var dayTime = day.getTime();

@@ -208,8 +208,8 @@
   </tr>
   <tr>
     <td>日期：</td> 
-    <td><input type="text" name="timeStart" id="timeStart" onClick="WdatePicker()"  class="input-time" readonly="readonly"/ > 至 
-                     <input type="text" name="timeEnd" id="timeEnd" onClick="WdatePicker()"  class="input-time" readonly="readonly"/></td>
+    <td><input type="text" name="timeStart" id="timeStart"  class="input-time" readonly="readonly"/ > 至 
+                     <input type="text" name="timeEnd" id="timeEnd"  class="input-time" readonly="readonly"/></td>
   </tr>
   <tr>
     <td>房量调整：</td>
@@ -221,7 +221,7 @@
           <input name="" type="button" value="设置为0" ng-click="changeNumDialog.zeroSave()" class="sure-more btn-bai" />
           <input name="" type="button" ng-click="changeNumDialog.addSave()" ng-value="'加'+filterNum(num)+'房量'"  class="sure-more" />
            <input name="" type="button" ng-click="changeNumDialog.minusSave()" ng-value="'减'+filterNum(num)+'房量'" class="sure-more" />
-          <input name="" ng-click="changeNumDialog.close()" type="button" value="取消" class="btn btn-bai"  />
+          <input name="" ng-click="changeNumDialog.close()" type="button" value="取消" class="btn-bai"  />
           </p>
        </div>
    </div> 
@@ -287,6 +287,14 @@
     <script>
         var hotelId = ${hotel_id};
     </script>
+
+    <link rel="stylesheet" type="text/css" href="${static_url('css/bootstrap-datepicker3.css')}">
+
+    <script type="text/javascript" src="${static_url('js/bootstrap.min.js')}"></script>
+    <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.js')}"></script>
+    <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.zh-CN.min.js')}"></script>
+
+
     <script src="${static_url('js/hotelInventory.js')}"></script>
 </%def>
 
