@@ -3,7 +3,7 @@
 .fr { float:right;padding-right: 80px;font-size:20px;} */
 .print-web {width:1000px;margin:0 auto; font-size:14px;color:#000; text-align:left; line-height:160%;}
 .print-web table td {padding:20px 0;}
-.print-web span {float:left;padding:3px 5px 3px 0;width:94px;}
+.print-web span {float:left;padding:3px 5px 3px 0;width:94px;  -webkit-box-sizing: content-box!important;-moz-box-sizing: content-box!important;box-sizing: content-box!important;}
 .print-web span b { font-size:17px; font-weight:bold;}
 .print-web u { float:left;width:240px; border-bottom:1px dotted #999;font-style:normal; text-decoration:none;}
 .print-web u.xian {min-height:26px;}
