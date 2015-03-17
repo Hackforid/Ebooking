@@ -35,6 +35,7 @@ from views.api.contract import ContractAPIHandler
 from views.contract import ContractHandler
 
 from views.api.pms import PMSNewOrderAPIHandler
+from views.api.batch import HotelRoomBatchAPIHandler
 
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -108,4 +109,6 @@ handlers = [
         (r"/api/inner/ordersys/order/submit/?", SubmitOrderAPIHandler),
         (r"/api/inner/ordersys/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
         (r"/api/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
+
+        (r"/api/batch/online/?", HotelRoomBatchAPIHandler),
 ]
