@@ -1,6 +1,6 @@
 (function() {
 
-	var hotelInventoryApp = angular.module('hotelInventoryApp', []);
+	var hotelInventoryApp = angular.module('hotelInventoryApp', ['myApp.service']);
 
 
 	hotelInventoryApp.config(['$httpProvider', function($httpProvider) {
@@ -44,7 +44,7 @@
 	});*/
 
 
-	var HotelHeadDialog = function(scope, http) {
+	var HotelHeadDialog = function(scope, http, log) {
 		this.scope = scope;
 		this.http = http;
 		this.name = '';
@@ -54,6 +54,8 @@
 
 		this.prefixName = "";
 		this.remarkName = "";
+
+		var log = log;
 
 
 		/*this.exampleDivIn = function(index) {
@@ -95,7 +97,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$("div.eachroom").eq(index).css("display", "none");
@@ -109,7 +111,7 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}
@@ -117,13 +119,14 @@
 	}
 
 
-	var ChangeNumDialog = function(scope, http) {
+	var ChangeNumDialog = function(scope, http, log) {
 		this.scope = scope;
 		this.http = http;
 		this.name = '';
 		this.mealType = 0;
 		this.punishType = 0;
 		this.errmsg = '';
+		var log = log;
 
 		this.close = function() {
 
@@ -246,7 +249,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -268,7 +271,7 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 
@@ -298,7 +301,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -320,7 +323,7 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}
@@ -349,7 +352,7 @@
 			//	console.log(url);
 			http.put(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$("#openDiv1").fadeOut(500);
@@ -371,7 +374,7 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 
@@ -383,7 +386,7 @@
 
 
 
-	hotelInventoryApp.controller('hotelInventoryCtrl', ['$scope', '$http', function($scope, $http) {
+	hotelInventoryApp.controller('hotelInventoryCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 		//$scope.desResult = false;
 		$scope.hotel = {};
@@ -398,8 +401,8 @@
 		$scope.roomNumAuto = [];
 		$scope.roomNumHand = [];
 		$scope.dayWeekSum = [];
-		$scope.changeNumDialog = new ChangeNumDialog($scope, $http);
-		$scope.hotelHeadDialog = new HotelHeadDialog($scope, $http);
+		$scope.changeNumDialog = new ChangeNumDialog($scope, $http, log);
+		$scope.hotelHeadDialog = new HotelHeadDialog($scope, $http, log);
 		$scope.currentRoomId;
 		$scope.currentIndex;
 		$scope.currentPriceType;
@@ -556,11 +559,11 @@
 			
 			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.cooped[$scope.cancelIndex].cooped_roomtype_id+"/cooped";
 
-			console.log(url);
+			log.log(url);
 
 			$http({method: 'DELETE', url: url})
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.willCoop.push($scope.cooped[$scope.cancelIndex]);
@@ -568,11 +571,11 @@
 						$scope.confirmCancel=false;
 						
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 
@@ -754,7 +757,7 @@
 					'roomtype_ids': shouldCooped
 				})
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						loadHotelMsg(hotelId);
@@ -767,7 +770,7 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 		}
 
@@ -791,10 +794,10 @@
 
 		function loadHotelMsg(hotel_id) {
 			var url = "/api/hotel/" + hotel_id + "/roomtype/?year=" + $scope.months[$scope.monthvalue - 1].year + "&month=" + $scope.months[$scope.monthvalue - 1].month;
-			console.log(url);
+			log.log(url);
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.willCoop = resp.result.will_coop_roomtypes;
@@ -805,11 +808,11 @@
 						$scope.dateCheck($scope.monthvalue);
 
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 		}
 
@@ -956,7 +959,7 @@
 					$scope.roomNum.push(tempInventory);
 				}
 			};
-			console.log($scope.roomNum);
+			log.log($scope.roomNum);
 			/*赋值部分*/
 
 			var tempDayNum = new Date(year, month, 0).getDate();

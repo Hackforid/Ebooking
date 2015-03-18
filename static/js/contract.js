@@ -1,4 +1,4 @@
-var contractApp = angular.module('contractApp', []);
+var contractApp = angular.module('contractApp', ['myApp.service']);
 
 
 contractApp.config(['$httpProvider', function($httpProvider) {
@@ -13,7 +13,7 @@ contractApp.config(['$httpProvider', function($httpProvider) {
 }]);
 
 
-contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $http) {
+contractApp.controller('contractAppCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 
 
@@ -84,7 +84,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 
 
 		$scope.currentContract = $scope.contracts[index];
-		console.log($scope.currentContract);
+		log.log($scope.currentContract);
 
 		$scope.changeName = $scope.currentContract.name;
 		$scope.changePayType = $scope.currentContract.type;
@@ -99,7 +99,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 
 
 	$scope.addContractBtn = function() {
-		console.log($scope.contracts.length);
+		log.log($scope.contracts.length);
 		if ($scope.contracts.length == 2) {
 			return;
 		}
@@ -229,11 +229,11 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 		};
 
 
-		console.log(params);
+		log.log(params);
 
 		$http.post(url, params)
 			.success(function(resp) {
-				console.log(resp);
+				log.log(resp);
 				if (resp.errcode == 0) {
 
 					$scope.contracts.push(resp.result.contract);
@@ -246,7 +246,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 				}
 			})
 			.error(function() {
-				console.log('network error');
+				log.log('network error');
 			})
 
 	}
@@ -324,11 +324,11 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 			"bank_account_name": $scope.changeBankName
 		};
 
-		console.log(params);
+		log.log(params);
 
 		$http.put(url, params)
 			.success(function(resp) {
-				console.log(resp);
+				log.log(resp);
 				if (resp.errcode == 0) {
 					//$scope.currentContract=resp.result;
 
@@ -342,7 +342,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 				}
 			})
 			.error(function() {
-				console.log('network error');
+				log.log('network error');
 			})
 
 
@@ -356,7 +356,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 
 		$http.get(url)
 			.success(function(resp) {
-				console.log(resp);
+				log.log(resp);
 				if (resp.errcode == 0) {
 
 					$scope.contracts = resp.result.contracts;
@@ -369,7 +369,7 @@ contractApp.controller('contractAppCtrl', ['$scope', '$http', function($scope, $
 				}
 			})
 			.error(function() {
-				console.log('network error');
+				log.log('network error');
 			})
 
 	}

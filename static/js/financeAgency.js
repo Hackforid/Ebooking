@@ -1,4 +1,4 @@
-var financeApp = angular.module('financeApp', []);
+var financeApp = angular.module('financeApp', ['myApp.service']);
 
 
 financeApp.config(['$httpProvider', function($httpProvider) {
@@ -13,7 +13,7 @@ financeApp.config(['$httpProvider', function($httpProvider) {
 }]);
 
 
-financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $http) {
+financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 
 
@@ -230,7 +230,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.ordDetail = function(id, ord) {
 
 		$scope.currentOtaOrders = ord;
-		console.log(ord);
+		log.log(ord);
 		$scope.orderDetail = true;
 
 	}
@@ -352,12 +352,12 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 			'pay_type': 0
 
 		};
-		console.log(params);
+		log.log(params);
 
 
 		$http.post('/api/income/', params)
 			.success(function(resp) {
-				console.log(resp);
+				log.log(resp);
 				if (resp.errcode == 0) {
 					var otaInc = resp.result.income;
 
@@ -393,10 +393,10 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 					$scope.currentOtaIncome = $scope.otaIncomes[$scope.currentOtaId]; //.incomes.push(resp.result.income);
-					console.log($scope.currentOtaIncome);
+					log.log($scope.currentOtaIncome);
 
 
-					console.log($scope.otaIncomes);
+					log.log($scope.otaIncomes);
 
 
 
@@ -410,19 +410,18 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				}
 			})
 			.error(function() {
-				console.log('network error');
+				log.log('network error');
 			})
 
 	}
 
 
 	$scope.incDetail = function(id, inc) {
-		console.log("rrr");
 		$scope.incomeDetail = true;
 		$scope.currentOtaIncome = inc;
 		$scope.currentOtaId = id;
-		console.log(inc);
-		console.log(id);
+		log.log(inc);
+		log.log(id);
 	}
 
 
@@ -471,7 +470,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 	$scope.urlCheck = function urlCheck() {
 
 		if ($.trim($scope.searchOtaId) == "" || $scope.searchOtaId == undefined || $.trim($scope.searchYear) == "" || $scope.searchYear == undefined || $.trim($scope.searchMonth) == "" || $scope.searchMonth == undefined) {
-			console.log("空值");
+			log.log("空值");
 			return;
 		}
 
@@ -499,9 +498,9 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 		}
 
 
-		console.log(url);
+		log.log(url);
 		$scope.finalUrl = encodeURI(url);
-		console.log($scope.finalUrl);
+		log.log($scope.finalUrl);
 
 		$scope.searchResult();
 
@@ -511,7 +510,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 		$http.get($scope.finalUrl)
 			.success(function(resp) {
-				console.log(resp);
+				log.log(resp);
 				if (resp.errcode == 0) {
 
 
@@ -1338,7 +1337,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 
 
-					console.log(allOtaInc);
+					log.log(allOtaInc);
 					$scope.otaIncomes = allOtaInc;
 
 
@@ -1386,7 +1385,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 
 					};
 
-					console.log(allotaOrd);
+					log.log(allotaOrd);
 
 
 					$scope.otaOrders = allotaOrd;
@@ -1420,7 +1419,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http', function($scope, $ht
 				}
 			})
 			.error(function() {
-				console.log('network error');
+				log.log('network error');
 			})
 
 

@@ -1,6 +1,6 @@
 (function() {
 
-	var orderListApp = angular.module('orderListApp', ['myApp.directives']);
+	var orderListApp = angular.module('orderListApp', ['myApp.service','myApp.directives']);
 
 
 	orderListApp.directive('ngEnter', function() {
@@ -32,7 +32,7 @@
 
 
 
-	orderListApp.controller('orderListBookCtrl', ['$scope', '$http', function($scope, $http) {
+	orderListApp.controller('orderListBookCtrl', ['$scope', '$http', 'log',function($scope, $http, log) {
 
 		$scope.todayBook = {};
 		$scope.itemPerPage = "20";
@@ -210,7 +210,7 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayBook = resp.result.orders;
 
@@ -288,11 +288,11 @@
 						$scope.directiveCtl = true;
 
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}
@@ -305,7 +305,7 @@
 	}])
 
 
-	orderListApp.controller('orderListCheckCtrl', ['$scope', '$http', function($scope, $http) {
+	orderListApp.controller('orderListCheckCtrl', ['$scope', '$http', 'log',function($scope, $http, log) {
 
 		$scope.todayCheckIn = {};
 
@@ -479,7 +479,7 @@
 			//console.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.todayCheckIn = resp.result.orders;
 
@@ -571,11 +571,11 @@
 
 
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}
@@ -588,7 +588,7 @@
 
 
 
-	orderListApp.controller('orderListQueryCtrl', ['$scope', '$http', function($scope, $http) {
+	orderListApp.controller('orderListQueryCtrl', ['$scope', '$http','log', function($scope, $http, log) {
 
 		$scope.queryList = {};
 		$scope.itemPerPage = "20";
@@ -710,7 +710,7 @@
 
 		$scope.orderDetail = function(m) {
 
-			console.log(m);
+			log.log(m);
 
 			$scope.currentOrder = m;
 
@@ -915,10 +915,10 @@
 
 		$scope.searchResult = function searchResult() {
 
-			console.log($scope.finalUrl);
+			log.log($scope.finalUrl);
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.queryList = resp.result.orders;
 
@@ -993,11 +993,11 @@
 						$scope.directiveCtl = true;
 
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}

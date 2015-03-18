@@ -1,4 +1,4 @@
-var orderAnalyseApp = angular.module('orderAnalyseApp', []);
+var orderAnalyseApp = angular.module('orderAnalyseApp', ['myApp.service']);
 
 
 orderAnalyseApp.config(['$httpProvider', function($httpProvider) {
@@ -14,9 +14,11 @@ orderAnalyseApp.config(['$httpProvider', function($httpProvider) {
 
 
 
-var ChartInit = function(scope, http) {
+var ChartInit = function(scope, http, log) {
     this.scope = scope;
     this.http = http;
+
+    var log = log;
 
 
 
@@ -46,7 +48,7 @@ var ChartInit = function(scope, http) {
 
     this.realchartInit = function() {
 
-        console.log("图标初始化");
+        log.log("图标初始化");
         // 路径配置
         require.config({
             paths: {
@@ -235,7 +237,7 @@ var ChartInit = function(scope, http) {
 
 
     this.init = function() {
-        console.log("数据初始化");
+        log.log("数据初始化");
 
         // var allOtaNames = ["全部", "去哪儿(优品房源)", "淘宝旅行", "美团", "携程(预付)", "艺龙", "去哪儿(酒店联盟)", "去哪儿(快团)", "去哪儿(酒店直销)", "百达屋", "携程(团购)"];
 
@@ -256,12 +258,13 @@ var ChartInit = function(scope, http) {
 
         var url = "/ebooking/orderStat/night/" + scope.dateRange + "/" + initCurrentAllWays + "/start" + scope.startTime + "/end" + scope.endTime;
 
-        console.log(url);
+        log.log(url);
         // console.log(params);
         http.get(url)
             .success(function(resp) {
-                console.log(resp);
-                console.log("数据1初始化完成");
+
+                log.log("数据1初始化完成");
+                log.log(resp);
 
 
                 /* var resp = {
@@ -389,7 +392,7 @@ var ChartInit = function(scope, http) {
                      };*/
 
                     scope.totalnightCounts = resp.result.dayNights;
-                    console.log(scope.totalnightCounts);
+                    log.log(scope.totalnightCounts);
                     scope.xAxisOrder = xaxisNumber;
                     //scope.yAxisOrder = yaxisNumber;
                     scope.yAxisvalueOrder = yaxisValue;
@@ -437,11 +440,12 @@ var ChartInit = function(scope, http) {
 
                     var pieurl = "/ebooking/orderStat/source/" + scope.dateRange + "/" + currentAllWays + "/start" + scope.startTime + "/end" + scope.endTime;
 
-                    console.log(pieurl);
+                    log.log(pieurl);
                     http.get(pieurl)
                         .success(function(resp) {
-                            console.log(resp);
-                            console.log("数据2初始化完成");
+                            
+                            log.log("数据2初始化完成");
+                            log.log(resp);
 
                             if (resp.errcode == 0) {
 
@@ -584,7 +588,7 @@ var ChartInit = function(scope, http) {
 
                                 scope.currrentOtaResult = scope.totalOtaResult;
 
-                                console.log(scope.totalOtaResult);
+                                log.log(scope.totalOtaResult);
 
 
                                 /*if (isEmptyObject(scope.currrentOtaResult)) {
@@ -632,7 +636,7 @@ var ChartInit = function(scope, http) {
 
 
 
-                                console.log(scope.currrentOtaResult);
+                                log.log(scope.currrentOtaResult);
 
 
                                 scope.otavalueOrder = otaNameValue;
@@ -645,7 +649,7 @@ var ChartInit = function(scope, http) {
 
                             } else {
 
-                                console.log(resp);
+                                log.log(resp);
 
                                 if (resp.errcode == 401) {
 
@@ -658,14 +662,14 @@ var ChartInit = function(scope, http) {
                             }
                         })
                         .error(function() {
-                            console.log('network error');
+                            log.log('network error');
                         })
 
 
 
                 } else {
 
-                    console.log(resp);
+                    log.log(resp);
 
                     if (resp.errcode == 401) {
 
@@ -680,7 +684,7 @@ var ChartInit = function(scope, http) {
                 }
             })
             .error(function() {
-                console.log('network error');
+                log.log('network error');
             })
 
 
@@ -693,7 +697,7 @@ var ChartInit = function(scope, http) {
 
 
 
-orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', 'log',function($scope, $http, log) {
     $scope.searchFlag = 0;
 
 
@@ -707,7 +711,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.currentCounts = "";
 
-    $scope.chartInit = new ChartInit($scope, $http);
+    $scope.chartInit = new ChartInit($scope, $http, log);
 
 
     $scope.lineId = "lineone";
@@ -848,7 +852,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
     $scope.getCurrentOrder = function(order) {
-        console.log(order);
+        log.log(order);
         $scope.currentOrder = order;
         $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
 
@@ -956,7 +960,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
     }
 
     $scope.infoconvent = function(info) {
-        console.log(info);
+        log.log(info);
 
         var infoobj = {};
 
@@ -1025,7 +1029,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
         if ($.trim($scope.currentOtaWay) == "") {
-            console.log("返回");
+            log.log("返回");
             return;
         }
 
@@ -1043,7 +1047,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
         var jurisdictionurl = "/ebooking/orderStat/isAdminAuth";
         $http.get(jurisdictionurl)
             .success(function(resp) {
-                console.log(resp);
+                log.log(resp);
 
                 if (resp.errcode == 0) {
 
@@ -1100,10 +1104,10 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
                 } else {
-                    console.log(resp);
+                    log.log(resp);
 
                     if (resp.errcode == 301) {
-                        console.log("跳转登陆");
+                        log.log("跳转登陆");
 
                         window.location.href = "/login/";
 
@@ -1112,7 +1116,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
                 }
             })
             .error(function() {
-                console.log('network error');
+                log.log('network error');
             })
 
 
@@ -1155,7 +1159,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', 'log', function($scope, $http, log) {
 
     $scope.searchFlag = 0;
 
@@ -1169,7 +1173,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
     $scope.currentCounts = "";
 
-    $scope.chartInit = new ChartInit($scope, $http);
+    $scope.chartInit = new ChartInit($scope, $http, log);
 
     $scope.lineId = "linetwo";
     $scope.pieId = "pietwo";
@@ -1298,7 +1302,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
 
     $scope.getCurrentOrder = function(order) {
-        console.log(order);
+        log.log(order);
         $scope.currentOrder = order;
         $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
 
@@ -1472,7 +1476,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
         $scope.searchFlag = 1;
 
         if ($.trim($scope.currentOtaWay) == "") {
-            console.log("返回");
+            log.log("返回");
             return;
         }
 
@@ -1517,7 +1521,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', function(
 
 
 
-orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function($scope, $http) {
+orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', 'log',function($scope, $http, log) {
     $scope.searchFlag = 0;
 
     $scope.contentId = "tabcontent3";
@@ -1529,7 +1533,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
     $scope.otaWays = [];
     $scope.currentCounts = "";
 
-    $scope.chartInit = new ChartInit($scope, $http);
+    $scope.chartInit = new ChartInit($scope, $http, log);
 
     $scope.lineId = "linethree";
     $scope.pieId = "piethree";
@@ -1683,7 +1687,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', function(
 
 
     $scope.getCurrentOrder = function(order) {
-        console.log(order);
+        log.log(order);
         $scope.currentOrder = order;
         $scope.detailInfo = $scope.infoconvent($scope.currentOrder['customerInfo']);
 
