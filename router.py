@@ -26,7 +26,7 @@ from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler
 
 from views.admin import AdminHandler
 from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler, AdminMerchantSuspendAPIHandler
-from views.api.merchant import MerchantListAPIHandler
+from views.api.merchant import MerchantListAPIHandler, MerchantQueryByHotelAPIHandler
 
 from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
 from views.api.finance import FinanceAPIHandler, IncomeAPIHandler
@@ -111,4 +111,5 @@ handlers = [
         (r"/api/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
 
         (r"/api/batch/online/?", HotelRoomBatchAPIHandler),
+        (r"/api/inner/merchant/query/hotel/(?P<hotel_id>\d+)/?", MerchantQueryByHotelAPIHandler),
 ]
