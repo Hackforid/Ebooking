@@ -1886,8 +1886,8 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', 'log',fun
     }
 
     $scope.resetorder = function() {
-        $("#time1").val("");
-        $("#time2").val("");
+        $("#time1").val("").datepicker('update');
+        $("#time2").val("").datepicker('update');
         $scope.currentOtaWay = "";
 
     }
