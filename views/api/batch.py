@@ -99,3 +99,7 @@ class HotelRoomBatchAPIHandler(BtwBaseHandler):
 
         return hotels
 
+class HotelRoomTypeOnlineAPIHandler(BtwBaseHandler):
+
+    def post(self):
+        pass
