@@ -1,6 +1,6 @@
 (function() {
 
-	var orderWaitingApp = angular.module('orderWaitingApp', ['myApp.directives']);
+	var orderWaitingApp = angular.module('orderWaitingApp', ['myApp.service','myApp.directives']);
 
 
 	orderWaitingApp.config(['$httpProvider', function($httpProvider) {
@@ -16,7 +16,7 @@
 
 
 
-	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http', function($scope, $http) {
+	orderWaitingApp.controller('orderWaitingCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 
 		$scope.orderList = {};
@@ -323,7 +323,7 @@
 				})
 				.error(function() {
 
-					console.log('network error');
+					log.log('network error');
 
 
 				})
@@ -374,7 +374,7 @@
 				})
 				.error(function() {
 
-					console.log('network error');
+					log.log('network error');
 
 				})
 
@@ -429,7 +429,7 @@
 
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						
 						$scope.orderList = resp.result.orders;
@@ -495,7 +495,7 @@
 
 					} else {
 
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 
 						//$scope.messageBox = resp.errmsg;
 						//$("#messageDialog").show();
@@ -503,7 +503,7 @@
 				})
 				.error(function() {
 
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}

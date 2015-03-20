@@ -1,6 +1,6 @@
 (function() {
 
-	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myhotelApp.directives', 'ui.bootstrap']);
+	var hotelWillCoopApp = angular.module('hotelWillCoopApp', ['myApp.service','myhotelApp.directives', 'ui.bootstrap']);
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-	hotelWillCoopApp.controller('hotelWillCoopContentCtrl', ['$scope', '$http', function($scope, $http) {
+	hotelWillCoopApp.controller('hotelWillCoopContentCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 			$scope.citys = [];
 			$scope.hotels = [];
@@ -95,7 +95,7 @@
 					})
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							console.log(resp);
+							log.log(resp);
 							var hotelResult = resp.result.hotel_cooprate;
 
 
@@ -133,7 +133,7 @@
 					})
 					.error(function() {
 
-						console.log('network error');
+						log.log('network error');
 
 					});
 
@@ -261,11 +261,11 @@
 
 				//console.log("数据库请求");
 
-				console.log($scope.finalUrl);
+				log.log($scope.finalUrl);
 				$http.get($scope.finalUrl)
 					.success(function(resp) {
 						if (resp.errcode == 0) {
-							console.log(resp);
+							log.log(resp);
 
 							$scope.itemPerPage = resp.result.limit;
 							$scope.total = resp.result.total;
@@ -297,7 +297,7 @@
 					})
 					.error(function() {
 
-						console.log("酒店列表读取失败");
+						log.log("酒店列表读取失败");
 
 					});
 
@@ -331,7 +331,7 @@
 					.error(function() {
 
 
-						console.log("网络错误");
+						log.log("网络错误");
 
 					});
 

@@ -35,7 +35,7 @@ $(document).ready(function() {
     };
     realName = realName + "...";
 
-    console.log(realName);
+    
     $("#userNameCheck").html(realName);
 
   }
@@ -92,7 +92,7 @@ $(document).ready(function() {
 
   /*qq*/
 
-  $("#qqOnline").click(function() {
+  $("#qqOnline").mouseenter(function() {
     $("#qqContact").show();
     $("#qqOnline").css("background-color", "white");
     $("#qqOnline").css("border-left", "1px solid #ccc");

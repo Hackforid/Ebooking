@@ -101,7 +101,7 @@ angular.module('myhotelApp.directives', []).directive('pageInfo', function() {
 
               scope.currentPage = initPage;
 
-               console.log("这里是当前页点击");
+               //console.log("这里是当前页点击");
 
               scope.$apply(function() {
                 scope.urlCheck(initPage);
@@ -165,7 +165,7 @@ angular.module('myhotelApp.directives', []).directive('pageInfo', function() {
           return;
         }
 
-        console.log("这里产生的watch");
+        //console.log("这里产生的watch");
         setPage();
 
       });

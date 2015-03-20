@@ -1,6 +1,6 @@
 (function() {
 
-	var ratePlanApp = angular.module('ratePlanApp', []);
+	var ratePlanApp = angular.module('ratePlanApp', ['myApp.service']);
 
 
 	ratePlanApp.config(['$httpProvider', function($httpProvider) {
@@ -39,7 +39,7 @@
 		}
 	});
 
-	var NewRatePlanDialog = function(scope, http) {
+	var NewRatePlanDialog = function(scope, http, log) {
 		this.scope = scope;
 		this.http = http;
 		this.name = '';
@@ -55,6 +55,8 @@
 		//this.holecheckStatus = false;
 		this.guaranteeStatus = "1";
 		this.lastTime = "";
+
+		var log = log;
 
 
 
@@ -99,7 +101,7 @@
 
 
 			if (this.priceType == "0") {
-				console.log("现付");
+				log.log("现付");
 
 				var testStr = /^\d+$/;
 				this.lastTime = $.trim(this.lastArriveTime);
@@ -151,7 +153,7 @@
 			//console.log(this.name + this.mealType + this.punishType);
 
 			var url = '/api/hotel/' + hotelId + '/roomtype/' + scope.currentRoomType["cooped_roomtype_id"] + '/rateplan/';
-			console.log(url);
+			log.log(url);
 			var params = {
 				'name': this.name,
 				'meal_num': parseInt(this.mealType),
@@ -161,11 +163,11 @@
 				'pay_type': parseInt(this.priceType)
 
 			};
-			console.log(params);
+			log.log(params);
 
 			http.post(url, params)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						scope.roomrates.push(resp.result.roomrate);
@@ -187,13 +189,13 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 		}
 
 	}
 
-	var RoomHeadPlanDialog = function(scope, http) {
+	var RoomHeadPlanDialog = function(scope, http , log) {
 		this.scope = scope;
 		this.http = http;
 		this.errmsg = '';
@@ -206,6 +208,8 @@
 		this.guaranteeStatus = "1";
 		this.lastTime = "";
 		this.currentPayType = "";
+
+		var log = log;
 
 
 		this.checkTime = function(time) {
@@ -299,7 +303,7 @@
 
 
 			if (this.currentPayType == "0") {
-				console.log("现付");
+				log.log("现付");
 
 				var testStr = /^\d+$/;
 				this.lastTime = $.trim(this.lastArriveTime);
@@ -375,7 +379,7 @@
 
 
 
-			console.log(params);
+			log.log(params);
 			http.put(url, params)
 				.success(function(resp) {
 					//console.log(resp);
@@ -391,7 +395,7 @@
 						scope.inputErrMessage = " ";
 					} else {
 
-						console.log(resp);
+						log.log(resp);
 						if (resp.errcode = "2001") {
 							scope.inputErrMessage = "名称输入错误";
 						} else if (resp.errcode = "2002") {
@@ -407,19 +411,22 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 		};
 
 	}
 
-	var RoomRatePlanDialog = function(scope, http) {
+	var RoomRatePlanDialog = function(scope, http , log) {
 		this.scope = scope;
 		this.http = http;
 		this.name = '';
 		this.mealType = 0;
 		this.punishType = 0;
 		this.errmsg = '';
+
+		var log = log;
+
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
@@ -522,7 +529,7 @@
 			};
 			http.put(url, params)
 				.success(function(resp) {
-					//console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$("#openDiv1").fadeOut(500);
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
@@ -534,20 +541,20 @@
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 		}
 
 	}
 
-	ratePlanApp.controller('ratePlanCtrl', ['$scope', '$http', function($scope, $http) {
+	ratePlanApp.controller('ratePlanCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 		$scope.roomtypes = [];
 		$scope.hotel = {};
-		$scope.newRatePlanDialog = new NewRatePlanDialog($scope, $http);
-		$scope.roomRatePlanDialog = new RoomRatePlanDialog($scope, $http);
-		$scope.roomHeadPlanDialog = new RoomHeadPlanDialog($scope, $http);
+		$scope.newRatePlanDialog = new NewRatePlanDialog($scope, $http , log);
+		$scope.roomRatePlanDialog = new RoomRatePlanDialog($scope, $http, log);
+		$scope.roomHeadPlanDialog = new RoomHeadPlanDialog($scope, $http, log);
 		$scope.currentRoomType = {};
 		$scope.rateplans = {};
 		$scope.roomrates = {};
@@ -607,21 +614,21 @@
 
 			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.rateplans[$scope.cancelIndex].roomtype_id+"/rateplan/"+$scope.rateplans[$scope.cancelIndex].id;
 
-			console.log(url);
+			log.log(url);
 
 			$http({method: 'DELETE', url: url})
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.rateplans.splice($scope.cancelIndex,1);
 						$scope.confirmCancel=false;
 						
 					} else { 
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 
@@ -691,8 +698,8 @@
 
 		$scope.addChangeP = function addChangeP(d, m, c, n) {
 
-			console.log($scope.currentRoomType);
-			console.log(n);
+			log.log($scope.currentRoomType);
+			log.log(n);
 
 			$scope.currentHotelDetail = n;
 
@@ -768,7 +775,7 @@
 			var url = "/api/hotel/" + _hotelId + "/roomtype/?simple=1";
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.hotel = resp.result.hotel;
 						$scope.roomtypes = resp.result.cooped_roomtypes;
@@ -776,11 +783,11 @@
 							$scope.currentRoomType = $scope.roomtypes[0];
 						}
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 		}
 
@@ -834,7 +841,7 @@
 
 			$http.get(url)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						$scope.rateplans = resp.result.rateplans;
 						$scope.roomrates = resp.result.roomrates;

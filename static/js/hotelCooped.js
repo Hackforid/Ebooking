@@ -1,6 +1,6 @@
 (function() {
 
-	var hotelCoopApp = angular.module('hotelCoopedApp', ['myhotelApp.directives', 'ui.bootstrap']);
+	var hotelCoopApp = angular.module('hotelCoopedApp', ['myApp.service','myhotelApp.directives', 'ui.bootstrap']);
 
 
 	hotelCoopApp.directive('ngEnter', function() {
@@ -32,7 +32,7 @@
 
 
 
-	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http', function($scope, $http) {
+	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http','log', function($scope, $http,log) {
 
 		$scope.citys = [];
 		$scope.hotels = [];
@@ -60,6 +60,8 @@
 		$scope.currentHotel;
 
 		$scope.currentHotelIndex;
+
+		log.log("logtest");
 
 
 
@@ -180,11 +182,11 @@
 			
 			var url="/api/hotel/cooped/"+$scope.hotels[$scope.cancelIndex].id;
 
-			console.log(url);
+			log.log(url);
 
 			$http({method: 'DELETE', url: url})
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 
 						$scope.hotels.splice($scope.cancelIndex,1);
@@ -193,11 +195,11 @@
 						
 						
 					} else {
-						console.log(resp.errmsg);
+						log.log(resp.errmsg);
 					}
 				})
 				.error(function() {
-					console.log('network error');
+					log.log('network error');
 				})
 
 
@@ -271,10 +273,10 @@
 			}
 
 			var url = "/api/hotel/cooped/" + id + "/online/" + statusRemark + "/";
-			console.log(url);
+			log.log(url);
 			$http.put(url)
 				.success(function(resp) {
-					console.log(resp);
+					log.log(resp);
 					if (resp.errcode == 0) {
 						//console.log($scope.hotels[index]);
 						$scope.hotels[$scope.currentHotelIndex]['is_online'] = resp.result.cooperate_hotel.is_online;
@@ -316,7 +318,7 @@
 			$scope.currentHotelIndex = m;
 
 			$scope.currentHotel = $scope.hotels[m];
-			console.log($scope.currentHotel);
+			log.log($scope.currentHotel);
 
 			if (typeof $scope.currentHotel['facilities'] === 'string') {
 
@@ -462,7 +464,7 @@
 
 
 			$scope.finalUrl = encodeURI(url);
-			console.log($scope.finalUrl);
+			log.log($scope.finalUrl);
 
 		}
 
@@ -473,7 +475,7 @@
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
-						console.log(resp);
+						log.log(resp);
 						$scope.hotels = resp.result.hotels;
 
 						$scope.itemPerPage = resp.result.limit;
@@ -505,7 +507,7 @@
 				.error(function() {
 
 
-					console.log("酒店列表读取失败");
+					log.log("酒店列表读取失败");
 
 
 				});
@@ -561,7 +563,7 @@
 
 
 function loadScript() {　
-	console.log("loadScript开始");
+	//console.log("loadScript开始");
 
 	var script = document.createElement("script");　
 
