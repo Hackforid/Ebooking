@@ -38,9 +38,6 @@ class PasswordAPIHandler(BtwBaseHandler):
 
         UserModel.update_password(self.db, self.current_user.merchant_id, self.current_user.username, password)
 
-        if task.status == 'SUCCESS':
-            self.clear_cookie('username')
-            self.clear_cookie('merchant_id')
-            self.finish_json(0, '修改成功')
-        else:
-            self.finish_json(1000, 'error')
+        self.clear_cookie('username')
+        self.clear_cookie('merchant_id')
+        self.finish_json(0, '修改成功')
