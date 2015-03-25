@@ -220,8 +220,16 @@
              
                <table width="100%">
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>类型：</strong></td><td style="width:78%"><span ng-bind="checkPayType(currentOrder['pay_type'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotel_name']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomtype_name']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>床型：</strong></td><td style="width:78%"><span ng-bind="checkBedType(currentOrder['bed_type'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkin_date']+'入,'+currentOrder['checkout_date']+'离'"></span></td></tr>
 
 
@@ -238,6 +246,11 @@
 
              <tr ng-if="currentOrder['pay_type'] == 1"><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancel_type'],currentOrder['punish_type'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['rateplan_name']"></span></td></tr>
+
+
+           <tr><td style="width:22%"><strong>早餐数：</strong></td><td style="width:78%"><span ng-bind="checkBreakFast(currentOrder['breakfast'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="currentOrder['everyday_price']"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['total_price']"></span></td></tr>
 

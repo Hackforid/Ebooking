@@ -47,6 +47,66 @@
 		$scope.currentOrder;
 
 
+		$scope.roomBedType = ['单床', '大床', '双床', '三床', '三床-1大2单', '榻榻米', '拼床', '水床', '榻榻米双床', '榻榻米单床', '圆床', '上下铺', '大床或双床'];
+
+
+
+		$scope.checkPayType = function(payType) {
+			if (payType == "0") {
+				return "现付";
+			} else if (payType == "1") {
+				return "预付";
+			}
+		}
+
+
+		$scope.checkBedType = function(bedType) {
+
+			var currentBedType = $scope.roomBedType[parseInt(bedType)];
+
+			if ($.trim(currentBedType) != "" && currentBedType != undefined && currentBedType != null)
+
+			{
+				return currentBedType;
+			} else {
+				return "";
+			}
+
+
+		}
+
+		$scope.checkBreakFast = function(breakfast) {
+
+
+			if ($.trim(breakfast) == "" || breakfast == undefined || breakfast == null) {
+				return "";
+			} else {
+
+				var everyBreakFast = breakfast.split(",");
+
+				var currentBreakFast = everyBreakFast[0];
+				if (currentBreakFast == "0") {
+					return "无早餐";
+
+				} else if (currentBreakFast == "1") {
+					return "一份早餐";
+
+				} else if (currentBreakFast == "2") {
+					return "两份早餐";
+
+				} else if (currentBreakFast == "100") {
+					return "按人头早餐";
+
+				} else {
+					return "";
+
+				}
+
+			}
+
+		}
+
+
 		$scope.resonStatusCheck = function(a, b) {
 
 			if (a == "拒绝") {
@@ -320,6 +380,67 @@
 
 
 		$scope.currentOrder;
+
+
+
+		$scope.roomBedType = ['单床', '大床', '双床', '三床', '三床-1大2单', '榻榻米', '拼床', '水床', '榻榻米双床', '榻榻米单床', '圆床', '上下铺', '大床或双床'];
+
+
+
+		$scope.checkPayType = function(payType) {
+			if (payType == "0") {
+				return "现付";
+			} else if (payType == "1") {
+				return "预付";
+			}
+		}
+
+
+		$scope.checkBedType = function(bedType) {
+
+			var currentBedType = $scope.roomBedType[parseInt(bedType)];
+
+			if ($.trim(currentBedType) != "" && currentBedType != undefined && currentBedType != null)
+
+			{
+				return currentBedType;
+			} else {
+				return "";
+			}
+
+
+		}
+
+		$scope.checkBreakFast = function(breakfast) {
+
+
+			if ($.trim(breakfast) == "" || breakfast == undefined || breakfast == null) {
+				return "";
+			} else {
+
+				var everyBreakFast = breakfast.split(",");
+
+				var currentBreakFast = everyBreakFast[0];
+				if (currentBreakFast == "0") {
+					return "无早餐";
+
+				} else if (currentBreakFast == "1") {
+					return "一份早餐";
+
+				} else if (currentBreakFast == "2") {
+					return "两份早餐";
+
+				} else if (currentBreakFast == "100") {
+					return "按人头早餐";
+
+				} else {
+					return "";
+
+				}
+
+			}
+
+		}
 
 
 		$scope.resonStatusCheck = function(a, b) {
@@ -671,6 +792,65 @@
 		}
 
 
+
+		$scope.roomBedType = ['单床', '大床', '双床', '三床', '三床-1大2单', '榻榻米', '拼床', '水床', '榻榻米双床', '榻榻米单床', '圆床', '上下铺', '大床或双床'];
+
+
+
+		$scope.checkPayType = function(payType) {
+			if (payType == "0") {
+				return "现付";
+			} else if (payType == "1") {
+				return "预付";
+			}
+		}
+
+
+		$scope.checkBedType = function(bedType) {
+
+			var currentBedType = $scope.roomBedType[parseInt(bedType)];
+
+			if ($.trim(currentBedType) != "" && currentBedType != undefined && currentBedType != null)
+
+			{
+				return currentBedType;
+			} else {
+				return "";
+			}
+
+
+		}
+
+		$scope.checkBreakFast = function(breakfast) {
+
+
+			if ($.trim(breakfast) == "" || breakfast == undefined || breakfast == null) {
+				return "";
+			} else {
+
+				var everyBreakFast = breakfast.split(",");
+
+				var currentBreakFast = everyBreakFast[0];
+				if (currentBreakFast == "0") {
+					return "无早餐";
+
+				} else if (currentBreakFast == "1") {
+					return "一份早餐";
+
+				} else if (currentBreakFast == "2") {
+					return "两份早餐";
+
+				} else if (currentBreakFast == "100") {
+					return "按人头早餐";
+
+				} else {
+					return "";
+
+				}
+
+			}
+
+		}
 
 		$scope.getCancelStatus = function(m,n) {
 
