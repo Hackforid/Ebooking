@@ -91,6 +91,7 @@ class UserModel(Base):
         if user:
             user.password = password
             session.commit()
+        return user
 
     @classmethod
     def add_user(cls, session, merchant_id, username, password, department, mobile, authority, is_valid):
