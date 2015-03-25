@@ -14,29 +14,29 @@
 <title>商旅分销管理系统</title>
 
 
-<script src="/static/js/jquery1.9.1.js?v=20150318"></script>
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css?v=20150318">
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datepicker3.css?v=20150318">
+<script src="/static/js/jquery1.9.1.js?v=20150325"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css?v=20150325">
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datepicker3.css?v=20150325">
 
-<script type="text/javascript" src="/static/js/bootstrap.min.js?v=20150318"></script>
-<script type="text/javascript" src="/static/js/bootstrap-datepicker.js?v=20150318"></script>
-<script type="text/javascript" src="/static/js/bootstrap-datepicker.zh-CN.min.js?v=20150318"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js?v=20150325"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datepicker.js?v=20150325"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datepicker.zh-CN.min.js?v=20150325"></script>
 
 
-<link href="/static/css/default.css?v=20150318" rel="stylesheet" type="text/css" >
-<link href="/static/css/mod.css?v=20150318" rel="stylesheet" type="text/css" >
+<link href="/static/css/default.css?v=20150325" rel="stylesheet" type="text/css" >
+<link href="/static/css/mod.css?v=20150325" rel="stylesheet" type="text/css" >
 
-<script src="/static/js/jquery.Placeholder.js?v=20150318"></script> <!--placeholder属性兼容--> 
-<script src="/static/js/common.js?v=20150318"></script>  
-<script src="/static/java/js/mainmenu-tab.js?v=20150318"></script><!--tab标签js--> 
+<script src="/static/js/jquery.Placeholder.js?v=20150325"></script> <!--placeholder属性兼容--> 
+<script src="/static/js/common.js?v=20150325"></script>  
+<script src="/static/java/js/mainmenu-tab.js?v=20150325"></script><!--tab标签js--> 
 
-<script src="/static/js/angular.js?v=20150318"></script>
+<script src="/static/js/angular.js?v=20150325"></script>
 
-<script src="/static/js/conLogService.js?v=20150318"></script>
+<script src="/static/js/conLogService.js?v=20150325"></script>
 
-<script src="/static/java/dist/echarts.js?v=20150318"></script>
+<script src="/static/java/dist/echarts.js?v=20150325"></script>
 
-<script src="/static/java/js/order.js?v=20150318"></script>
+<script src="/static/java/js/order.js?v=20150325"></script>
 
 <link href="/static/image/icon.ico" rel="SHORTCUT ICON">
 
@@ -202,8 +202,15 @@
 
            <table width="100%">
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+
+           <tr><td style="width:22%"><strong>类型：</strong></td><td style="width:78%"><span ng-bind="checkPayType(currentOrder['payType'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+
+           <tr><td style="width:22%"><strong>床型：</strong></td><td style="width:78%"><span ng-bind="checkBedType(currentOrder['bedType'])"></span></td></tr>
+
            <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
            
@@ -228,6 +235,10 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>早餐数：</strong></td><td style="width:78%"><span ng-bind="checkBreakFast(currentOrder['breakfast'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
@@ -486,8 +497,15 @@
 
            <table width="100%">
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>类型：</strong></td><td style="width:78%"><span ng-bind="checkPayType(currentOrder['payType'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>床型：</strong></td><td style="width:78%"><span ng-bind="checkBedType(currentOrder['bedType'])"></span></td></tr>
+
            <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
@@ -510,6 +528,9 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>早餐数：</strong></td><td style="width:78%"><span ng-bind="checkBreakFast(currentOrder['breakfast'])"></span></td></tr>
+
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
@@ -790,8 +811,15 @@
 
            <table width="100%">
            <tr><td style="width:22%"><strong>订单确认号：</strong></td><td style="width:78%"><span ng-bind="currentOrder['id']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>类型：</strong></td><td style="width:78%"><span ng-bind="checkPayType(currentOrder['payType'])"></span></td></tr>
+
            <tr><td style="width:22%"><strong>酒店名称：</strong></td><td style="width:78%"><span ng-bind="currentOrder['hotelName']"></span></td></tr>
            <tr><td style="width:22%"><strong>房型：</strong></td><td style="width:78%"><span ng-bind="currentOrder['roomTypeName']"></span></td></tr>
+
+            <tr><td style="width:22%"><strong>床型：</strong></td><td style="width:78%"><span ng-bind="checkBedType(currentOrder['bedType'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>入离时间：</strong></td><td style="width:78%"><span ng-bind="currentOrder['checkInDate']+'入,'+currentOrder['checkOutDate']+'离'"></span></td></tr>
 
 
@@ -814,6 +842,11 @@
 
              <tr><td style="width:22%"><strong>取消规则：</strong></td><td style="width:78%"><span ng-bind="getCancelStatus(currentOrder['cancelType'],currentOrder['punishType'])"></span></td></tr>
            <tr><td style="width:22%"><strong>价格类别：</strong></td><td style="width:78%"><span ng-bind="currentOrder['ratePlanName']"></span></td></tr>
+
+
+            <tr><td style="width:22%"><strong>早餐数：</strong></td><td style="width:78%"><span ng-bind="checkBreakFast(currentOrder['breakfast'])"></span></td></tr>
+
+
            <tr><td style="width:22%"><strong>每日价格：</strong></td><td style="width:78%"><span ng-bind="checkEveryPrice(currentOrder['everydayPrice'])"></span></td></tr>
            <tr><td style="width:22%"><strong>总价：</strong></td><td style="width:78%"><span ng-bind="currentOrder['totalPrice']/100"></span></td></tr>
             <tr><td style="width:22%"><strong>拒绝理由：</strong></td><td style="width:78%"><span ng-bind="resonStatusCheck(currentOrder['status'],currentOrder['extra'])"></span></td></tr>
