@@ -94,12 +94,17 @@ class RatePlanModel(Base):
 
 
     @classmethod
-    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type, pay_type=None, guarantee_type=None, guarantee_start_time=None):
+    def new_rate_plan(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, name, meal_num, punish_type, ahead_days, stay_days, pay_type=None, guarantee_type=None, guarantee_start_time=None):
 
         if pay_type == cls.PAY_TYPE_PRE:
             rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type)
         else:
             rateplan = RatePlanModel(merchant_id=merchant_id, hotel_id=hotel_id,roomtype_id=roomtype_id, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id, name=name, punish_type=punish_type, pay_type=pay_type, guarantee_start_time=guarantee_start_time, guarantee_type=guarantee_type)
+
+        if ahead_days is not None:
+            rateplan.ahead_days = ahead_days
+        if stay_days is not None:
+            rateplan.stay_days = stay_days
 
         session.add(rateplan)
         session.commit()
