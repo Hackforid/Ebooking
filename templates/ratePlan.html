@@ -88,7 +88,7 @@
        <div class="con">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="125px">名　称：</td>
+    <td width="140px">名　称：</td>
     <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
   </tr>
 
@@ -112,6 +112,19 @@
 
     </td>
   </tr>
+
+   <tr>
+    <td width="140px">最少连住：</td>
+    <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.stayDays"/>&nbsp;&nbsp天</td> 
+  </tr>
+  <tr>
+    <td width="140px">最少提前：</td>
+    <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.aHeadDays"/>&nbsp;&nbsp天预定</td> 
+  </tr>
+
+
+
+
   <tr ng-show="rateplan.pay_type">
     <td>取消时：</td>
     <td><select id={{"roomheadpunish"+$index}}  
@@ -264,7 +277,7 @@
        <div class="con">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="125px">名　称：</td>
+    <td width="140px">名　称：</td>
     <td><input type="text"  value="" class="input-t" ng-model="newRatePlanDialog.name"  /></td>
   </tr>
 
@@ -285,6 +298,18 @@
                        <option value="100">按人头早餐</option>
                      </select></td>
   </tr>
+
+
+   <tr>
+    <td width="140px">最少连住：</td>
+    <td><input type="text"  class="input-t" style="width:50px" ng-model="newRatePlanDialog.stayDays"/>&nbsp;&nbsp天</td> 
+  </tr>
+  <tr>
+    <td width="140px">最少提前：</td>
+    <td><input type="text"  class="input-t" style="width:50px" ng-model="newRatePlanDialog.aHeadDays"/>&nbsp;&nbsp天预定</td> 
+  </tr>
+
+
   <tr ng-show="!newRatePlanDialog.priceTypeShow">
     <td>取消时：</td>
     <td><select name="" class="input-s" ng-model="newRatePlanDialog.punishType" >
