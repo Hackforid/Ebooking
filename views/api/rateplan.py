@@ -71,6 +71,9 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         name, meal_num, punish_type = get_and_valid_arguments(
             args, 'name', 'meal_num', 'punish_type')
         pay_type = args.get('pay_type', RatePlanModel.PAY_TYPE_PRE)
+        ahead_days = args.get('ahead_days', None)
+        stay_days = args.get('stay_days', None)
+
         self.valid_pay_type(pay_type)
         self.valid_rateplan_arguments(name, meal_num, punish_type)
 
@@ -80,10 +83,10 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
             self.valid_arrive_pay_args(guarantee_type, guarantee_start_time)
 
             rateplan, roomrate = self.new_rate_plan(
-                merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, pay_type, guarantee_type, guarantee_start_time)
+                merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days, pay_type, guarantee_type, guarantee_start_time)
         else:
             rateplan, roomrate = self.new_rate_plan(
-                merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type)
+                merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days)
 
         self.finish_json(result=dict(
             rateplan=rateplan.todict(),
@@ -109,7 +112,7 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         return rateplans, roomrates
 
 
-    def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, pay_type=None, guarantee_type=None, guarantee_start_time=None):
+    def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days, pay_type=None, guarantee_type=None, guarantee_start_time=None):
         room = CooperateRoomTypeModel.get_by_id(self.db, roomtype_id)
         if not room:
             raise JsonException(errcode=404, errmsg='room not exist')
@@ -120,7 +123,7 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
             raise JsonException(errcode=405, errmsg="name exist")
 
         new_rateplan = RatePlanModel.new_rate_plan(self.db,
-                                                   merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type, pay_type, guarantee_type, guarantee_start_time)
+                                                   merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type, ahead_days, stay_days, pay_type, guarantee_type, guarantee_start_time)
         new_roomrate = RoomRateModel.new_roomrate(
             self.db, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num)
 
@@ -140,6 +143,8 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
         punish_type = args.get("punish_type", None)
         guarantee_type = args.get("guarantee_type", None)
         guarantee_start_time = args.get("guarantee_start_time", None)
+        ahead_days = args.get('ahead_days', None)
+        stay_days = args.get('stay_days', None)
 
         if name is not None:
             self.valid_name(name)
@@ -154,14 +159,14 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
 
 
         rateplan, roomrate = self.modify_rateplan(
-            rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time)
+            rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time, ahead_days, stay_days)
 
         self.finish_json(result=dict(
             rateplan=rateplan.todict(),
             roomrate=roomrate.todict(),
         ))
 
-    def modify_rateplan(self, rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time):
+    def modify_rateplan(self, rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time, ahead_days, stay_days):
         rateplan = RatePlanModel.get_by_id(self.db, rateplan_id)
         if not rateplan:
             return JsonException(errcode=404, errmsg="rateplan not found")
@@ -184,6 +189,10 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
                 rateplan.guarantee_type = guarantee_type
             if guarantee_start_time is not None:
                 rateplan.guarantee_start_time = guarantee_start_time
+        if ahead_days is not None:
+            rateplan.ahead_days = ahead_days
+        if stay_days is not None:
+            rateplan.stay_days = stay_days
 
         self.db.commit()
 

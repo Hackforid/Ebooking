@@ -26,7 +26,7 @@ from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler
 
 from views.admin import AdminHandler
 from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler, AdminMerchantSuspendAPIHandler
-from views.api.merchant import MerchantListAPIHandler
+from views.api.merchant import MerchantListAPIHandler, MerchantQueryByHotelAPIHandler
 
 from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
 from views.api.finance import FinanceAPIHandler, IncomeAPIHandler
@@ -35,6 +35,7 @@ from views.api.contract import ContractAPIHandler
 from views.contract import ContractHandler
 
 from views.api.pms import PMSNewOrderAPIHandler
+from views.api.batch import HotelRoomBatchAPIHandler
 
 handlers = [
         (r"/?", OrderWaitingHandler),
@@ -108,4 +109,7 @@ handlers = [
         (r"/api/inner/ordersys/order/submit/?", SubmitOrderAPIHandler),
         (r"/api/inner/ordersys/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
         (r"/api/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
+
+        (r"/api/batch/online/?", HotelRoomBatchAPIHandler),
+        (r"/api/inner/merchant/query/hotel/(?P<hotel_id>\d+)/?", MerchantQueryByHotelAPIHandler),
 ]
