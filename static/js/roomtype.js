@@ -66,6 +66,10 @@
 
 
 		this.open = function() {
+
+			this.stayDays="";
+			this.aHeadDays="";
+
 			this.name = '';
 			this.mealType = 0;
 			this.punishType = 0;
@@ -162,7 +166,14 @@
 
 				if (testStr.test($.trim(this.aHeadDays)) == false) {
 
-					scope.errMessage = '最少连住时间为非负整数';
+					scope.errMessage = '最少提前时间为非负整数';
+					return;
+
+				}
+
+				if (parseInt($.trim(this.aHeadDays)) > 90) {
+
+					scope.errMessage = '最少提前时间小于90天';
 					return;
 
 				}
@@ -178,6 +189,13 @@
 				if (testStr.test($.trim(this.stayDays)) == false) {
 
 					scope.errMessage = '最少连住时间为非负整数';
+					return;
+
+				}
+
+				if (parseInt($.trim(this.stayDays)) > 90) {
+
+					scope.errMessage = '最少连住时间小于90天';
 					return;
 
 				}
@@ -265,7 +283,7 @@
 
 			this.stayDays = scope.rateplans[index].stay_days;
 			this.aHeadDays = scope.rateplans[index].ahead_days;
-			
+
 			var roomRateName;
 			roomRateName = scope.rateplans[index].name;
 
@@ -425,12 +443,23 @@
 
 				if (testStr.test($.trim(this.aHeadDays)) == false) {
 
-					scope.errMessage = '最少连住时间为非负整数';
+					scope.inputErrMessage = '最少提前时间为非负整数';
+					return;
+
+
+				}
+				if (parseInt($.trim(this.aHeadDays)) > 90) {
+
+					scope.inputErrMessage = '最少提前时间小于90天';
 					return;
 
 				}
 
 				params['ahead_days'] = parseInt($.trim(this.aHeadDays));
+
+			} else if ($.trim(this.aHeadDays) == "") {
+
+				params['ahead_days'] = 0;
 
 			}
 
@@ -440,12 +469,23 @@
 
 				if (testStr.test($.trim(this.stayDays)) == false) {
 
-					scope.errMessage = '最少连住时间为非负整数';
+					scope.inputErrMessage = '最少连住时间为非负整数';
+					return;
+
+				}
+
+				if (parseInt($.trim(this.stayDays)) > 90) {
+
+					scope.inputErrMessage = '最少连住时间小于90天';
 					return;
 
 				}
 
 				params['stay_days'] = parseInt($.trim(this.stayDays));
+
+			} else if ($.trim(this.stayDays) == "") {
+
+				params['stay_days'] = 1;
 
 			}
 
