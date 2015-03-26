@@ -57,8 +57,8 @@
 		this.lastTime = "";
 
 
-		this.stayDays="";
-		this.aHeadDays="";
+		this.stayDays = 1;
+		this.aHeadDays = 0;
 		
 
 		var log = log;
@@ -67,8 +67,8 @@
 
 		this.open = function() {
 
-			this.stayDays="";
-			this.aHeadDays="";
+			this.stayDays = 1;
+			this.aHeadDays = 0;
 
 			this.name = '';
 			this.mealType = 0;
