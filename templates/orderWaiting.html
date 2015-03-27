@@ -156,7 +156,7 @@
 
                         <!--单个订单-->
                         <div class="room-main" ng-repeat="order in orderList">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" >
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table02" ng-cloak>
                                 <tr>
                                
                                     <td width="10%"  style="text-decoration: underline;position:relative"><a href="javascript:void(0)" ng-click="orderDetail($index)" id={{"orderConfimId-"+$index}} ng-bind="order.id"></a></td>

@@ -71,15 +71,10 @@
 
 
                         <div class="form form1"
-                            ng-repeat="rateplan in rateplans" ng-init="index=$index"
-                            >
+                            ng-repeat="rateplan in rateplans" ng-init="index=$index" ng-cloak>
                             <div class="roomhead" style="position:relative"><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>
                              
                              
-
-
-
-
                                   <!--修改价格类别浮层-->    
 <div class="messageDiv changePriceType" id="" style=" display:none">
    <div class="messageBlack"></div>
@@ -124,7 +119,6 @@
 
 
 
-
   <tr ng-show="rateplan.pay_type">
     <td>取消时：</td>
     <td><select id={{"roomheadpunish"+$index}}  
@@ -158,12 +152,6 @@
 
 
 
-
-
-
-
-
-
 </table>
 <p  style="margin-left:17px;color:red"  ng-bind="inputErrMessage"></p>
           
@@ -178,19 +166,10 @@
  <!--修改价格类别弹窗浮层end-->  
 
 
-
-
-
 <input type="button" ng-click="cancelBtn($index)" style="height:29px;width:60px;position:absolute;right:0px;bottom:5px;" value="删除" class="btn-bai"/>
 
 
-
-
-
-
-
                             </div>
-
 
 
                             <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
