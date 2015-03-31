@@ -987,8 +987,8 @@
 			var month = $scope.months[monthvalue - 1].month;
 			//console.log(year);
 			//console.log(month);
-			day.setFullYear(year);
-			day.setMonth(month - 1);
+			//day.setFullYear(year);
+			//day.setMonth(month - 1);
 
 			var ninetytime = new Date().getTime() + 1000 * 60 * 60 * 24 * 364;
 			var ninetyday = new Date(ninetytime);
@@ -1148,10 +1148,16 @@
 			}
 
 			daynum = new Date(year, month, 0).getDate();
+
+
+			var firstDay = new Date();
+			firstDay.setFullYear(year);
+			firstDay.setMonth((month - 1),1);
+
 			for (var i = 1; i <= daynum; i++) {
 				var temp;
-				day.setDate(i);
-				var tempday = day.getDay();
+				firstDay.setDate(i);
+				var tempday = firstDay.getDay();
 				var week = weekDay[tempday];
 				if (tempday == 0 || tempday == 6) {
 					temp = {
