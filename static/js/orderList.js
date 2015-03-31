@@ -221,7 +221,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b-1);
+			day.setMonth((b-1), 1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();
@@ -557,7 +557,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b-1);
+			day.setMonth((b-1), 1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();
@@ -961,7 +961,7 @@
 			var day = new Date();
 
 			day.setFullYear(a);
-			day.setMonth(b-1);
+			day.setMonth((b-1), 1);
 			day.setDate(c);
 
 			var dayTime = day.getTime();

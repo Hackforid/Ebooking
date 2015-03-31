@@ -51,6 +51,7 @@
 
 
 								<label><strong>星级：</strong><select ng-enter="urlCheck(1)" name="" class="input-s"  ng-model="searchStar">
+										<option value=""></option>
 										<option value="0">不限</option>
 										<option value="1">一星级</option>
 										<option value="2">二星级</option>
@@ -85,8 +86,7 @@
 							</table> 
 
 
-							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow"
-                               >
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
 								<tr ng-repeat="hotel in hotels">
 									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
                                     <td width="25%" ng-bind="hotel.name"></td>

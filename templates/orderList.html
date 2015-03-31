@@ -189,7 +189,7 @@
                                 </tr></thead>
                             </table>   <!--<span ng-bind="DateDiff(book.checkin_date,book.checkout_date)"></span>-->
 
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
                                 <tr ng-repeat="book in todayBook">
                                     <td width="13%" ><a style="cursor:pointer;" ng-click="orderDetail(book)" ng-bind='book.id'></a></td>
                                         <td width="15%" ng-bind='book.hotel_name'></td>

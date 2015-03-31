@@ -1000,7 +1000,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', 'log',fun
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b-1);
+        day.setMonth((b-1), 1);
         day.setDate(c);
 
         var dayTime = day.getTime();
@@ -1191,7 +1191,7 @@ orderAnalyseApp.controller('orderTab1AnalyseCtrl', ['$scope', '$http', 'log',fun
 
 
         var day = new Date();
-        day.setMonth((date[1] - 1));
+        day.setMonth((date[1] - 1), 1);
         day.setFullYear(date[0]);
         day.setDate(date[2]);
         var totaltime = day.getTime();
@@ -1509,7 +1509,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', 'log', fu
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b-1);
+        day.setMonth((b-1), 1);
         day.setDate(c);
 
         var dayTime = day.getTime();
@@ -1614,7 +1614,7 @@ orderAnalyseApp.controller('orderTab2AnalyseCtrl', ['$scope', '$http', 'log', fu
 
 
         var day = new Date();
-        day.setMonth((date[1] - 1));
+        day.setMonth((date[1] - 1), 1);
         day.setFullYear(date[0]);
         day.setDate(date[2]);
         var totaltime = day.getTime();
@@ -1942,7 +1942,7 @@ orderAnalyseApp.controller('orderTab3AnalyseCtrl', ['$scope', '$http', 'log',fun
         var day = new Date();
 
         day.setFullYear(a);
-        day.setMonth(b-1);
+        day.setMonth((b-1), 1);
         day.setDate(c);
 
         var dayTime = day.getTime();

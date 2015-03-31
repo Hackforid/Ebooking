@@ -62,8 +62,7 @@
 
 
                       <div class="form form1"
-                        ng-repeat="room in cooped" ng-init="index=$index"
-                        >
+                        ng-repeat="room in cooped" ng-init="index=$index" ng-cloak>
                         <div class="roomhead"><h1 style="position:relative;background:url('');padding-left:20px" ng-click="roomDescribe($index);"><span ng-bind="room.name"></span><span>--剩余房量</span></h1><span></span>
                          <!--   <div class="eachroom" style=" display:none;background:#EBEBED">
                                 <label><span ng-bind="'房型名称：'+room.name"></span><a class="a-blue" ng-click="roomDescribe($index)">[房型详情]</a></label>

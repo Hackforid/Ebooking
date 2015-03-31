@@ -63,7 +63,7 @@
 
 
                             <label><strong>星级：</strong><select ng-enter="urlCheck(1)" name="" class="input-s" ng-model="searchStar" >
-
+                                <option value=""></option>
                                 <option value="0">不限</option>
                                 <option value="1">一星级</option>
                                 <option value="2">二星级</option>
@@ -73,6 +73,7 @@
                                 
                             </select></label>
                             <label><strong>状态：</strong><select ng-enter="urlCheck(1)" name="" class="input-s"  ng-model="searchStatus">
+                                    <option value=""></option>
                                     <option value="2">不限</option>
                                     <option value="1">正常</option>
                                     <option value="0">暂停</option>
@@ -100,7 +101,7 @@
                         </table>
 
 
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
                             <tr ng-repeat="hotel in hotels">
                                 <td width="33%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
                                 <td width="11%" ng-bind="getHotelStar(hotel.star)"></td>
