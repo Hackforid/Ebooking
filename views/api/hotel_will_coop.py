@@ -28,6 +28,7 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
 
         hotels, total = yield self.get_will_coop_hotels(self.current_user.merchant_id, start, limit, name, city_id, star)
         if hotels is not None and total is not None:
+            yield self.merge_district(hotels)
             self.finish_json(result=dict(
                 hotels=hotels,
                 total=total,
@@ -68,3 +69,30 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
             raise gen.Return((hotels, total))
         else:
             raise gen.Return((None, None))
+
+    @gen.coroutine
+    def merge_district(self, hotels):
+        district_ids = [hotel['district_id'] for hotel in hotels]
+        district_ids = {}.fromkeys(district_ids).keys()
+
+        districts = yield self.fetch_districts(district_ids)
+
+        for hotel in hotels:
+            for district in districts:
+                if hotel['district_id'] == district['id']:
+                    hotel['district_name'] = district['name']
+                    break
+        raise gen.Return()
+
+    @gen.coroutine
+    def fetch_districts(self, district_ids):
+        url = API['POI'] + '/api/district/?district_ids=' + url_escape(json_encode(district_ids))
+        print url
+
+        resp = yield AsyncHTTPClient().fetch(url)
+        r = json_decode(resp.body)
+        if r and r['errcode'] == 0:
+            districts = r['result']['districts']
+            raise gen.Return(districts)
+        else:
+            raise gen.Return([])
