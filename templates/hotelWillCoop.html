@@ -36,7 +36,7 @@
 								<label ><strong>城市：</strong></label>
 
 								<label>
-  								<input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control" ng-blur="cityBlur();">
+  								<input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control" >
 								</label>
 
 								<label><strong>区：</strong>
@@ -79,14 +79,14 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head">
 								<thead><tr>
 										<th width="10%"><input ng-click="checkStatus=!checkStatus" ng-checked="checkStatus" name="input2" type="checkbox" value="" />全选</th>
-										<th width="25%">酒店名称</th>
+										<th width="20%">酒店名称</th>
 										<th width="6%">星级</th>
 										<th width="6%">城市</th>
 										<th width="8%">区域</th>
-										<th width="15%">地址</th>
-										<th width="10%">电话</th>
-										<th width="10%">状态</th>
-										<th width="10%">操作</th>
+										<th width="20%">地址</th>
+										<th width="15%">电话</th>
+										<th width="7%">状态</th>
+										<th width="8%">操作</th>
 								</tr></thead>
 							</table> 
 
@@ -94,16 +94,16 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
 								<tr ng-repeat="hotel in hotels">
 									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
-                                    <td width="25%" ng-bind="hotel.name"></td>
+                                    <td width="20%" ng-bind="hotel.name"></td>
 
                                     <td width="6%" ng-bind="getHotelStar(hotel.star)"></td>
 
                                     <td width="6%" ng-bind="getCityName(hotel.city_id)"></td>
                                  	<td width="8%" ng-bind="hotel.district_name"></td>
-                                    <td width="15%" ng-bind="hotel.address"></td>
-                                    <td width="10%" ng-bind="hotel.phone"></td>
-									<td width="10%">可申请合作</td>
-									<td class="action" width="10%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>
+                                    <td width="20%" ng-bind="hotel.address"></td>
+                                    <td width="15%" ng-bind="hotel.phone"></td>
+									<td width="7%">可申请合作</td>
+									<td class="action" width="8%"><input name="" type="button" value="申请合作" class="btn-s btn-bai" ng-click="cooprate(hotel,$index)"/></td>
 								</tr>
 								</tbody>
 							</table>
