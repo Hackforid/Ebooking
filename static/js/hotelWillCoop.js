@@ -56,8 +56,40 @@
 
 			$scope.checkStatus = false;
 
+			$scope.changeDistrictName = {};
+
 
 			//$scope.cityList = [];
+
+			$scope.cityBlur = function() {
+				console.log($scope.citysName.selected);
+				$scope.changeDistrictName = {};
+				var city_id = getCityId($scope.citysName.selected);
+				if (city_id == -1) {
+					return;
+				}
+
+				var districtUrl = "/api/city/" + city_id + "/district/";
+
+				console.log(districtUrl);
+
+				return;
+
+				$http.get(districtUrl)
+					.success(function(resp) {
+						console.log(resp);
+						if (resp.errcode == 0) {
+							$scope.changeDistrictName = resp.result.districts;
+
+						} else {
+							alert(resp.errmsg);
+						}
+					})
+					.error(function() {});
+
+
+			}
+
 			$scope.getHotelStar = function(m) {
 				if (m == "0") {
 					return "无";
