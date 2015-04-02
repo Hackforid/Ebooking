@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+import calendar
 
 from tornado.util import ObjectDict
 
@@ -136,53 +137,62 @@ class RoomRateModel(Base):
         return room
 
     @classmethod
-    def set_price(cls, session, id, price, start_date, end_date):
+    def set_price(cls, session, id, price, start_date, end_date, weekdays=None):
         roomrate = cls.get_by_id(session, id)
         if not roomrate:
             return
 
         year0, year1 = start_date.year, end_date.year
         if year0 == year1:
-            roomrate.change_price_in_ayear(price, start_date, end_date)
+            roomrate.change_price_in_ayear(price, start_date, end_date, weekdays)
         else:
-            roomrate.change_price_in_ayear(price, start_date, datetime(year0, 12, 31))
-            roomrate.change_price_in_ayear(price, datetime(year1, 1, 1), end_date)
+            roomrate.change_price_in_ayear(price, start_date, date(year0, 12, 31), weekdays)
+            roomrate.change_price_in_ayear(price, date(year1, 1, 1), end_date, weekdays)
 
         session.commit()
         return roomrate
 
-    def change_price_in_ayear(self, price, start_date, end_date):
+    def change_price_in_ayear(self, price, start_date, end_date, weekdays=None):
+
         month0, month1 = start_date.month, end_date.month
+        year = start_date.year
+
         if month0 == month1:
-            day0, day1 = start_date.day, end_date.day
-            self.change_price(price, month0, start_date.day, end_date.day)
+            self.change_price(price, start_date, end_date, weekdays)
         else:
             for month in range(month0, month1 + 1):
                 if month == month0:
-                    self.change_price(price, month, start_date.day, 31)
+                    _end_date = date(year, month, calendar.monthrange(year, month)[1])
+                    self.change_price(price, start_date, _end_date, weekdays)
                 elif month == month1:
-                    self.change_price(price, month, 1, end_date.day)
+                    _start_date = date(year, month, 1)
+                    self.change_price(price, _start_date, end_date, weekdays)
                 else:
-                    self.change_price(price, month, 1, 31)
+                    _start_date = date(year, month, 1)
+                    _end_date = date(year, month, calendar.monthrange(year, month)[1])
+                    self.change_price(price, _start_date, _end_date, weekdays)
 
-
-
-
-    def change_price(self, price, month, start_day, end_day):
-        month_key = 'month{}'.format(month)
+    def change_price(self, price, start_date, end_date, weekdays=None):
+        month_key = 'month{}'.format(start_date.month)
         prices = getattr(self, month_key)
-        setattr(self, month_key, self.get_updated_price(prices, price, start_day, end_day))
+        setattr(self, month_key, self.get_updated_price(prices, price, start_date, end_date, weekdays))
 
-
-    def get_updated_price(self, prices, price, start, end):
+    def get_updated_price(self, prices, price, start_date, end_date, weekdays):
         prices = prices.split('|')
         price = str(price)
-        for i in range(start, end+1):
-            prices[i-1] = price
+
+        # 计算星期 day % 7 - n = (day.weekday() + 1)
+        n = start_date.day % 7 - (start_date.weekday() + 1)
+
+        for day in range(start_date.day, end_date.day+1):
+            if weekdays is not None:
+                weekday = day % 7 - n
+                weekday = 1 if weekday == 8 else weekday
+                if weekday not in weekdays:
+                    continue
+            prices[day-1] = price
 
         return '|'.join(prices)
-
-
 
     def todict(self):
         return ObjectDict(

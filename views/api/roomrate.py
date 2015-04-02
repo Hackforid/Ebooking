@@ -21,11 +21,12 @@ class RoomRateAPIHandler(BtwBaseHandler):
         args = self.get_json_arguments()
         start_date, end_date, price = get_and_valid_arguments(args,
                 'start_date', 'end_date', 'price')
+        weekdays = args.get('weekdays', None)
 
         self.valid_price(price)
-        start_date, end_date = self.valid_date(start_date, end_date)
+        start_date, end_date = self.valid_date(start_date, end_date, weekdays)
 
-        roomrate = self.set_price(roomrate_id, price, start_date, end_date)
+        roomrate = self.set_price(roomrate_id, price, start_date, end_date, weekdays)
         if roomrate:
             self.finish_json(result=dict(
                 roomrate=roomrate.todict(),
@@ -35,7 +36,7 @@ class RoomRateAPIHandler(BtwBaseHandler):
 
 
 
-    def valid_date(self, str_start_date, str_end_date):
+    def valid_date(self, str_start_date, str_end_date, weekdays):
         time_format = "%Y-%m-%d"
         try:
             start_date = datetime.strptime(str_start_date, time_format)
@@ -55,6 +56,10 @@ class RoomRateAPIHandler(BtwBaseHandler):
         if end_date.date() < min_date or end_date.date() >= max_date:
             raise JsonException(errcode=2001, errmsg="invalid date: end date out of range")
 
+        if weekdays:
+            if not set([1, 2, 3, 4, 5, 6, 7]).difference(weekdays):
+                raise JsonException(errcode=2002, errmsg="invalid weekdays: end date out of range [1,2,3,4,5,6,7]")
+
         return start_date, end_date
 
     def valid_price(self, price):
@@ -62,8 +67,8 @@ class RoomRateAPIHandler(BtwBaseHandler):
         if not isinstance(price, int) or price < 0 or price > 999999:
             raise JsonException(errcode=2002, errmsg="price out of range")
 
-    def set_price(self, roomrate_id, price, start_date, end_date):
-        roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date)
+    def set_price(self, roomrate_id, price, start_date, end_date, weekdays=None):
+        roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date, weekdays)
         if roomrate:
             PushRatePlanTask().push_rateplan.delay(roomrate.rate_plan_id, with_cancel_rule=False)
         return roomrate
