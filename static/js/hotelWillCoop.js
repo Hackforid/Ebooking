@@ -56,8 +56,75 @@
 
 			$scope.checkStatus = false;
 
+			$scope.changeDistrictName = {};
+
+
+			function isChinese(cityInput) {
+				var re = /[^\u4e00-\u9fa5]/;
+				if (re.test(cityInput)) {
+					return false;
+				}
+				return true;
+			}
 
 			//$scope.cityList = [];
+
+			$scope.$watch('citysName.selected', function(newValue, oldValue) {
+				if (newValue == oldValue) {
+					return;
+				} else {
+					
+					$scope.cityBlur();
+
+				}
+			});
+
+
+			$scope.cityBlur = function() {
+				/*空过滤*/
+				if($.trim($scope.citysName.selected) == ""){
+					$scope.changeDistrictName = {};
+					return;
+				}
+				/*英文字符过滤*/
+				if(isChinese($.trim($scope.citysName.selected))){
+					var selectCity = $scope.citysName.selected;
+					var Len = selectCity.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+					if (Len < 3) {
+						$scope.changeDistrictName = {};
+						return;
+					}
+				} else {
+					$scope.changeDistrictName = {};
+					return;
+				}
+
+				$scope.changeDistrictName = {};
+				var city_id = getCityId($scope.citysName.selected);
+				if (city_id == -1 || city_id == false) {
+					$scope.changeDistrictName = {};
+					return;
+				}
+
+				var districtUrl = "/api/city/" + city_id + "/district/";
+
+				log.log(districtUrl);
+
+				$http.get(districtUrl)
+					.success(function(resp) {
+						log.log(resp);
+						if (resp.errcode == 0) {
+							$scope.changeDistrictName = resp.result.districts;
+
+						} else {
+							log.log(resp.errmsg);
+						}
+					})
+					.error(function() {});
+
+
+			}
+
 			$scope.getHotelStar = function(m) {
 				if (m == "0") {
 					return "无";
@@ -179,6 +246,12 @@
 					url = url + "&limit=" + $scope.itemPerPage;
 
 				}
+
+				if ($.trim($scope.searchDistrict) != "" && $scope.searchDistrict != undefined) {
+					url = url + "&district_id=" + $scope.searchDistrict;
+
+				}
+
 				$scope.finalUrl = encodeURI(url);
 
 			}
@@ -240,6 +313,8 @@
 			$scope.conditionReset = function conditionReset() {
 
 				$scope.checkStatus = false;
+
+				$scope.changeDistrictName = {};
 
 				$scope.searchName = "";
 				//$scope.searchCity = "";
