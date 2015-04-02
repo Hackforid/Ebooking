@@ -28,10 +28,11 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
         limit = self.get_query_argument('limit', 20)
         name = self.get_query_argument('name', None)
         city_id = self.get_query_argument('city_id', None)
+        district_id = self.get_query_argument('district_id', None)
         star = self.get_query_argument('star', None)
         is_online = self.get_query_argument('is_online', None)
 
-        hotels, total = yield self.get_cooped_hotels(self.current_user.merchant_id, start, limit, name, city_id, star, is_online)
+        hotels, total = yield self.get_cooped_hotels(self.current_user.merchant_id, start, limit, name, city_id, district_id, star, is_online)
         if hotels is not None and total is not None:
             self.finish_json(result=dict(
                 hotels=hotels,
@@ -43,13 +44,13 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise JsonException(500, 'query error')
 
     @gen.coroutine
-    def get_cooped_hotels(self, merchant_id, start, limit, name, city_id, star, is_online):
+    def get_cooped_hotels(self, merchant_id, start, limit, name, city_id, district_id, star, is_online):
         cooped_base_hotels = self.get_cooped_base_hotels(merchant_id, is_online)
         cooped_base_hotel_ids = [hotel.base_hotel_id for hotel in cooped_base_hotels]
         if not cooped_base_hotel_ids:
             raise gen.Return(([], 0))
 
-        hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_base_hotel_ids, start, limit)
+        hotels, total = yield self.fetch_hotels(name, city_id, district_id, star, cooped_base_hotel_ids, start, limit)
         if hotels is not None and total is not None:
             yield self.merge_district(hotels)
             self.merge_base_hotel_with_coops(hotels, cooped_base_hotels)
@@ -70,8 +71,8 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
                     break
 
     @gen.coroutine
-    def fetch_hotels(self, name, city_id, star, within_ids, start, limit):
-        params = {'name': url_escape(name) if name else None, 'city_id': city_id, 'star': star, 'start': start, 'limit': limit}
+    def fetch_hotels(self, name, city_id, district_id, star, within_ids, start, limit):
+        params = {'name': url_escape(name) if name else None, 'city_id': city_id, 'district_id': district_id, 'star': star, 'start': start, 'limit': limit}
 
         if within_ids:
             params['within_ids'] = url_escape(json_encode(within_ids))
