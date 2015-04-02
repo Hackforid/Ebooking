@@ -83,6 +83,7 @@
 			$scope.cityBlur = function() {
 				/*空过滤*/
 				if($.trim($scope.citysName.selected) == ""){
+					$scope.changeDistrictName = {};
 					return;
 				}
 				/*英文字符过滤*/
@@ -90,15 +91,18 @@
 					var selectCity = $scope.citysName.selected;
 					var Len = selectCity.replace(/[\u4E00-\u6FA5]/g, "aa").length;
 					if (Len < 3) {
+						$scope.changeDistrictName = {};
 						return;
 					}
 				} else {
+					$scope.changeDistrictName = {};
 					return;
 				}
 
 				$scope.changeDistrictName = {};
 				var city_id = getCityId($scope.citysName.selected);
 				if (city_id == -1 || city_id == false) {
+					$scope.changeDistrictName = {};
 					return;
 				}
 
@@ -113,7 +117,7 @@
 							$scope.changeDistrictName = resp.result.districts;
 
 						} else {
-							alert(resp.errmsg);
+							log.log(resp.errmsg);
 						}
 					})
 					.error(function() {});
