@@ -9,7 +9,7 @@ from views.hotel_inventory import HotelInventoryHandler
 from views.rateplan import RatePlanHandler
 from views.order import OrderWaitingHandler
 from views.order_list import OrderListHandler
-from views.api.city import CityAPIHandler
+from views.api.city import CityAPIHandler, DistrictByCityAPIHandler
 from views.api.hotel_will_coop import HotelWillCoopAPIHandler
 from views.api.hotel_coop import HotelCoopAPIHandler, HotelCoopsAPIHandler 
 from views.api.hotel_cooped import HotelCoopedAPIHandler, HotelCoopOnlineAPIHandler, HotelCoopedModifyAPIHandler
@@ -112,4 +112,7 @@ handlers = [
 
         (r"/api/batch/online/?", HotelRoomBatchAPIHandler),
         (r"/api/inner/merchant/query/hotel/(?P<hotel_id>\d+)/?", MerchantQueryByHotelAPIHandler),
+
+        (r"/api/city/(?P<city_id>\d+)/district/?", DistrictByCityAPIHandler),
+        
 ]

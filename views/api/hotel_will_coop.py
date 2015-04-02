@@ -25,8 +25,9 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
         name = self.get_query_argument('name', None)
         city_id = self.get_query_argument('city_id', None)
         star = self.get_query_argument('star', None)
+        district_id = self.get_query_argument('district_id', None)
 
-        hotels, total = yield self.get_will_coop_hotels(self.current_user.merchant_id, start, limit, name, city_id, star)
+        hotels, total = yield self.get_will_coop_hotels(self.current_user.merchant_id, start, limit, name, city_id, district_id, star)
         if hotels is not None and total is not None:
             yield self.merge_district(hotels)
             self.finish_json(result=dict(
@@ -39,9 +40,9 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
             raise JsonException(500, 'query error')
 
     @gen.coroutine
-    def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, star):
+    def get_will_coop_hotels(self, merchant_id, start, limit, name, city_id, district_id, star):
         cooped_base_hotel_ids = self.get_cooped_base_hotel_ids(merchant_id)
-        base_hotels, total = yield self.fetch_hotels(name, city_id, star, cooped_base_hotel_ids, start, limit)
+        base_hotels, total = yield self.fetch_hotels(name, city_id, district_id, star, cooped_base_hotel_ids, start, limit)
         if base_hotels is not None and total is not None:
             raise gen.Return((base_hotels, total))
         else:
@@ -52,8 +53,8 @@ class HotelWillCoopAPIHandler(BtwBaseHandler):
         return [hotel.base_hotel_id for hotel in hotels]
 
     @gen.coroutine
-    def fetch_hotels(self, name, city_id, star, filter_ids, start, limit):
-        params = {'name': url_escape(name) if name else None, 'city_id': city_id, 'star': star, 'start': start, 'limit': limit}
+    def fetch_hotels(self, name, city_id, district_id, star, filter_ids, start, limit):
+        params = {'name': url_escape(name) if name else None, 'city_id': city_id, 'district_id': district_id, 'star': star, 'start': start, 'limit': limit}
 
         if filter_ids:
             params['filter_ids'] = url_escape(json_encode(filter_ids))
