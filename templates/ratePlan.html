@@ -57,7 +57,7 @@
                                 </select>
 
                                 选择月份： <select name="" class="input-s" ng-model="monthvalue" 
-                                ng-options="conventIdInt(key) as (value.month+'月') group by value.year+'年' for  (key , value) in months">
+                                ng-options="conventIdInt(key) as (value.month+'月') group by value.year+'年' for  (key , value) in months | monthObjectBy:'' ">
                                 <!--
                                 <option  value={{$index+1}}  ng-repeat="i in months" ng-bind="i.month+'月'"></option>-->
                                   
@@ -226,6 +226,17 @@
     <td><input type="text" name="timeStart" id="timeStart"  class="input-time" readonly="readonly"/ > 至 
                      <input type="text" name="timeEnd" id="timeEnd"  class="input-time" readonly="readonly"/></td>
   </tr>
+
+  <tr>
+    <td>适用星期：</td>
+    <td>
+        <input type="checkbox" style="margin-left:0px;" ng-checked="roomRatePlanDialog.weekChecked" ng-model="roomRatePlanDialog.weekChecked" ng-click="roomRatePlanDialog.selectAllDay()"/>全选
+        <span ng-repeat="day in roomRatePlanDialog.weekItem">
+        <input type="checkbox" ng-checked="day.selected" ng-model="day.selected" ng-click="roomRatePlanDialog.selectWeekDay($index)" />{{day.day}}
+        </span>
+    </td>
+  </tr>
+
   <tr>
     <td>价格：</td>
     <td><input id="lowprice" name="" type="text" class="input-t" value="" placeholder="输入数字" /></td>

@@ -39,6 +39,26 @@
 		}
 	});
 
+
+	ratePlanApp.filter('monthObjectBy', function() {
+		return function(input) {
+			var monthInput = {};
+			for (var i = 0; i < input.length; i++) {
+				var index;
+				if (i < 10) {
+					index = "0" + i;
+
+				} else {
+					index = i;
+				}
+				monthInput[index] = input[i];
+			};
+			input = monthInput;
+			return input;
+		}
+	});
+
+
 	var NewRatePlanDialog = function(scope, http, log) {
 		this.scope = scope;
 		this.http = http;
@@ -537,13 +557,93 @@
 		this.punishType = 0;
 		this.errmsg = '';
 
+		this.weekChecked = true;
+
 		var log = log;
+
+
+		this.weekItem = [{
+				'day': '周一',
+				'selected': true
+			}, {
+				'day': '周二',
+				'selected': true
+			}, {
+				'day': '周三',
+				'selected': true
+			}, {
+				'day': '周四',
+				'selected': true
+			}, {
+				'day': '周五',
+				'selected': true
+			}, {
+				'day': '周六',
+				'selected': true
+			}, {
+				'day': '周日',
+				'selected': true
+			}
+
+		];
+
+		this.selectWeekDay = function(index) {
+
+			if (this.weekChecked && this.weekItem[index]['selected']) {
+
+				this.weekChecked = !this.weekChecked;
+
+			}
+
+			var weekDay = [];
+
+			for (var i = 0; i < this.weekItem.length; i++) {
+				if (this.weekItem[i]['selected']) {
+					weekDay.push(i);
+				}
+			};
+			if (weekDay.length == 6 && this.weekItem[index]['selected'] == false) {
+				this.weekChecked = true;
+
+			} else if (weekDay.length == 1 && this.weekItem[index]['selected'] == true) {
+				this.weekChecked = false;
+
+			}
+
+		}
+
+
+		this.selectAllDay = function() {
+			var weekday = this.weekItem;
+
+			if (this.weekChecked) {
+				for (var i = 0; i < weekday.length; i++) {
+					weekday[i]['selected'] = false;
+				};
+
+			} else {
+
+				for (var i = 0; i < weekday.length; i++) {
+					weekday[i]['selected'] = true;
+				};
+
+			}
+
+			this.weekItem = weekday;
+
+		}
 
 		this.close = function() {
 
 			$("#openDiv1").fadeOut(500);
 			this.errmsg = ' ';
 			$("#lowprice").val("");
+
+			this.weekChecked = true;
+
+			for (var b = 0; b < this.weekItem.length; b++) {
+				this.weekItem[b]['selected'] = true;
+			};
 		}
 
 
@@ -626,19 +726,37 @@
 				return;
 			}
 
-
-
-			this.errmsg = ' ';
-			//console.log(url);
-
+  			
 			var price = this.accMul($.trim($("#lowprice").val()), 100);
-			//console.log(price);
 			var params = {
 				"start_date": timeStart,
 				"end_date": timeEnd,
-				"price": price
+				"price": price,
+				
+			};
+
+			var weekdays = [];
+			for (var a = 0; a < this.weekItem.length; a++) {
+				if (this.weekItem[a]['selected'] == true) {
+					var selectedIndex = parseInt(a) + 1;
+					weekdays.push(selectedIndex);
+				}
 
 			};
+			if (weekdays.length != 0 && weekdays.length != 7) {
+				params['weekdays'] = weekdays;
+
+			}else if(weekdays.length == 0){
+
+				this.errmsg = '适用日期不能为空';
+				return;
+
+			}
+
+			this.errmsg = ' ';
+
+			console.log(params);
+
 			http.put(url, params)
 				.success(function(resp) {
 					log.log(resp);
@@ -647,6 +765,13 @@
 						scope.roomrates[scope.currentindex] = resp.result.roomrate;
 						scope.dateCheck(scope.monthvalue);
 						$("#lowprice").val("");
+
+
+						scope.roomRatePlanDialog.weekChecked = true;
+
+						for (var b = 0; b < scope.roomRatePlanDialog.weekItem.length; b++) {
+							scope.roomRatePlanDialog.weekItem[b]['selected'] = true;
+						};
 
 					} else {
 						this.errmsg = resp.errmsg;

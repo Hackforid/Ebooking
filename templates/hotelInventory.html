@@ -52,7 +52,7 @@
                     <div class="choosem">                 
                         <div class="left">选择操作月份：
                             <select name="" class="input-s"
-                                ng-model="monthvalue"  ng-options="conventIdInt(key) as (value.month+'月') group by value.year+'年' for  (key , value) in months"                             
+                                ng-model="monthvalue"  ng-options="conventIdInt(key) as (value.month+'月') group by value.year+'年' for  (key , value) in months | monthObjectBy:'' "                             
                                 >
                                 <!--<option  value={{$index+1}}  ng-repeat="i in months" ng-bind="i.year+'年'+i.month+'月'"></option>-->
 

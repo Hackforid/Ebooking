@@ -15,6 +15,25 @@
 	}]);
 
 
+	hotelInventoryApp.filter('monthObjectBy', function() {
+		return function(input) {
+			var monthInput = {};
+			for (var i = 0; i < input.length; i++) {
+				var index;
+				if (i < 10) {
+					index = "0" + i;
+
+				} else {
+					index = i;
+				}
+				monthInput[index] = input[i];
+			};
+			input = monthInput;
+			return input;
+		}
+	});
+
+
 
 	hotelInventoryApp.filter('orderObjectBy', function() {
 		return function(input) {
