@@ -158,7 +158,6 @@ class RoomRateModel(Base):
         year = start_date.year
 
         if month0 == month1:
-            print '==' * 10
             self.change_price(price, start_date, end_date, weekdays)
         else:
             for month in range(month0, month1 + 1):
@@ -174,7 +173,6 @@ class RoomRateModel(Base):
                     self.change_price(price, _start_date, _end_date, weekdays)
 
     def change_price(self, price, start_date, end_date, weekdays=None):
-        print start_date, end_date
         month_key = 'month{}'.format(start_date.month)
         prices = getattr(self, month_key)
         setattr(self, month_key, self.get_updated_price(prices, price, start_date, end_date, weekdays))
@@ -185,16 +183,12 @@ class RoomRateModel(Base):
 
         # 计算星期 day % 7 - n = (day.weekday() + 1)
         n = start_date.day % 7 - (start_date.weekday() + 1)
-        print 'week=', weekdays
-        print 'n=', n
 
         for day in range(start_date.day, end_date.day+1):
             if weekdays is not None:
                 weekday = (day % 7 - n) % 7
                 weekday = weekday if weekday != 0 else 7
-                print day, weekday
                 if weekday not in weekdays:
-                    print 'pass'
                     continue
             prices[day-1] = price
 
