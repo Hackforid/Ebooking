@@ -14,6 +14,7 @@ from exception.celery_exception import CeleryException
 from constants import PERMISSIONS
 
 from models.cooperate_hotel import CooperateHotelModel
+from models.cooperate_roomtype import CooperateRoomTypeModel
 from tasks.stock import PushHotelTask
 from mixin.coop_mixin import CooperateMixin
 
@@ -34,6 +35,7 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
 
         hotels, total = yield self.get_cooped_hotels(self.current_user.merchant_id, start, limit, name, city_id, district_id, star, is_online)
         if hotels is not None and total is not None:
+            self.merge_roomtypes_online_count(hotels)
             self.finish_json(result=dict(
                 hotels=hotels,
                 total=total,
@@ -57,6 +59,16 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise gen.Return((hotels, total))
         else:
             raise gen.Return((None, None))
+
+    def merge_roomtypes_online_count(self, hotels):
+        hotel_ids = [hotel['id'] for hotel in hotels]
+        roomtypes = CooperateRoomTypeModel.get_by_hotel_ids(self.db, hotel_ids)
+
+        for hotel in hotels:
+            rooms = [roomtype for roomtype in roomtypes if roomtype.hotel_id == hotel['id']]
+            online_rooms = [room for room in rooms if room.is_online == 1]
+            hotel['roomtype_count'] = len(rooms)
+            hotel['online_roomtype_count'] = len(online_rooms)
 
     def get_cooped_base_hotels(self, merchant_id, is_online):
         return CooperateHotelModel.get_by_merchant_id(self.db, merchant_id, is_online)
