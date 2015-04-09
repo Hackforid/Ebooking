@@ -403,6 +403,15 @@ class PushInventoryTask(SqlAlchemyTask):
             self.push_inventory(roomtype.id)
 
     @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
+    def push_inventory_by_merchant(self, merchant_id):
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+        self.log.info(">> push inventories by merchant {}".format(merchant_id))
+        roomtypes = CooperateRoomTypeModel.get_by_merchant_id(self.session, merchant_id)
+
+        for roomtype in roomtypes:
+            self.push_inventory(roomtype.id)
+
+    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
     def push_inventory(self, roomtype_id):
         self.log.info("<< push inventory (roomtype {})>>".format(roomtype_id))
         from models.inventory import InventoryModel
