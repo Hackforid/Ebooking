@@ -105,9 +105,6 @@ handlers = [
         (r"/api/contract/?", ContractAPIHandler),
         (r"/contract/?", ContractHandler),
 
-        (r"/api/server/order/submit/?", SubmitOrderAPIHandler),
-        (r"/api/server/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
-
         (r"/api/inner/ordersys/order/submit/?", SubmitOrderAPIHandler),
         (r"/api/inner/ordersys/order/(?P<order_id>\d+)/cancel/?", CancelOrderAPIHander),
         (r"/api/pms/merchant/(?P<merchant_id>\d+)/order/new/?", PMSNewOrderAPIHandler),
