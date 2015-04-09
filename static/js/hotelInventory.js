@@ -540,6 +540,42 @@
 		$scope.confirmCancel=false;
 		$scope.cancelIndex;
 
+		$scope.roomConfirmCancel = false;
+		$scope.roomCloseIndex;
+
+
+		$scope.roomClose=function(index){
+
+			$scope.roomConfirmCancel=true;
+			$scope.roomCloseIndex=index;
+
+		}
+
+		$scope.roomCloseConfirm=function(){
+
+			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.cooped[$scope.roomCloseIndex].cooped_roomtype_id+"/online";
+
+			log.log(url);
+			return;
+
+			$http.put(url,{"is_online":1})
+				.success(function(resp) {
+					log.log(resp);
+					if (resp.errcode == 0) {
+						//$scope.rateplans.splice($scope.cancelIndex,1);
+						//$scope.confirmCancel=false;
+						
+					} else { 
+						log.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					log.log('network error');
+				})
+
+
+		}
+
 
 		$('#timeStart').datepicker({
 

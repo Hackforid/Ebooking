@@ -9,8 +9,6 @@
     <!--导航条end-->  
 
 
-
-    
  <!--删除提示-->     
             <div class="messageDiv"  ng-show="confirmCancel" ng-cloak> 
                 <div class="messageBlack"></div>
@@ -26,13 +24,9 @@
                 </div> 
             </div>  
 
- <!--删除提示-->   
+ <!--删除提示-->
 
-
-
-
-
-    
+  
 
     <!--主体内容-->  
     <div class="main"><div class="p15">
@@ -67,110 +61,100 @@
 
                         </div>
 
-
-
-
                         <div class="form form1"
                             ng-repeat="rateplan in rateplans" ng-init="index=$index" ng-cloak>
-                            <div class="roomhead" style="position:relative"><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>
-                             
+                            <div class="roomhead" style="position:relative"><h1 ng-click="roomHeadPlanDialog.eachshow($index);" ng-bind="rateplan.name"></h1><span></span>                             
                              
                                   <!--修改价格类别浮层-->    
-<div class="messageDiv changePriceType" id="" style=" display:none">
-   <div class="messageBlack"></div>
-   <div class="detail piliang-room" style="width:400px;margin-left:-200px;">
-       <div class="head"><h1>修改价格类别</h1></div>
-       <div class="con">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="140px">名&nbsp;&nbsp;&nbsp;称：</td>
-    <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
-  </tr>
+                                  <div class="messageDiv changePriceType" id="" style=" display:none">
+                                    <div class="messageBlack"></div>
+                                    <div class="detail piliang-room" style="width:400px;margin-left:-200px;">
+                                        <div class="head"><h1>修改价格类别</h1></div>
+                                        <div class="con">
+                                           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td width="140px">名&nbsp;&nbsp;&nbsp;称：</td>
+                                                  <td><input id={{"roomheadinput"+$index}} class="input-t" type="text" ng-value="rateplan.name" /></td>
+                                                </tr>
 
-  <tr>
-    <td >类&nbsp;&nbsp;&nbsp;型：</td>
-    <td><select disabled name="" class="input-s"  ng-model="rateplan.pay_type" >
-                       <option value="0">现付</option>
-                       <option value="1">预付</option>                      
-                     </select></td>
-  </tr>
+                                                <tr>
+                                                  <td >类&nbsp;&nbsp;&nbsp;型：</td>
+                                                  <td>
+                                                    <select disabled name="" class="input-s"  ng-model="rateplan.pay_type" >
+                                                      <option value="0">现付</option>
+                                                      <option value="1">预付</option>             
+                                                    </select>
+                                                  </td>
+                                                </tr>
 
-  <tr>
-    <td >早餐数：</td>
-    <td>
-        <select id={{"roomheadmeal"+$index}} name="" class="input-s"  >
-                                            <option value="0">无早餐</option>
-                                            <option value="1">一份早餐</option>
-                                            <option value="2">两份早餐</option>
-                                            <option value="100">按人头早餐</option>  
-                                        </select>
+                                                <tr>
+                                                  <td >早餐数：</td>
+                                                  <td>
+                                                      <select id={{"roomheadmeal"+$index}} name="" class="input-s"  >
+                                                        <option value="0">无早餐</option>
+                                                        <option value="1">一份早餐</option>
+                                                        <option value="2">两份早餐</option>
+                                                        <option value="100">按人头早餐</option>  
+                                                      </select>
 
-    </td>
-  </tr>
+                                                  </td>
+                                                </tr>
 
-   <tr>
-    <td width="140px">最少连住：</td>
-    <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.stayDays"/>&nbsp;&nbsp天</td> 
-  </tr>
-  <tr>
-    <td width="140px">最少提前：</td>
-    <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.aHeadDays"/>&nbsp;&nbsp天预定</td> 
-  </tr>
+                                                <tr>
+                                                  <td width="140px">最少连住：</td>
+                                                  <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.stayDays"/>&nbsp;&nbsp天</td> 
+                                                </tr>
+                                                <tr>
+                                                  <td width="140px">最少提前：</td>
+                                                  <td><input type="text"  class="input-t" style="width:50px" ng-model="roomHeadPlanDialog.aHeadDays"/>&nbsp;&nbsp天预定</td> 
+                                                </tr>
 
+                                                <tr ng-show="rateplan.pay_type">
+                                                  <td>取消时：</td>
+                                                  <td>
+                                                      <select id={{"roomheadpunish"+$index}}  
+                                                        name="" class="input-s"  >                
+                                                          <option value="0">不扣任何费用</option>
+                                                          <option value="1">扣首晚房费</option>
+                                                          <option value="2">扣全部房费</option>
+                                          
+                                                      </select></td>
+                                                </tr>
 
-
-  <tr ng-show="rateplan.pay_type">
-    <td>取消时：</td>
-    <td><select id={{"roomheadpunish"+$index}}  
-                                    name="" class="input-s"  >                       
-                                             <option value="0">不扣任何费用</option>
-                                            <option value="1">扣首晚房费</option>
-                                            <option value="2">扣全部房费</option>
-                                          <!--  <option value="3">扣定额</option> -->
-                                          <!-- <option value="4">扣全额房费百分比</option> -->
-                                        </select></td>
-  </tr>
-
-  <tr ng-show="!rateplan.pay_type">
-    <td>几点后到店需要担保：</td>
-    <td><input ng-model="roomHeadPlanDialog.lastArriveTime" class="input-t" type="text"/>
+                                                <tr ng-show="!rateplan.pay_type">
+                                                    <td>几点后到店需要担保：</td>
+                                                    <td><input ng-model="roomHeadPlanDialog.lastArriveTime" class="input-t" type="text"/>
 <!--
     <input type="radio" name="" ng-checked="roomHeadPlanDialog.firstcheckStatus" ng-click="roomHeadPlanDialog.firstcheckStatus=!roomHeadPlanDialog.firstcheckStatus;roomHeadPlanDialog.holecheckStatus=false" value = "normal">首晚担保&nbsp;&nbsp;<input type="radio" name="" ng-checked="roomHeadPlanDialog.holecheckStatus" ng-click="roomHeadPlanDialog.holecheckStatus=!roomHeadPlanDialog.holecheckStatus;roomHeadPlanDialog.firstcheckStatus=false" value = "pause">全额担保
 -->
 
-    </td>
-  </tr>
+                                                    </td>
+                                                </tr>
 
-
-  <tr ng-show="!rateplan.pay_type">
-    <td>No Show扣款情况：</td>
-    <td><select name="" class="input-s" ng-model="roomHeadPlanDialog.guaranteeStatus">
-                       <option value="1">扣首晚房费</option>
-                       <option value="2">扣全部房费</option>                                    
-                     </select></td>
-  </tr>
-
-
-
-</table>
-<p  style="margin-left:17px;color:red"  ng-bind="inputErrMessage"></p>
+                                                <tr ng-show="!rateplan.pay_type">
+                                                    <td>No Show扣款情况：</td>
+                                                    <td>
+                                                      <select name="" class="input-s" ng-model="roomHeadPlanDialog.guaranteeStatus">
+                                                        <option value="1">扣首晚房费</option>
+                                                        <option value="2">扣全部房费</option>     
+                                                      </select></td>
+                                                </tr>
+                                  </table>
+                                  <p  style="margin-left:17px;color:red"  ng-bind="inputErrMessage"></p>
           
-          <p class="action" style=" text-align:center">
-              <input name="" type="button" value="保存"  ng-click="roomHeadPlanDialog.save($index);"/>
-          <input name="" type="button" value="取消" class="btn-bai" ng-click="roomHeadPlanDialog.eachhide($index);"  />
-          </p>
+                                            <p class="action" style=" text-align:center">
+                                                <input name="" type="button" value="保存"  ng-click="roomHeadPlanDialog.save($index);"/>
+                                            <input name="" type="button" value="取消" class="btn-bai" ng-click="roomHeadPlanDialog.eachhide($index);"  />
+                                            </p>
  
-       </div>
-   </div> 
-</div>   
+                                         </div>
+                                     </div> 
+                                  </div>   
  <!--修改价格类别弹窗浮层end-->  
 
 
-<input type="button" ng-click="cancelBtn($index)" style="height:29px;width:60px;position:absolute;right:0px;bottom:5px;" value="删除" class="btn-bai"/>
-
-
-                            </div>
-
+                              <input type="button" ng-click="cancelBtn($index)" style="height:29px;width:60px;position:absolute;right:0px;bottom:5px;" value="删除" class="btn-bai"/>                             
+                          </div>
 
                             <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table03 room-table01" >
                                 <thead><tr>
