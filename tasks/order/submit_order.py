@@ -88,6 +88,18 @@ def submit_order(self, order_json):
     if order.status != 0:
         return order
 
+    # valid is roomtype online
+    roomtype = CooperateRoomTypeModel.get_by_id(self.session, order.roomtype_id)
+    if roomtype.is_online != 1:
+        Log.info('roomtype is not online')
+        order.status = 200
+        session.commit()
+
+        OrderHistoryModel.set_order_status_by_server(session, order, 0, 200)
+        return order
+
+
+    # valid is inventory enough
     if not valid_inventory(session, submit_order):
         Log.info('more room please')
         order.status = 200
@@ -139,7 +151,7 @@ def valid_inventory(session, order):
     inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
         session, order.merchant_id,
         order.hotel_id, order.roomtype_id, year_months)
-    
+
     if not inventories:
         Log.info("no inventory")
         return False

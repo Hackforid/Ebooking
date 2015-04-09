@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
 import json
 import time
@@ -17,33 +18,6 @@ from tools.net import req
 
 def generate_track_id(key):
     return "{}|{}".format(key, time.time())
-
-class PushRoomTypeTask(SqlAlchemyTask):
-
-    @app.task(filter=task_method, ignore_result=True, queue=QUEUE_STOCK_PUSH)
-    def update_roomtype_valid(self, roomtype_ids):
-        from models.cooperate_roomtype import CooperateRoomTypeModel
-        if not IS_PUSH_TO_STOCK:
-            return
-
-        self.log.info("<<update roomtype valid {}>> start".format(roomtype_ids))
-        roomtypes = CooperateRoomTypeModel.get_by_ids(self.session, roomtype_ids, with_delete=True)
-
-        roomtype_datas = [{'chain_id': CHAIN_ID, 'hotel_id': roomtype.hotel_id, 'room_type_id': roomtype.id, 'is_valid': self.cal_roomtype_is_valid(roomtype)}
-                for roomtype in roomtypes]
-
-        track_id = generate_track_id(100)
-        data = {'list': roomtype_datas, 'type': 2}
-        params = {'track_id': track_id, 'data': json.dumps(data)}
-
-        self.log.info("<<update roomtype valid {}>> request:{}".format(roomtype_ids, params))
-
-        url = API['STOCK'] + '/stock/update_state?is_async=false'
-        r = req.post(url, data=params)
-        self.log.info("<<update roomtype valid {}>> response:{}".format(roomtype_ids, r.text))
-
-    def cal_roomtype_is_valid(self, roomtype):
-        return 1 if roomtype.is_online == 1 and roomtype.is_delete == 0 else 0
 
 class PushHotelTask(SqlAlchemyTask):
 
@@ -167,7 +141,7 @@ class PushHotelTask(SqlAlchemyTask):
                     room['name'] = base_roomtype['name']
                     room['bed_type'] = base_roomtype['bed_type']
                     room['facilities'] = base_roomtype['facility'].replace(',', '|') if base_roomtype['facility'] else ''
-                    room['is_valid'] = 1 if roomtype.is_delete == 0 and roomtype.is_online == 1 else 0
+                    room['is_valid'] = 1 if roomtype.is_delete == 0 else 0
                     rooms.append(room)
                     break
         return rooms
@@ -432,6 +406,9 @@ class PushInventoryTask(SqlAlchemyTask):
     def push_inventory(self, roomtype_id):
         self.log.info("<< push inventory (roomtype {})>>".format(roomtype_id))
         from models.inventory import InventoryModel
+        from models.cooperate_roomtype import CooperateRoomTypeModel
+
+        roomtype = CooperateRoomTypeModel.get_by_id(self.session, roomtype_id)
 
         start_day = datetime.date.today()
         days = [start_day + datetime.timedelta(days=i) for i in xrange(90)]
@@ -439,15 +416,13 @@ class PushInventoryTask(SqlAlchemyTask):
         days = {}.fromkeys(days).keys()
 
         inventories = InventoryModel.get_by_roomtype_and_dates(self.session, roomtype_id, days)
-        self.post_inventory(inventories)
+        self.post_inventory(inventories, roomtype.is_online)
 
-    def post_inventory(self, inventories):
-        if not IS_PUSH_TO_STOCK:
-            return
+    def post_inventory(self, inventories, is_online=1):
         if not inventories:
             self.log.info('no inventoris')
             return
-        inventory_data = self.generate_inventory_data(inventories)
+        inventory_data = self.generate_inventory_data(inventories, is_online)
         track_id = generate_track_id(inventories[0].roomtype_id)
 
         params = {'track_id': track_id,
@@ -456,24 +431,29 @@ class PushInventoryTask(SqlAlchemyTask):
 
         url = API['STOCK'] + '/stock/update_inventory?is_async=false'
 
+        if not IS_PUSH_TO_STOCK:
+            return
         r = req.post(url, data=params)
         self.log.info(r.text)
 
 
-    def generate_inventory_data(self, inventories):
+    def generate_inventory_data(self, inventories, is_online=1):
         start_day = datetime.date.today()
         end_day = start_day + datetime.timedelta(days=89)
 
         manual_confirm_count = []
-
-        day = start_day
-        while day <= end_day:
-            month = int("{}{:0>2d}".format(day.year, day.month))
-            for inventory in inventories:
-                if inventory.month == month:
-                    manual_confirm_count.append(str(inventory.get_day(day.day)))
-                    break
-            day = day + datetime.timedelta(days=1)
+        if is_online == 1:
+            day = start_day
+            while day <= end_day:
+                month = int("{}{:0>2d}".format(day.year, day.month))
+                for inventory in inventories:
+                    if inventory.month == month:
+                        manual_confirm_count.append(str(inventory.get_day(day.day)))
+                        break
+                day = day + datetime.timedelta(days=1)
+        else:
+            #manual_confirm_count = ['0' for i in range(90)]
+            manual_confirm_count = '0' * 90
 
         data = {}
         data['chain_id'] = CHAIN_ID
