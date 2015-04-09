@@ -179,6 +179,50 @@
 
 		$scope.changeDistrictName = {};
 
+		$scope.roomConfirmCancel = false;
+		$scope.roomCloseIndex;
+		$scope.currentIsOnline;
+
+		$scope.allRoomClose=function(isonline){
+
+			$scope.roomConfirmCancel = true;
+
+			$scope.currentIsOnline=isonline;
+
+		}
+
+		$scope.roomCloseConfirm = function() {
+
+			//var url = "/api/hotel/" + hotelId + "/roomtype/" + $scope.cooped[$scope.roomCloseIndex].cooped_roomtype_id + "/online";
+			var url="/api/merchant/roomtype/online";
+			log.log(url);
+			log.log({
+					"is_online": parseInt($scope.currentIsOnline)
+				});
+
+
+			$http.put(url, {
+					"is_online": parseInt($scope.currentIsOnline)
+				})
+				.success(function(resp) {
+					log.log(resp);
+					if (resp.errcode == 0) {
+
+						$scope.roomConfirmCancel = false;
+
+					} else {
+						log.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					log.log('network error');
+				})
+
+
+		}
+
+
+
 		function isChinese(cityInput) {
 				var re = /[^\u4e00-\u9fa5]/;
 				if (re.test(cityInput)) {

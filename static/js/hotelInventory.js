@@ -537,35 +537,40 @@
 
 
 
-		$scope.confirmCancel=false;
+		$scope.confirmCancel = false;
 		$scope.cancelIndex;
 
 		$scope.roomConfirmCancel = false;
 		$scope.roomCloseIndex;
+		$scope.currentIsOnline;
 
 
-		$scope.roomClose=function(index){
+		$scope.roomClose = function(index, isonline) {
 
-			$scope.roomConfirmCancel=true;
-			$scope.roomCloseIndex=index;
+			$scope.roomConfirmCancel = true;
+			$scope.roomCloseIndex = index;
+			$scope.currentIsOnline = isonline;
 
 		}
 
-		$scope.roomCloseConfirm=function(){
+		$scope.roomCloseConfirm = function() {
 
-			var url="/api/hotel/" + hotelId + "/roomtype/"+$scope.cooped[$scope.roomCloseIndex].cooped_roomtype_id+"/online";
+			var url = "/api/hotel/" + hotelId + "/roomtype/" + $scope.cooped[$scope.roomCloseIndex].cooped_roomtype_id + "/online";
 
 			log.log(url);
-			return;
 
-			$http.put(url,{"is_online":1})
+
+			$http.put(url, {
+					"is_online": parseInt($scope.currentIsOnline)
+				})
 				.success(function(resp) {
 					log.log(resp);
 					if (resp.errcode == 0) {
-						//$scope.rateplans.splice($scope.cancelIndex,1);
-						//$scope.confirmCancel=false;
-						
-					} else { 
+
+						$scope.cooped[$scope.roomCloseIndex].is_online = parseInt($scope.currentIsOnline);
+						$scope.roomConfirmCancel = false;
+
+					} else {
 						log.log(resp.errmsg);
 					}
 				})
