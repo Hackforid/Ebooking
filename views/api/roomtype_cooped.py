@@ -206,3 +206,27 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
         self.finish_json(result=dict(
             roomtype=room.todict()))
 
+class RoomTypeOnlineAPIHandler(BtwBaseHandler):
+
+    def put(self, hotel_id, roomtype_id):
+
+        args = self.get_json_arguments()
+        is_online, = get_and_valid_arguments(args, 'is_online')
+        if is_online not in [0, 1]:
+            raise JsonException(errmsg='wrong arg is_online', errcode=2001)
+
+        roomtype =  CooperateRoomTypeModel.get_by_merchant_hotel_and_id(self.db, self.merchant.id, hotel_id, roomtype_id)
+        if not roomtype:
+            raise JsonException(errmsg='roomtype not found', errcode=2002)
+
+        roomtype.is_online = is_online
+        self.db.commit()
+
+        PushInventoryTask().push_inventory.delay(roomtype_id)
+
+        self.finish_json(result=dict(
+            roomtype = roomtype.todict(),
+            ))
+
+
+

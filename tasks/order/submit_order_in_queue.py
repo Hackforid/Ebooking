@@ -8,27 +8,32 @@ from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
 from tasks.stock import PushInventoryTask
+from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.order import OrderModel
 from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
+from tools.log import Log
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def start_order(self, order_id):
     session = self.session
     order = get_order(session, order_id)
     if order.status != 0:
-        return
+        return order
 
-    pre_status = order.status
+    # valid is roomtype online
+    roomtype = CooperateRoomTypeModel.get_by_id(self.session, order.roomtype_id)
+    if roomtype.is_online != 1:
+        Log.info('roomtype is not online')
+        order.status = 200
+        session.commit()
+        OrderHistoryModel.set_order_status_by_server(session, order, 0, 200)
+        return order
 
     order = modify_inventory(session, order)
-    PushInventoryTask().push_inventory.delay(order.roomtype_id)
-
-    new_status = order.status
-
-    if pre_status != new_status:
-        OrderHistoryModel.set_order_status_by_server(session, order, pre_status, new_status)
+    if order.status != 0:
+        OrderHistoryModel.set_order_status_by_server(session, order, 0, order.status)
 
     return order
 
