@@ -6,7 +6,6 @@ from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
 from views.base import BtwBaseHandler
-from tasks.order.submit_order import submit_order 
 from tasks.order.cancel_order import cancel_order_by_server
 from models.order import OrderModel
 from models.merchant import MerchantModel
@@ -26,6 +25,7 @@ from tasks.sms import send_order_sms
 import tcelery
 tcelery.setup_nonblocking_producer()
 
+
 class SubmitOrderAPIHandler(BtwBaseHandler):
     '''
     this api is use for server to submit order
@@ -39,18 +39,16 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
         merchant = MerchantModel.get_by_id(self.db, order.merchant_id)
 
         if order.status in [200, 400, 500]:
-            self.finish_json(errcode=1, errmsg="fail: {}".format(order.exception_info),
-                result=dict(
-                    order_id=order.id,
-                    merchant=merchant.todict(),
-                )
-            )
+            self.finish_json(errcode=1,
+                             errmsg="fail: {}".format(order.exception_info),
+                             result=dict(order_id=order.id,
+                                         merchant=merchant.todict(), ))
         else:
-            self.finish_json(result=dict(
-                order_id=order.id,
-                wait= 0 if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO or order.status == 300 else 1,
-                merchant=merchant.todict(),
-                ))
+            self.finish_json(result=dict(order_id=order.id,
+                                         wait=0 if order.confirm_type ==
+                                         OrderModel.CONFIRM_TYPE_AUTO or
+                                         order.status == 300 else 1,
+                                         merchant=merchant.todict(), ))
 
     def format_order(self, order_json):
         Log.info(order_json)
@@ -83,12 +81,14 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             task = yield gen.Task(start_order.apply_async, args=[order.id])
             order = task.result
             if task.status == 'SUCCESS':
-                send_order_sms.delay(order.merchant_id, order.hotel_name, order.id, order.confirm_type)
+                send_order_sms.delay(order.merchant_id, order.hotel_name,
+                                     order.id, order.confirm_type)
             else:
-                raise JsonException(1, 'server error: there are something wrong when processing order in celery queue')
+                raise JsonException(
+                    1,
+                    'server error: there are something wrong when processing order in celery queue')
 
         raise gen.Return(order)
-
 
     def pre_check_order(self, order_entity):
 
@@ -109,7 +109,6 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             OrderHistoryModel.set_order_status_by_server(self.db, order, 0, 200)
             return order
 
-
         # valid is inventory enough
         if not self.valid_inventory(order_entity):
             Log.info('more room please')
@@ -121,7 +120,6 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             return order
 
         return order
-
 
     def create_order(self, order_entity):
         order = OrderModel.get_by_main_order_id(self.db, order_entity.id)
@@ -140,8 +138,8 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
         year_months = {}.fromkeys(year_months).keys()
 
         inventories = InventoryModel.get_by_merchant_hotel_roomtype_dates(
-            self.db, order.merchant_id,
-            order.hotel_id, order.roomtype_id, year_months)
+            self.db, order.merchant_id, order.hotel_id, order.roomtype_id,
+            year_months)
 
         if not inventories:
             Log.info("no inventory")
@@ -189,21 +187,18 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
     def combin_year_month(self, year, month):
         return int("{}{:0>2d}".format(year, month))
 
+
 class CancelOrderAPIHander(BtwBaseHandler):
 
     @gen.coroutine
     def post(self, order_id):
         task = yield gen.Task(cancel_order_by_server.apply_async,
-                args=[order_id])
+                              args=[order_id])
 
         if task.status == 'SUCCESS':
-            self.finish_json(result=dict(
-                order_id=task.result.id,
-                ))
+            self.finish_json(result=dict(order_id=task.result.id, ))
         else:
             if isinstance(task.result, CeleryException):
                 raise JsonException(1, task.result.errmsg)
             else:
                 raise JsonException(1, 'server error')
-
-
