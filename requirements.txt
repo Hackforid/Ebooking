@@ -1,7 +1,7 @@
 tornado
 sqlalchemy
 mako
-mysql-connector-python
+MySQL-python
 PyMySQL
 celery
 tornado-celery
