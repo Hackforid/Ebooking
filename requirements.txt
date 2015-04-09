@@ -2,6 +2,7 @@ tornado
 sqlalchemy
 mako
 mysql-connector-python
+PyMySQL
 celery
 tornado-celery
 python-dateutil
