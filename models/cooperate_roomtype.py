@@ -136,5 +136,6 @@ class CooperateRoomTypeModel(Base):
                 is_online = self.is_online,
                 prefix_name = self.prefix_name,
                 remark_name = self.remark_name,
+                is_delete = self.is_delete,
                 )
 

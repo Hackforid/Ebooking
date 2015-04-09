@@ -7,7 +7,7 @@ from models.room_rate import RoomRateModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 
-from tasks.stock import PushRatePlanTask, PushRoomTypeTask, PushHotelTask
+from tasks.stock import PushRatePlanTask, PushHotelTask
 
 class CooperateMixin(object):
 
@@ -43,8 +43,6 @@ class CooperateMixin(object):
             roomtype.is_delete = 1
         self.db.commit()
 
-        #roomtype_ids = [roomtype.id for roomtype in roomtypes]
-        #PushRoomTypeTask().update_roomtype_valid.delay(roomtype_ids)
         if notify_stock:
             PushHotelTask().push_hotel.delay(roomtypes[0].hotel_id)
 
