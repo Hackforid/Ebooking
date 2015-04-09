@@ -55,6 +55,7 @@ class OrderModel(Base):
     guarantee_type = Column("guaranteeType", TINYINT(4), nullable=False, default=0)
     ota_id = Column('otaId', INTEGER, nullable=False, default=0)
     ota_name = Column('otaName', VARCHAR(50), nullable=False, default='')
+    exception_info = ''
 
     CONFIRM_TYPE_INIT = 0
     CONFIRM_TYPE_AUTO = 1
@@ -288,4 +289,5 @@ class OrderModel(Base):
                 ota_name=self.ota_name,
                 stay_days=self.get_stay_days(),
                 has_breakfast=self.get_has_breakfast(),
+                exception_info=self.exception_info,
                 )

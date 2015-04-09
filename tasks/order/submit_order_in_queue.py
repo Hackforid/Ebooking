@@ -12,7 +12,6 @@ from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.order import OrderModel
 from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
-from exception.celery_exception import CeleryException
 from tools.log import Log
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
@@ -27,6 +26,7 @@ def start_order(self, order_id):
     if roomtype.is_online != 1:
         Log.info('roomtype is not online')
         order.status = 200
+        order.exception_info = 'roomtype is not online'
         session.commit()
         OrderHistoryModel.set_order_status_by_server(session, order, 0, 200)
         return order
@@ -60,7 +60,7 @@ def get_inventory_by_date(inventories, year, month):
 
 def valid_inventory(inventories, stay_days, room_quantity):
     if not inventories:
-        print "no inventory"
+        Log.info('no inventory')
         return False
 
     for inventory in inventories:
@@ -69,13 +69,13 @@ def valid_inventory(inventories, stay_days, room_quantity):
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
         if not inventory:
-            print 'day {}-{} inventory not found'.format(day.year, day.month)
+            Log.info('day {}-{} inventory not found'.format(day.year, day.month))
             return False
         if inventory.get_day(day.day) < room_quantity:
-            print 'room not enough'
+            Log.info('room not enough')
             return False
     else:
-        print 'found'
+        Log.info('found')
         return True
 
 def modify_inventory(session, order):
@@ -89,14 +89,15 @@ def modify_inventory(session, order):
         order.hotel_id, order.roomtype_id, year_months)
 
     if not valid_inventory(inventories, stay_days, order.room_num):
-        print 'valid inventory fail'
+        Log.info('valid inventory fail')
+        order.exception_info = 'valid inventory fail'
         order.status = 200
         session.commit()
         return order
 
     room_num_record = []
     is_auto = True
-    
+
     for day in stay_days:
         inventory = get_inventory_by_date(inventories, day.year, day.month)
         num_auto, num_manual = inventory.deduct_val_by_day(day.day, order.room_num)
