@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from config import Config
 
 engine = create_engine(
-            Config['mysql-connector'], encoding='utf-8',
+            Config['mysql-pymysql'], encoding='utf-8',
             pool_recycle=600, pool_size=20, max_overflow=100,
             echo=False
             )
