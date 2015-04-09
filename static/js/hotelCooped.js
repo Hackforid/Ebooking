@@ -174,7 +174,7 @@
 		};
 
 
-		$scope.confirmCancel=false;
+		$scope.confirmCancel = false;
 		$scope.cancelIndex;
 
 		$scope.changeDistrictName = {};
@@ -183,23 +183,21 @@
 		$scope.roomCloseIndex;
 		$scope.currentIsOnline;
 
-		$scope.allRoomClose=function(isonline){
+		$scope.allRoomClose = function(isonline) {
 
 			$scope.roomConfirmCancel = true;
 
-			$scope.currentIsOnline=isonline;
+			$scope.currentIsOnline = isonline;
 
 		}
 
 		$scope.roomCloseConfirm = function() {
 
-			//var url = "/api/hotel/" + hotelId + "/roomtype/" + $scope.cooped[$scope.roomCloseIndex].cooped_roomtype_id + "/online";
-			var url="/api/merchant/roomtype/online";
+			var url = "/api/merchant/roomtype/online";
 			log.log(url);
 			log.log({
-					"is_online": parseInt($scope.currentIsOnline)
-				});
-
+				"is_online": parseInt($scope.currentIsOnline)
+			});
 
 			$http.put(url, {
 					"is_online": parseInt($scope.currentIsOnline)
@@ -217,7 +215,6 @@
 				.error(function() {
 					log.log('network error');
 				})
-
 
 		}
 
@@ -413,10 +410,10 @@
 				checkBookResult = "允许外国人入住";
 			}
 			if (b == "0") {
-				checkBookResult = checkBookResult + "预定不需要身份证";
+				checkBookResult = checkBookResult + "，预定不需要身份证";
 			} else {
 
-				checkBookResult = checkBookResult + "预定需要身份证";
+				checkBookResult = checkBookResult + "，预定需要身份证";
 			}
 
 			return checkBookResult;
