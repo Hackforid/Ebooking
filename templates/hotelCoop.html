@@ -142,11 +142,11 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-head" >
                             <thead><tr>
                                     <th width="33%">酒店名称</th>
-                                    <th width="11%">星级</th>
-                                    <th width="11%">城市</th>
-                                    <th width="10%">区域</th>                                 
-                                    <th width="10%">商圈</th>
-                                    <th width="5%">房态</th>
+                                    <th width="8%">星级</th>
+                                    <th width="8%">城市</th>
+                                    <th width="9%">区域</th>                                 
+                                    <th width="14%">商圈</th>
+                                    <th width="8%">房态</th>
                                     <th width="13%">维护</th>
                                     <th width="7%">操作</th>
                             </tr></thead>
@@ -156,11 +156,11 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
                             <tr ng-repeat="hotel in hotels">
                                 <td width="33%"><a href="javascript:void(0)" ng-click="hotelDetail($index)" class="hotel-btn" ng-bind="hotel.name"></a></td>
-                                <td width="11%" ng-bind="getHotelStar(hotel.star)"></td>
-                                <td width="11%" ng-bind="getCityName(hotel.city_id)"></td>
-                                <td width="10%" ng-bind="hotel.district_name"></td>
-                                <td width="10%" ng-bind="hotel['business_zone']['name']"></td> 
-                                <td width="5%">
+                                <td width="8%" ng-bind="getHotelStar(hotel.star)"></td>
+                                <td width="8%" ng-bind="getCityName(hotel.city_id)"></td>
+                                <td width="9%" ng-bind="hotel.district_name"></td>
+                                <td width="14%" ng-bind="hotel['business_zone']['name']"></td> 
+                                <td width="8%">
                                     <a style="text-decoration: underline;cursor: pointer;" ng-click="roomStatusClick()" ng-mouseenter="loadRoomTypes(hotel.id,$index)" ng-bind="(hotel['online_roomtype_count'])+'/'+(hotel['roomtype_count'])">
                                     </a>
                                 </td> 

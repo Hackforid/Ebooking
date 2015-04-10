@@ -319,6 +319,7 @@
 
 
 			$scope.cityBlur = function() {
+				$scope.searchDistrict = "";
 				/*空过滤*/
 				if($.trim($scope.citysName.selected) == ""){
 					$scope.changeDistrictName = {};
@@ -353,6 +354,13 @@
 						log.log(resp);
 						if (resp.errcode == 0) {
 							$scope.changeDistrictName = resp.result.districts;
+
+							var unlimitedDistrict = {
+								id: -100,
+								name: "不限"
+							};
+							$scope.changeDistrictName.unshift(unlimitedDistrict);
+
 
 						} else {
 							log.log(resp.errmsg);
@@ -650,7 +658,7 @@
 
 			}
 
-			if ($.trim($scope.searchDistrict) != "" && $scope.searchDistrict != undefined) {
+			if ($.trim($scope.searchDistrict) != "" && $scope.searchDistrict != undefined && $.trim($scope.searchDistrict) != -100) {
 					url = url + "&district_id=" + $scope.searchDistrict;
 
 			}
