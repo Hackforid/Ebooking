@@ -113,11 +113,10 @@
                                                   <td>取消时：</td>
                                                   <td>
                                                       <select id={{"roomheadpunish"+$index}}  
-                                                        name="" class="input-s"  >                
-                                                          <option value="0">不扣任何费用</option>
+                                                        name="" class="input-s"  > 
                                                           <option value="1">扣首晚房费</option>
-                                                          <option value="2">扣全部房费</option>
-                                          
+                                                          <option value="2">扣全部房费</option>   
+                                                          <option value="0">不扣任何费用</option>
                                                       </select></td>
                                                 </tr>
 
@@ -287,9 +286,9 @@
   <tr ng-show="!newRatePlanDialog.priceTypeShow">
     <td>取消时：</td>
     <td><select name="" class="input-s" ng-model="newRatePlanDialog.punishType" >
-                       <option value="0">不扣任何费用</option>
-                       <option value="1">扣首晚房费</option>
-                       <option value="2">扣全部房费</option>
+                        <option value="1">扣首晚房费</option>
+                        <option value="2">扣全部房费</option>
+                        <option value="0">不扣任何费用</option>
                   <!--  <option value="3">扣定额</option> -->
                   <!--  <option value="4">扣全额房费百分比</option> -->
                      </select></td>

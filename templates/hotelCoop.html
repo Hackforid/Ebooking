@@ -26,7 +26,39 @@
                 </div> 
             </div>  
 
- <!--删除提示-->  
+ <!--删除提示--> 
+
+
+
+ <!--修改房型提示-->     
+            <div class="messageDiv"  ng-show="changeRoomOnline" ng-cloak> 
+                <div class="messageBlack"></div>
+                    <div class="detail hotel-detail" style="margin-left:-250px;width:500px;height:310px;">
+                    <div class="head">
+                        <h1>设置房态</h1>
+                        <p id="closeDiv" class="close" href="#" ng-click="changeRoomOnline=false">X</p>
+                    </div>
+                    <div class="con" >
+                        <div class="cm2" style="height:250px">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01"  ng-cloak>
+                                <tr ng-repeat="room in currentRoomtypes">
+                                    <td width="50%" style="vertical-align: middle" ng-bind="room.name"></td>
+                                    <td width="50%">
+                                        <input type="button" ng-show="room.is_online" ng-click="currenRoomCloseConfirm($index,0)" class="btn-bai" value="关房"/>
+
+                                        <input type="button" ng-show="!room.is_online" ng-click="currenRoomCloseConfirm($index,1)"  value="开房"/>
+                                    </td>
+                                
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
+
+ <!--修改房型提示-->  
+
 
 
  <!--关闭房型提示-->     
@@ -114,8 +146,9 @@
                                     <th width="11%">城市</th>
                                     <th width="10%">区域</th>                                 
                                     <th width="10%">商圈</th>
-                                    <th width="15%">维护</th>
-                                    <th width="10%">操作</th>
+                                    <th width="5%">房态</th>
+                                    <th width="13%">维护</th>
+                                    <th width="7%">操作</th>
                             </tr></thead>
                         </table>
 
@@ -126,10 +159,15 @@
                                 <td width="11%" ng-bind="getHotelStar(hotel.star)"></td>
                                 <td width="11%" ng-bind="getCityName(hotel.city_id)"></td>
                                 <td width="10%" ng-bind="hotel.district_name"></td>
-                                <td width="10%" ng-bind="hotel['business_zone']['name']"></td>     
-                                <td class="action" width="15%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+                                <td width="10%" ng-bind="hotel['business_zone']['name']"></td> 
+                                <td width="5%">
+                                    <a style="text-decoration: underline;cursor: pointer;" ng-click="roomStatusClick()" ng-mouseenter="loadRoomTypes(hotel.id,$index)" ng-bind="(hotel['online_roomtype_count'])+'/'+(hotel['roomtype_count'])">
+                                    </a>
+                                </td> 
 
-                                <td width="10%"><a ng-click="cancelBtn($index)" href="#" style="color:#0073B7;text-decoration: underline;">解除合作</a></td>
+                                <td class="action" width="13%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+
+                                <td width="7%"><a ng-click="cancelBtn($index)" href="#" style="color:#0073B7;text-decoration: underline;">解除合作</a></td>
 
 
                             </tr>
