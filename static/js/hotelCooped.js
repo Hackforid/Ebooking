@@ -174,10 +174,128 @@
 		};
 
 
-		$scope.confirmCancel=false;
+		$scope.confirmCancel = false;
 		$scope.cancelIndex;
 
 		$scope.changeDistrictName = {};
+
+		$scope.roomConfirmCancel = false;
+		$scope.roomCloseIndex;
+		$scope.currentIsOnline;
+		$scope.currentRoomtypes;
+
+		$scope.currentHotelId;
+		
+		$scope.changeRoomOnline = false;
+
+		$scope.loadRoomTypes = function(currentHotelId, index) {
+			$scope.currentHotelIndex = index;
+			$scope.currentHotelId = currentHotelId;
+			var url = "/api/hotel/" + currentHotelId + "/roomtype/?simple=1";
+			log.log(url);
+			$http.get(url)
+				.success(function(resp) {
+					log.log(resp);
+					if (resp.errcode == 0) {
+						$scope.currentRoomtypes = resp.result.cooped_roomtypes;
+					} else {
+						log.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					log.log('network error');
+				})
+		}
+		$scope.roomStatusClick = function(){
+
+			$scope.changeRoomOnline = true;
+
+		}
+
+
+		$scope.currenRoomCloseConfirm = function(index, currentIsOnline) {
+
+			var url = "/api/hotel/" + $scope.currentHotelId + "/roomtype/" + $scope.currentRoomtypes[index].cooped_roomtype_id + "/online";
+
+			log.log(url);
+
+			$http.put(url, {
+					"is_online": parseInt(currentIsOnline)
+				})
+				.success(function(resp) {
+					log.log(resp);
+					if (resp.errcode == 0) {
+
+						$scope.currentRoomtypes[index].is_online = parseInt(currentIsOnline);
+
+						if (currentIsOnline == 1) {
+							$scope.hotels[$scope.currentHotelIndex]['online_roomtype_count'] ++;
+
+						} else if (currentIsOnline == 0) {
+							$scope.hotels[$scope.currentHotelIndex]['online_roomtype_count'] --;
+
+						}
+
+
+					} else {
+						log.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					log.log('network error');
+				})
+
+
+		}
+
+
+		$scope.allRoomClose = function(isonline) {
+
+			$scope.roomConfirmCancel = true;
+
+			$scope.currentIsOnline = isonline;
+
+		}
+
+		$scope.roomCloseConfirm = function() {
+
+			var url = "/api/merchant/roomtype/online";
+			log.log(url);
+			log.log({
+				"is_online": parseInt($scope.currentIsOnline)
+			});
+
+			$http.put(url, {
+					"is_online": parseInt($scope.currentIsOnline)
+				})
+				.success(function(resp) {
+					log.log(resp);
+					if (resp.errcode == 0) {
+
+						$scope.roomConfirmCancel = false;
+
+						if ($scope.currentIsOnline == 0) {
+
+							for (var i = 0; i < $scope.hotels.length; i++) {
+								$scope.hotels[i]['online_roomtype_count'] = 0;
+							};
+						} else if ($scope.currentIsOnline == 1) {
+
+							for (var i = 0; i < $scope.hotels.length; i++) {
+								$scope.hotels[i]['online_roomtype_count'] = $scope.hotels[i]['roomtype_count'];
+							};
+						}
+
+					} else {
+						log.log(resp.errmsg);
+					}
+				})
+				.error(function() {
+					log.log('network error');
+				})
+
+		}
+
 
 		function isChinese(cityInput) {
 				var re = /[^\u4e00-\u9fa5]/;
@@ -369,10 +487,10 @@
 				checkBookResult = "允许外国人入住";
 			}
 			if (b == "0") {
-				checkBookResult = checkBookResult + "预定不需要身份证";
+				checkBookResult = checkBookResult + "，预定不需要身份证";
 			} else {
 
-				checkBookResult = checkBookResult + "预定需要身份证";
+				checkBookResult = checkBookResult + "，预定需要身份证";
 			}
 
 			return checkBookResult;

@@ -64,7 +64,7 @@
 		this.http = http;
 		this.name = '';
 		this.mealType = 0;
-		this.punishType = 0;
+		this.punishType = 1;
 		this.errmsg = '';
 
 		this.priceType = "1";
@@ -92,7 +92,7 @@
 
 			this.name = '';
 			this.mealType = 0;
-			this.punishType = 0;
+			this.punishType = 1;
 			scope.errMessage = '';
 			//this.firstcheckStatus = false;
 			//this.holecheckStatus = false;
@@ -755,7 +755,7 @@
 
 			this.errmsg = ' ';
 
-			console.log(params);
+			//console.log(params);
 
 			http.put(url, params)
 				.success(function(resp) {
