@@ -3,6 +3,9 @@
 import json
 from datetime import date
 
+from tornado import gen
+from tornado.httpclient import AsyncHTTPClient
+
 from views.base import BtwBaseHandler
 from models.order import OrderModel
 from models.income import IncomeModel
@@ -11,10 +14,12 @@ from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
 from constants import PERMISSIONS, OTA
 from exception.json_exception import JsonException
+from config import API
 
 
 class FinanceAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.income_statistics, json=True)
     def get(self):
@@ -29,6 +34,7 @@ class FinanceAPIHandler(BtwBaseHandler):
             ota_ids = json.loads(ota_ids)
 
         orders = self.get_order_in_date(merchant_id, year, month, pay_type, ota_ids)
+        orders = yield self.valid_order_from_server(orders)
         incomes = self.get_income_record_in_date(merchant_id, year, month, pay_type, ota_ids)
 
         orders=[order.todict() for order in orders]
@@ -57,6 +63,21 @@ class FinanceAPIHandler(BtwBaseHandler):
     def get_commission(self, merchant_id):
         contract = ContractModel.get_by_merchant_and_type(self.db, merchant_id, ContractModel.PAY_TYPE_ARRIVE)
         return contract.commission / 100.0 if contract else 0
+
+    @gen.coroutine
+    def valid_order_from_server(self, orders):
+        order_ids = [order.id for order in orders]
+        url = API['ORDER_VALID'] + '/order/settleApi/settleStatus'
+        resp = yield AsyncHTTPClient().fetch(url, method='POST', headers = {'Content-Type': 'application/json; charset=UTF-8'}, body = json.dumps({'order_ids': order_ids}))
+        r = json.loads(resp.body)
+
+        if r and r['errcode'] == 0:
+           valid_order_ids = r['result']['order_ids']
+           orders = [order for order in orders if order.id in valid_order_ids]
+           raise gen.Return(orders)
+        else:
+            raise JsonException(1002, 'order valid server error')
+
 
 
 
