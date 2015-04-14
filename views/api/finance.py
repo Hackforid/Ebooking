@@ -67,7 +67,7 @@ class FinanceAPIHandler(BtwBaseHandler):
     @gen.coroutine
     def valid_order_from_server(self, orders):
         order_ids = [order.id for order in orders]
-        url = API['ORDER_VALID'] + '/order/settleApi/settleStatus'
+        url = API['ORDER_VALID'] + '/order/settleApi/ebooking/settleStatus'
         resp = yield AsyncHTTPClient().fetch(url, method='POST', headers = {'Content-Type': 'application/json; charset=UTF-8'}, body = json.dumps({'order_ids': order_ids}))
         r = json.loads(resp.body)
 
