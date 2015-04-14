@@ -189,6 +189,7 @@
 		$scope.changeRoomOnline = false;
 
 		$scope.loadRoomTypes = function(currentHotelId, index) {
+			$scope.currentRoomtypes = {};
 			$scope.currentHotelIndex = index;
 			$scope.currentHotelId = currentHotelId;
 			var url = "/api/hotel/" + currentHotelId + "/roomtype/?simple=1";
