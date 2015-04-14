@@ -121,7 +121,7 @@
 
 			var checkResult = this.name;
 
-			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+			var resultLen = checkResult.replace(/[\u4e00-\u9fa5]/g, "aa").length;
 
 			if (resultLen > 20) {
 				scope.errMessage = "名称不能超过20个字符";
@@ -371,7 +371,7 @@
 			}
 
 
-			var resultLen = checkResult.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+			var resultLen = checkResult.replace(/[\u4e00-\u9fa5]/g, "aa").length;
 
 			if (resultLen > 20) {
 				scope.inputErrMessage = "名称不能超过20个字符";
