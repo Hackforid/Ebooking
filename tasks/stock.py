@@ -16,6 +16,8 @@ from config import API, IS_PUSH_TO_STOCK
 from constants import QUEUE_STOCK_PUSH, CHAIN_ID
 from tools.net import req
 
+from config import SPEC_STOCK_PUSH
+
 def generate_track_id(key):
     return "{}|{}".format(key, time.time())
 
@@ -190,7 +192,15 @@ class PushRatePlanTask(SqlAlchemyTask):
         rateplan_ids = [rateplan.id for rateplan in rateplans]
 
         roomrates= RoomRateModel.get_by_rateplans(self.session, rateplan_ids)
-        roomrate_datas = [self.generate_roomrate_data(roomrate) for roomrate in roomrates] 
+
+        merchant_roomrates = []
+        for roomrate in roomrates:
+            for rateplan in rateplans:
+                if rateplan.id == roomrate.rate_plan_id:
+                    merchant_roomrates.append((rateplan.merchant_id, roomrate))
+                    break
+
+        roomrate_datas = [self.generate_roomrate_data(merchant_roomrate[0], merchant_roomrate[1]) for merchant_roomrate in merchant_roomrates] 
         roomrate_data_list = [roomrate_datas[i: i+self.MAX_PUSH_NUM] for i in range(0, len(roomrate_datas), self.MAX_PUSH_NUM)]
         for roomrate_data in roomrate_data_list:
             self.post_roomrates(roomrate_data)
@@ -213,7 +223,7 @@ class PushRatePlanTask(SqlAlchemyTask):
             self.post_cancel_rule(rateplan)
 
         if with_roomrate:
-            self.post_roomrate(roomrate)
+            self.post_roomrate(rateplan.merchant_id, roomrate)
 
 
     def post_rateplan(self, rateplan):
@@ -268,10 +278,10 @@ class PushRatePlanTask(SqlAlchemyTask):
         r = req.post(url, data)
         self.log.info("<<push cancel rules>> response: {}".format(r.text))
 
-    def post_roomrate(self, roomrate):
+    def post_roomrate(self, merchant_id, roomrate):
         if not IS_PUSH_TO_STOCK:
             return
-        roomrate_data = self.generate_roomrate_data(roomrate)
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
         data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
         self.log.info(data)
@@ -341,12 +351,17 @@ class PushRatePlanTask(SqlAlchemyTask):
 
         return data
 
-    def generate_roomrate_data(self, roomrate):
+    def generate_roomrate_data(self, merchant_id, roomrate):
         data = {}
         data['chain_id'] = CHAIN_ID
         data['hotel_id'] = str(roomrate.hotel_id)
         data['room_type_id'] = str(roomrate.roomtype_id)
         data['rate_plan_id'] = str(roomrate.rate_plan_id)
+
+        if merchant_id in SPEC_STOCK_PUSH:
+            data['ota_id'] = SPEC_STOCK_PUSH[merchant_id]
+        else:
+            data['ota_id'] = 0
 
         data['instant_confirm'] = '|'.join([str(0) for i in xrange(90)])
         meal_num = roomrate.get_meal()
@@ -466,7 +481,12 @@ class PushInventoryTask(SqlAlchemyTask):
 
         data = {}
         data['chain_id'] = CHAIN_ID
-        data['ota_id'] = 0
+
+        if inventories[0].merchant_id in SPEC_STOCK_PUSH:
+            data['ota_id'] = SPEC_STOCK_PUSH[inventories[0].merchant_id]
+        else:
+            data['ota_id'] = 0
+
         data['hotel_id'] = str(inventories[0].hotel_id)
         data['room_type_id'] = str(inventories[0].roomtype_id)
         data['manual_confirm_counts'] = '|'.join(manual_confirm_count)
