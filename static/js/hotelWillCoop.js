@@ -90,7 +90,7 @@
 				/*英文字符过滤*/
 				if(isChinese($.trim($scope.citysName.selected))){
 					var selectCity = $scope.citysName.selected;
-					var Len = selectCity.replace(/[\u4E00-\u6FA5]/g, "aa").length;
+					var Len = selectCity.replace(/[\u4e00-\u9fa5]/g, "aa").length;
 					if (Len < 3) {
 						$scope.changeDistrictName = {};
 						return;
