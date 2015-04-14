@@ -29,3 +29,7 @@ COOKIE_SALT = "you never know me"
 ORDER_CONTACTS = [
         '13071218832', '18513956997',
         ]
+
+SPEC_STOCK_PUSH = {
+        21: 19,
+        }
