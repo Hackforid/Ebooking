@@ -31,5 +31,5 @@ ORDER_CONTACTS = [
         ]
 
 SPEC_STOCK_PUSH = {
-        21: 19,
+        21: 13,
         }
