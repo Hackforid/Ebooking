@@ -11,6 +11,7 @@ API = {
     'POI': 'http://127.0.0.1:9001',
     'STOCK': 'http://121.41.23.128:8080/stock2',
     'ORDER': 'http://121.40.120.72:8080/',
+    'ORDER_VALID': 'http://192.168.50.4:8080',
 }
 
 
@@ -29,3 +30,7 @@ COOKIE_SALT = "you never know me"
 ORDER_CONTACTS = [
         '13071218832', '18513956997',
         ]
+
+SPEC_STOCK_PUSH = {
+        21: 13,
+        }
