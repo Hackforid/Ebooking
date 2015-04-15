@@ -15,6 +15,7 @@ from tools.request_tools import get_and_valid_arguments
 from constants import PERMISSIONS, OTA
 from exception.json_exception import JsonException
 from config import API
+from tools.log import Log
 
 
 class FinanceAPIHandler(BtwBaseHandler):
@@ -72,9 +73,11 @@ class FinanceAPIHandler(BtwBaseHandler):
         r = json.loads(resp.body)
 
         if r and r['errcode'] == 0:
-           valid_order_ids = r['result']['order_ids']
-           orders = [order for order in orders if order.id in valid_order_ids]
-           raise gen.Return(orders)
+            Log.info("load orders {}".format(order_ids))
+            Log.info("fetch valid orders {}".format(r))
+            valid_order_ids = r['result']['order_ids']
+            orders = [order for order in orders if str(order.id) in valid_order_ids]
+            raise gen.Return(orders)
         else:
             raise JsonException(1002, 'order valid server error')
 
