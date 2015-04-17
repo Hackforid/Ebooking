@@ -58,8 +58,6 @@
 					.success(function(resp) {
 						if (resp.errcode == 0) {
 
-							_hmt.push(['_setCustomVar', 1, 'login', 1, 2]);
-
 							window.location.href = ("/order/waiting/");
 						} else {
 							$scope.errMsg = resp.errmsg;
