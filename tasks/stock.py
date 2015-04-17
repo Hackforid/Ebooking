@@ -229,6 +229,7 @@ class PushRatePlanTask(SqlAlchemyTask):
     def post_rateplan(self, rateplan):
         if not IS_PUSH_TO_STOCK:
             return
+
         rateplan_data = self.generate_rateplan_data(rateplan)
 
         track_id = self.generate_track_id(rateplan_data['rate_plan_id'])
@@ -396,6 +397,8 @@ class PushRatePlanTask(SqlAlchemyTask):
         self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.text))
 
     def cal_rateplan_isvalid(self, rateplan):
+        if rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 1:
+            return 0
         return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 
 class PushInventoryTask(SqlAlchemyTask):
