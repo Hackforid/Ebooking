@@ -7,6 +7,29 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
         <title>商旅分销管理系统</title>
+
+        <script>
+        if (window.location.host == "ebooking.betterwood.com") {
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?bdfdf5e780c80fff1d6d3a1f708d0032";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+        } else if (window.location.host == "ebookingtest.betterwood.com") {
+
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?385000e2adcc281fc566e9e409bb69ec";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+
+        }
+        </script>
+
 		<script>
 			var merchantId = ${user.merchant_id};
 		</script>
