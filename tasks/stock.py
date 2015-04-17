@@ -173,7 +173,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         from models.rate_plan import RatePlanModel
 
         rateplans = RatePlanModel.get_by_merchant(self.session, merchant.id, with_delete=True)
-        rateplan_datas = [self.generate_rateplan_data(rateplan) for rateplan in rateplans if not (rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 0)]
+        rateplan_datas = [self.generate_rateplan_data(rateplan) for rateplan in rateplans]
         cancel_rule_datas =  [self.generate_cancel_rule_data(rateplan) for rateplan in rateplans]
 
         rateplan_data_list = [rateplan_datas[i: i+self.MAX_PUSH_NUM] for i in range(0, len(rateplan_datas), self.MAX_PUSH_NUM)]
@@ -215,9 +215,6 @@ class PushRatePlanTask(SqlAlchemyTask):
         roomrate = RoomRateModel.get_by_rateplan(self.session, rateplan_id, with_delete=True)
         if not rateplan or not roomrate:
             self.log.info('not found')
-            return
-
-        if rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 0:
             return
 
         self.post_rateplan(rateplan)
@@ -400,6 +397,8 @@ class PushRatePlanTask(SqlAlchemyTask):
         self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.text))
 
     def cal_rateplan_isvalid(self, rateplan):
+        if rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 1:
+            return 0
         return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 
 class PushInventoryTask(SqlAlchemyTask):
