@@ -18,6 +18,7 @@ import tasks.models.inventory as Inventory
 import tcelery
 tcelery.setup_nonblocking_producer()
 
+from tools.log import Log
 
 class InventoryAPIHandler(BtwBaseHandler):
 
@@ -27,6 +28,7 @@ class InventoryAPIHandler(BtwBaseHandler):
     def put(self, hotel_id, roomtype_id):
         merchant_id = self.current_user.merchant_id
         args = self.get_json_arguments()
+        Log.info(u"modify inventory>> user:{} data:{}".format(self.current_user.todict(), args))
         start_date, end_date, change_num, price_type = get_and_valid_arguments(args,
                 'start_date', 'end_date', 'change_num', 'price_type')
         start_date, end_date = self.valid_date(start_date, end_date)
