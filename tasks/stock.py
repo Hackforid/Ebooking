@@ -173,7 +173,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         from models.rate_plan import RatePlanModel
 
         rateplans = RatePlanModel.get_by_merchant(self.session, merchant.id, with_delete=True)
-        rateplan_datas = [self.generate_rateplan_data(rateplan) for rateplan in rateplans]
+        rateplan_datas = [self.generate_rateplan_data(rateplan) for rateplan in rateplans if not (rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 0)]
         cancel_rule_datas =  [self.generate_cancel_rule_data(rateplan) for rateplan in rateplans]
 
         rateplan_data_list = [rateplan_datas[i: i+self.MAX_PUSH_NUM] for i in range(0, len(rateplan_datas), self.MAX_PUSH_NUM)]
@@ -217,6 +217,9 @@ class PushRatePlanTask(SqlAlchemyTask):
             self.log.info('not found')
             return
 
+        if rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 0:
+            return
+
         self.post_rateplan(rateplan)
 
         if with_cancel_rule:
@@ -229,6 +232,7 @@ class PushRatePlanTask(SqlAlchemyTask):
     def post_rateplan(self, rateplan):
         if not IS_PUSH_TO_STOCK:
             return
+
         rateplan_data = self.generate_rateplan_data(rateplan)
 
         track_id = self.generate_track_id(rateplan_data['rate_plan_id'])
