@@ -404,8 +404,8 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 		var params = {
 			'remark': $.trim($scope.remarkDetail),
 			'value': accMul($.trim($scope.moneyDetail), 100),
-			'month': parseInt(splitTime[1]),
-			'year': parseInt(splitTime[0]),
+			'month': parseInt($scope.searchMonth),
+			'year': parseInt($scope.searchYear),
 			'ota_ids': currentOtaIds, //parseInt($scope.currentOtaId),
 			'pay_type': 1
 
