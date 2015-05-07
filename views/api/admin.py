@@ -5,9 +5,9 @@ from tornado import gen
 
 from exception.json_exception import JsonException
 
-from tools.auth import auth_login, auth_permission, need_btw_admin
+from tools.auth import auth_backstage_login, need_backstage_admin
 from tools.request_tools import get_and_valid_arguments
-from views.base import BtwBaseHandler
+from views.base import BackStageHandler
 from models.merchant import MerchantModel
 from models.user import UserModel
 from models.cooperate_hotel import CooperateHotelModel
@@ -15,10 +15,10 @@ from models.cooperate_hotel import CooperateHotelModel
 
 from tasks.stock import PushHotelTask
 
-class AdminMerchantAPIHandler(BtwBaseHandler):
+class AdminMerchantAPIHandler(BackStageHandler):
 
-    @auth_login(json=True)
-    @need_btw_admin(json=True)
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
     def get(self):
         merchants = MerchantModel.get_all(self.db)
         merchants = [merchant.todict() for merchant in merchants]
@@ -26,10 +26,10 @@ class AdminMerchantAPIHandler(BtwBaseHandler):
             merchants=merchants
             ))
 
-class AdminMerchantModifyAPIHandler(BtwBaseHandler):
+class AdminMerchantModifyAPIHandler(BackStageHandler):
 
-    @auth_login(json=True)
-    @need_btw_admin(json=True)
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
     def post(self):
         args = self.get_json_arguments()
         merchant, root_pwd, admin_pwd = get_and_valid_arguments(args, 'merchant', 'root_pwd', 'admin_pwd')
@@ -49,8 +49,8 @@ class AdminMerchantModifyAPIHandler(BtwBaseHandler):
         return merchant, admin, root
 
 
-    @auth_login(json=True)
-    @need_btw_admin(json=True)
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
     def put(self):
         args = self.get_json_arguments()
         merchant, = get_and_valid_arguments(args, 'merchant')
@@ -79,11 +79,11 @@ class AdminMerchantModifyAPIHandler(BtwBaseHandler):
 
         return merchant
 
-class AdminMerchantSuspendAPIHandler(BtwBaseHandler):
+class AdminMerchantSuspendAPIHandler(BackStageHandler):
 
 
-    @auth_login(json=True)
-    @need_btw_admin(json=True)
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
     def put(self, merchant_id, is_suspend):
 
         merchant = self.suspend_merchant(merchant_id, is_suspend)

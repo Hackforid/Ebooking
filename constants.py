@@ -16,6 +16,9 @@ PERMISSIONS = ObjectDict({
     'root'                     : (1<<10),
 })
 
+class BackStage(object):
+    PERMISSION_ADMIN = 'permission_admin'
+
 #Celery Queue
 QUEUE_DEFAULT = "DEFAULT"
 QUEUE_ORDER = "ORDER"

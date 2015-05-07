@@ -2,10 +2,12 @@
 
 import sys
 import traceback
+import json
 
 from tornado.escape import json_decode
 from tornado.util import ObjectDict
 from tornado import gen
+from tornado.httpclient import AsyncHTTPClient
 
 from views import BaseHandler
 from exception.json_exception import JsonException, JsonDecodeError
@@ -15,6 +17,8 @@ from tools.json import json_encode
 from mixin.request_mixin import CeleryTaskMixin
 from models.user import UserModel
 from models.merchant import MerchantModel
+
+from config import BACKSTAGE_HOST, BACKSTAGE_USERNAME_KEY
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -72,4 +76,32 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
             print traceback.format_exc()
             if raise_error:
                 raise JsonDecodeError()
+
+class BackStageHandler(BtwBaseHandler):
+
+    def initialize(self):
+        super(BackStageHandler, self).initialize()
+        self.backstage_user_name = None
+        self.backstage_user_permissions = []
+
+    @gen.coroutine
+    def prepare(self):
+        yield self.get_backstage_user()
+
+    @gen.coroutine
+    def get_backstage_user(self):
+        self.backstage_user_name = self.get_secure_cookie(BACKSTAGE_USERNAME_KEY)
+        if self.backstage_user_name:
+            yield self.get_backstage_user_permission(self.backstage_user_name)
+
+        raise gen.Return()
+
+    @gen.coroutine
+    def get_backstage_user_permission(self, username):
+        url = '{}/backstage/app/Ebooking_account/list?username={}'.format(BACKSTAGE_HOST, username)
+        resp = yield AsyncHTTPClient().fetch(url)
+        r = json.loads(resp.body)
+        resources = r['result']['resources']
+        self.backstage_user_permissions = [p['id'] for p in resources]
+        raise gen.Return()
 

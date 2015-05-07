@@ -34,3 +34,11 @@ ORDER_CONTACTS = [
 SPEC_STOCK_PUSH = {
         21: 13,
         }
+
+BACKSTAGE_HOST = 'http://121.42.8.247:8080'
+BACKSTAGE_USERNAME_KEY = "test_op_username"
+
+BACKSTAGE_PERMISSIONS = {
+        'admin': 63,
+        }
+
