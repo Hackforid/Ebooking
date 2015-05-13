@@ -37,6 +37,7 @@ SPEC_STOCK_PUSH = {
 
 BACKSTAGE_HOST = 'http://121.42.8.247:8080'
 BACKSTAGE_USERNAME_KEY = "test_op_username"
+BACKSTAGE_ENABLE = False
 
 BACKSTAGE_PERMISSIONS = {
         'admin': 63,
