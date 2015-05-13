@@ -17,6 +17,7 @@ from tools.json import json_encode
 from mixin.request_mixin import CeleryTaskMixin
 from models.user import UserModel
 from models.merchant import MerchantModel
+from tools.log import Log
 
 from config import BACKSTAGE_HOST, BACKSTAGE_USERNAME_KEY
 
