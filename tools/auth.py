@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
-from config import PASSWORD_SALT, BACKSTAGE_PERMISSIONS
+from config import PASSWORD_SALT, BACKSTAGE_PERMISSIONS, BACKSTAGE_ENABLE
 
 
 def auth_login(json=False):
@@ -73,7 +73,7 @@ def auth_backstage_login(json=False):
     def _decorator(fn):
         def _(self, *args, **kwargs):
 
-            if self.backstage_user_name:
+            if self.backstage_user_name or not BACKSTAGE_ENABLE:
                 return fn(self, *args, **kwargs)
             else:
                 if json:
@@ -87,7 +87,7 @@ def need_backstage_admin(json=False):
     def _decorator(fn):
         def _(self, *args, **kwargs):
 
-            if BACKSTAGE_PERMISSIONS['admin'] in self.backstage_user_permissions:
+            if BACKSTAGE_PERMISSIONS['admin'] in self.backstage_user_permissions or not BACKSTAGE_ENABLE:
                 return fn(self, *args, **kwargs)
             else:
                 if json:
