@@ -98,7 +98,7 @@ class BackStageHandler(BtwBaseHandler):
 
     @gen.coroutine
     def get_backstage_user_permission(self, username):
-        url = '{}/backstage/app/Ebooking_account/list?username={}'.format(BACKSTAGE_HOST, username)
+        url = '{}/app/supplier_manage/list?username={}'.format(BACKSTAGE_HOST, username)
         resp = yield AsyncHTTPClient().fetch(url)
         r = json.loads(resp.body)
         resources = r['result']['resources']
