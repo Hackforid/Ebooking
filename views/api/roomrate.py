@@ -13,12 +13,15 @@ from constants import PERMISSIONS
 from models.room_rate import RoomRateModel
 from tasks.stock import PushRatePlanTask
 
+from tools.log import Log
+
 class RoomRateAPIHandler(BtwBaseHandler):
 
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, roomrate_id):
         args = self.get_json_arguments()
+        Log.info(u"modify roomrate>> user:{} data:{}".format(self.current_user.todict(), args))
         start_date, end_date, price = get_and_valid_arguments(args,
                 'start_date', 'end_date', 'price')
         weekdays = args.get('weekdays', None)
