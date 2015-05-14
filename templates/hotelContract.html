@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>商旅分销管理系统后台</title>
 		<script src="${static_url('js/angular.js')}"></script>
+        <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
         <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
         <link href="${static_url('css/hotelContract.css')}" rel="stylesheet" type="text/css" >
         <script type="text/javascript">
@@ -18,20 +19,19 @@
             基础信息
         </div>
         <div class="basetcontent">
-            <div><label>酒店名称:</label><input type="text"/></div>
-            <div><label>预定部联系人:</label><input type="text"/></div>
-            <div><label>前台电话:</label><input type="text"/></div>
-            <div><label>传真:</label><input type="text"/></div>
-            <div><label>保证金额:</label><input type="text"/></div>
-            <div><label>业务联系人1:</label><input type="text"/></div>
-            <div><label>电话:</label><input type="text"/></div>
-            <div><label>业务联系人2:</label><input type="text"/></div>
-            <div><label>电话:</label><input type="text"/></div>
+            <div><label>酒店名称:</label><input type="text" readonly ng-model="hotelName"/></div>
+            <div><label>前台电话:</label><input type="text" ng-model="hotelInfo.receptionist_phone"/></div>
+            <div><label>传真:</label><input type="text" ng-model="hotelInfo.fax"/></div>
+            <div><label>保证金额:</label><input type="text" ng-model="hotelInfo.margin"/></div>
+            <div><label>业务联系人1:</label><input type="text" ng-model="hotelInfo.business1_name"/></div>
+            <div><label>电话1:</label><input type="text" ng-model="hotelInfo.business1_tel"/></div>
+            <div><label>业务联系人2:</label><input type="text" ng-model="hotelInfo.business2_name"/></div>
+            <div><label>电话2:</label><input type="text" ng-model="hotelInfo.business2_tel"/></div>
         </div>
         <div class="title">
             房量房价
         </div>
-        <div class="contract">
+        <div id="payTypeContract" class="contract" ng-show="payTypeContract">
             <h1>预付</h1>
             <table width="100%" border="0" cellspacing="1" cellpadding="0">
                 <tr>
@@ -63,22 +63,32 @@
             结算
         </div>
         <div class="accountcontent">
-            <div><label>财务联系人</label><input type="text"/></div>
-            <div><label>联系电话</label><input type="text"/></div>
-            <div><label>佣金</label><input type="text"/>%</div>
-            <div><label>结算周期</label><input type="text"/></div>
-            <div><label>对账时间</label><input type="text"/></div>
-            <div><label>合作模式</label><input type="text"/></div>
-            <div><label>开户名称</label><input type="text"/></div>
-            <div><label>QQ</label><input type="text"/></div>
-            <div><label>结算订单日期</label><input type="text"/></div>
-            <div><label>开户名称</label><input type="text"/></div>
-            <div><label>开户行</label><input type="text"/></div>
-            <div><label>账号</label><input type="text"/></div>
+            <div><label>财务联系人</label><input type="text" ng-model="hotelInfo.finance_name"/></div>
+            <div><label>联系电话</label><input type="text" ng-model="hotelInfo.finance_tel"/></div>
+            <div><label>佣金</label><input type="text" ng-model="hotelInfo.commission"/>%</div>
+            <div><label>结算周期</label>
+                <select ng-model="hotelInfo.settle_cycle">
+                    <option value="0">周结</option>
+                    <option value="1">月结</option>
+                    <option value="2">单结</option>
+                </select>
+            </div>
+            <div><label>对账时间</label><input type="text" ng-model="hotelInfo.settle_date"/></div>
+            <div><label>合作模式</label><input type="text" ng-model="hotelInfo.cooperation_mode"/></div>
+            <div><label>开户名称</label><input type="text" ng-model="hotelInfo.account_name"/></div>
+            <div><label>QQ</label><input type="text" ng-model="hotelInfo.finance_qq"/></div>
+            <div><label>结算订单日期</label>
+                <select ng-model="hotelInfo.settle_order_method">
+                    <option value="0">按离店日期结算</option>
+                    <option value="1">按下单日期结算</option>
+                </select>
+            </div>
+            <div><label>开户行</label><input type="text" ng-model="hotelInfo.account_bank_name"/></div>
+            <div><label>账号</label><input type="text" ng-model="hotelInfo.account_bank_id"/></div>
         </div>
         <div>
             <p style="text-align: center;">
-                <input type="button" value="保存">
+                <input type="button" value="保存" ng-click="saveContract()">
                 <input type="button" value="取消">
             </p>
         </div>
