@@ -77,6 +77,20 @@ class HotelContractAPIHandler(BackStageHandler):
             contract_hotel = contract_hotel.todict(),
             ))
 
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, merchant_id, hotel_id):
+        contract_hotel_args = self.get_json_arguments()
+
+        contract_hotel = ContractHotelModel.get_by_hotel(self.db, hotel_id)
+        if not contract_hotel:
+            raise JsonException(1000, 'contract not exist')
+
+        ContractHotelModel.update(self.db, **contract_hotel_args)
+
+        self.finish_json(result = dict(
+            contract_hotel = contract_hotel.todict(),
+            ))
 
 
 
