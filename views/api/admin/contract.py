@@ -93,4 +93,39 @@ class HotelContractAPIHandler(BackStageHandler):
             ))
 
 
+class RoomTypeContractAPIHandler(BackStageHandler):
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def post(self, merchant_id, hotel_id, roomtype_id, pay_type):
+        contract_roomtype_args = self.get_json_arguments()
+
+        contract = ContractRoomTypeModel.get_by_hotel_roomtype_pay_type(self.db, hotel_id, roomtype_id, pay_type)
+        if contract:
+            raise JsonException(1000, 'contract exist')
+
+        contract = ContractRoomTypeModel.new(self.db, hotel_id, roomtype_id, pay_type, **contract_roomtype_args)
+
+        self.finish_json(result=dict(
+            contract_roomtype = contract.todict(),
+            ))
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, merchant_id, hotel_id, roomtype_id, pay_type):
+        contract_roomtype_args = self.get_json_arguments()
+
+        contract = ContractRoomTypeModel.get_by_hotel_roomtype_pay_type(self.db, hotel_id, roomtype_id, pay_type)
+        if not contract:
+            raise JsonException(1000, 'contract not exist')
+
+        ContractRoomTypeModel.update(self.db, hotel_id, roomtype_id, pay_type, **contract_roomtype_args)
+
+        self.finish_json(result=dict(
+            contract_roomtype = contract.todict(),
+            ))
+
+
+
+
 
