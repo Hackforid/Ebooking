@@ -1,2 +1,88 @@
-var hotelID = ${hotel_id};
-var merchantID = ${merchant_id};
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+		<script src="${static_url('js/angular.js')}"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link href="${static_url('css/hotelContract.css')}" rel="stylesheet" type="text/css" >
+        <script type="text/javascript">
+            var hotelID = ${hotel_id};
+            var merchantID = ${merchant_id};
+        </script>
+    </head>
+    <body ng-app="contractApp" ng-controller="contractCtrl">
+    <div class="wrapper">
+        <p>新增合同</p>
+        <div class="title">
+            基础信息
+        </div>
+        <div class="basetcontent">
+            <div><label>酒店名称:</label><input type="text"/></div>
+            <div><label>预定部联系人:</label><input type="text"/></div>
+            <div><label>前台电话:</label><input type="text"/></div>
+            <div><label>传真:</label><input type="text"/></div>
+            <div><label>保证金额:</label><input type="text"/></div>
+            <div><label>业务联系人1:</label><input type="text"/></div>
+            <div><label>电话:</label><input type="text"/></div>
+            <div><label>业务联系人2:</label><input type="text"/></div>
+            <div><label>电话:</label><input type="text"/></div>
+        </div>
+        <div class="title">
+            房量房价
+        </div>
+        <div class="contract">
+            <h1>预付</h1>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                <tr>
+                    <td>房型</td>
+                    <td>保留房数</td>
+                    <td>平日底价</td>
+                    <td>周末底价</td>
+                    <td>取消政策</td>
+                    <td>早餐</td>
+                    <td>特殊房价</td>
+                    <td>备注</td>
+                </tr>
+            </table>
+            <h1>现付</h1>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                <tr>
+                    <td>房型</td>
+                    <td>平日底价</td>
+                    <td>平日底价</td>
+                    <td>周末底价</td>
+                    <td>取消政策</td>
+                    <td>早餐</td>
+                    <td>特殊房价</td>
+                    <td>备注</td>
+                </tr>
+            </table>
+        </div>
+        <div class="title">
+            结算
+        </div>
+        <div class="accountcontent">
+            <div><label>财务联系人</label><input type="text"/></div>
+            <div><label>联系电话</label><input type="text"/></div>
+            <div><label>佣金</label><input type="text"/>%</div>
+            <div><label>结算周期</label><input type="text"/></div>
+            <div><label>对账时间</label><input type="text"/></div>
+            <div><label>合作模式</label><input type="text"/></div>
+            <div><label>开户名称</label><input type="text"/></div>
+            <div><label>QQ</label><input type="text"/></div>
+            <div><label>结算订单日期</label><input type="text"/></div>
+            <div><label>开户名称</label><input type="text"/></div>
+            <div><label>开户行</label><input type="text"/></div>
+            <div><label>账号</label><input type="text"/></div>
+        </div>
+        <div>
+            <p style="text-align: center;">
+                <input type="button" value="保存">
+                <input type="button" value="取消">
+            </p>
+        </div>
+    </div>
+    <script src="${static_url('js/hotelContract.js')}"></script>
+</body>
+</html>
