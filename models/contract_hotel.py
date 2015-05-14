@@ -20,25 +20,24 @@ class ContractHotelModel(Base):
     hotel_id = Column(INTEGER, nullable=False)
     base_hotel_id = Column(INTEGER, nullable=False)
     creator = Column(VARCHAR(50), nullable=False)
-    margin = Column(INTEGER)
-    rd_contact_name = Column(VARCHAR(50))
+    margin = Column(INTEGER, nullable=False)
     receptionist_phone = Column(VARCHAR(50))
-    fax = Column(VARCHAR(50))
-    cooperation_mode = Column(VARCHAR(50))
-    commission = Column(TINYINT)
+    fax = Column(VARCHAR(50), nullable=False)
+    cooperation_mode = Column(VARCHAR(50), nullable=False)
+    commission = Column(TINYINT, nullable=False)
     settle_cycle = Column(TINYINT, nullable=False, default=0)
     settle_date = Column(TINYINT, nullable=False, default=1)
     settle_order_method = Column(TINYINT, nullable=False, default=0)
-    account_name = Column(VARCHAR(50))
-    account_bank_name = Column(VARCHAR(50))
-    account_bank_id = Column(VARCHAR(50))
-    finance_name = Column(VARCHAR(50))
-    finance_tel = Column(VARCHAR(50))
-    finance_qq = Column(VARCHAR(50))
-    business1_name = Column(VARCHAR(50))
-    business1_tel = Column(VARCHAR(50))
-    business2_name = Column(VARCHAR(50))
-    business2_tel = Column(VARCHAR(50))
+    account_name = Column(VARCHAR(50), nullable=False)
+    account_bank_name = Column(VARCHAR(50), nullable=False)
+    account_bank_id = Column(VARCHAR(50), nullable=False)
+    finance_name = Column(VARCHAR(50), nullable=False)
+    finance_tel = Column(VARCHAR(50), nullable=False)
+    finance_qq = Column(VARCHAR(50), nullable=False)
+    business1_name = Column(VARCHAR(50), nullable=False)
+    business1_tel = Column(VARCHAR(50), nullable=False)
+    business2_name = Column(VARCHAR(50), nullable=False)
+    business2_tel = Column(VARCHAR(50), nullable=False)
     weekend = Column(VARCHAR(20), nullable=False, default="6,7")
     is_delete = Column(BIT(1), nullable=False, default=0)
 
@@ -51,6 +50,24 @@ class ContractHotelModel(Base):
                         )
         return query.first()
 
+
+    @classmethod
+    def new(cls, session, creator, **kwargs):
+        contract = ContractHotelModel(creator=creator, **kwargs)
+        session.add(contract)
+        session.commit()
+        return contract
+
+    @classmethod
+    def update(cls, session, hotel_id, **kwargs):
+        session.query(ContractHotelModel)\
+                .filter(ContractHotelModel.hotel_id == hotel_id,
+                        ContractHotelModel.is_delete == 0
+                        )\
+                .update(kwargs)
+        session.commit()
+
+
     def todict(self):
         return ObjectDict(
                 id = self.id,
@@ -59,7 +76,6 @@ class ContractHotelModel(Base):
                 base_hotel_id = self.base_hotel_id,
                 creator = self.creator,
                 margin = self.margin,
-                rd_contact_name = self.rd_contact_name,
                 receptionist_phone = self.receptionist_phone,
                 fax = self.fax,
                 cooperation_mode = self.cooperation_mode,
