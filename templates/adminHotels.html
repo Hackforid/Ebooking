@@ -1,1 +1,61 @@
-var merchant_id = ${merchant_id};
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+        <script src="${static_url('js/angular.js')}"></script>
+         <link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}">   
+         <link rel="stylesheet" type="text/css" href="${static_url('css/adminHotel.css')}">  
+        <script type="text/javascript">
+        var merchant_id = ${merchant_id};
+        </script>
+    </head>
+    <body ng-app="adminHotelsApp" ng-controller="adminHotelsCtrl">
+        <div class="wrapper">
+            <div class="search">
+                <label>酒店名称:</label><input type="text" ng-model="searchName">
+                <label>城市:</label>
+                <input ng-enter="urlCheck()" style="display:inline;width:100px;height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
+                <label>区域:</label>
+                <select ng-enter="urlCheck()" name="" class="input-s" ng-model="searchDistrict" ng-options="c.id as c.name for c in changeDistrictName">
+                </select>
+                <label>星级:</label>
+                <select ng-enter="urlCheck()" name="" class="input-s" ng-model="searchStar" >
+                    <option value=""></option>
+                    <option value="0">不限</option>
+                    <option value="1">一星级</option>
+                    <option value="2">二星级</option>
+                    <option value="3">三星级</option>
+                    <option value="4">四星级</option>
+                    <option value="5">五星级</option>
+                </select>
+                <span class="searchbutton">
+                    <input type="button" value="搜索" ng-click="urlCheck()" class="btn btn-primary navbar-btn"> 
+                    <input type="button" value="重置" ng-click="conditionReset()" class="btn btn-bai"> 
+                </span>
+            </div>
+            <div class="allhotel">
+                <table width="100%">
+                    <tr>
+                        <th width="20%">ebooking编号</th>
+                        <th width="20%">酒店名称</th>
+                        <th width="20%">星级</th>
+                        <th width="20%">城市</th>
+                        <th width="20%">操作</th>
+                    </tr>
+                    <tr ng-repeat="hotel in hotels" ng-cloak>
+                        <td width="20%">${merchant_id}</td>
+                        <td width="20%" ng-bind="hotel.name"></td>
+                        <td width="20%" ng-bind="getHotelStar(hotel.star)"></td>
+                        <td width="20%" ng-bind="getCityName(hotel.city_id)"></td>
+                        <td class="action" width="20%"><input name="" type="button" value="合同管理" class="btn btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
+        <script src="${static_url('js/adminHotels.js')}"></script>
+        <script src="${static_url('js/md5.js')}"></script>  
+        <script src="${static_url('js/ui-bootstrap-tpls.js')}"></script>
+    </body>
+</html>
