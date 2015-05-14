@@ -129,6 +129,7 @@
 				.error(function() {});
 		}
 		$scope.conditionReset = function conditionReset() {
+			$scope.searchDistrict = "";
 			$scope.changeDistrictName = {};
 			$scope.searchName = "";
 			$scope.searchStatus = "";
