@@ -15,7 +15,7 @@ from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.contract_hotel import ContractHotelModel
 from models.contract_roomtype import ContractRoomTypeModel
 
-from config import API
+from config import API, BACKSTAGE_ENABLE
 
 from utils import hotel as hotel_util
 
@@ -60,6 +60,22 @@ class HotelContractAPIHandler(BackStageHandler):
                 if base_roomtype['id'] == roomtype_dict['base_roomtype_id']:
                     roomtype_dict['base_roomtype'] = base_roomtype
                     break
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def post(self, merchant_id, hotel_id):
+        contract_hotel_args = self.get_json_arguments()
+
+        contract_hotel = ContractHotelModel.get_by_hotel(self.db, hotel_id)
+        if contract_hotel:
+            raise JsonException(1000, 'contract exist')
+
+        creator = self.backstage_user_name if BACKSTAGE_ENABLE else 'TEST'
+        contract_hotel = ContractHotelModel.new(self.db, creator=creator, **contract_hotel_args)
+
+        self.finish_json(result = dict(
+            contract_hotel = contract_hotel.todict(),
+            ))
 
 
 
