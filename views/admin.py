@@ -18,3 +18,8 @@ class MerchantHotelsHandler(BackStageHandler):
     def get(self, merchant_id):
         self.render("adminHotels.html", merchant_id=merchant_id)
 
+class HotelContractHandler(BackStageHandler):
+
+    @auth_backstage_login()
+    def get(self, merchant_id, hotel_id):
+        self.render("hotelContract.html", merchant_id=merchant_id, hotel_id=hotel_id)

@@ -87,6 +87,7 @@ handlers = [
 
         (r"/admin/?", "views.admin.AdminHandler"),
         (r"/admin/merchant/(?P<merchant_id>\d+)/hotels/?", "views.admin.MerchantHotelsHandler"),
+        (r"/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/contract/?", "views.admin.HotelContractHandler"),
 
         (r"/api/admin/merchant/all/?", "views.api.admin.merchant.AdminMerchantAPIHandler"),
         (r"/api/admin/merchant/modify/?", "views.api.admin.merchant.AdminMerchantModifyAPIHandler"),
