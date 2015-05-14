@@ -51,6 +51,15 @@ class ContractHotelModel(Base):
                         )
         return query.first()
 
+
+    @classmethod
+    def new(cls, session, creator, **kwargs):
+        contract = ContractHotelModel(creator=creator, **kwargs)
+        session.add(contract)
+        session.commit()
+        return contract
+
+
     def todict(self):
         return ObjectDict(
                 id = self.id,
