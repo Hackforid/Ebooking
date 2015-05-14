@@ -38,6 +38,32 @@ class ContractRoomTypeModel(Base):
                         ContractRoomTypeModel.is_delete == 0)
         return query.all()
 
+    @classmethod
+    def get_by_hotel_roomtype_pay_type(cls, session, hotel_id, roomtype_id, pay_type):
+        query = session.query(ContractRoomTypeModel)\
+                .filter(ContractRoomTypeModel.hotel_id == hotel_id,
+                        ContractRoomTypeModel.roomtype_id == roomtype_id,
+                        ContractRoomTypeModel.pay_type == pay_type,
+                        ContractRoomTypeModel.is_delete == 0)
+        return query.first()
+
+    @classmethod
+    def new(self, session, hotel_id, roomtype_id, pay_type, **kwargs):
+        contract = ContractRoomTypeModel(hotel_id=hotel_id, roomtype_id=roomtype_id, pay_type=pay_type, **kwargs)
+        session.add(contract)
+        session.commit()
+        return contract
+
+    @classmethod
+    def update(self, session, hotel_id, roomtype_id, pay_type, **kwargs):
+        session.query(ContractRoomTypeModel)\
+                .filter(ContractRoomTypeModel.hotel_id == hotel_id,
+                        ContractRoomTypeModel.roomtype_id == roomtype_id,
+                        ContractRoomTypeModel.pay_type == pay_type,
+                        ContractRoomTypeModel.is_delete == 0)\
+                .update(kwargs)
+        session.commit()
+
     def todict(self):
         return ObjectDict(
                 id = self.id,
