@@ -76,7 +76,6 @@ class ContractHotelModel(Base):
                 base_hotel_id = self.base_hotel_id,
                 creator = self.creator,
                 margin = self.margin,
-                rd_contact_name = self.rd_contact_name,
                 receptionist_phone = self.receptionist_phone,
                 fax = self.fax,
                 cooperation_mode = self.cooperation_mode,
