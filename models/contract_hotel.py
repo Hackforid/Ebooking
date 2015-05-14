@@ -59,6 +59,15 @@ class ContractHotelModel(Base):
         session.commit()
         return contract
 
+    @classmethod
+    def update(cls, session, hotel_id, **kwargs):
+        session.query(ContractHotelModel)\
+                .filter(ContractHotelModel.hotel_id == hotel_id,
+                        ContractHotelModel.is_delete == 0
+                        )\
+                .update(kwargs)
+        session.commit()
+
 
     def todict(self):
         return ObjectDict(
