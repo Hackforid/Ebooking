@@ -92,6 +92,7 @@ class ContractHotelModel(Base):
                 business1_name = self.business1_name,
                 business1_tel = self.business2_name,
                 business2_name = self.business2_name,
+                business2_tel = self.business2_tel,
                 weekend = self.weekend,
                 is_delete = self.is_delete,
                 )
