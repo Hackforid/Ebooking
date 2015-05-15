@@ -14,6 +14,7 @@ from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.contract_hotel import ContractHotelModel
 from models.contract_roomtype import ContractRoomTypeModel
+from models.contract_spec_price import ContractSpecPriceModel
 
 from config import API, BACKSTAGE_ENABLE
 
@@ -36,6 +37,8 @@ class HotelContractAPIHandler(BackStageHandler):
 
         roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel_id)
         contract_roomtypes = ContractRoomTypeModel.get_by_hotel(self.db, hotel_id)
+        contract_spec_prices = ContractSpecPriceModel.get_by_hotel(self.db, hotel_id)
+
 
         hotel_dict = hotel.todict()
         roomtype_dicts = [room.todict() for room in roomtypes]
@@ -45,7 +48,8 @@ class HotelContractAPIHandler(BackStageHandler):
             hotel=hotel_dict,
             roomtypes=roomtype_dicts,
             contract_hotel=contract_hotel.todict() if contract_hotel else {},
-            contract_roomtypes = [c.todict() for c in contract_roomtypes]
+            contract_roomtypes = [c.todict() for c in contract_roomtypes],
+            contract_spec_prices = [p.todict() for p in contract_spec_prices],
             ))
 
 
@@ -123,6 +127,20 @@ class RoomTypeContractAPIHandler(BackStageHandler):
 
         self.finish_json(result=dict(
             contract_roomtype = contract.todict(),
+            ))
+
+
+class SpecPriceContractAPIHandler(BackStageHandler):
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def post(self, merchant_id, hotel_id, roomtype_id):
+        params = self.get_json_arguments()
+
+        contract = ContractSpecPriceModel.new(hotel_id, roomtype_id, **params)
+
+        self.finish_json(result = dict(
+            contract_spec_price = contract.todict(),
             ))
 
 

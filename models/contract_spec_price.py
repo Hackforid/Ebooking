@@ -16,7 +16,6 @@ class ContractSpecPriceModel(Base):
         'mysql_charset': 'utf8', 'mysql_engine': 'InnoDB'}
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
-    merchant_id = Column(INTEGER, nullable=False)
     hotel_id = Column(INTEGER, nullable=False)
     roomtype_id = Column(INTEGER, nullable=False)
     pay_type = Column(TINYINT, nullable=False, default=0)
@@ -25,3 +24,31 @@ class ContractSpecPriceModel(Base):
     price = Column(INTEGER, nullable=False, default=0)
     remark = Column(VARCHAR(200))
     is_delete = Column(BIT(1), nullable=False, default=0)
+
+    @classmethod
+    def get_by_hotel(cls, session, hotel_id):
+        query = session.query(ContractSpecPriceModel)\
+                .filter(ContractSpecPriceModel.hotel_id == hotel_id,
+                        ContractSpecPriceModel.is_delete == 0
+                        )
+        return query.all()
+
+    @classmethod
+    def new(cls, session, hotel_id, roomtype_id, **kwargs):
+        contract = ContractSpecPriceModel(hotel_id=hotel_id, roomtype_id=roomtype_id, **kwargs)
+        session.add(contract)
+        session.commit()
+        return contract
+
+
+    def todict(self):
+        return ObjectDict(
+                id = self.id,
+                hotel_id = self.hotel_id,
+                roomtype_id = self.roomtype_id,
+                pay_type = self.pay_type,
+                start_date = self.start_date,
+                end_date = self.end_date,
+                price = self.price,
+                remark = self.remark,
+                )
