@@ -26,6 +26,7 @@ class ContractRoomTypeModel(Base):
     weekend_base_price = Column(INTEGER)
     weekday_sell_price = Column(INTEGER)
     weekend_sell_price = Column(INTEGER)
+    cancel_rule = Column(VARCHAR)
     retain_num = Column(INTEGER)
     breakfest = Column(VARCHAR(50))
     remark = Column(TEXT)
@@ -80,4 +81,5 @@ class ContractRoomTypeModel(Base):
                 retain_num = self.retain_num,
                 breakfest = self.breakfest,
                 remark = self.remark,
+                cancel_rule = self.cancel_rule,
                 )
