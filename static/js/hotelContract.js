@@ -1,25 +1,15 @@
 (function() {
 	var contractApp = angular.module('contractApp', ['ui.bootstrap']);
-	contractApp.controller('contractCtrl', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+	contractApp.controller('contractCtrl', ['$scope', '$http', '$modal', '$rootScope', '$timeout',function($scope, $http, $modal, $rootScope,$timeout) {
 		$scope.payTypeContract = false;
 		$scope.hotelName;
 		$scope.currentSaveFlag = 1; /*1 新增 0 修改*/
 		$scope.errMessage = "";
 		$scope.roomErrMessage = "";
 		$scope.allRoomType = {};
-		//$scope.currentallRoomType={};
 		$scope.currentPayType;
 		$scope.weekShow = false;
 		$scope.weekSelectShow = true;
-		/*$scope.contractRoomType = {
-			"base_roomtype_id": 6,
-			"merchant_id": merchantID,
-			"weekday_base_price": "1",
-			"weekend_base_price": "1",
-			"retain_num": "1",
-			"breakfest": "1",
-			"remark": "1"
-		};*/
 		$scope.currentSelectItem = [];
 		$scope.weekItem = [{
 				'day': '周一',
@@ -38,40 +28,31 @@
 				'selected': false
 			}, {
 				'day': '周六',
-				'selected': true
+				'selected': false
 			}, {
 				'day': '周日',
-				'selected': true
+				'selected': false
 			}
 
 		];
 
 		$scope.weekSave = function() {
 			$scope.currentSelectItem = [];
-
 			if ($scope.weekShow == true) {
 				$scope.weekShow = false;
 				$("#week").val("周末定义");
-
 				for (var i = 0; i < $scope.weekItem.length; i++) {
 					if ($scope.weekItem[i]['selected'] == true) {
 						var index = i + 1;
 						$scope.currentSelectItem.push(index);
-
 					}
 				};
-				console.log($scope.currentSelectItem);
 				$scope.weekSelectShow = true;
-
 			} else {
 				$scope.weekShow = true;
 				$("#week").val("确定");
 				$scope.weekSelectShow = false;
 			}
-
-		}
-		$scope.test = function() {
-			console.log($scope.weekItem);
 		}
 		$scope.hotelInfo = {
 			"merchant_id": merchantID,
@@ -95,31 +76,25 @@
 			"account_bank_name": "",
 			"account_bank_id": ""
 		};
-		$scope.openSpecialPrice = function() {
+		$scope.openSpecialPrice = function(currentRoom, currentPayType) {
+			currentRoom["pay_type"] = currentPayType;
 			var modalInstance = $modal.open({
 				templateUrl: 'specialPrice.html',
 				controller: 'specialPriceCtrl',
 				size: 'lg',
 				resolve: {
-					contract: function() {
-						return 1;
+					special: function() {
+						return currentRoom;
 					}
 				}
 			});
-
 			modalInstance.result.then(function() {
 				console.log('close');
 			}, function() {
 				console.log('dismiss');
 			});
 		}
-
-
 		$scope.openModify = function(currentRoom, currentPayType) {
-
-			/*$scope.currentallRoomType=currentRoom;
-			$scope.currentPayType=currentPayType;
-			console.log($scope.currentallRoomType);*/
 			currentRoom["pay_type"] = currentPayType;
 			console.log(currentRoom);
 			var modalInstance = $modal.open({
@@ -135,34 +110,34 @@
 
 			modalInstance.result.then(function() {
 				console.log('close');
-				//loadMerchants();
 			}, function() {
 				console.log('dismiss');
 			});
 		}
 
-		function loadContracts() {
+		$rootScope.loadContracts = function loadContracts() {
 			var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/contract";
 			$http.get(url)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
 						console.log(resp);
+						$scope.currentSelectItem = [];
 						var contractHotel = resp.result.contract_hotel;
 						$scope.hotelName = resp.result.hotel.base_hotel['name'];
 						$scope.hotelInfo['base_hotel_id'] = resp.result.hotel['base_hotel_id'];
 						$scope.allRoomType = resp.result.roomtypes;
 						var contractRoomtypes = resp.result.contract_roomtypes;
 						if (isEmptyObject(contractHotel)) {
-							console.log($scope.payTypeContract);
 							console.log("zeng");
 							$scope.payTypeContract = false;
 							$scope.currentSaveFlag = 1;
+							$scope.currentSelectItem = [5, 6];
+							$scope.weekItem[4]['selected'] = true;
+							$scope.weekItem[5]['selected'] = true;
 						} else {
 							var selectedWeek = contractHotel.weekend.split("|");
 							for (var i = 0; i < selectedWeek.length; i++) {
 								var index = (selectedWeek[i]) - 1;
-								console.log(index);
-								console.log($scope.weekItem[index]);
 								$scope.currentSelectItem.push((selectedWeek[i]));
 								$scope.weekItem[index]['selected'] = true;
 							};
@@ -176,6 +151,7 @@
 							"weekday_base_price": "",
 							"weekend_base_price": "",
 							"retain_num": "",
+							"cancel_rule": "",
 							"breakfast": "",
 							"remark": "",
 							"weekday_sell_price": "",
@@ -199,7 +175,6 @@
 								}
 							};
 						};
-						console.log($scope.allRoomType);
 					}
 				});
 		}
@@ -210,7 +185,6 @@
 			}
 			return true;
 		}
-
 
 		$scope.saveContract = function() {
 			if ($.trim($scope.hotelInfo.fax) == "") {
@@ -283,7 +257,6 @@
 			}
 			$scope.errMessage = "";
 			$scope.hotelInfo['weekend'] = $scope.currentSelectItem.join("|");
-			console.log($scope.hotelInfo);
 			var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/contract";
 			if ($scope.currentSaveFlag == 1) {
 				console.log("新增");
@@ -291,7 +264,10 @@
 					.success(function(resp) {
 						console.log(resp);
 						if (resp.errcode == 0) {
-
+							$scope.payTypeContract = true;
+							$scope.currentSaveFlag = 0;
+							$scope.errMessage = "保存成功";
+							$timeout(function(){$scope.errMessage = "";},2000);
 						}
 					})
 					.error(function() {
@@ -304,26 +280,26 @@
 					.success(function(resp) {
 						console.log(resp);
 						if (resp.errcode == 0) {
-
+							$scope.errMessage = "保存成功";
+							$timeout(function(){$scope.errMessage = "";},2000);
 						}
 					}).error(function() {
 						console.log('network error');
 					});
 			}
 		}
-		loadContracts();
+		$rootScope.loadContracts();
 	}])
 
-	contractApp.controller('roomContranctCtrl', function($scope, $http, $modalInstance, contract) {
+	contractApp.controller('roomContranctCtrl', function($scope, $http, $modalInstance, $rootScope, contract) {
 		$scope.currentallRoomType = contract;
-		console.log(contract);
-
 		$scope.currentPayallRoomType = {
 			"current": {
 				"merchant_id": merchantID,
 				"weekday_base_price": "",
 				"weekend_base_price": "",
 				"retain_num": "",
+				"cancel_rule": "",
 				"breakfast": "",
 				"remark": "",
 				"weekday_sell_price": "",
@@ -335,7 +311,6 @@
 		$scope.currentPayallRoomType["current"]["pay_type"] = $scope.currentallRoomType["pay_type"]
 		if (($scope.currentallRoomType["pay_type"] == "1") && ($scope.currentallRoomType.preContractRoomTypes['flag'] == "0")) {
 			$scope.currentPayallRoomType["current"] = $scope.currentallRoomType.preContractRoomTypes;
-
 		} else if ($scope.currentallRoomType["pay_type"] == "0" && ($scope.currentallRoomType.comeContractRoomTypes['flag'] == "0")) {
 			$scope.currentPayallRoomType["current"] = $scope.currentallRoomType.comeContractRoomTypes;
 
@@ -344,38 +319,29 @@
 		$scope.saveRoomTypeContract = function() {
 			$scope.allRoomType;
 			var finalContract = $scope.currentPayallRoomType['current'];
-			/*if ($scope.currentallRoomType["pay_type"] == "1") {
-				finalContract = $scope.currentallRoomType.preContractRoomTypes;
-				console.log("1");console.log(finalContract);
-			} else {
-				finalContract = $scope.currentallRoomType.comeContractRoomTypes;
-				console.log("0");console.log(finalContract);
-			}*/
-
-			/*if ($.trim(finalContract.retain_num) == "") {
-				$scope.roomErrMessage = "保留房数不能为空";
+			if (($.trim(finalContract.weekday_sell_price) == "") && (finalContract.pay_type == 0)) {
+				$scope.roomErrMessage = "平日卖价不能为空";
 				return;
-			}*/
+			}
+			if (($.trim(finalContract.weekend_sell_price) == "") && (finalContract.pay_type == 0)) {
+				$scope.roomErrMessage = "周末卖价不能为空";
+				return;
+			}
+			if (($.trim(finalContract.cancel_rule) == "") && (finalContract.pay_type == 1)) {
+				$scope.roomErrMessage = "取消政策不能为空";
+				return;
+			}
 			if ($.trim(finalContract.weekday_base_price) == "") {
 				$scope.roomErrMessage = "平日底价不能为空";
 				return;
 			}
-			/*if ($.trim(finalContract.weekend_base_price) == "") {
-				$scope.roomErrMessage = "周末底价不能为空";
-				return;
-			}*/
 			if ($.trim(finalContract.breakfast) == "") {
 				$scope.roomErrMessage = "早餐不能为空";
 				return;
 			}
-			/*if ($.trim(finalContract.remark) == "") {
-				$scope.roomErrMessage = "备注不能为空";
-				return;
-			}*/
 			var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/roomtype/" + $scope.currentallRoomType.id + "/pay_type/" + $scope.currentallRoomType["pay_type"] + "/contract";
 			console.log(url);
 			console.log(finalContract);
-			//return;
 			if (($scope.currentallRoomType.preContractRoomTypes.flag == 1) && ($scope.currentallRoomType["pay_type"] == 1)) {
 				delete finalContract["flag"];
 				delete finalContract["pay_type"];
@@ -384,7 +350,7 @@
 						console.log(resp);
 						if (resp.errcode == 0) {
 							$modalInstance.dismiss('cancel');
-							$scope.currentallRoomType.preContractRoomTypes = resp.result.contract_roomtype;
+							$rootScope.loadContracts();
 						}
 					})
 					.error(function() {
@@ -399,7 +365,7 @@
 						console.log(resp);
 						if (resp.errcode == 0) {
 							$modalInstance.dismiss('cancel');
-							$scope.currentallRoomType.comContractRoomTypes = resp.result.contract_roomtype;
+							$rootScope.loadContracts();
 						}
 					})
 					.error(function() {
@@ -418,7 +384,7 @@
 						console.log(resp);
 						if (resp.errcode == 0) {
 							$modalInstance.dismiss('cancel');
-
+							$rootScope.loadContracts();
 						}
 					})
 					.error(function() {
@@ -428,20 +394,122 @@
 		}
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
+			$rootScope.loadContracts();
 		};
 	});
 
-	contractApp.controller('specialPriceCtrl', function($scope, $http, $modalInstance) {
-		$scope.addStartDate = "";
-		$scope.addEndDate = "";
+	contractApp.controller('specialPriceCtrl', function($scope, $http, $modalInstance, special) {
 		$scope.addPrice = "";
 		$scope.addRemark = "";
 		$scope.priceErrMessage;
+		$scope.currentSpecialPrice = special;
+		$scope.existSpecial;
+		$scope.existSpecialShow = false;
+		$scope.flag = 0; /*0新增1修改*/
+		$scope.currentModifyObj; /*0新增1修改*/
+		$scope.cancelModify = function() {
+			$scope.flag = 0;
+			$("#addbutton").html("增加");
+			$("#startTime").val("");
+			$("#endTime").val("");
+			$scope.addPrice = "";
+			$scope.addRemark = "";
+		}
+
+		$scope.checkSpecial = function() {
+			if ($.trim($("#startTime").val()) == "") {
+				$scope.priceErrMessage = "开始时间不能为空";
+				return;
+			}
+			if ($.trim($("#endTime").val()) == "") {
+				$scope.priceErrMessage = "结束时间不能为空";
+				return;
+			}
+			if ($.trim($scope.addPrice) == "") {
+				$scope.priceErrMessage = "价格不能为空";
+				return;
+			}
+			if ($.trim($("#startTime").val()) > $.trim($("#endTime").val())) {
+				$scope.priceErrMessage = "开始时间不能大于结束时间";
+				return;
+			}
+			if ($scope.flag == 0) {
+				var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/roomtype/" + $scope.currentSpecialPrice.id + "/pay_type/" + $scope.currentSpecialPrice.pay_type + "/spec_price/";
+				var obj = {
+					"start_date": $("#startTime").val(),
+					"end_date": $("#endTime").val(),
+					"price": $scope.addPrice,
+					"remark": $scope.addRemark
+				};
+				$http.post(url, obj)
+					.success(function(resp) {
+						console.log(resp);
+						if (resp.errcode == 0) {
+							getSpecial();
+							$scope.cancelModify();
+						}
+					})
+					.error(function() {
+						console.log('network error');
+					});
+			} else if ($scope.flag == 1) {
+				var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/roomtype/" + $scope.currentModifyObj.roomtype_id + "/spec_price/" + $scope.currentModifyObj.id;
+				var specialObj = {
+					"start_date": $("#startTime").val(),
+					"end_date": $("#endTime").val(),
+					"price": $scope.addPrice,
+					"remark": $scope.addRemark
+				}
+				console.log(url);
+				console.log(specialObj);
+				$http.put(url, specialObj)
+					.success(function(resp) {
+						console.log(resp);
+						if (resp.errcode == 0) {
+							getSpecial();
+							$scope.cancelModify();
+						}
+					})
+					.error(function() {
+						console.log('network error');
+					});
+			}
+		}
+
+		function getSpecial() {
+			var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/roomtype/" + $scope.currentSpecialPrice.id + "/pay_type/" + $scope.currentSpecialPrice.pay_type + "/spec_price/";
+			console.log(url);
+			console.log($scope.currentSpecialPrice);
+			$http.get(url)
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						$scope.existSpecial = resp.result.contract_spec_prices;
+						if ($scope.existSpecial.length != 0) {
+							$scope.existSpecialShow = true;
+						}
+					}
+				})
+				.error(function() {
+					console.log('network error');
+				});
+		}
+
+		getSpecial();
+		$scope.modifySpecial = function(specialprice) {
+			$scope.flag = 1; /*修改为1*/
+			$("#startTime").val(specialprice.start_date);
+			$("#endTime").val(specialprice.end_date);
+			$scope.addPrice = specialprice.price;
+			$scope.addRemark = specialprice.remark;
+			$("#addbutton").html("保存修改");
+			$scope.currentModifyObj = specialprice;
+		}
 		$scope.today = function() {
 			$scope.dt = new Date();
 			$scope.dt1 = new Date();
 		};
-		$scope.today();
+		//$scope.today();
 
 		$scope.clear = function() {
 			$scope.dt = null;
@@ -455,12 +523,14 @@
 		};
 		$scope.toggleMin();
 
-		$scope.open = function($event,index) {
+		$scope.open = function($event, index) {
+			$scope.opened = false;
+			$scope.opened1 = false;
 			$event.preventDefault();
 			$event.stopPropagation();
-			if(index==0){
+			if (index == 0) {
 				$scope.opened = true;
-			}else if(index==1){
+			} else if (index == 1) {
 				$scope.opened1 = true;
 			}
 		};
@@ -489,7 +559,6 @@
 		$scope.getDayClass = function(date, mode) {
 			if (mode === 'day') {
 				var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
 				for (var i = 0; i < $scope.events.length; i++) {
 					var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
 
@@ -498,14 +567,12 @@
 					}
 				}
 			}
-
 			return '';
 		};
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		};
 		$scope.saveSpecialPrice = function() {
-
 			var url;
 			$http.post(url, finalContract)
 				.success(function(resp) {
@@ -517,11 +584,6 @@
 				.error(function() {
 					console.log('network error');
 				});
-
 		}
-
 	});
-
-
-
 })()
