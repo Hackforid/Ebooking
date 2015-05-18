@@ -135,7 +135,12 @@
 							$scope.weekItem[4]['selected'] = true;
 							$scope.weekItem[5]['selected'] = true;
 						} else {
-							var selectedWeek = contractHotel.weekend.split("|");
+							var selectedWeek;
+							if(contractHotel.weekend!=""){
+								selectedWeek = contractHotel.weekend.split("|");
+							}else{
+								selectedWeek=[];
+							}
 							for (var i = 0; i < selectedWeek.length; i++) {
 								var index = (selectedWeek[i]) - 1;
 								$scope.currentSelectItem.push((selectedWeek[i]));
