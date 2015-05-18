@@ -28,7 +28,7 @@ class ContractRoomTypeModel(Base):
     weekend_sell_price = Column(INTEGER)
     cancel_rule = Column(VARCHAR)
     retain_num = Column(INTEGER)
-    breakfest = Column(VARCHAR(50))
+    breakfast = Column(VARCHAR(50))
     remark = Column(TEXT)
     is_delete = Column(BIT(1), nullable=False, default=0)
 
@@ -79,7 +79,7 @@ class ContractRoomTypeModel(Base):
                 weekday_sell_price = self.weekday_sell_price,
                 weekend_sell_price = self.weekend_sell_price,
                 retain_num = self.retain_num,
-                breakfest = self.breakfest,
+                breakfast = self.breakfast,
                 remark = self.remark,
                 cancel_rule = self.cancel_rule,
                 )
