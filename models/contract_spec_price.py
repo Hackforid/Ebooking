@@ -26,6 +26,15 @@ class ContractSpecPriceModel(Base):
     is_delete = Column(BIT(1), nullable=False, default=0)
 
     @classmethod
+    def get_by_id(cls, session, id):
+        query = session.query(ContractSpecPriceModel)\
+                .filter(ContractSpecPriceModel.id == id,
+                        ContractSpecPriceModel.is_delete == 0
+                        )
+        return query.first()
+
+
+    @classmethod
     def get_by_hotel(cls, session, hotel_id):
         query = session.query(ContractSpecPriceModel)\
                 .filter(ContractSpecPriceModel.hotel_id == hotel_id,
@@ -34,11 +43,28 @@ class ContractSpecPriceModel(Base):
         return query.all()
 
     @classmethod
-    def new(cls, session, hotel_id, roomtype_id, **kwargs):
-        contract = ContractSpecPriceModel(hotel_id=hotel_id, roomtype_id=roomtype_id, **kwargs)
+    def get_by_hotel_roomtype_pay_type(cls, session, hotel_id, roomtype_id, pay_type):
+        query = session.query(ContractSpecPriceModel)\
+                .filter(ContractSpecPriceModel.hotel_id == hotel_id,
+                        ContractSpecPriceModel.roomtype_id == roomtype_id,
+                        ContractSpecPriceModel.pay_type == pay_type,
+                        ContractSpecPriceModel.is_delete == 0
+                        )
+        return query.all()
+
+    @classmethod
+    def new(cls, session, hotel_id, roomtype_id, pay_type, **kwargs):
+        contract = ContractSpecPriceModel(hotel_id=hotel_id, roomtype_id=roomtype_id, pay_type=pay_type, **kwargs)
         session.add(contract)
         session.commit()
         return contract
+
+    @classmethod
+    def update(cls, session, id, **kwargs):
+        session.query(ContractSpecPriceModel)\
+                .filter(ContractSpecPriceModel.id == id)\
+                .update(kwargs)
+        session.commit()
 
 
     def todict(self):
