@@ -137,7 +137,14 @@ class OrderModel(Base):
                 .filter(OrderModel.main_order_id==main_order_id)\
                 .first()
         return order
-    
+
+    @classmethod
+    def change_order_status_by_main_order_id(cls, session, main_order_id, status):
+        session.query(OrderModel)\
+                .filter(OrderModel.main_order_id==main_order_id)\
+                .update({'status': status})
+        session.commit()
+
     @classmethod
     def new_order(cls, session, submit_order):
         from models.rate_plan import  RatePlanModel
