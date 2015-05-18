@@ -202,3 +202,36 @@ class CancelOrderAPIHander(BtwBaseHandler):
                 raise JsonException(1, task.result.errmsg)
             else:
                 raise JsonException(1, 'server error')
+
+class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
+
+    @gen.coroutine
+    def post(self):
+        order_entity = self.format_order(self.request.body)
+        self.reset_order_status(order_entity)
+
+
+        order = yield self.submit_order(order_entity)
+        merchant = MerchantModel.get_by_id(self.db, order.merchant_id)
+
+        if order.status in [200, 400, 500]:
+            self.finish_json(errcode=1,
+                             errmsg="fail: {}".format(order.exception_info),
+                             result=dict(order_id=order.id,
+                                         merchant=merchant.todict(), ))
+        else:
+            self.finish_json(result=dict(order_id=order.id,
+                                         wait=0 if order.confirm_type ==
+                                         OrderModel.CONFIRM_TYPE_AUTO or
+                                         order.status == 300 else 1,
+                                         merchant=merchant.todict(), ))
+
+    def reset_order_status(self, order_entity):
+        order = OrderModel.get_by_main_order_id(self.db, order_entity.id)
+        if not order:
+            raise JsonException(1, 'order not exist')
+
+        pre_status = order.status
+
+        OrderModel.change_order_status_by_main_order_id(self.db, order_entity.id, 0)
+        OrderHistoryModel.set_order_status_by_server(self.db, order, pre_status, 0)
