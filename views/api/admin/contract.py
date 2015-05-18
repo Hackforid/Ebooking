@@ -14,6 +14,7 @@ from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.contract_hotel import ContractHotelModel
 from models.contract_roomtype import ContractRoomTypeModel
+from models.contract_spec_price import ContractSpecPriceModel
 
 from config import API, BACKSTAGE_ENABLE
 
@@ -37,6 +38,7 @@ class HotelContractAPIHandler(BackStageHandler):
         roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel_id)
         contract_roomtypes = ContractRoomTypeModel.get_by_hotel(self.db, hotel_id)
 
+
         hotel_dict = hotel.todict()
         roomtype_dicts = [room.todict() for room in roomtypes]
         yield self.merge_base_info(hotel_dict, roomtype_dicts)
@@ -45,7 +47,7 @@ class HotelContractAPIHandler(BackStageHandler):
             hotel=hotel_dict,
             roomtypes=roomtype_dicts,
             contract_hotel=contract_hotel.todict() if contract_hotel else {},
-            contract_roomtypes = [c.todict() for c in contract_roomtypes]
+            contract_roomtypes = [c.todict() for c in contract_roomtypes],
             ))
 
 
@@ -126,6 +128,41 @@ class RoomTypeContractAPIHandler(BackStageHandler):
             ))
 
 
+class SpecPriceContractAPIHandler(BackStageHandler):
 
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def post(self, merchant_id, hotel_id, roomtype_id, pay_type):
+        params = self.get_json_arguments()
 
+        contract = ContractSpecPriceModel.new(self.db, hotel_id, roomtype_id, pay_type, **params)
+
+        self.finish_json(result = dict(
+            contract_spec_price = contract.todict(),
+            ))
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def get(self, merchant_id, hotel_id, roomtype_id, pay_type):
+        contracts = ContractSpecPriceModel.get_by_hotel_roomtype_pay_type(self.db, hotel_id, roomtype_id, pay_type)
+        self.finish_json(result=dict(
+            contract_spec_prices = [c.todict() for c in contracts],
+            ))
+
+class SpecPriceContractModifyAPIHandler(BackStageHandler):
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, merchant_id, hotel_id, roomtype_id, contract_id):
+        params = self.get_json_arguments()
+        contract = ContractSpecPriceModel.get_by_id(self.db, contract_id)
+        if not contract:
+            raise JsonException(1000, 'contract not found')
+
+        params.update({'hotel_id': hotel_id, 'roomtype_id': roomtype_id})
+        ContractSpecPriceModel.update(self.db, contract_id, **params)
+
+        self.finish_json(result = dict(
+            contract_spec_price = contract.todict(),
+            ))
 
