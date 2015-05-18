@@ -1,15 +1,13 @@
+select{
+	width: 167px;
+}
+
+
 p{
 	text-align: center;
 	font-size: 20px;
 }
-table{
-	background: black;
-	margin-bottom: 10px;
-}
-table td{
-	background: white;
-	text-align: center;
-}
+
 
 .wrapper{
 	height: auto;
@@ -40,7 +38,7 @@ table td{
 }
 
 .accountcontent div{
-	width: 33%;
+	width: 20%;
 	float: left;
 	text-align: right;
 	padding-bottom: 5px;
@@ -49,6 +47,6 @@ table td{
 }
 .contract{
 	padding-left: 5px;
-	display: none;
+/* 	display: none; */
 
 }

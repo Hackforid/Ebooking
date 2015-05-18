@@ -4,9 +4,20 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>商旅分销管理系统后台</title>
 		<script src="${static_url('js/angular.js')}"></script>
-        <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
+        <script src="${static_url('js/jquery1.9.1.js')}"></script>
         <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
         <link href="${static_url('css/hotelContract.css')}" rel="stylesheet" type="text/css" >
+         <script src="${static_url('js/ui-bootstrap-tpls-0.12.0.min.js')}"></script>
+
+
+        <link rel="stylesheet" type="text/css" href="${static_url('css/bootstrap-datepicker3.css')}">
+        <script type="text/javascript" src="${static_url('js/bootstrap.min.js')}"></script>
+        <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.js')}"></script>
+        <script type="text/javascript" src="${static_url('js/bootstrap-datepicker.zh-CN.min.js')}"></script>
+
+
+
+
         <script type="text/javascript">
             var hotelID = ${hotel_id};
             var merchantID = ${merchant_id};
@@ -28,12 +39,23 @@
             <div><label>业务联系人2:</label><input type="text" ng-model="hotelInfo.business2_name"/></div>
             <div><label>电话2:</label><input type="text" ng-model="hotelInfo.business2_tel"/></div>
         </div>
-        <div class="title">
-            房量房价
+        <div class="title" style="position:relative;height:40px;">
+            房型房价
+            <span style="position:absolute;right:92px;" ng-show="weekShow">
+                <span ng-repeat="day in weekItem">
+                    <input type="checkbox" ng-checked="day.selected" ng-model="day.selected" ng-click="test()" />{{day.day}}
+                </span>
+            </span>
+            <span style="position:absolute;right:100px;height:50px;" ng-show="weekSelectShow">
+                周末日期&nbsp;&nbsp;
+                <span ng-repeat="week in currentSelectItem" ng-bind="'星期'+week+' '"></span>
+            </span>
+            <input id="week" style="position:absolute;right:5px;height:30px;" type="button" value="周末定义" ng-click="weekSave()"/>
+            
         </div>
         <div id="payTypeContract" class="contract" ng-show="payTypeContract">
             <h1>预付</h1>
-            <table width="100%" border="0" cellspacing="1" cellpadding="0">
+            <table class="table">
                 <tr>
                     <td>房型</td>
                     <td>保留房数</td>
@@ -44,18 +66,41 @@
                     <td>特殊房价</td>
                     <td>备注</td>
                 </tr>
+                <tr ng-repeat="room in allRoomType">
+                    <td><a href="javascript:void(0)" ng-click="openModify(room,1)" ng-bind="room.base_roomtype.name"></a></td>
+                    <td ng-bind="room.preContractRoomTypes.retain_num"></td>
+                    <td ng-bind="room.preContractRoomTypes.weekday_base_price"></td>
+                    <td ng-bind="room.preContractRoomTypes.weekend_base_price"></td>
+                    <td ng-bind="room.preContractRoomTypes.breakfast"></td> 
+                    <td ng-bind="room.preContractRoomTypes.breakfast"></td>
+                    <td><a href="javascript:void(0)" ng-click="openSpecialPrice()">特殊房价管理</a></td> 
+                    <td ng-bind="room.preContractRoomTypes.remark"></td>
+                </tr>
             </table>
             <h1>现付</h1>
-            <table width="100%" border="0" cellspacing="1" cellpadding="0">
+            <table class="table">
                 <tr>
                     <td>房型</td>
                     <td>平日底价</td>
-                    <td>平日底价</td>
                     <td>周末底价</td>
-                    <td>取消政策</td>
+                    <td>保留房数</td>
+                    <td>平日卖价</td>
+                    <td>周末卖价</td>
+                   <!--  <td>取消政策</td> -->
                     <td>早餐</td>
                     <td>特殊房价</td>
                     <td>备注</td>
+                </tr>
+                 <tr ng-repeat="room in allRoomType">
+                    <td><a href="javascript:void(0)" ng-click="openModify(room,0)" ng-bind="room.base_roomtype.name"></a></td>
+                    <td ng-bind="room.comeContractRoomTypes.weekday_base_price"></td>
+                    <td ng-bind="room.comeContractRoomTypes.weekend_sell_price"></td>
+                    <td ng-bind="room.comeContractRoomTypes.retain_num"></td>
+                    <td ng-bind="room.comeContractRoomTypes.weekday_sell_price"></td>
+                    <td ng-bind="room.comeContractRoomTypes.weekend_sell_price"></td>
+                    <td ng-bind="room.comeContractRoomTypes.breakfast"></td>
+                    <td><a href="javascript:void(0)" ng-click="openSpecialPrice()">特殊房价管理</a></td>
+                    <td ng-bind="room.comeContractRoomTypes.remark"></td>
                 </tr>
             </table>
         </div>
@@ -87,12 +132,141 @@
             <div><label>账号</label><input type="text" ng-model="hotelInfo.account_bank_id"/></div>
         </div>
         <div>
+            <p style="color:red;text-align:left;" ng-bind="errMessage"></p>
             <p style="text-align: center;">
                 <input type="button" value="保存" ng-click="saveContract()">
                 <input type="button" value="取消">
             </p>
         </div>
     </div>
+    <script type="text/ng-template" id="contractHotelModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title">{{title}}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{roomErrMessage}}</p>
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">房型:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentallRoomType.base_roomtype.name" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">保留房数:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.retain_num">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">平日底价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekday_base_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="currentPayallRoomType.current.pay_type==0">
+                        <label class="col-lg-2 control-label">平日卖价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekday_sell_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">周末底价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekend_base_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="currentPayallRoomType.current.pay_type==0">
+                        <label class="col-lg-2 control-label">周末卖价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekend_sell_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">取消政策:</label>
+                        <div class="col-lg-10">
+                           
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">早餐:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.breakfast">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.remark">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="saveRoomTypeContract()">保存</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="specialPrice.html">
+            <div class="modal-body">
+                <p>{{priceErrMessage}}</p>
+                <form role="form" class="form-horizontal">
+                    <table class="table">
+                        <tr>
+                            <td>开始时间</td>
+                            <td>结束时间</td>
+                            <td>价格</td>
+                            <td>备注</td>
+                        </tr>
+                    </table>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">开始时间:</label>
+                        <div class="col-lg-10">
+                            <p class="input-group">
+                                 <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                <button style="height:34px;" type="button" class="btn btn-default" ng-click="open($event,0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">结束时间:</label>
+                        <div class="col-lg-10">
+                             <p class="input-group">
+                                 <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt1" is-open="opened1" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                <button  style="height:34px;" type="button" class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">价格:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="addPrice">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="addRemark">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="saveSpecialPrice()">增加</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
+            </div>
+        </script>
     <script src="${static_url('js/hotelContract.js')}"></script>
 </body>
 </html>
