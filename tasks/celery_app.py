@@ -1,8 +1,5 @@
 # -*- coding -*-
 
-from gevent import monkey
-monkey.patch_all()
-
 from celery import Celery
 
 from config import Config
