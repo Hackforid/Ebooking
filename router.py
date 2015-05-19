@@ -24,8 +24,6 @@ from views.api.roomrate import RoomRateAPIHandler
 from views.api.inventory import InventoryAPIHandler, InventoryCompleteAPIHandler
 from views.api.order import OrderWaitingAPIHandler, OrderTodayBookListAPIHandler, OrderTodayCheckinListAPIHandler, OrderUserConfirmAPIHandler, OrderUserCancelAPIHandler, OrderSearchAPIHandler
 
-from views.admin import AdminHandler
-from views.api.admin import AdminMerchantAPIHandler, AdminMerchantModifyAPIHandler, AdminMerchantSuspendAPIHandler
 from views.api.merchant import MerchantListAPIHandler, MerchantQueryByHotelAPIHandler
 
 from views.api.console import POIPushAllAPIHandler, StockPushAllAPIHandler
@@ -87,10 +85,19 @@ handlers = [
         (r"/api/test/helloworld", HelloWorldHandler),
         (r"/api/test/helloworld/celery/?", HelloWorldCeleryHandler),
 
-        (r"/admin/?", AdminHandler),
-        (r"/api/admin/merchant/all/?", AdminMerchantAPIHandler),
-        (r"/api/admin/merchant/modify/?", AdminMerchantModifyAPIHandler),
-        (r"/api/admin/merchant/(?P<merchant_id>\d+)/suspend/(?P<is_suspend>\d+)/?", AdminMerchantSuspendAPIHandler),
+        (r"/admin/?", "views.admin.AdminHandler"),
+        (r"/admin/merchant/(?P<merchant_id>\d+)/hotels/?", "views.admin.MerchantHotelsHandler"),
+        (r"/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/contract/?", "views.admin.HotelContractHandler"),
+
+        (r"/api/admin/merchant/all/?", "views.api.admin.merchant.AdminMerchantAPIHandler"),
+        (r"/api/admin/merchant/modify/?", "views.api.admin.merchant.AdminMerchantModifyAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/suspend/(?P<is_suspend>\d+)/?", "views.api.admin.merchant.AdminMerchantSuspendAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotels/?", "views.api.admin.merchant.MerchantHotelsAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/contract/?", "views.api.admin.contract.HotelContractAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/pay_type/(?P<pay_type>\d+)/contract/?", "views.api.admin.contract.RoomTypeContractAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/pay_type/(?P<pay_type>\d+)/spec_price/?", "views.api.admin.contract.SpecPriceContractAPIHandler"),
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/spec_price/(?P<contract_id>\d+)/?", "views.api.admin.contract.SpecPriceContractModifyAPIHandler"),
+
 
         (r"/api/merchant/all/?", MerchantListAPIHandler),
 

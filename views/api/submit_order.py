@@ -33,6 +33,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
     def post(self):
+        Log.info("submit order: {}".format(self.request.body))
 
         order_entity = self.format_order(self.request.body)
         order = yield self.submit_order(order_entity)
@@ -207,6 +208,7 @@ class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
 
     @gen.coroutine
     def post(self):
+        Log.info("resubmit order: {}".format(self.request.body))
         order_entity = self.format_order(self.request.body)
         self.reset_order_status(order_entity)
 

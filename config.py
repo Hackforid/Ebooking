@@ -41,5 +41,5 @@ BACKSTAGE_ENABLE = False
 
 BACKSTAGE_PERMISSIONS = {
         'admin': 63,
-        }
-
+}
+        
