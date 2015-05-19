@@ -206,8 +206,8 @@
 			}
 			return false;
 		}
-		$scope.redictToInventoryPage = function(hotel) {
-			//window.location.href = ("/hotel/cooped/" + hotel.id + "/inventory/");
+		$scope.redictToContractPage = function(hotelId) {
+			window.location.href = ("/admin/merchant/" +merchant_id+"/hotel/"+ hotelId + "/contract/");
 		}
 	}])
 })()
