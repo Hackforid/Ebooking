@@ -1,5 +1,6 @@
 select{
-	width: 167px;
+	width: 174px;
+	height: 26px;
 }
 
 
@@ -38,12 +39,13 @@ p{
 }
 
 .accountcontent div{
-	width: 20%;
+	width: 25%;
 	float: left;
 	text-align: right;
 	padding-bottom: 5px;
 	padding-top: 5px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	height: 38px;
 }
 .contract{
 	padding-left: 5px;

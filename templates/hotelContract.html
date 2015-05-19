@@ -15,7 +15,7 @@
     </head>
     <body ng-app="contractApp" ng-controller="contractCtrl">
     <div class="wrapper">
-        <p>新增合同</p>
+        <h2 style="text-align: center;">新增合同</h2>
         <div class="title">
             基础信息
         </div>
@@ -29,7 +29,7 @@
             <div><label>业务联系人2:</label><input type="text" ng-model="hotelInfo.business2_name"/></div>
             <div><label>电话2:</label><input type="text" ng-model="hotelInfo.business2_tel"/></div>
         </div>
-        <div class="title" style="position:relative;height:40px;">
+        <div class="title" style="position:relative;height:40px;line-height:40px">
             房型房价
             <span style="position:absolute;right:92px;" ng-show="weekShow">
                 <span ng-repeat="day in weekItem">
@@ -40,11 +40,11 @@
                 周末日期&nbsp;&nbsp;
                 <span ng-repeat="week in currentSelectItem" ng-bind="'星期'+week+' '"></span>
             </span>
-            <input id="week" style="position:absolute;right:5px;height:30px;" type="button" value="周末定义" ng-click="weekSave()"/>
+            <input id="week" style="position:absolute;right:5px;height:30px;line-height:25px;top:4px;" type="button" value="周末定义" ng-click="weekSave()"/>
             
         </div>
         <div id="payTypeContract" class="contract" ng-show="payTypeContract" ng-cloak>
-            <h1>预付</h1>
+            <h2>预付</h2>
             <table class="table">
                 <tr>
                     <td>房型</td>
@@ -67,7 +67,7 @@
                     <td ng-bind="room.preContractRoomTypes.remark"></td>
                 </tr>
             </table>
-            <h1>现付</h1>
+            <h2>现付</h2>
             <table class="table">
                 <tr>
                     <td>房型</td>
@@ -99,8 +99,8 @@
         <div class="accountcontent">
             <div><label>财务联系人:</label><input type="text" ng-model="hotelInfo.finance_name"/></div>
             <div><label>联系电话:</label><input type="text" ng-model="hotelInfo.finance_tel"/></div>
-            <div><label>佣金:</label><input type="text" ng-model="hotelInfo.commission"/>%</div>
-            <div><label>结算周期:</label>
+            <div style="position:relative"><label>佣金:</label><input type="text" ng-model="hotelInfo.commission"/><span style="position:absolute">%</span></div>
+            <div><label style="margin-right: -4px;">结算周期:</label>
                 <select ng-model="hotelInfo.settle_cycle">
                     <option value="0">周结</option>
                     <option value="1">月结</option>
@@ -111,7 +111,7 @@
             <div><label>合作模式:</label><input type="text" ng-model="hotelInfo.cooperation_mode"/></div>
             <div><label>开户名称:</label><input type="text" ng-model="hotelInfo.account_name"/></div>
             <div><label>QQ:</label><input type="text" ng-model="hotelInfo.finance_qq"/></div>
-            <div><label>结算订单日期:</label>
+            <div><label style="margin-right: -4px;">结算订单日期:</label>
                 <select ng-model="hotelInfo.settle_order_method">
                     <option value="0">按离店日期结算</option>
                     <option value="1">按下单日期结算</option>
