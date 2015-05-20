@@ -121,5 +121,6 @@ handlers = [
         (r"/api/inner/merchant/query/hotel/(?P<hotel_id>\d+)/?", MerchantQueryByHotelAPIHandler),
 
         (r"/api/city/(?P<city_id>\d+)/district/?", DistrictByCityAPIHandler),
-        
+
+        (r"/api/inner/test/roomrate/?", "views.api.roomrate.RoomRateTESTAPIHandler"),
 ]

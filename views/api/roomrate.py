@@ -17,6 +17,7 @@ from tasks.stock import PushRatePlanTask
 from tools.log import Log
 from utils.stock_push.rateplan import RoomRatePusher
 
+
 class RoomRateAPIHandler(BtwBaseHandler):
 
     @gen.coroutine
@@ -24,7 +25,7 @@ class RoomRateAPIHandler(BtwBaseHandler):
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, roomrate_id):
         args = self.get_json_arguments()
-        Log.info(u"modify roomrate>> user:{} data: {}".format(self.current_user.todict(), args))
+        Log.info(u"<<modify roomrate {}>> user:{} data: {}".format(roomrate_id, self.current_user.todict(), args))
         start_date, end_date, price = get_and_valid_arguments(args,
                 'start_date', 'end_date', 'price')
         weekdays = args.get('weekdays', None)
@@ -83,4 +84,22 @@ class RoomRateAPIHandler(BtwBaseHandler):
             raise JsonException(1002, 'push stock fail')
         raise gen.Return(roomrate)
 
+
+class RoomRateTESTAPIHandler(RoomRateAPIHandler):
+
+    @gen.coroutine
+    def put(self):
+        args = self.get_json_arguments()
+        Log.info(u"<<modify roomrate>>  data: {}".format(args))
+        merchant_id, roomrate_id, start_date, end_date, price = get_and_valid_arguments(args,
+                'merchant_id', 'roomrate_id', 'start_date', 'end_date', 'price')
+        weekdays = args.get('weekdays', None)
+
+        self.valid_price(price)
+        start_date, end_date = self.valid_date(start_date, end_date, weekdays)
+
+        roomrate = yield self.set_price(merchant_id, roomrate_id, price, start_date, end_date, weekdays)
+        self.finish_json(result=dict(
+            roomrate=roomrate.todict(),
+            ))
 
