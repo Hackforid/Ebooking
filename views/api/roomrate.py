@@ -12,7 +12,6 @@ from exception.json_exception import JsonException
 
 from constants import PERMISSIONS
 from models.room_rate import RoomRateModel
-from tasks.stock import PushRatePlanTask
 
 from tools.log import Log
 from utils.stock_push.rateplan import RoomRatePusher
