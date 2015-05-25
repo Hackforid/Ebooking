@@ -16,7 +16,6 @@ from utils.stock_push import Pusher
 from tools.json import json_encode
 from tools.net import req
 
-from exception.json_exception import JsonException
 
 from tools.log import Log
 from config import SPEC_STOCK_PUSH, API, IS_PUSH_TO_STOCK
@@ -37,26 +36,26 @@ class InventoryPusher(Pusher):
         days = {}.fromkeys(days).keys()
 
         inventories = InventoryModel.get_by_roomtype_and_dates(self.db, roomtype_id, days)
-        self.post_inventory(inventories, roomtype.is_online)
+        return self.post_inventory(inventories, roomtype.is_online)
 
     def post_inventory(self, inventories, is_online=1):
         if not inventories:
-            return
+            return False
         inventory_data = self.generate_inventory_data(inventories, is_online)
         track_id = self.generate_track_id(inventories[0].roomtype_id)
 
         params = {'track_id': track_id,
                 'data': json_encode({'list': [inventory_data]})}
-        Log.info(params)
 
-
+        Log.info("push inventory roomtype {}: {}".format(inventories[0].roomtype_id, params))
         if not IS_PUSH_TO_STOCK:
-            return
+            return True
 
         url = API['STOCK'] + '/stock/update_inventory?is_async=false'
         r = req.post(url, data=params)
-        Log.info(r.text)
-        return r.status == 200 and r.json()['errcode'] == 0
+        Log.info("push inventory roomtype {} response {}".format(inventories[0].roomtype_id, r.text))
+
+        return r.status_code == 200 and r.json()['errcode'] == 0
 
 
 

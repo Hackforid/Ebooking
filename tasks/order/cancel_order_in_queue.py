@@ -4,12 +4,12 @@ import datetime
 
 from tasks.celery_app import app
 from tasks.base_task import SqlAlchemyTask, OrderTask
-from tasks.stock import PushInventoryTask
 
 from tasks.models.inventory import InventoryModel
 from models.order import OrderModel
 from constants import QUEUE_ORDER
 from exception.celery_exception import CeleryException
+from utils.stock_push.inventory import InventoryPusher
 
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
@@ -30,13 +30,19 @@ def cancel_order_after_user_confirm(self, order_id):
     recovery_inventory(stay_days, inventories, order)
 
     order.status = 600
-    session.commit()
-    PushInventoryTask().push_inventory.delay(order.roomtype_id)
-    return order
+    r = InventoryPusher(session).push_by_roomtype_id(order.room_type_id)
+    if r:
+        session.commit()
+        return order
+    else:
+        raise Exception("push stock fail")
+
 
 def recovery_inventory(stay_days, inventories, order):
-    room_num_record = [record.split('|') for record in order.room_num_record.split(',')]
-    room_num_record = [(int(record[0]), int(record[1])) for record in room_num_record]
+    room_num_record = [record.split('|')
+                       for record in order.room_num_record.split(',')]
+    room_num_record = [(int(record[0]), int(record[1]))
+                       for record in room_num_record]
     for i, day in enumerate(stay_days):
         inventory = get_inventory_by_date(inventories, day.year, day.month)
         num_auto, num_manual = room_num_record[i]
@@ -62,9 +68,12 @@ def cancel_order_before_user_confirm(self, order_id):
     recovery_inventory(stay_days, inventories, order)
 
     order.status = 500
-    session.commit()
-    PushInventoryTask().push_inventory.delay(order.roomtype_id)
-    return order
+    r = InventoryPusher(session).push_by_roomtype_id(order.roomtype_id)
+    if r:
+        session.commit()
+        return order
+    else:
+        raise Exception("push stock fail")
 
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
@@ -86,10 +95,12 @@ def cancel_order_by_user(self, order_id, reason):
 
     order.status = 400
     order.extra = reason
-    session.commit()
-
-    PushInventoryTask().push_inventory.delay(order.roomtype_id)
-    return order
+    r = InventoryPusher(session).push_by_roomtype_id(order.roomtype_id)
+    if r:
+        session.commit()
+        return order
+    else:
+        raise Exception("push stock fail")
 
 
 def get_stay_days(checkin_date, checkout_date):

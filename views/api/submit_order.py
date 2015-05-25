@@ -81,7 +81,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             # second valid in spec queue
             task = yield gen.Task(start_order.apply_async, args=[order.id])
             order = task.result
-            if task.status == 'SUCCESS':
+            if task.status == 'SUCCESS' and order:
                 send_order_sms.delay(order.merchant_id, order.hotel_name,
                                      order.id, order.confirm_type)
             else:
