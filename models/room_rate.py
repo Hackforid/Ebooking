@@ -137,7 +137,7 @@ class RoomRateModel(Base):
         return room
 
     @classmethod
-    def set_price(cls, session, id, price, start_date, end_date, weekdays=None):
+    def set_price(cls, session, id, price, start_date, end_date, weekdays=None, commit=True):
         roomrate = cls.get_by_id(session, id)
         if not roomrate:
             return
@@ -149,7 +149,8 @@ class RoomRateModel(Base):
             roomrate.change_price_in_ayear(price, start_date, date(year0, 12, 31), weekdays)
             roomrate.change_price_in_ayear(price, date(year1, 1, 1), end_date, weekdays)
 
-        session.commit()
+        if commit:
+            session.commit()
         return roomrate
 
     def change_price_in_ayear(self, price, start_date, end_date, weekdays=None):

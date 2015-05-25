@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta, date
 
 from tornado.escape import json_encode, json_decode, url_escape
+from tornado import gen
 
 from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
@@ -11,31 +12,31 @@ from exception.json_exception import JsonException
 
 from constants import PERMISSIONS
 from models.room_rate import RoomRateModel
-from tasks.stock import PushRatePlanTask
 
 from tools.log import Log
+from utils.stock_push.rateplan import RoomRatePusher
+
 
 class RoomRateAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, roomrate_id):
         args = self.get_json_arguments()
-        Log.info(u"modify roomrate>> user:{} data:{}".format(self.current_user.todict(), args))
+        Log.info(u"<<modify roomrate {}>> user:{} data: {}".format(roomrate_id, self.current_user.todict(), args))
         start_date, end_date, price = get_and_valid_arguments(args,
                 'start_date', 'end_date', 'price')
         weekdays = args.get('weekdays', None)
+        merchant_id = self.merchant.id
 
         self.valid_price(price)
         start_date, end_date = self.valid_date(start_date, end_date, weekdays)
 
-        roomrate = self.set_price(roomrate_id, price, start_date, end_date, weekdays)
-        if roomrate:
-            self.finish_json(result=dict(
-                roomrate=roomrate.todict(),
-                ))
-        else:
-            raise JsonException(errmsg="修改失败", errcode=1001)
+        roomrate = yield self.set_price(merchant_id, roomrate_id, price, start_date, end_date, weekdays)
+        self.finish_json(result=dict(
+            roomrate=roomrate.todict(),
+            ))
 
 
 
@@ -70,10 +71,34 @@ class RoomRateAPIHandler(BtwBaseHandler):
         if not isinstance(price, int) or price < 0 or price > 999999:
             raise JsonException(errcode=2002, errmsg="price out of range")
 
-    def set_price(self, roomrate_id, price, start_date, end_date, weekdays=None):
-        roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date, weekdays)
-        if roomrate:
-            PushRatePlanTask().push_rateplan.delay(roomrate.rate_plan_id, with_cancel_rule=False)
-        return roomrate
+    @gen.coroutine
+    def set_price(self, merchant_id, roomrate_id, price, start_date, end_date, weekdays=None):
+        roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date, weekdays, commit=False)
+        if not roomrate:
+            raise JsonException(1001, 'roomrate not found')
+        push_r = yield RoomRatePusher(self.db).push_roomrate(merchant_id, roomrate)
+        if push_r:
+            self.db.commit()
+        else:
+            raise JsonException(1002, 'push stock fail')
+        raise gen.Return(roomrate)
 
+
+class RoomRateTESTAPIHandler(RoomRateAPIHandler):
+
+    @gen.coroutine
+    def put(self):
+        args = self.get_json_arguments()
+        Log.info(u"<<modify roomrate>>  data: {}".format(args))
+        merchant_id, roomrate_id, start_date, end_date, price = get_and_valid_arguments(args,
+                'merchant_id', 'roomrate_id', 'start_date', 'end_date', 'price')
+        weekdays = args.get('weekdays', None)
+
+        self.valid_price(price)
+        start_date, end_date = self.valid_date(start_date, end_date, weekdays)
+
+        roomrate = yield self.set_price(merchant_id, roomrate_id, price, start_date, end_date, weekdays)
+        self.finish_json(result=dict(
+            roomrate=roomrate.todict(),
+            ))
 
