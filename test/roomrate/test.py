@@ -16,7 +16,7 @@ def init_db():
     elif v == 1:
         db = MySQLdb.connect("10.163.118.152", "btw", "btw123", "devine_stock2")
     elif v == 2:
-        db = MySQLdb.connect("10.157.94.104", "btw", "btwPassw0rd", "devine_stock2")
+        db = MySQLdb.connect("10.168.251.93", "btw", "btwPassw0rd", "devine_stock2")
 
 def finish():
     global db
@@ -60,7 +60,7 @@ def start_request(data):
     elif v == 1:
         url = 'http://127.0.0.1:9501/api/inner/test/roomrate/'
     elif v == 2:
-        url = 'http://127.0.0.1:9701/api/inner/test/roomrate/'
+        url = 'http://10.168.234.38:9701/api/inner/test/roomrate/'
     r = requests.put(url, json=data)
     if r.status_code == 200:
         roomrate = r.json()['result']['roomrate']
@@ -95,7 +95,7 @@ def main():
     merchant_id = sys.argv[1]
     roomrate_id = sys.argv[2]
     if len(sys.argv) == 4:
-        v = sys.argv[3]
+        v = int(sys.argv[3])
     init_db()
     test(merchant_id, roomrate_id)
     finish()
