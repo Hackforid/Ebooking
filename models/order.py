@@ -132,6 +132,14 @@ class OrderModel(Base):
         return order
 
     @classmethod
+    def get_by_merchant_and_id(cls, session, merchant_id, id):
+        order = session.query(OrderModel)\
+                .filter(OrderModel.id == id)\
+                .filter(OrderModel.merchant_id == merchant_id)\
+                .first()
+        return order
+
+    @classmethod
     def get_by_main_order_id(cls, session, main_order_id):
         order = session.query(OrderModel)\
                 .filter(OrderModel.main_order_id==main_order_id)\
