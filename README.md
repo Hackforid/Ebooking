@@ -38,3 +38,7 @@ return cooped hotel info
 ``/api/hotel/{hotel_id}/roomtype/{roomtype_id}/``  
 [POST]  
 
+
+### User
+**获取当前登陆用户信息**  
+``curl http://BASE_URL/api/user/``  

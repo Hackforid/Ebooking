@@ -39,11 +39,10 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
         self.get_current_user()
         if self.get_argument('jsonp', None):
             self.is_jsonp = True
-            method = self.get_argument('method', 'GET')
+            self.request.method = self.get_argument('method', 'GET')
             body = self.get_argument('body', None)
             self.callback_fun_name = self.get_argument('callback')
-            self.request.method = method
-            if method in ['POST', 'PUT']:
+            if self.request.method in ['POST', 'PUT']:
                 if body is not None:
                     self.request.body = body
 

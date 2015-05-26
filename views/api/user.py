@@ -12,6 +12,15 @@ from tools.request_tools import get_and_valid_arguments
 
 from models.user import UserModel
 
+class UserAPIHandler(BtwBaseHandler):
+
+    @auth_login()
+    def get(self):
+        self.finish_json(result=dict(
+            user=self.current_user.todict(),
+            ))
+
+
 class UserManageAPIHandler(BtwBaseHandler):
 
     @auth_login()

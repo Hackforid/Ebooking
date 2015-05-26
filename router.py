@@ -123,4 +123,6 @@ handlers = [
         (r"/api/city/(?P<city_id>\d+)/district/?", DistrictByCityAPIHandler),
 
         (r"/api/inner/test/roomrate/?", "views.api.roomrate.RoomRateTESTAPIHandler"),
+
+        (r"/api/user/?", "views.api.user.UserAPIHandler"),
 ]
