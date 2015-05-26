@@ -15,4 +15,3 @@ class PMSNewOrderAPIHandler(BtwBaseHandler):
         self.finish_json(result=dict(
             has_new_order=True if orders else False,
             ))
-

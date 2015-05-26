@@ -32,9 +32,20 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
         self.db = self.application.DB_Session()
         self.current_user = None
         self.merchant = None
+        self.is_jsonp = False
+        self.callback_fun_name = ""
 
     def prepare(self):
         self.get_current_user()
+        if self.get_argument('jsonp', None):
+            self.is_jsonp = True
+            method = self.get_argument('method', 'GET')
+            body = self.get_argument('body', None)
+            self.callback_fun_name = self.get_argument('callback')
+            self.request.method = method
+            if method in ['POST', 'PUT']:
+                if body is not None:
+                    self.request.body = body
 
     def on_finish(self):
         self.db.close()
@@ -66,9 +77,13 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
 
     def finish_json(self, errcode=0, errmsg=None, result=None):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.finish(json_encode({'errcode': errcode,
+        #self.set_header("Access-Control-Allow-Origin", "*")
+        resp_json = json_encode({'errcode': errcode,
                     'errmsg': errmsg,
-                                 'result': result}))
+                                 'result': result})
+        if self.is_jsonp:
+            resp_json = "{}({})".format(self.callback_fun_name, resp_json)
+        self.finish(resp_json)
 
     def get_json_arguments(self, raise_error=True):
         try:
@@ -105,4 +120,6 @@ class BackStageHandler(BtwBaseHandler):
         resources = r['result']['resources']
         self.backstage_user_permissions = [p['id'] for p in resources]
         raise gen.Return()
+
+
 
