@@ -73,6 +73,7 @@ handlers = [
 
         (r"/order/waiting/?", OrderWaitingHandler),
         (r"/api/order/waiting/?", OrderWaitingAPIHandler),
+        (r"/api/order/waiting/count/?", "views.api.order.OrderWaitingCountAPIHandler"),
         (r"/api/order/(?P<order_id>\d+)/confirm/?", OrderUserConfirmAPIHandler),
         (r"/api/order/(?P<order_id>\d+)/cancel/?", OrderUserCancelAPIHandler),
 

@@ -37,6 +37,18 @@ class OrderWaitingAPIHandler(BtwBaseHandler):
             'limit': limit,
             })
 
+class OrderWaitingCountAPIHandler(BtwBaseHandler):
+
+    @auth_login(json=True)
+    @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
+    def get(self):
+        merchant_id = self.current_user.merchant_id
+        total = OrderModel.get_waiting_orders_count(self.db, merchant_id)
+
+        self.finish_json(result={
+            'total': total,
+            })
+
 
 class OrderUserConfirmAPIHandler(BtwBaseHandler):
 

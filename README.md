@@ -42,3 +42,7 @@ return cooped hotel info
 ### User
 **获取当前登陆用户信息**  
 ``curl http://BASE_URL/api/user/``  
+
+### Order
+**获取当前登陆商户待处理订单数**  
+``curl http://BASE_URL/api/order/waiting/count/``  

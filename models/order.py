@@ -205,6 +205,15 @@ class OrderModel(Base):
 
         return query.all(), total
 
+    @classmethod
+    def get_waiting_orders_count(cls, session, merchant_id):
+        query = session.query(OrderModel)\
+                .filter(OrderModel.merchant_id == merchant_id)\
+                .filter(OrderModel.status == 100)
+        total = query.count()
+
+        return total
+
 
     @classmethod
     def get_today_book_orders(cls, session, merchant_id, start=None, limit=None):
