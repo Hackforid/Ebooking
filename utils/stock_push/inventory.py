@@ -4,6 +4,8 @@ import json
 import urllib
 import datetime
 
+import requests
+
 from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
 
@@ -52,7 +54,7 @@ class InventoryPusher(Pusher):
             return True
 
         url = API['STOCK'] + '/stock/update_inventory?is_async=false'
-        r = req.post(url, data=params)
+        r = requests.post(url, data=params)
         Log.info("push inventory roomtype {} response {}".format(inventories[0].roomtype_id, r.text))
 
         return r.status_code == 200 and r.json()['errcode'] == 0

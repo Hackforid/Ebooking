@@ -41,6 +41,7 @@ def confirm_order_by_user(self, user, order_id):
         raise CeleryException(1000, 'callback order server fail')
 
 def callback_order_server(order_id):
+    return True
     url = API['ORDER'] + '/order/ebooking/update'
     params = {'orderId': order_id, 'msgType': 0, 'success': True,
             'trackId': generate_track_id(order_id)}
