@@ -14,7 +14,7 @@ from exception.celery_exception import CeleryException
 from tools.json import json_encode
 from config import API, IS_PUSH_TO_STOCK
 from constants import QUEUE_STOCK_PUSH, CHAIN_ID
-from tools.net import req
+import requests as req
 
 from config import SPEC_STOCK_PUSH
 
