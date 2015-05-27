@@ -30,7 +30,7 @@ def cancel_order_after_user_confirm(self, order_id):
     recovery_inventory(stay_days, inventories, order)
 
     order.status = 600
-    r = InventoryPusher(session).push_by_roomtype_id(order.room_type_id)
+    r = InventoryPusher(session).push_by_roomtype_id(order.roomtype_id)
     if r:
         session.commit()
         return order
@@ -73,7 +73,7 @@ def cancel_order_before_user_confirm(self, order_id):
         session.commit()
         return order
     else:
-        raise Exception("push stock fail")
+        raise CeleryException(1000, "push stock fail")
 
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
@@ -100,7 +100,7 @@ def cancel_order_by_user(self, order_id, reason):
         session.commit()
         return order
     else:
-        raise Exception("push stock fail")
+        raise CeleryException(1000, "push stock fail")
 
 
 def get_stay_days(checkin_date, checkout_date):
