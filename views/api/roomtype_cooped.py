@@ -231,11 +231,13 @@ class RoomTypeOnlineAPIHandler(BtwBaseHandler):
                 roomtype = roomtype.todict(),
                 ))
         else:
+            self.db.rollback()
             raise JsonException(1000, 'push stock fail')
 
 
 class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     def put(self):
 
         args = self.get_json_arguments()
@@ -243,9 +245,14 @@ class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
         if is_online not in [0, 1]:
             raise JsonException(errmsg='wrong arg is_online', errcode=2001)
 
-        CooperateRoomTypeModel.set_online_by_merchant(self.db, self.merchant.id, is_online)
+        CooperateRoomTypeModel.set_online_by_merchant(self.db, self.merchant.id, is_online, commit=False)
 
-        PushInventoryTask().push_inventory_by_merchant.delay(self.merchant.id)
-
-        self.finish_json()
+        r = yield InventoryAsyncPusher(self.db).push_inventory_by_merchant(self.merchant.id)
+        if r:
+            self.db.commit()
+            self.finish_json()
+        else:
+            self.db.rollback()
+            yield InventoryAsyncPusher(self.db).push_inventory_by_merchant(self.merchant.id)
+            raise JsonException(1000, "push stock error")
 

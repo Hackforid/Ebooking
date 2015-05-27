@@ -98,6 +98,17 @@ class InventoryPusher(Pusher):
 class InventoryAsyncPusher(InventoryPusher):
 
     @gen.coroutine
+    def push_inventory_by_merchant(self, merchant_id):
+        Log.info(">> push inventories by merchant {}".format(merchant_id))
+        roomtypes = CooperateRoomTypeModel.get_by_merchant_id(self.db, merchant_id)
+
+        for roomtype in roomtypes:
+            r = yield self.push_by_roomtype(roomtype)
+            if not r:
+                raise gen.Return(False)
+        raise gen.Return(True)
+
+    @gen.coroutine
     def push_by_roomtype_id(self, roomtype_id):
         roomtype = CooperateRoomTypeModel.get_by_id(self.db, roomtype_id)
         r = yield self.push_by_roomtype(roomtype)

@@ -135,11 +135,12 @@ class CooperateRoomTypeModel(Base):
         return coops
 
     @classmethod
-    def set_online_by_merchant(cls, session, merchant_id, is_online):
+    def set_online_by_merchant(cls, session, merchant_id, is_online, commit=True):
         session.query(CooperateRoomTypeModel)\
                 .filter(CooperateRoomTypeModel.merchant_id == merchant_id)\
                 .update({CooperateRoomTypeModel.is_online: is_online})
-        session.commit()
+        if commit:
+            session.commit()
 
 
     def todict(self):
