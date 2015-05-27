@@ -21,6 +21,7 @@ from models.inventory import InventoryModel
 from tasks.poi import POIPushRoomTypeTask
 
 from tasks.stock import PushHotelTask, PushInventoryTask
+from utils.stock_push.inventory import InventoryAsyncPusher
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -208,6 +209,7 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
 
 class RoomTypeOnlineAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     def put(self, hotel_id, roomtype_id):
 
         args = self.get_json_arguments()
@@ -220,13 +222,16 @@ class RoomTypeOnlineAPIHandler(BtwBaseHandler):
             raise JsonException(errmsg='roomtype not found', errcode=2002)
 
         roomtype.is_online = is_online
-        self.db.commit()
 
-        PushInventoryTask().push_inventory.delay(roomtype_id)
 
-        self.finish_json(result=dict(
-            roomtype = roomtype.todict(),
-            ))
+        r = yield InventoryAsyncPusher(self.db).push_by_roomtype(roomtype)
+        if r:
+            self.db.commit()
+            self.finish_json(result=dict(
+                roomtype = roomtype.todict(),
+                ))
+        else:
+            raise JsonException(1000, 'push stock fail')
 
 
 class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
@@ -243,6 +248,4 @@ class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
         PushInventoryTask().push_inventory_by_merchant.delay(self.merchant.id)
 
         self.finish_json()
-
-
 
