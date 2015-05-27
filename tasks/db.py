@@ -7,7 +7,7 @@ from config import Config
 
 engine = create_engine(
             Config['mysql-mysqldb'], encoding='utf-8',
-            pool_recycle=600, pool_size=20, max_overflow=100,
+            pool_recycle=60, pool_size=20, max_overflow=100,
             echo=False
             )
 
