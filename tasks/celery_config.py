@@ -16,7 +16,7 @@ CELERY_IMPORTS = (
     'tasks.test', 'tasks.stock', 'tasks.poi',
                 'tasks.models.inventory',
                 'tasks.order.submit_order', 'tasks.order.submit_order_in_queue',
-                'tasks.order.cancel_order', 'tasks.order.cancel_order_in_queue',)
+                'tasks.order.cancel_order_in_queue',)
 
 
 CELERYBEAT_SCHEDULE = {
