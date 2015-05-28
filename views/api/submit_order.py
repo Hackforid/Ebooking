@@ -47,6 +47,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
                                          merchant=merchant.todict(), ))
         else:
             self.finish_json(result=dict(order_id=order.id,
+                                         btwOrderId=order.main_order_id,
                                          wait=0 if order.confirm_type ==
                                          OrderModel.CONFIRM_TYPE_AUTO or
                                          order.status == 300 else 1,
@@ -207,6 +208,7 @@ class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
             self.finish_json(errcode=1,
                              errmsg="fail: {}".format(order.exception_info),
                              result=dict(order_id=order.id,
+                                         btwOrderId=order.main_order_id,
                                          merchant=merchant.todict(), ))
         else:
             self.finish_json(result=dict(order_id=order.id,
