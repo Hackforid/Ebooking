@@ -127,4 +127,7 @@ handlers = [
         (r"/api/inner/test/roomrate/?", "views.api.roomrate.RoomRateTESTAPIHandler"),
 
         (r"/api/user/?", "views.api.user.UserAPIHandler"),
+
+
+        (r"/locktest/?", "views.api.test.LockTestHandler"),
 ]

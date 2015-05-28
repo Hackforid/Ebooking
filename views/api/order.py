@@ -78,19 +78,44 @@ class OrderUserConfirmAPIHandler(BtwBaseHandler):
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.update_order, json=True)
     def post(self, order_id):
-        merchant_id = self.current_user.merchant_id
 
-        task = yield gen.Task(SubmitOrder.confirm_order_by_user.apply_async,
-                args=[self.current_user, order_id])
-        if task.status == 'SUCCESS':
-            self.finish_json(result=dict(
-                order=task.result.todict(),
-                ))
+
+        order = OrderModel.get_by_id(self.db, order_id)
+        pre_status = order.status
+        if order.merchant_id != self.merchant.id:
+            raise JsonException(100, 'merchant not valid')
+        if order.status != 100:
+            raise JsonException(200, 'illegal status')
+
+        if (yield self.callback_order_server(order_id)):
+            order.confirm_by_user(self.db)
+            if order.status != pre_status:
+                OrderHistoryModel.set_order_status_by_user(self.db, self.current_user, order, pre_status, order.status)
         else:
-            if isinstance(task.result, CeleryException):
-                raise JsonException(1000, task.result.errmsg)
-            else:
-                raise JsonException(1000, 'network error')
+            raise JsonException(1000, 'callback order server fail')
+
+        self.finish_json(result=dict(
+            order=order.todict(),
+            ))
+
+    @gen.coroutine
+    def callback_order_server(self, order_id):
+        url = API['ORDER'] + '/order/ebooking/update'
+        params = {'orderId': order_id, 'msgType': 0, 'success': True,
+                'trackId': self.generate_track_id(order_id)}
+        r = yield AsyncHTTPClient().fetch(url, method='POST',
+                body=urllib.urlencode(params)
+                )
+        Log.info(r.body)
+        resp = json.loads(r.body)
+
+        if resp and resp['errcode'] == 0:
+            raise gen.Return(True)
+        raise gen.Return(False)
+
+    def generate_track_id(self, order_id):
+        return "{}|{}".format(order_id, time.time())
+
 
 class OrderUserCancelAPIHandler(BtwBaseHandler):
 
