@@ -26,7 +26,7 @@ CELERYBEAT_SCHEDULE = {
             },
         'push_all_to_poi': {
             'task': 'tasks.poi.push_poi',
-            'schedule': crontab(hour=0, minute=0),
+            'schedule': crontab(hour='*/3', minute=0),
             },
         'push_all_to_stock': {
             'task': 'tasks.stock.push_all_to_stock',
