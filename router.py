@@ -130,4 +130,6 @@ handlers = [
 
 
         (r"/locktest/?", "views.api.test.LockTestHandler"),
+
+        (r"/api/weixin/qrcode/?", "views.api.weixin.QRCodeAPIHandler"),
 ]
