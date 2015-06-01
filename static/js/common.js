@@ -39,8 +39,36 @@ $(document).ready(function() {
     $("#userNameCheck").html(realName);
 
   }
-
-
+  function getQRcode(){
+    $.ajax({
+      url: '/api/weixin/qrcode/',
+      success: function(data) {
+        if (data.errcode == 0) {
+          console.log(data);
+          var qrcode=data.result.url;
+          if(qrcode!=undefined){
+            var qrcodeContainer="<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /></div>";
+            $("#qrcode").append(qrcodeContainer);
+            $("#qrcodeImg").attr("src",data.result.url);
+            /*二维码*/
+            $("#qrcode").mouseenter(function() {
+              $("#qrcodeContainer").show();
+              $("#qrcode").css("background-color", "white");
+              $("#qrcode").css("border-left", "1px solid #ccc");
+              $("#qrcode").css("border-right", "1px solid #ccc");
+            });
+            $("#qrcode").mouseleave(function() {
+              $("#qrcodeContainer").hide();
+              $("#qrcode").css("background-color", "#FAFAFA");
+              $("#qrcode").css("border-left", "none");
+              $("#qrcode").css("border-right", "none");
+            });
+          }
+        }
+      }
+    });
+  }
+  getQRcode();
 
   function waitingQuery() {
     $.ajax({
