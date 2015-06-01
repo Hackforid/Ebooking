@@ -46,8 +46,8 @@ $(document).ready(function() {
         if (data.errcode == 0) {
           console.log(data);
           var qrcode=data.result.url;
-          if(qrcode!=undefined){
-            var qrcodeContainer="<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /></div>";
+          if(qrcode != undefined && qrcode !="" && qrcode != null){
+            var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /></div>";
             $("#qrcode").append(qrcodeContainer);
             $("#qrcodeImg").attr("src",data.result.url);
             /*二维码*/
