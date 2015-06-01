@@ -16,7 +16,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 from router import handlers
-from config import Config, LISTENER_IP, COOKIE_SALT
+from config import Config, LISTENER_IP, COOKIE_SALT, DEBUG
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -31,7 +31,7 @@ class Application(tornado.web.Application):
             cookie_secret=COOKIE_SALT,
             autoreload=True,
             gzip=True,
-            debug=True,
+            debug=DEBUG,
             login_url='/login/',
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )

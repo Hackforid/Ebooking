@@ -6,13 +6,14 @@ from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
 
 from views.base import BtwBaseHandler
-from tasks.order.cancel_order import cancel_order_by_server
+from tasks.order import cancel_order_in_queue as Cancel
 from models.order import OrderModel
 from models.merchant import MerchantModel
 from models.rate_plan import RatePlanModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.order_history import OrderHistoryModel
 from models.inventory import InventoryModel
+from models.order_history import OrderHistoryModel
 
 from exception.json_exception import JsonException
 from exception.celery_exception import CeleryException
@@ -46,6 +47,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
                                          merchant=merchant.todict(), ))
         else:
             self.finish_json(result=dict(order_id=order.id,
+                                         btwOrderId=order.main_order_id,
                                          wait=0 if order.confirm_type ==
                                          OrderModel.CONFIRM_TYPE_AUTO or
                                          order.status == 300 else 1,
@@ -81,7 +83,7 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
             # second valid in spec queue
             task = yield gen.Task(start_order.apply_async, args=[order.id])
             order = task.result
-            if task.status == 'SUCCESS':
+            if task.status == 'SUCCESS' and order:
                 send_order_sms.delay(order.merchant_id, order.hotel_name,
                                      order.id, order.confirm_type)
             else:
@@ -189,20 +191,6 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
         return int("{}{:0>2d}".format(year, month))
 
 
-class CancelOrderAPIHander(BtwBaseHandler):
-
-    @gen.coroutine
-    def post(self, order_id):
-        task = yield gen.Task(cancel_order_by_server.apply_async,
-                              args=[order_id])
-
-        if task.status == 'SUCCESS':
-            self.finish_json(result=dict(order_id=task.result.id, ))
-        else:
-            if isinstance(task.result, CeleryException):
-                raise JsonException(1, task.result.errmsg)
-            else:
-                raise JsonException(1, 'server error')
 
 class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
 
@@ -220,6 +208,7 @@ class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
             self.finish_json(errcode=1,
                              errmsg="fail: {}".format(order.exception_info),
                              result=dict(order_id=order.id,
+                                         btwOrderId=order.main_order_id,
                                          merchant=merchant.todict(), ))
         else:
             self.finish_json(result=dict(order_id=order.id,
@@ -237,3 +226,55 @@ class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
 
         OrderModel.change_order_status_by_main_order_id(self.db, order_entity.id, 0)
         OrderHistoryModel.set_order_status_by_server(self.db, order, pre_status, 0)
+
+
+
+class CancelOrderAPIHander(BtwBaseHandler):
+
+    @gen.coroutine
+    def post(self, order_id):
+        yield self.cancel_order_by_server(order_id)
+        self.finish_json(result=dict(order_id=order_id, ))
+
+
+    @gen.coroutine
+    def cancel_order_by_server(self, order_id):
+        order = OrderModel.get_by_id(self.db, order_id)
+        if not order:
+            raise JsonException(2000, 'no order')
+
+        pre_status = order.status
+
+        if order.status == 0 or order.status == 100:
+            _order = yield self.cancel_before_user_confirm(order.id)
+        elif order.status == 300:
+            _order = yield self.cancel_after_user_confirm(order.id)
+        elif order.status in [400, 500, 600]:
+            raise gen.Return(order)
+        else:
+            raise JsonException(1000, 'illegal status')
+
+
+        if _order.status != pre_status:
+            OrderHistoryModel.set_order_status_by_server(self.db, _order, pre_status, _order.status)
+        raise gen.Return(_order)
+
+    @gen.coroutine
+    def cancel_before_user_confirm(self, order_id):
+        task = yield gen.Task(Cancel.cancel_order_before_user_confirm.apply_async, args=[order_id])
+        
+        if task.status == 'SUCCESS':
+            raise gen.Return(task.result) 
+        else:
+            raise task.result
+
+    @gen.coroutine
+    def cancel_after_user_confirm(self, order_id):
+        task = yield gen.Task(Cancel.cancel_order_after_user_confirm.apply_async, args=[order_id])
+
+        if task.status == 'SUCCESS':
+            raise gen.Return(task.result) 
+        else:
+            raise task.result
+
+

@@ -38,3 +38,17 @@ return cooped hotel info
 ``/api/hotel/{hotel_id}/roomtype/{roomtype_id}/``  
 [POST]  
 
+
+### User
+**获取当前登陆用户信息**  
+``/api/user/``  
+``curl http://BASE_URL/api/user/``  
+
+### Order
+**获取当前登陆商户待处理订单数**  
+``/api/order/waiting/count/``  
+``curl http://BASE_URL/api/order/waiting/count/``  
+
+**获取当前登陆商户的特定订单**  
+``/api/order/{order_id}/``  
+``curl http://BASE_URL/api/order/1``  

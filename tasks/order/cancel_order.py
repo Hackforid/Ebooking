@@ -33,7 +33,6 @@ def cancel_order_by_server(self, order_id):
     else:
         raise CeleryException(1000, 'illegal status')
 
-    PushInventoryTask().push_inventory.delay(_order.roomtype_id)
 
     if _order.status != pre_status:
         OrderHistoryModel.set_order_status_by_server(session, _order, pre_status, _order.status)
@@ -95,7 +94,6 @@ def cancel_before_user_confirm(session, order_id):
 def cancel_after_user_confirm(session, order_id):
     task = Cancel.cancel_order_after_user_confirm.delay(order_id)
     result = task.get()
-    
     if task.status == 'SUCCESS':
         return result
     else:

@@ -9,6 +9,8 @@ from models.inventory import InventoryModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 
 from constants import QUEUE_ORDER
+from utils.stock_push.inventory import InventoryPusher
+from tools.log import Log
 
 
 @app.task(base=SqlAlchemyTask, bind=True, queue=QUEUE_ORDER)
@@ -31,11 +33,13 @@ def modify_inventory(self, merchant_id, hotel_id, roomtype_id, price_type, chang
             inventory.add_val_by_day(day.day, price_type, change_num)
         else:
             inventory.set_val_by_day(day.day, price_type, change_num)
-    session.commit()
-
-    PushInventoryTask().push_inventory.delay(roomtype_id)
-    return inventories
-
+    r = InventoryPusher(self.session).push_by_roomtype_id(roomtype_id)
+    if r:
+        session.commit()
+        return inventories
+    else:
+        session.rollback()
+        return None
 
 def get_stay_days(start_date, end_date):
     aday = datetime.timedelta(days=1)

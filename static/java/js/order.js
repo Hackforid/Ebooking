@@ -246,7 +246,7 @@ var ChartInit = function(scope, http, log) {
         var initCurrentAllWays;
 
         if (scope.currentOtaWay == 1) {
-            initCurrentAllWays = "1-6-7-8";
+            initCurrentAllWays = "1-6-7-8-11-12";
 
         } else if (scope.currentOtaWay == 4) {
             initCurrentAllWays = "4-10";
@@ -427,7 +427,7 @@ var ChartInit = function(scope, http, log) {
                     var currentAllWays;
 
                     if (scope.currentOtaWay == 1) {
-                        currentAllWays = "1-6-7-8";
+                        currentAllWays = "1-6-7-8-11-12";
 
                     } else if (scope.currentOtaWay == 4) {
                         currentAllWays = "4-10";
@@ -466,7 +466,7 @@ var ChartInit = function(scope, http, log) {
                                 for (var i = 0; i < otaOrder.length; i++) {
 
 
-                                    if (otaOrder[i].otaId == 6 || otaOrder[i].otaId == 7 || otaOrder[i].otaId == 8) {
+                                    if (otaOrder[i].otaId == 6 || otaOrder[i].otaId == 7 || otaOrder[i].otaId == 8|| otaOrder[i].otaId == 11|| otaOrder[i].otaId == 12) {
 
                                         otaOrder[i].otaId = 1;
 

@@ -3,16 +3,15 @@
 import datetime
 
 from tasks.celery_app import app
-from tasks.base_task import SqlAlchemyTask, OrderTask
-from tasks.stock import PushInventoryTask
+from tasks.base_task import OrderTask
 
 from tasks.models.inventory import InventoryModel
-from tasks.stock import PushInventoryTask
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.order import OrderModel
 from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
 from tools.log import Log
+from utils.stock_push.inventory import InventoryPusher
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def start_order(self, order_id):
@@ -79,7 +78,6 @@ def valid_inventory(inventories, stay_days, room_quantity):
         return True
 
 def modify_inventory(session, order):
-    print '# valid inventory for order %d' % order.id
     stay_days = get_stay_days(order.checkin_date, order.checkout_date)
     year_months = [(day.year, day.month) for day in stay_days]
     year_months = {}.fromkeys(year_months).keys()
@@ -114,10 +112,13 @@ def modify_inventory(session, order):
 
     order.room_num_record = generate_room_num_record(room_num_record)
 
-    session.commit()
-
-    PushInventoryTask().push_inventory.delay(order.roomtype_id)
-    return order
+    r = InventoryPusher(session).push_by_roomtype_id(order.roomtype_id)
+    if r:
+        session.commit()
+        return order
+    else:
+        session.rollback()
+        raise Exception("push stock fail")
 
 def generate_room_num_record(room_num_record):
     room_num_record_str = ','.join(['{}|{}'.format(*record) for record in room_num_record])

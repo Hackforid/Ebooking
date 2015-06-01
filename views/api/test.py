@@ -2,7 +2,7 @@
 import re
 
 from tornado.escape import json_encode
-from tornado import gen
+from tornado import gen, web
 
 
 from views import BaseHandler
@@ -11,6 +11,7 @@ from tools.auth import auth_login
 from tools.auth import auth_permission
 from constants import PERMISSIONS
 from tools.request_tools import get_and_valid_arguments
+from models.order_history import OrderHistoryModel
 
 from tasks import test as Test
 
@@ -25,3 +26,11 @@ class HelloWorldCeleryHandler(BtwBaseHandler):
     def get(self):
         print 'helloworld'
         Test.helloworld.delay()
+
+class LockTestHandler(BtwBaseHandler):
+
+    @web.asynchronous
+    def get(self):
+        r = OrderHistoryModel.get_lock_test(self.db, 21)
+        print r
+

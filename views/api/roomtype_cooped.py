@@ -21,6 +21,7 @@ from models.inventory import InventoryModel
 from tasks.poi import POIPushRoomTypeTask
 
 from tasks.stock import PushHotelTask, PushInventoryTask
+from utils.stock_push.inventory import InventoryAsyncPusher
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -208,6 +209,7 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
 
 class RoomTypeOnlineAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     def put(self, hotel_id, roomtype_id):
 
         args = self.get_json_arguments()
@@ -220,17 +222,22 @@ class RoomTypeOnlineAPIHandler(BtwBaseHandler):
             raise JsonException(errmsg='roomtype not found', errcode=2002)
 
         roomtype.is_online = is_online
-        self.db.commit()
 
-        PushInventoryTask().push_inventory.delay(roomtype_id)
 
-        self.finish_json(result=dict(
-            roomtype = roomtype.todict(),
-            ))
+        r = yield InventoryAsyncPusher(self.db).push_by_roomtype(roomtype)
+        if r:
+            self.db.commit()
+            self.finish_json(result=dict(
+                roomtype = roomtype.todict(),
+                ))
+        else:
+            self.db.rollback()
+            raise JsonException(1000, 'push stock fail')
 
 
 class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
 
+    @gen.coroutine
     def put(self):
 
         args = self.get_json_arguments()
@@ -238,11 +245,14 @@ class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
         if is_online not in [0, 1]:
             raise JsonException(errmsg='wrong arg is_online', errcode=2001)
 
-        CooperateRoomTypeModel.set_online_by_merchant(self.db, self.merchant.id, is_online)
+        CooperateRoomTypeModel.set_online_by_merchant(self.db, self.merchant.id, is_online, commit=False)
 
-        PushInventoryTask().push_inventory_by_merchant.delay(self.merchant.id)
-
-        self.finish_json()
-
-
+        r = yield InventoryAsyncPusher(self.db).push_inventory_by_merchant(self.merchant.id)
+        if r:
+            self.db.commit()
+            self.finish_json()
+        else:
+            self.db.rollback()
+            yield InventoryAsyncPusher(self.db).push_inventory_by_merchant(self.merchant.id)
+            raise JsonException(1000, "push stock error")
 

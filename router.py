@@ -73,6 +73,8 @@ handlers = [
 
         (r"/order/waiting/?", OrderWaitingHandler),
         (r"/api/order/waiting/?", OrderWaitingAPIHandler),
+        (r"/api/order/(?P<order_id>\d+)/?", "views.api.order.OrderInfoAPIHandler"),
+        (r"/api/order/waiting/count/?", "views.api.order.OrderWaitingCountAPIHandler"),
         (r"/api/order/(?P<order_id>\d+)/confirm/?", OrderUserConfirmAPIHandler),
         (r"/api/order/(?P<order_id>\d+)/cancel/?", OrderUserCancelAPIHandler),
 
@@ -123,4 +125,11 @@ handlers = [
         (r"/api/city/(?P<city_id>\d+)/district/?", DistrictByCityAPIHandler),
 
         (r"/api/inner/test/roomrate/?", "views.api.roomrate.RoomRateTESTAPIHandler"),
+
+        (r"/api/user/?", "views.api.user.UserAPIHandler"),
+
+
+        (r"/locktest/?", "views.api.test.LockTestHandler"),
+
+        (r"/api/weixin/qrcode/?", "views.api.weixin.QRCodeAPIHandler"),
 ]

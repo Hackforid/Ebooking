@@ -39,3 +39,11 @@ class OrderHistoryModel(Base):
         history = OrderHistoryModel(merchant_id=order.merchant_id, order_id=order.id, pre_status=pre_status, status=new_status, user_id=user.id, username=user.username, extra="operate by user")
         session.add(history)
         session.commit()
+
+    @classmethod
+    def get_lock_test(cls, session, id):
+        query = session.query(OrderHistoryModel)\
+                .filter(OrderHistoryModel.id == id)\
+                .with_for_update()
+
+        return query.first()

@@ -10,3 +10,4 @@ gevent
 simplejson
 librabbitmq
 requests==2.5.1
+futures=3.0.2
