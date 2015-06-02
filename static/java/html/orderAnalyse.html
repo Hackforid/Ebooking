@@ -45,11 +45,11 @@ if (window.location.host == "ebooking.betterwood.com") {
 <script type="text/javascript" src="/static/js/bootstrap-datepicker.zh-CN.min.js?v=20150331"></script>
 
 
-<link href="/static/css/default.css?v=20150331" rel="stylesheet" type="text/css" >
-<link href="/static/css/mod.css?v=20150331" rel="stylesheet" type="text/css" >
+<link href="/static/css/default.css?v=20150602" rel="stylesheet" type="text/css" >
+<link href="/static/css/mod.css?v=20150602" rel="stylesheet" type="text/css" >
 
 <script src="/static/js/jquery.Placeholder.js?v=20150331"></script> <!--placeholder属性兼容--> 
-<script src="/static/js/common.js?v=20150331"></script>  
+<script src="/static/js/common.js?v=20150602"></script>  
 <script src="/static/java/js/mainmenu-tab.js?v=20150331"></script><!--tab标签js--> 
 
 <script src="/static/js/angular.js?v=20150331"></script>
@@ -58,7 +58,7 @@ if (window.location.host == "ebooking.betterwood.com") {
 
 <script src="/static/java/dist/echarts.js?v=20150331"></script>
 
-<script src="/static/java/js/order.js?v=20150331"></script>
+<script src="/static/java/js/order.js?v=20150602"></script>
 
 <link href="/static/image/icon.ico" rel="SHORTCUT ICON">
 
@@ -101,7 +101,7 @@ if (window.location.host == "ebooking.betterwood.com") {
           <ul class="right-menu">
           <li class="icon-out"><a href="javascript:void(0)" id="out-btn">退出系统</a></li>
                      
-          <li id="qqOnline" class="icon-contact">
+          <li id="qqOnline" class="icon-contact" style="position:relative">
 
             <div  class="qq" id="qqContact">
                 <div class="borderdis"></div>
@@ -129,7 +129,8 @@ if (window.location.host == "ebooking.betterwood.com") {
             <a href="#" alt="在线QQ联系我们" title="在线QQ联系我们">在线客服</a>
             </li>  
 
-           <li class="icon-guide"><a href="javascript:void(0)" id="guide-btn">新手引导</a></li>            
+           <li class="icon-guide"><a href="javascript:void(0)" id="guide-btn">新手引导</a></li>
+           <li id="qrcode"><a href="javascript:void(0)" id="guide-btn">官方微信</a></li>               
           </ul>
        </div>
              
@@ -197,9 +198,9 @@ if (window.location.host == "ebooking.betterwood.com") {
             
             <div class="tabList">
 <ul>
-<li><a href="#" onclick="easytabs('1', '1');" onfocus="easytabs('1', '1');" title="" id="tablink1" class="tabactive" >最近七天</a></li>
-<li><a href="#" onclick="easytabs('1', '2');" onfocus="easytabs('1', '2');" title="" id="tablink2">最近30天</a></li>
-<li><a href="#" onclick="easytabs('1', '3');" onfocus="easytabs('1', '3');" title="" id="tablink3">指定日期</a></li>
+<li><a href="#" title="" id="tablink1" class="tabactive" >最近七天</a></li>
+<li><a href="#" title="" id="tablink2">最近30天</a></li>
+<li><a href="#" title="" id="tablink3">指定日期</a></li>
 </ul>
 </div>
  
@@ -1019,9 +1020,10 @@ if (window.location.host == "ebooking.betterwood.com") {
                      <input  type="text" name="time2" id="time2" readonly="readonly"  class="input-time"/>
                      </span>
                     
-                     <label ><input ng-click="searchorder();"  name="" type="button" value="搜索" />
-                    <input name="" ng-click="resetorder()" type="button" value="重置"   class="btn-bai btn-s" /> 
-                </label>
+                    <span>
+                        <input ng-click="searchorder();"  name="" type="button" value="搜索" />
+                        <input name="" ng-click="resetorder();" type="button" value="重置"   class="btn-bai btn-s" /> 
+                    </span>
                                                                                           
 
              <!--   <label>
