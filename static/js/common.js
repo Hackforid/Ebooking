@@ -47,7 +47,7 @@ $(document).ready(function() {
           console.log(data);
           var qrcode=data.result.url;
           if(qrcode != undefined && qrcode !="" && qrcode != null){
-            var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /></div>";
+            var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /><div class='codetest'>手机登录Ebooking</div></div>";
             $("#qrcode").append(qrcodeContainer);
             $("#qrcodeImg").attr("src",data.result.url);
             /*二维码*/
@@ -56,12 +56,14 @@ $(document).ready(function() {
               $("#qrcode").css("background-color", "white");
               $("#qrcode").css("border-left", "1px solid #ccc");
               $("#qrcode").css("border-right", "1px solid #ccc");
+              $("#qrcode").css("right","1px");
             });
             $("#qrcode").mouseleave(function() {
               $("#qrcodeContainer").hide();
               $("#qrcode").css("background-color", "#FAFAFA");
               $("#qrcode").css("border-left", "none");
               $("#qrcode").css("border-right", "none");
+              $("#qrcode").css("right","0px");
             });
           }
         }
@@ -125,6 +127,7 @@ $(document).ready(function() {
     $("#qqOnline").css("background-color", "white");
     $("#qqOnline").css("border-left", "1px solid #ccc");
     $("#qqOnline").css("border-right", "1px solid #ccc");
+    $("#qqOnline").css("right","1px");
 
   });
   $("#qqOnline").mouseleave(function() {
@@ -132,6 +135,7 @@ $(document).ready(function() {
     $("#qqOnline").css("background-color", "#FAFAFA");
     $("#qqOnline").css("border-left", "none");
     $("#qqOnline").css("border-right", "none");
+    $("#qqOnline").css("right","0px");
   });
 
   //新手引导弹窗
