@@ -18,6 +18,7 @@ from tasks import test as Test
 class HelloWorldHandler(BtwBaseHandler):
 
     def get(self):
+        self.clear_cookie("open_id", domain=".betterwood.com")
         self.finish('hello world')
 
 class HelloWorldCeleryHandler(BtwBaseHandler):
