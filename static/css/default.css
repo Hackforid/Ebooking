@@ -160,12 +160,19 @@ border-left:0px solid #E1E1E1; border-top:0px solid #305C9A;}
 .header .right-menu li.icon-help:hover { background-position:20px -990px; }
 
 /* qq悬浮 */
-.qq{clear:both;display:none;width:240px;border-top:1px solid #ccc;border-right:1px solid #ccc;border-left:1px solid #ccc;border-bottom:1px solid #ccc;position:absolute;top:86px;right:0px;background:white;font-size:12px;}
+.qq{clear:both;display:none;width:240px;border-top:1px solid #ccc;border-right:1px solid #ccc;border-left:1px solid #ccc;border-bottom:1px solid #ccc;position:absolute;top:86px;right:-76px;background:white;font-size:12px;}
 .qq img{margin-top: 5px;margin-bottom: 5px;margin-left: 15px;}
 .qq span{/* position: relative;bottom: 12px; */}
 .qq a{display: inline!important;}
 .qq .borderdis{background:white;height:1px;width:68px;position:absolute;left:95px;border:1px solid white;top:-1px;}
 
+/* 二维码 */
+#qrcode{background-position: 12px -1567px;position:relative;}
+#qrcode:hover{background-position: 12px -1683px;}
+.qrcode{clear:both;display:none;width:130px;border-top:1px solid #ccc;border-right:1px solid #ccc;border-left:1px solid #ccc;border-bottom:1px solid #ccc;position:absolute;top:86px;left:-1px;background:white;font-size:12px;}
+.qrcode img{width:105px;margin: 10px;border:10px solid #F8F8F8}
+.qrcode .borderdis{background:white;height:1px;width:68px;position:absolute;left:0px;border:1px solid white;top:-1px;}
+.qrcode .codetest{text-align: center;margin-bottom: 10px;}
 
 /* 页头用户信息菜单 */
 .header .admin-info {float:left; background:#FFA700;height:86px;width:170px; overflow:hidden;}
