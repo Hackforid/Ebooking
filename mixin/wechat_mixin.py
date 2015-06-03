@@ -27,6 +27,8 @@ class WechatMixin(object):
 
     @gen.coroutine
     def check_open_id(self, open_id, merchant_id, username):
+        if API.get('WEIXIN') is None:
+            raise gen.Return(False)
         url = "{}/webchart/user/ebk/has_bind_wechat?merchantId={}&username={}&openId={}".format(API['WEIXIN'], merchant_id, username, open_id)
         resp = yield AsyncHTTPClient().fetch(url)
         Log.info(resp.body)
