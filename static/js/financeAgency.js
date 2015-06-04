@@ -1434,6 +1434,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 								};
 								allotaOrd[otaOrd[i].ota_id] = ordVal;
+								allotaOrd[otaOrd[i].ota_id]['commission']=allotaOrd[otaOrd[i].ota_id]['commission'].toFixed(2);
 
 							} else {
 								allotaOrd[otaOrd[i].ota_id]['sum'] = parseInt(allotaOrd[otaOrd[i].ota_id]['sum']) + parseInt(otaOrd[i].total_price) / 100;
