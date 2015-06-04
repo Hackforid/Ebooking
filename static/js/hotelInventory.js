@@ -609,7 +609,7 @@
 
 		$scope.conventIdInt=function(id){
 			
-			return (parseInt(id)+1);
+			return (parseInt(id,10)+1);
 
 		}
 

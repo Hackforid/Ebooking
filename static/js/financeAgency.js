@@ -145,11 +145,11 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 		var sum = 0;
 		for (var i in order) {
 
-			sum = sum + order[i]['commission'];
+			sum = parseFloat(sum) + parseFloat(order[i]['commission']);
 
 		}
 
-		return sum;
+		return sum.toFixed(2);
 
 	}
 
@@ -422,7 +422,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 				if (resp.errcode == 0) {
 					var otaInc = resp.result.income;
 
-					if (otaInc.ota_id == 6 || otaInc.ota_id == 7 || otaInc.ota_id == 8) {
+					if (otaInc.ota_id == 6 || otaInc.ota_id == 7 || otaInc.ota_id == 8 || otaInc.ota_id == 11 || otaInc.ota_id == 12) {
 
 						otaInc.ota_id = 1;
 
@@ -542,7 +542,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 			if ($scope.searchOtaId == 1) {
 
-				url = url + "&ota_ids=[1,6,7,8]";
+				url = url + "&ota_ids=[1,6,7,8,11,12]";
 
 			} else if ($scope.searchOtaId == 4) {
 
@@ -1359,7 +1359,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 					var allOtaInc = {};
 					for (var i = 0; i < otaInc.length; i++) {
 
-						if (otaInc[i].ota_id == 6 || otaInc[i].ota_id == 7 || otaInc[i].ota_id == 8) {
+						if (otaInc[i].ota_id == 6 || otaInc[i].ota_id == 7 || otaInc[i].ota_id == 8 || otaInc[i].ota_id == 11 || otaInc[i].ota_id == 12) {
 
 							otaInc[i].ota_id = 1;
 
@@ -1371,7 +1371,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 
 
-						if (otaInc[i].ota_id != 0) {
+						if ((otaInc[i].ota_id != 0) && ($scope.otaNames[otaInc[i].ota_id] != undefined)) {
 							if (allOtaInc[otaInc[i].ota_id] == undefined || allOtaInc[otaInc[i].ota_id] == null) {
 
 								var incVal = {};
@@ -1409,7 +1409,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 
 
-						if (otaOrd[i].ota_id == 6 || otaOrd[i].ota_id == 7 || otaOrd[i].ota_id == 8) {
+						if (otaOrd[i].ota_id == 6 || otaOrd[i].ota_id == 7 || otaOrd[i].ota_id == 8 || otaOrd[i].ota_id == 11 || otaOrd[i].ota_id == 12) {
 
 							otaOrd[i].ota_id = 1;
 
@@ -1421,7 +1421,7 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 
 
-						if (otaOrd[i].ota_id != 0) {
+						if ((otaOrd[i].ota_id != 0) && ($scope.otaNames[otaOrd[i].ota_id] != undefined)) {
 							if (allotaOrd[otaOrd[i].ota_id] == undefined || allotaOrd[otaOrd[i].ota_id] == null) {
 
 								var ordVal = {};
@@ -1437,6 +1437,8 @@ financeApp.controller('financeAppCtrl', ['$scope', '$http','log', function($scop
 
 							} else {
 								allotaOrd[otaOrd[i].ota_id]['sum'] = parseInt(allotaOrd[otaOrd[i].ota_id]['sum']) + parseInt(otaOrd[i].total_price) / 100;
+								allotaOrd[otaOrd[i].ota_id]['commission'] = parseFloat(allotaOrd[otaOrd[i].ota_id]['commission']) + parseFloat(otaOrd[i].commission / 100) ;
+								allotaOrd[otaOrd[i].ota_id]['commission']=allotaOrd[otaOrd[i].ota_id]['commission'].toFixed(2);
 								allotaOrd[otaOrd[i].ota_id]['orders'].push(otaOrd[i]);
 
 							}
