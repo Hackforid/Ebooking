@@ -144,7 +144,7 @@ input[type="button"].btn-print:hover,.btn-print:hover {border:0;height:18px;widt
 
 .header .right {width:400px;padding-right:5px;}
 .header .right-menu { font-family: "Microsoft YaHei";}
-.header .right-menu li { float:right;width:70px;height:86px; list-style:none;background-image:url(../image/icon-top.png); background-repeat:no-repeat;
+.header .right-menu li { float:right;width:70px;height:86px; list-style:none;background-image:url(../image/icon-top.png?v=20150604); background-repeat:no-repeat;
 border-left:0px solid #E1E1E1; border-top:0px solid #305C9A;}
 .header .right-menu li a { display:block;width:70px; font-size:12px; color:#000; text-align:center;padding-top:57px;}
 .header .right-menu li a:hover { text-decoration:none;}

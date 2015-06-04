@@ -44,7 +44,6 @@ $(document).ready(function() {
       url: '/api/weixin/qrcode/',
       success: function(data) {
         if (data.errcode == 0) {
-          console.log(data);
           var qrcode=data.result.url;
           if(qrcode != undefined && qrcode !="" && qrcode != null){
             var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /><div class='codetest'>手机登录Ebooking</div></div>";
