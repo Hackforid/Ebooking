@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+		<script src="${static_url('js/angular.js')}"></script>
+        <script src="${static_url('js/jquery1.9.1.js')}"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link href="${static_url('css/hotelContract.css')}" rel="stylesheet" type="text/css" >
+        <script src="${static_url('js/ui-bootstrap-tpls-0.12.0.min.js')}"></script>
+        <script type="text/javascript">
+            var hotelID = ${hotel_id};
+            var merchantID = ${merchant_id};
+        </script>
+    </head>
+    <body ng-app="contractApp" ng-controller="contractCtrl">
+    <div class="wrapper">
+        <h2 style="text-align: center;">新增合同</h2>
+        <div class="title">
+            基础信息
+        </div>
+        <div class="basetcontent">
+            <div><label>酒店名称:</label><input type="text" readonly ng-model="hotelName"/></div>
+            <div><label>前台电话:</label><input type="text" ng-model="hotelInfo.receptionist_phone"/></div>
+            <div><label>传真:</label><input type="text" ng-model="hotelInfo.fax"/></div>
+            <div><label>保证金额:</label><input type="text" ng-model="hotelInfo.margin"/></div>
+            <div><label>业务联系人1:</label><input type="text" ng-model="hotelInfo.business1_name"/></div>
+            <div><label>电话1:</label><input type="text" ng-model="hotelInfo.business1_tel"/></div>
+            <div><label>业务联系人2:</label><input type="text" ng-model="hotelInfo.business2_name"/></div>
+            <div><label>电话2:</label><input type="text" ng-model="hotelInfo.business2_tel"/></div>
+        </div>
+        <div class="title">
+            结算
+        </div>
+        <div class="accountcontent">
+            <div><label>财务联系人:</label><input type="text" ng-model="hotelInfo.finance_name"/></div>
+            <div><label>联系电话:</label><input type="text" ng-model="hotelInfo.finance_tel"/></div>
+            <div style="position:relative"><label>佣金:</label><input type="text" ng-model="hotelInfo.commission"/><span style="position:absolute">%</span></div>
+            <div><label style="margin-right: -4px;">结算周期:</label>
+                <select ng-model="hotelInfo.settle_cycle">
+                    <option value="0">周结</option>
+                    <option value="1">月结</option>
+                    <option value="2">单结</option>
+                </select>
+            </div>
+            <div><label>对账时间:</label><input type="text" ng-model="hotelInfo.settle_date"/></div>
+            <div><label>合作模式:</label><input type="text" ng-model="hotelInfo.cooperation_mode"/></div>
+            <div><label>开户名称:</label><input type="text" ng-model="hotelInfo.account_name"/></div>
+            <div><label>QQ:</label><input type="text" ng-model="hotelInfo.finance_qq"/></div>
+            <div><label style="margin-right: -4px;">结算订单日期:</label>
+                <select ng-model="hotelInfo.settle_order_method">
+                    <option value="0">按离店日期结算</option>
+                    <option value="1">按下单日期结算</option>
+                </select>
+            </div>
+            <div><label>开户行:</label><input type="text" ng-model="hotelInfo.account_bank_name"/></div>
+            <div><label>账号:</label><input type="text" ng-model="hotelInfo.account_bank_id"/></div>
+        </div>
+        <div>
+            <p style="color:red;text-align:left;" ng-bind="errMessage"></p>
+            <p style="text-align: center;">
+                <input type="button" value="保存" ng-click="saveContract()">
+            </p>
+        </div>
+    </div>
+    <script type="text/ng-template" id="contractHotelModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title">{{title}}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{roomErrMessage}}</p>
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">房型:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentallRoomType.base_roomtype.name" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">保留房数:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.retain_num">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">平日底价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekday_base_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="currentPayallRoomType.current.pay_type==0">
+                        <label class="col-lg-2 control-label">平日卖价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekday_sell_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">周末底价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekend_base_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="currentPayallRoomType.current.pay_type==0">
+                        <label class="col-lg-2 control-label">周末卖价:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.weekend_sell_price">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="currentPayallRoomType.current.pay_type==1">
+                        <label class="col-lg-2 control-label">取消政策:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.cancel_rule">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">早餐:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.breakfast">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="currentPayallRoomType.current.remark">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="saveRoomTypeContract()">保存</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
+            </div>
+        </script>
+    <script src="${static_url('js/merchantContract.js')}"></script>
+</body>
+</html>
