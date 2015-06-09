@@ -101,6 +101,7 @@ handlers = [
         (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/spec_price/(?P<contract_id>\d+)/?", "views.api.admin.contract.SpecPriceContractModifyAPIHandler"),
 
         (r"/api/admin/merchant/(?P<merchant_id>\d+)/contract/?", "views.api.admin.contract.MerchantContractAPIHandler"),
+        (r"/admin/merchant/(?P<merchant_id>\d+)/contract/?", "views.admin.MerchantContractHandler"),
 
 
         (r"/api/merchant/all/?", MerchantListAPIHandler),
