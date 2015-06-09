@@ -29,4 +29,4 @@ class MerchantContractHandler(BackStageHandler):
 
     @auth_backstage_login()
     def get(self, merchant_id):
-        self.render("merchantContract.html")
+        self.render("merchantContract.html", merchant_id=merchant_id)

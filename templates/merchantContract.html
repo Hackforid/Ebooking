@@ -9,7 +9,6 @@
         <link href="${static_url('css/hotelContract.css')}" rel="stylesheet" type="text/css" >
         <script src="${static_url('js/ui-bootstrap-tpls-0.12.0.min.js')}"></script>
         <script type="text/javascript">
-            var hotelID = ${hotel_id};
             var merchantID = ${merchant_id};
         </script>
     </head>
@@ -20,7 +19,6 @@
             基础信息
         </div>
         <div class="basetcontent">
-            <div><label>酒店名称:</label><input type="text" readonly ng-model="hotelName"/></div>
             <div><label>前台电话:</label><input type="text" ng-model="hotelInfo.receptionist_phone"/></div>
             <div><label>传真:</label><input type="text" ng-model="hotelInfo.fax"/></div>
             <div><label>保证金额:</label><input type="text" ng-model="hotelInfo.margin"/></div>
