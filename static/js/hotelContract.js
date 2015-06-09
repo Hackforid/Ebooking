@@ -11,7 +11,7 @@
 		$scope.weekShow = false;
 		$scope.weekSelectShow = true;
 		$scope.currentSelectItem = [];
-		$scope.weekItem = [{
+		$scope.weekItem = [{ 
 				'day': '周一',
 				'selected': false
 			}, {
