@@ -116,8 +116,7 @@ class HotelContractAPIHandler(BackStageHandler):
         if contract_hotel:
             raise JsonException(1000, 'contract exist')
 
-        creator = self.backstage_user_name if BACKSTAGE_ENABLE else 'TEST'
-        contract_hotel = ContractHotelModel.new(self.db, creator=creator, **contract_hotel_args)
+        contract_hotel = ContractHotelModel.new(self.db, **contract_hotel_args)
 
         self.finish_json(result = dict(
             contract_hotel = contract_hotel.todict(),
