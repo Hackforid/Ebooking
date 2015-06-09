@@ -68,7 +68,7 @@ class OrderModel(Base):
             if order:
                 return [order], 1
             else:
-                return None, 0
+                return [], 0
         query = session.query(OrderModel).filter(OrderModel.merchant_id==merchant_id)
 
         if hotel_name:

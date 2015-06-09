@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import json
 import requests
 
 from models.user import UserModel
@@ -19,12 +20,14 @@ def send_order_sms(self, merchant_id, hotel_name, order_id, confirm_type):
 
     order = OrderModel.get_by_id(self.session, order_id)
     breakfast_str = u'含早' if order.get_has_breakfast() else u'无早'
+    customers = json.loads(order.customer_info)
+    customer_str = " ".join([customer['name'] for customer in customers])
 
 
     if confirm_type == OrderModel.CONFIRM_TYPE_AUTO:
-        content = u"尊敬的用户您好，系统收到编号{}自动确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，总价：{}，{}。订单号：{}，请及时关注。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), order.total_price / 100, breakfast_str, order_id)
+        content = u"尊敬的用户您好，系统收到编号{}自动确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，入住人：{}，总价：{}，{}。订单号：{}，请及时关注。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), customer_str, order.total_price / 100, breakfast_str, order_id)
     elif confirm_type == OrderModel.CONFIRM_TYPE_MANUAL:
-        content = u"尊敬的用户您好，系统收到编号{}待确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，总价：{}，{}。订单号：{}，请尽快处理。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), order.total_price / 100, breakfast_str, order_id)
+        content = u"尊敬的用户您好，系统收到编号{}待确认订单：{}，房型：{}，入离日期：{}至{}( {}晚 )，入住人：{}，总价：{}，{}。订单号：{}，请尽快处理。客服联系电话：4006103330".format(merchant_id, hotel_name, order.roomtype_name, order.checkin_date, order.checkout_date, order.get_stay_days(), customer_str, order.total_price / 100, breakfast_str, order_id)
     send_sms_to_service(merchant_id, content)
 
     user =UserModel.get_user_by_merchantid_username(self.session, merchant_id, 'admin')

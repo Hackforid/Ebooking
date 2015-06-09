@@ -100,6 +100,8 @@ handlers = [
         (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/pay_type/(?P<pay_type>\d+)/spec_price/?", "views.api.admin.contract.SpecPriceContractAPIHandler"),
         (r"/api/admin/merchant/(?P<merchant_id>\d+)/hotel/(?P<hotel_id>\d+)/roomtype/(?P<roomtype_id>\d+)/spec_price/(?P<contract_id>\d+)/?", "views.api.admin.contract.SpecPriceContractModifyAPIHandler"),
 
+        (r"/api/admin/merchant/(?P<merchant_id>\d+)/contract/?", "views.api.admin.contract.MerchantContractAPIHandler"),
+
 
         (r"/api/merchant/all/?", MerchantListAPIHandler),
 

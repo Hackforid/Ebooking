@@ -15,6 +15,7 @@ from exception.json_exception import JsonException, JsonDecodeError
 from tools.json import json_encode
 
 from mixin.request_mixin import CeleryTaskMixin
+from mixin.wechat_mixin import WechatMixin
 from models.user import UserModel
 from models.merchant import MerchantModel
 from tools.log import Log
@@ -25,7 +26,7 @@ import tcelery
 tcelery.setup_nonblocking_producer()
 
 
-class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
+class BtwBaseHandler(BaseHandler, CeleryTaskMixin, WechatMixin):
 
     def initialize(self):
         super(BtwBaseHandler, self).initialize()
@@ -35,8 +36,9 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
         self.is_jsonp = False
         self.callback_fun_name = ""
 
+    @gen.coroutine
     def prepare(self):
-        self.get_current_user()
+        yield self.get_current_user()
         if self.get_argument('jsonp', None):
             self.is_jsonp = True
             self.request.method = self.get_argument('method', 'GET')
@@ -49,7 +51,11 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
     def on_finish(self):
         self.db.close()
 
+    @gen.coroutine
     def get_current_user(self):
+        # check wechat login first
+        yield self.valid_wechat_login()
+
         username = self.get_secure_cookie('username')
         merchant_id = self.get_secure_cookie('merchant_id')
         if username and merchant_id:
@@ -57,7 +63,8 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin):
             self.set_secure_cookie('merchant_id', merchant_id, expires_days=0.02)
             self.merchant = MerchantModel.get_by_id(self.db, merchant_id)
             self.current_user = UserModel.get_user_by_merchantid_username(self.db, merchant_id, username)
-        return self.current_user
+        raise gen.Return(self.current_user)
+
 
     def render(self, template_name, **kwargs):
         kwargs['current_user'] = self.current_user

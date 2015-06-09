@@ -52,7 +52,7 @@ class RatePlanValidMixin(object):
     def valid_gurantee_start_time(self, guarantee_start_time):
         try:
             time.strptime(guarantee_start_time, "%H:%M:%S")
-        except ValueError as e:
+        except Exception as e:
             raise JsonException(errcode=2004, errmsg="wrong guarantee_time")
 
     def valid_pay_type(self, pay_type):
