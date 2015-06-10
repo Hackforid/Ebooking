@@ -118,9 +118,10 @@
 							$scope.weekItem[4]['selected'] = true;
 							$scope.weekItem[5]['selected'] = true;
 						} else {
+							$scope.currentSaveFlag = 0;
 							var selectedWeek;
 							if(contractHotel.weekend!=""){
-								selectedWeek = contractHotel.weekend.split("|");
+								selectedWeek = contractHotel.weekend.split(",");
 							}else{
 								selectedWeek=[];
 							}
@@ -131,7 +132,6 @@
 							};
 							console.log("gai");
 							$scope.payTypeContract = true;
-							$scope.currentSaveFlag = 0;
 							$scope.hotelInfo = contractHotel;
 						}
 						var currentcontractRoomType = {
@@ -176,7 +176,7 @@
 
 		$scope.saveContract = function() {
 			$scope.errMessage = "";
-			$scope.hotelInfo['weekend'] = $scope.currentSelectItem.join("|");
+			$scope.hotelInfo['weekend'] = $scope.currentSelectItem.join(",");
 			console.log($scope.hotelInfo);
 			var url = "/api/admin/merchant/" + merchantID + "/hotel/" + hotelID + "/contract";
 			if ($scope.currentSaveFlag == 1) {
