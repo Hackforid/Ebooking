@@ -30,7 +30,7 @@ class MerchantContractAPIHandler(BackStageHandler):
 
         contract = ContractMerchantModel.get_by_merchant_id(self.db, merchant_id)
         self.finish_json(result={
-            "contract_merchant": contract.todict() if contract else None,
+            "contract_merchant": contract.todict() if contractelse None,
             })
 
     @auth_backstage_login(json=True)
