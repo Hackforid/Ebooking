@@ -82,7 +82,7 @@ class ContractMerchantModel(Base):
                 finance_tel = self.finance_tel,
                 finance_qq = self.finance_qq,
                 business1_name = self.business1_name,
-                business1_tel = self.business2_name,
+                business1_tel = self.business1_tel,
                 business2_name = self.business2_name,
                 business2_tel = self.business2_tel,
                 )
