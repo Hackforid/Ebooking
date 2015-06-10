@@ -5,6 +5,7 @@ from tornado.escape import json_encode, json_decode
 from views.base import BtwBaseHandler
 from models.merchant import MerchantModel 
 from models.cooperate_hotel import CooperateHotelModel as Hotel
+from models.contract_merchant impoer ContractMerchantModel
 
 class MerchantListAPIHandler(BtwBaseHandler):
 
@@ -20,9 +21,12 @@ class MerchantQueryByHotelAPIHandler(BtwBaseHandler):
             hotel = Hotel.get_by_id(self.db, hotel_id)
             if hotel:
                 merchant = MerchantModel.get_by_id(self.db, hotel.merchant_id)
+                contract = ContractMerchantModel.get_by_merchant_id(self.db, merchant.id)
                 if merchant:
                     self.finish_json(result=dict(
-                        merchant=merchant.todict()))
+                        merchant=merchant.todict(),
+                        contract=contract.todict(),
+                        ))
                     return
 
             self.finish_json(result=dict(
