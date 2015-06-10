@@ -79,7 +79,7 @@ class HotelContractAPIHandler(BackStageHandler):
 
         contract_hotel = ContractHotelModel.get_by_hotel(self.db, hotel_id)
         if not contract_hotel:
-            contract_hotel = ContractHotelModel.new(self.db, weekend="5,6")
+            contract_hotel = ContractHotelModel.new(self.db, merchant_id=merchant_id, hotel_id=hotel_id, base_hotel_id=hotel.base_hotel_id, weekend="5,6")
 
         roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel_id)
         contract_roomtypes = ContractRoomTypeModel.get_by_hotel(self.db, hotel_id)
