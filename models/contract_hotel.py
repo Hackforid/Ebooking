@@ -19,7 +19,7 @@ class ContractHotelModel(Base):
     merchant_id = Column(INTEGER, nullable=False)
     hotel_id = Column(INTEGER, nullable=False)
     base_hotel_id = Column(INTEGER, nullable=False)
-    weekend = Column(VARCHAR(20), nullable=False, default="6,7")
+    weekend = Column(VARCHAR(20), nullable=False, default="5,6")
 
 
     @classmethod
