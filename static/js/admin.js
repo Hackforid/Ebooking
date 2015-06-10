@@ -40,6 +40,9 @@ adminApp.controller('merchantCtrl', ['$scope', '$http', '$modal', function($scop
 	$scope.merchantHotelManage = function(merchantId){
 		window.location.href = ("/admin/merchant/" + merchantId + "/hotels/");
 	}
+	$scope.merchantContractManage = function(merchantId){
+		window.location.href = ("/admin/merchant/" + merchantId + "/contract/");
+	}
 
 	$scope.getMerchantTypeName = function(type) {
 		switch(type) {
