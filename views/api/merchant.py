@@ -5,7 +5,7 @@ from tornado.escape import json_encode, json_decode
 from views.base import BtwBaseHandler
 from models.merchant import MerchantModel 
 from models.cooperate_hotel import CooperateHotelModel as Hotel
-from models.contract_merchant impoer ContractMerchantModel
+from models.contract_merchant import ContractMerchantModel
 
 class MerchantListAPIHandler(BtwBaseHandler):
 

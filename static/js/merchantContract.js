@@ -144,6 +144,7 @@
 				return;
 			}
 			$scope.errMessage = "";
+			console.log($scope.hotelInfo);
 			var url = "/api/admin/merchant/" + merchantID + "/contract";
 			if ($scope.currentSaveFlag == 1) {
 				console.log("新增");
