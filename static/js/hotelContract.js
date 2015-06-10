@@ -326,6 +326,7 @@
 		}
 
 		$scope.checkSpecial = function() {
+			$scope.priceErrMessage = "";
 			if ($.trim($("#startTime").val()) == "") {
 				$scope.priceErrMessage = "开始时间不能为空";
 				return;
