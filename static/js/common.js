@@ -46,7 +46,9 @@ $(document).ready(function() {
         if (data.errcode == 0) {
           var qrcode=data.result.url;
           if(qrcode != undefined && qrcode !="" && qrcode != null){
-            var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div><img id='qrcodeImg' /><div class='codetest'>手机登录Ebooking</div></div>";
+            var qrcodeContainer = "<div class='qrcode' id='qrcodeContainer'><div class='borderdis'></div>"+
+            "<div class='cordcontainer'><img id='qrcodeImg' /></div><div class='textcontainer'><p>扫码关注百达屋腓腓</p>"+
+            "<p>绑定（微信版）商旅分销</p><p>提示：如二维码超时请刷新页面,重新扫描</p></div></div>";
             $("#qrcode").append(qrcodeContainer);
             $("#qrcodeImg").attr("src",data.result.url);
             /*二维码*/
