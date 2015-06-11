@@ -397,7 +397,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         self.log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.text))
 
     def cal_rateplan_isvalid(self, rateplan):
-        if rateplan.merchant_id in SPEC_STOCK_PUSH and rateplan.pay_type == 1:
+        if rateplan.merchant_id in SPEC_STOCK_PUSH:
             return 0
         return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 

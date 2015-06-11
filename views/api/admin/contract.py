@@ -13,6 +13,7 @@ from models.merchant import MerchantModel
 from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.contract_hotel import ContractHotelModel
+from models.contract_merchant import ContractMerchantModel
 from models.contract_roomtype import ContractRoomTypeModel
 from models.contract_spec_price import ContractSpecPriceModel
 
@@ -20,8 +21,51 @@ from config import API, BACKSTAGE_ENABLE
 
 from utils import hotel as hotel_util
 
-class HotelContractAPIHandler(BackStageHandler):
 
+class MerchantContractAPIHandler(BackStageHandler):
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def get(self, merchant_id):
+
+        contract = ContractMerchantModel.get_by_merchant_id(self.db, merchant_id)
+        self.finish_json(result={
+            "contract_merchant": contract.todict() if contract else None,
+            })
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def post(self, merchant_id):
+        contract = ContractMerchantModel.get_by_merchant_id(self.db, merchant_id)
+        if contract:
+            raise JsonException(1001, 'contract exist')
+
+        contract_args = self.get_json_arguments()
+
+        creator = self.backstage_user_name if BACKSTAGE_ENABLE else 'TEST'
+        contract = ContractMerchantModel.new(self.db, creator=creator, **contract_args)
+
+        self.finish_json(result = dict(
+            contract_hotel = contract.todict(),
+            ))
+
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, merchant_id):
+        contract_args = self.get_json_arguments()
+
+        contract = ContractMerchantModel.get_by_merchant_id(self.db, merchant_id)
+        if not contract:
+            raise JsonException(1000, 'contract not exist')
+
+        ContractMerchantModel.update(self.db, **contract_args)
+
+        self.finish_json(result = dict(
+            contract_hotel = contract.todict(),
+            ))
+
+
+class HotelContractAPIHandler(BackStageHandler):
 
     @gen.coroutine
     @auth_backstage_login(json=True)
@@ -34,6 +78,8 @@ class HotelContractAPIHandler(BackStageHandler):
 
 
         contract_hotel = ContractHotelModel.get_by_hotel(self.db, hotel_id)
+        if not contract_hotel:
+            contract_hotel = ContractHotelModel.new(self.db, merchant_id=merchant_id, hotel_id=hotel_id, base_hotel_id=hotel.base_hotel_id, weekend="5,6")
 
         roomtypes = CooperateRoomTypeModel.get_by_hotel_id(self.db, hotel_id)
         contract_roomtypes = ContractRoomTypeModel.get_by_hotel(self.db, hotel_id)
@@ -72,8 +118,7 @@ class HotelContractAPIHandler(BackStageHandler):
         if contract_hotel:
             raise JsonException(1000, 'contract exist')
 
-        creator = self.backstage_user_name if BACKSTAGE_ENABLE else 'TEST'
-        contract_hotel = ContractHotelModel.new(self.db, creator=creator, **contract_hotel_args)
+        contract_hotel = ContractHotelModel.new(self.db, **contract_hotel_args)
 
         self.finish_json(result = dict(
             contract_hotel = contract_hotel.todict(),

@@ -266,7 +266,10 @@ class CancelOrderAPIHander(BtwBaseHandler):
         if task.status == 'SUCCESS':
             raise gen.Return(task.result) 
         else:
-            raise task.result
+            if isinstance(task.result, CeleryException):
+                raise JsonException(task.result.errcode, task.result.errmsg)
+            else:
+                raise task.result
 
     @gen.coroutine
     def cancel_after_user_confirm(self, order_id):
@@ -275,6 +278,9 @@ class CancelOrderAPIHander(BtwBaseHandler):
         if task.status == 'SUCCESS':
             raise gen.Return(task.result) 
         else:
-            raise task.result
+            if isinstance(task.result, CeleryException):
+                raise JsonException(task.result.errcode, task.result.errmsg)
+            else:
+                raise task.result
 
 

@@ -46,7 +46,8 @@ def recovery_inventory(stay_days, inventories, order):
     for i, day in enumerate(stay_days):
         inventory = get_inventory_by_date(inventories, day.year, day.month)
         num_auto, num_manual = room_num_record[i]
-        inventory.recovery_val_by_day(day.day, num_auto, num_manual)
+        if inventory:
+            inventory.recovery_val_by_day(day.day, num_auto, num_manual)
 
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)

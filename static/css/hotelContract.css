@@ -36,6 +36,7 @@ p{
 	float: left;
 	text-align: right;
 	padding-bottom: 5px;
+	min-width: 285px;
 }
 
 .accountcontent div{
@@ -46,6 +47,7 @@ p{
 	padding-top: 5px;
 	margin-bottom: 5px;
 	height: 38px;
+	min-width: 285px;
 }
 .contract{
 	padding-left: 5px;

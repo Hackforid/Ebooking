@@ -8,6 +8,8 @@ from tools.auth import auth_login
 from tools.request_tools import get_and_valid_arguments
 from models.user import UserModel
 
+from tools.request_tools import clear_domain_cookie
+
 class LoginHandler(BtwBaseHandler):
 
     def get(self):
@@ -34,5 +36,10 @@ class LogoutHandler(BtwBaseHandler):
 
     @auth_login()
     def get(self):
-        self.clear_all_cookies()
+        clear_domain_cookie(self, "open_id", domain=".betterwood.com")
+        clear_domain_cookie(self, "username", domain=".betterwood.com")
+        clear_domain_cookie(self, "merchant_id", domain=".betterwood.com")
+        clear_domain_cookie(self, "open_id")
+        clear_domain_cookie(self, "username")
+        clear_domain_cookie(self, "merchant_id")
         self.redirect("/login/")
