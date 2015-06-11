@@ -25,7 +25,7 @@ class MerchantQueryByHotelAPIHandler(BtwBaseHandler):
                 if merchant:
                     self.finish_json(result=dict(
                         merchant=merchant.todict(),
-                        contract=contract.todict(),
+                        contract=contract.todict() if contract else None,
                         ))
                     return
 
