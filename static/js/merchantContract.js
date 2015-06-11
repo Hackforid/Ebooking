@@ -107,10 +107,6 @@
 				$scope.errMessage = "联系电话不能为空";
 				return;
 			}
-			if ($.trim($scope.hotelInfo.commission) == "") {
-				$scope.errMessage = "佣金不能为空";
-				return;
-			}
 			if ($.trim($scope.hotelInfo.settle_cycle) == "") {
 				$scope.errMessage = "结算周期不能为空";
 				return;
