@@ -7,4 +7,3 @@ class CeleryException(Exception):
         self.errcode = errcode
         self.errmsg = errmsg
         super(Exception, self).__init__(errcode, errmsg)
-L
