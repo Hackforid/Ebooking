@@ -10,6 +10,7 @@
 		$scope.weekShow = false;
 		$scope.weekSelectShow = true;
 		$scope.currentSelectItem = [];
+		$scope.merchantName;
 		
 		$scope.hotelInfo = {
 			"merchant_id": merchantID,
@@ -41,6 +42,7 @@
 						console.log(resp);
 						
 						var contractHotel = resp.result.contract_merchant;
+						$scope.merchantName = resp.result.merchant.name;
 						if (isEmptyObject(contractHotel)) {
 							console.log("zeng");
 							$scope.payTypeContract = false;
