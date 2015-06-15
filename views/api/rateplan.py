@@ -159,6 +159,7 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
 class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixin):
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def put(self, hotel_id, roomtype_id, rateplan_id):
@@ -184,7 +185,7 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
             self.valid_gurantee_start_time(guarantee_start_time)
 
 
-        rateplan, roomrate = self.modify_rateplan(
+        rateplan, roomrate = yield self.modify_rateplan(
             rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time, ahead_days, stay_days)
 
         self.finish_json(result=dict(
@@ -192,22 +193,23 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
             roomrate=roomrate.todict(),
         ))
 
+    @gen.coroutine
     def modify_rateplan(self, rateplan_id, name, meal_num, punish_type, guarantee_type, guarantee_start_time, ahead_days, stay_days):
         rateplan = RatePlanModel.get_by_id(self.db, rateplan_id)
         if not rateplan:
-            return JsonException(errcode=404, errmsg="rateplan not found")
+            raise JsonException(errcode=404, errmsg="rateplan not found")
 
         if name is not None:
             _rateplan = RatePlanModel.get_by_merchant_hotel_room_name(self.db,
                                                                       rateplan.merchant_id, rateplan.hotel_id, rateplan.roomtype_id, name)
             if _rateplan and _rateplan.id != rateplan.id:
-                return JsonException(errcode=405, errmsg="name exist")
+                raise JsonException(errcode=405, errmsg="name exist")
             else:
                 rateplan.name = name
 
         if meal_num is not None:
             roomrate = RoomRateModel.set_meal(
-                self.db, rateplan.id, meal_num, False)
+                self.db, rateplan.id, meal_num, commit=False)
         if punish_type is not None:
             rateplan.punish_type = punish_type
         if rateplan.pay_type == rateplan.PAY_TYPE_ARRIVE:
@@ -220,11 +222,27 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
         if stay_days is not None:
             rateplan.stay_days = stay_days
 
-        self.db.commit()
 
-        PushRatePlanTask().push_rateplan.delay(rateplan.id, with_roomrate=True)
-        return rateplan, roomrate
+        rateplan_pusher = RatePlanPusher(self.db)
+        roomrate_pusher = RoomRatePusher(self.db)
+        try:
+            if not (yield rateplan_pusher.post_rateplan(rateplan)):
+                raise JsonException(2000, 'rateplan push fail')
+            if not (yield rateplan_pusher.post_cancel_rule(rateplan)):
+                raise JsonException(2001, 'cancel rule push fail')
+            if not (yield roomrate_pusher.push_roomrate(rateplan.merchant_id, roomrate)):
+                raise JsonException(2002, 'roomrate push fail')
+            self.db.commit()
 
+        except JsonException, e:
+            self.db.rollback()
+            raise e
+        except Exception, e:
+            self.db.rollback()
+            Log.exception(e)
+            raise JsonException(2003, 'push stock fail')
+
+        raise gen.Return((rateplan, roomrate))
 
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
@@ -233,6 +251,7 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
         if not rateplan:
             raise JsonException(1001, 'rateplan not found')
 
+        # TODO: make delete sync
         self.delete_rateplan(rateplan)
 
         self.finish_json(result=dict(

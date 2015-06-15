@@ -16,4 +16,22 @@ class OtaChannelModel(Base):
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     hotel_id = Column(INTEGER, nullable=False)
-    ota_ids = Column(VARCHAR(50), nullable=False)
+    ota_ids = Column(VARCHAR(50), nullable=False, default='0')
+
+    @classmethod
+    def get_by_hotel_id(cls, session, hotel_id):
+        query = session.query(OtaChannelModel)\
+                .filter(OtaChannelModel.hotel_id == hotel_id)
+        return query.first()
+
+    def get_ota_ids(self):
+        ota_ids = self.ota_ids.split(',')
+        return [int(id) for id in ota_ids]
+
+
+    def todict(self):
+        return ObjectDict(
+                id=self.id,
+                hotel_id=self.hotel_id,
+                ota_ids=self.ota_ids,
+                )
