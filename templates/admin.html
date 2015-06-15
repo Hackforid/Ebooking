@@ -33,7 +33,7 @@
                     <th>操作</th>
                 </tr>
                 <tr ng-repeat="merchant in merchants">
-                    <td>{{merchant.id}}</td>
+                    <td><a name={{merchant.id}} style="color:black">{{merchant.id}}</a></td>
                     <td>{{merchant.name}}</td>
                     <td>{{getMerchantTypeName(merchant.type)}}</td>
 					<td>{{getMerchantSuspendState(merchant.is_suspend)}}</td>

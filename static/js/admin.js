@@ -13,6 +13,16 @@ adminApp.controller('merchantCtrl', ['$scope', '$http', '$modal', function($scop
 				console.log(resp);
 				if (resp.errcode == 0) {
 					$scope.merchants = resp.result.merchants;
+					var currentUrl = location.search;
+					if (currentUrl != "" && currentUrl != undefined) {
+						setTimeout(function() {
+							var splitUrl = currentUrl.split("=");
+							if (splitUrl[1] != "" && splitUrl[1] != undefined) {
+								window.location.hash = splitUrl[1];
+								window.location = window.location;
+							}
+						}, 0);
+					}
 				}
 			})
 	}

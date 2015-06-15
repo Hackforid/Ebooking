@@ -154,6 +154,7 @@
 							$scope.currentSaveFlag = 0;
 							$scope.errMessage = "保存成功";
 							$timeout(function(){$scope.errMessage = "";},2000);
+							window.location.href = ("/admin?anchor=" + merchantID);
 						}
 					})
 					.error(function() {
@@ -168,6 +169,7 @@
 						if (resp.errcode == 0) {
 							$scope.errMessage = "保存成功";
 							$timeout(function(){$scope.errMessage = "";},2000);
+							window.location.href = ("/admin?anchor=" + merchantID);
 						}
 					}).error(function() {
 						console.log('network error');
