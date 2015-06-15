@@ -28,7 +28,6 @@ class RatePlanPusher(Pusher):
         if not rateplan or not roomrate:
             raise gen.Return()
 
-        yield self.post_rateplan(rateplan)
         if not (yield self.post_rateplan(rateplan)):
             raise JsonException(1000, 'push rateplan fail')
 
@@ -79,6 +78,12 @@ class RatePlanPusher(Pusher):
         data['end_date'] = rateplan.end_date
         return data
 
+    def get_pay_type(self, rateplan):
+        return 1 if rateplan.pay_type == 1 else 2
+
+    def get_rate_type(self, rateplan):
+        # 到付卖价0 预付底价 1
+        return rateplan.pay_type
 
     @gen.coroutine
     def post_cancel_rule(self, rateplan):

@@ -325,6 +325,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         return data
 
     def get_rate_type(self, rateplan):
+        # 到付卖价0 预付底价 1
         return rateplan.pay_type
 
     def get_pay_type(self, rateplan):

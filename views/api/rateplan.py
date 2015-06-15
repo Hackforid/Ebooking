@@ -2,10 +2,12 @@
 
 import time
 
+from tornado import gen
 from tornado.escape import json_encode, json_decode, url_escape
 
 from tools.auth import auth_login, auth_permission
 from tools.request_tools import get_and_valid_arguments
+from tools.log import Log
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
@@ -18,6 +20,7 @@ from models.room_rate import RoomRateModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 
 from mixin.coop_mixin import CooperateMixin
+from utils.stock_push.rateplan import RatePlanPusher, RoomRatePusher
 
 
 class RatePlanValidMixin(object):
@@ -62,6 +65,7 @@ class RatePlanValidMixin(object):
 
 class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def post(self, hotel_id, roomtype_id):
@@ -82,10 +86,10 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
                 args, 'guarantee_start_time', 'guarantee_type')
             self.valid_arrive_pay_args(guarantee_type, guarantee_start_time)
 
-            rateplan, roomrate = self.new_rate_plan(
+            rateplan, roomrate = yield self.new_rate_plan(
                 merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days, pay_type, guarantee_type, guarantee_start_time)
         else:
-            rateplan, roomrate = self.new_rate_plan(
+            rateplan, roomrate = yield self.new_rate_plan(
                 merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days)
 
         self.finish_json(result=dict(
@@ -109,9 +113,11 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
         rateplans = RatePlanModel.get_by_room(self.db, merchant_id, hotel_id, roomtype_id)
         rateplan_ids = [rateplan.id for rateplan in rateplans]
         roomrates= RoomRateModel.get_by_rateplans(self.db, rateplan_ids)
+        Log.info(roomrates)
         return rateplans, roomrates
 
 
+    @gen.coroutine
     def new_rate_plan(self, merchant_id, hotel_id, roomtype_id, name, meal_num, punish_type, ahead_days, stay_days, pay_type=None, guarantee_type=None, guarantee_start_time=None):
         room = CooperateRoomTypeModel.get_by_id(self.db, roomtype_id)
         if not room:
@@ -123,12 +129,32 @@ class RatePlanAPIHandler(BtwBaseHandler, RatePlanValidMixin):
             raise JsonException(errcode=405, errmsg="name exist")
 
         new_rateplan = RatePlanModel.new_rate_plan(self.db,
-                                                   merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type, ahead_days, stay_days, pay_type, guarantee_type, guarantee_start_time)
+                                                   merchant_id, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id,  name, meal_num, punish_type, ahead_days, stay_days, pay_type, guarantee_type, guarantee_start_time, commit=False)
+        self.db.flush()
         new_roomrate = RoomRateModel.new_roomrate(
-            self.db, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num)
+            self.db, hotel_id, roomtype_id, room.base_hotel_id, room.base_roomtype_id, new_rateplan.id, meal_num, commit=False)
+        self.db.flush()
 
-        PushRatePlanTask().push_rateplan.delay(new_rateplan.id)
-        return new_rateplan, new_roomrate
+        rateplan_pusher = RatePlanPusher(self.db)
+        roomrate_pusher = RoomRatePusher(self.db)
+        try:
+            if not (yield rateplan_pusher.post_rateplan(new_rateplan)):
+                raise JsonException(2000, 'rateplan push fail')
+            if not (yield rateplan_pusher.post_cancel_rule(new_rateplan)):
+                raise JsonException(2001, 'cancel rule push fail')
+            if not (yield roomrate_pusher.push_roomrate(new_rateplan.merchant_id, new_roomrate)):
+                raise JsonException(2002, 'roomrate push fail')
+            self.db.commit()
+
+        except JsonException, e:
+            self.db.rollback()
+            raise e
+        except Exception, e:
+            self.db.rollback()
+            Log.exception(e)
+            raise JsonException(2003, 'push stock fail')
+
+        raise gen.Return((new_rateplan, new_roomrate))
 
 
 class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixin):
