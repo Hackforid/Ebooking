@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+		<script src="${static_url('js/angular.js')}"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link href="${static_url('css/admin.css')}" rel="stylesheet" type="text/css" >
+    </head>
+
+    <body ng-app="adminApp" ng-controller="otaCtrl">
+
+        <nav class="nav navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="nav-header">
+                    <a class="navbar-brand" href="#"><b>渠道管理</b></a>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+
+            <table class="table">
+                <tr>
+                    <th>渠道名称</th>
+                    <th>操作</th>
+                </tr>
+                <tr ng-repeat="ota in otas">
+                    <td ng-bind="ota.description"></td>
+                    <td><button class="btn btn-default" type="button" ng-click="readict(ota.id)">产品管理</button></td>
+                </tr>
+            </table>
+
+        </div>
+
+
+	    <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
+	    <script src="${static_url('js/ui-bootstrap-tpls-0.12.0.min.js')}"></script>
+        <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
+	    <script src="${static_url('js/otaManage.js')}"></script>
+	    <script src="${static_url('js/md5.js')}"></script>
+
+
+        
+    </body>
+</html>
