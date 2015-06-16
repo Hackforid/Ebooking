@@ -69,7 +69,7 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
             raise JsonException(1000, 'get ota fail')
 
         ota_channel = OtaChannelModel.get_by_hotel_id(self.db, hotel_id)
-        if not ota_channel:
+        if not ota_channel or (ota_channel and 0 in ota_channel.get_ota_ids()):
             if is_online == 0:
                 new_ota_ids = [id for id in ota_ids if id != ota_id]
             else:
@@ -82,10 +82,14 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
                     new_ota_ids = ota_channel.get_ota_ids()
             else:
                 if ota_id not in ota_channel.get_ota_ids():
-                    new_ota_ids = ota_channel.get_ota_ids().append(ota_id)
+                    print ota_channel.get_ota_ids()
+                    new_ota_ids = ota_channel.get_ota_ids()
+                    new_ota_ids.append(ota_id)
                 else:
                     new_ota_ids = ota_channel.get_ota_ids()
 
+        if 0 in new_ota_ids:
+            new_ota_ids = [0]
         ota_channel = OtaChannelModel.set_ota_ids(self.db, hotel_id, new_ota_ids, commit=False)
 
         r = yield change_ota(hotel_id, ota_ids)
