@@ -141,5 +141,6 @@ handlers = [
         (r"/api/admin/ota/all/?", "views.api.admin.ota.OtaListAPIHandler"),
         (r"/api/admin/ota/(?P<ota_id>\d+)/hotels/?", "views.api.admin.ota.OtaHotelsAPIHandler"),
         (r"/api/admin/ota/hotel/(?P<hotel_id>\d+)/modify/?", "views.api.admin.ota.OtaHotelModifyAPIHandler"),
+        (r"/api/admin/ota/(?P<ota_id>\d+)/hotel/(?P<hotel_id>\d+)/online/(?P<is_online>\d+)/?", "views.api.admin.ota.OtaHotelOnlineAPIHandler"),
 ]
 
