@@ -28,7 +28,6 @@
 		$scope.changeDistrictName = {};
 		$scope.currentRoomtypes;
 		$scope.currentHotelId;
-
 		$scope.checkedItem = [false, false, false];
 		$scope.checktest = function(item) {
 			$scope.checkedItem[item] = ($scope.checkedItem[item] == false ? true : false);
@@ -44,11 +43,9 @@
 			if (($scope.checkedItem[1] == true) && ($scope.checkedItem[2] == true)) {
 				$scope.checkedItem[0] = true;
 			}
-			//console.log($scope.checkedItem[1]);
 			if (($scope.checkedItem[1] == false) || ($scope.checkedItem[2] == false)) {
 				$scope.checkedItem[0] = false;
 			}
-			console.log($scope.checkedItem);
 		}
 
 		function loadAllOtas() {
@@ -68,11 +65,8 @@
 		}
 
 		$scope.modifyStatus = function(hotel) {
-			console.log(hotel);
 			var currentOtaIds = angular.copy($scope.otas);
 			var currentHotelOtaIds = hotel.ota_ids;
-
-
 			if ((currentHotelOtaIds.length == 1) && (currentHotelOtaIds[0] == 0)) {
 				for (var i = 0; i < currentOtaIds.length; i++) {
 					currentOtaIds[i]['checked'] = true;
@@ -86,10 +80,6 @@
 					};
 				};
 			}
-			console.log(currentOtaIds);
-
-
-
 			var modalInstance = $modal.open({
 				templateUrl: 'onlinestatus.html',
 				controller: 'onLineStatus',
@@ -155,23 +145,6 @@
 				$scope.changeDistrictName = {};
 				return;
 			}
-			var districtUrl = "/api/city/" + city_id + "/district/";
-			console.log(districtUrl);
-			$http.get(districtUrl)
-				.success(function(resp) {
-					console.log(resp);
-					if (resp.errcode == 0) {
-						$scope.changeDistrictName = resp.result.districts;
-						var unlimitedDistrict = {
-							id: -100,
-							name: "不限"
-						};
-						$scope.changeDistrictName.unshift(unlimitedDistrict);
-					} else {
-						console.log(resp.errmsg);
-					}
-				})
-				.error(function() {});
 		}
 
 		$scope.checkOtaLineStatus = function(hotel) {
@@ -220,15 +193,15 @@
 			if (m == "0") {
 				return "无";
 			} else if (m == "1") {
-				return "一星级";
+				return "一星";
 			} else if (m == "2") {
-				return "二星级";
+				return "二星";
 			} else if (m == "3") {
-				return "三星级";
+				return "三星";
 			} else if (m == "4") {
-				return "四星级";
+				return "四星";
 			} else if (m == "5") {
-				return "五星级";
+				return "五星";
 			}
 		}
 
@@ -257,13 +230,12 @@
 
 		$scope.urlCheck = function urlCheck() {
 			$scope.searchCity = $("#searchCity").val();
-			var url = "/api/admin/ota/" + ota_id + "/hotels/?1=1";
+			var url = "/api/admin/ota/" + ota_id + "/hotels/?";
 			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 				url = url + "&hotel_name=" + $scope.searchName;
 			}
 			if ($.trim($scope.searchMerchant) != "" && $scope.searchMerchant != undefined) {
-				console.log($scope.searchMerchant);
-				url = url + "&merchant_id=" + $scope.searchMerchant;
+				url = url + "merchant_id=" + $scope.searchMerchant;
 			}
 			if ($scope.checkedItem[0] == false) {
 				if ($scope.checkedItem[1] == true) {
@@ -283,10 +255,6 @@
 			}
 			if ($.trim($scope.searchStar) != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 				url = url + "&star=" + $scope.searchStar;
-			}
-			if ($.trim($scope.searchDistrict) != "" && $scope.searchDistrict != undefined && $.trim($scope.searchDistrict) != -100) {
-				url = url + "&district_id=" + $scope.searchDistrict;
-
 			}
 			$scope.finalUrl = encodeURI(url);
 			console.log($scope.finalUrl);
@@ -309,15 +277,14 @@
 			getAllMerchant();
 		}
 		init();
-		$scope.singleHotelOnline=function(hotel_id,is_online){
-			var url="/api/admin/ota/"+ota_id+"/hotel/"+hotel_id+"/online/"+is_online;
+		$scope.singleHotelOnline = function(hotel_id, is_online) {
+			var url = "/api/admin/ota/" + ota_id + "/hotel/" + hotel_id + "/online/" + is_online;
 			console.log(url);
-
 			$http.put(url, {})
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
-						
+						$rootScope.searchResult();
 					} else {}
 				})
 				.error(function() {});
@@ -342,9 +309,6 @@
 			}
 			return false;
 		}
-		$scope.redictToContractPage = function(hotelId) {
-			window.location.href = ("/admin/merchant/" + merchant_id + "/hotel/" + hotelId + "/contract/");
-		}
 	}])
 
 	adminHotelsApp.controller('onLineStatus', function($scope, $http, $rootScope, $modalInstance, otas, hotelId) {
@@ -353,11 +317,9 @@
 		$scope.allOtaStatus = {
 			status: false
 		};
-
 		$scope.allOtaSelect = function() {
 			var currentStatus = $scope.allOtaStatus.status;
 			if (currentStatus == false) {
-
 				for (var i = 0; i < $scope.currentOtas.length; i++) {
 					$scope.currentOtas[i]['checked'] = true;
 				};
@@ -365,14 +327,8 @@
 				for (var i = 0; i < $scope.currentOtas.length; i++) {
 					$scope.currentOtas[i]['checked'] = false;
 				};
-
 			}
-
 		}
-
-		console.log($scope.currentOtas);
-
-
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		};
@@ -404,9 +360,5 @@
 				})
 				.error(function() {});
 		}
-
 	});
-
-
-
 })()

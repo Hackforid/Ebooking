@@ -52,7 +52,7 @@
                 <tr ng-repeat="hotel in hotels">
                     <td ng-bind="hotel.name"></td>
                     <td>{{hotel.city}}</td>
-                    <td ng-bind="hotel.star">1</td>
+                    <td ng-bind="getHotelStar(hotel.star)"></td>
                     <td ng-init="isShow=checkOtaLineStatus(hotel)">{{isShow}}
                         <button ng-if="isShow" class="btn btn-default" type="button" ng-click="singleHotelOnline(hotel.id,0)">下线
                         </button>
