@@ -8,6 +8,7 @@ from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
 from models.rate_plan import RatePlanModel
 from models.room_rate import RoomRateModel
+from models.ota_channel import OtaChannelModel
 
 from utils.stock_push import Pusher
 from tools.json import json_encode
@@ -17,6 +18,7 @@ from exception.json_exception import JsonException
 from tools.log import Log
 from config import SPEC_STOCK_PUSH, API, IS_PUSH_TO_STOCK
 from constants import CHAIN_ID
+
 
 class RatePlanPusher(Pusher):
 
@@ -28,7 +30,6 @@ class RatePlanPusher(Pusher):
         if not rateplan or not roomrate:
             raise gen.Return()
 
-        yield self.post_rateplan(rateplan)
         if not (yield self.post_rateplan(rateplan)):
             raise JsonException(1000, 'push rateplan fail')
 
@@ -44,7 +45,7 @@ class RatePlanPusher(Pusher):
         track_id = self.generate_track_id(rateplan_data['rate_plan_id'])
         data = {'list': [rateplan_data]}
         params = {'track_id': track_id,
-                'data': json.dumps(data)
+                'data': json_encode(data)
                 }
         Log.info('push rateplan {} : {}'.format(rateplan.id, params))
 
@@ -79,12 +80,18 @@ class RatePlanPusher(Pusher):
         data['end_date'] = rateplan.end_date
         return data
 
+    def get_pay_type(self, rateplan):
+        return 1 if rateplan.pay_type == 1 else 2
+
+    def get_rate_type(self, rateplan):
+        # 到付卖价0 预付底价 1
+        return rateplan.pay_type
 
     @gen.coroutine
     def post_cancel_rule(self, rateplan):
         rateplan_data = self.generate_cancel_rule_data(rateplan)
         track_id = self.generate_track_id(rateplan.id)
-        data = {'track_id': track_id, 'data': json.dumps({'list': [rateplan_data]})}
+        data = {'track_id': track_id, 'data': json_encode({'list': [rateplan_data]})}
         Log.info("<<push cancel rule rateplan {}>> data:{}".format(rateplan.id, data))
         if not IS_PUSH_TO_STOCK:
             raise gen.Return(True)
@@ -144,9 +151,9 @@ class RoomRatePusher(Pusher):
 
     @gen.coroutine
     def post_roomrate(self, merchant_id, roomrate):
-        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
+        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
         Log.info("<<push roomrate {}>>: {}".format(roomrate.id, data))
 
         if not IS_PUSH_TO_STOCK:
@@ -177,8 +184,8 @@ class RoomRatePusher(Pusher):
         data['instant_confirm'] = '|'.join([str(0) for i in xrange(90)])
         meal_num = roomrate.get_meal()
         data['meals'] = '|'.join([str(meal_num) for i in xrange(90)])
-        data['start_date'] = datetime.date.today() 
-        data['end_date'] = data['start_date'] + datetime.timedelta(days=89) 
+        data['start_date'] = datetime.date.today()
+        data['end_date'] = data['start_date'] + datetime.timedelta(days=89)
 
         day = datetime.date.today()
         days = [day + datetime.timedelta(days=i) for i in xrange(90)]
@@ -186,3 +193,16 @@ class RoomRatePusher(Pusher):
 
         return data
 
+    def generate_roomrate_datas(self, merchant_id, roomrate):
+        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
+        ota_ids = ota_channel.get_ota_ids() if ota_channel else [0]
+
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+
+        datas = []
+        for ota_id in ota_ids:
+            data = roomrate_data.copy()
+            data['ota_id'] = ota_id
+            datas.append(data)
+
+        return datas

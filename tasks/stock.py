@@ -282,9 +282,9 @@ class PushRatePlanTask(SqlAlchemyTask):
     def post_roomrate(self, merchant_id, roomrate):
         if not IS_PUSH_TO_STOCK:
             return
-        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
+        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
         self.log.info(data)
 
         url = API['STOCK'] + '/stock/update_room_rate?is_async=false'
@@ -325,6 +325,7 @@ class PushRatePlanTask(SqlAlchemyTask):
         return data
 
     def get_rate_type(self, rateplan):
+        # 到付卖价0 预付底价 1
         return rateplan.pay_type
 
     def get_pay_type(self, rateplan):
@@ -376,6 +377,21 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['prices'] = '|'.join([str(roomrate.get_price_by_date(d.month, d.day)) for d in days])
 
         return data
+
+    def generate_roomrate_datas(self, merchant_id, roomrate):
+        from models.ota_channel import OtaChannelModel
+        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
+        ota_ids = ota_channel.get_ota_ids() if ota_channel else [0]
+
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+
+        datas = []
+        for ota_id in ota_ids:
+            data = roomrate_data.copy()
+            data['ota_id'] = ota_id
+            datas.append(data)
+
+        return datas
 
     @app.task(filter=task_method, queue=QUEUE_STOCK_PUSH)
     def update_rateplans_valid_status(self, rateplan_ids):

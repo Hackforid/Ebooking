@@ -135,4 +135,10 @@ handlers = [
         (r"/locktest/?", "views.api.test.LockTestHandler"),
 
         (r"/api/weixin/qrcode/?", "views.api.weixin.QRCodeAPIHandler"),
+
+        (r"/admin/ota/?", "views.admin.OtaManageHandler"),
+        (r"/admin/ota/(?P<ota_id>\d+)/hotels/?", "views.admin.HotelOtaManageHandler"),
+        (r"/api/admin/ota/all?", "views.api.admin.ota.OtaListAPIHandler"),
+        (r"/api/admin/ota/(?P<ota_id>\d+)/hotels/?", "views.api.admin.ota.OtaHotelsAPIHandler"),
 ]
+
