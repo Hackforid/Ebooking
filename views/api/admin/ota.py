@@ -29,6 +29,21 @@ class OtaListAPIHandler(BackStageHandler):
         self.finish(r.body)
 
 
+class OtaHotelModifyAPIHandler(BackStageHandler):
+
+    @gen.coroutine
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, hotel_id):
+        args = self.get_json_arguments()
+        ota_ids = get_and_valid_arguments(args, 'ota_ids')
+
+    def post_ota(self, ota_ids):
+        url =  API['STOCK']
+
+
+
+
 class OtaHotelsAPIHandler(BackStageHandler):
 
     @gen.coroutine
@@ -45,29 +60,38 @@ class OtaHotelsAPIHandler(BackStageHandler):
 
         hotels, total = yield self.get_cooped_hotels(merchant_id, hotel_name, city_id, district_id, star, is_online=1)
 
-        hotels = self.filter_by_ota_id(ota_id, hotels)
+        self.merge_ota(hotels)
+        hotels = self.filter_by_ota_id(ota_id, hotels, status)
 
         self.finish_json(result=dict(
             hotels = hotels,
             ))
 
-    def filter_by_ota_id(self, ota_id, hotels):
+    def merge_ota(self, hotels):
         hotel_ids = [hotel['id'] for hotel in hotels]
         ota_channels = OtaChannelModel.get_by_hotel_ids(self.db, hotel_ids)
 
-        r = []
         for hotel in hotels:
+            print hotel
             for ota_channel in ota_channels:
                 if hotel['id'] == ota_channel.hotel_id:
-                    ota_ids = ota_channel.get_ota_ids()
-                    if ota_id in ota_ids:
-                        r.append(hotel)
-                        break
-                    else:
-                        break
+                    hotel['ota_ids'] = ota_channel.get_ota_ids()
             else:
-                r.append(hotel)
+                hotel['ota_ids'] = [0]
 
+
+    def filter_by_ota_id(self, ota_id, hotels, status):
+        if status == 0:
+            return hotels
+
+        r = []
+        for hotel in hotels:
+            if ota_id in hotel['ota'] or 0 in hotel['ota']:
+                if status == 1:
+                    r.append(hotel)
+            else:
+                if status == 2:
+                    r.append(hotel)
         return r
 
     @gen.coroutine
@@ -116,3 +140,5 @@ class OtaHotelsAPIHandler(BackStageHandler):
                     base['id'] = cooped.id
                     base['is_online'] = cooped.is_online
                     break
+
+
