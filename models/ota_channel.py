@@ -24,6 +24,12 @@ class OtaChannelModel(Base):
                 .filter(OtaChannelModel.hotel_id == hotel_id)
         return query.first()
 
+    @classmethod
+    def get_by_hotel_ids(cls, session, hotel_ids):
+        query = session.query(OtaChannelModel)\
+                .filter(OtaChannelModel.hotel_id.in_(hotel_ids))
+        return query.all()
+
     def get_ota_ids(self):
         ota_ids = self.ota_ids.split(',')
         return [int(id) for id in ota_ids]

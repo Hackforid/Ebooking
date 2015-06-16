@@ -30,3 +30,15 @@ class MerchantContractHandler(BackStageHandler):
     @auth_backstage_login()
     def get(self, merchant_id):
         self.render("merchantContract.html", merchant_id=merchant_id)
+
+class OtaManageHandler(BackStageHandler):
+
+    @auth_backstage_login()
+    def get(self):
+        self.render('otaManage.html')
+
+class HotelOtaManageHandler(BackStageHandler):
+
+    @auth_backstage_login()
+    def get(self, ota_id):
+        self.render('hotelOtaManage.html', ota_id=ota_id)
