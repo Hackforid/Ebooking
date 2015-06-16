@@ -30,6 +30,22 @@ class OtaChannelModel(Base):
                 .filter(OtaChannelModel.hotel_id.in_(hotel_ids))
         return query.all()
 
+    @classmethod
+    def set_ota_ids(cls, session, hotel_id, ota_ids, commit=True):
+        ids = ','.join([str(id) for id in ota_ids])
+        ota_channel = cls.get_by_hotel_id(session, hotel_id)
+        if not ota_channel:
+            ota_channel = OtaChannelModel(hotel_id=hotel_id, ota_ids=ids)
+            session.add(ota_channel)
+        else:
+            ota_channel.ota_ids = ids
+
+        if commit:
+            session.commit()
+        return ota_channel
+
+
+
     def get_ota_ids(self):
         ota_ids = self.ota_ids.split(',')
         return [int(id) for id in ota_ids]

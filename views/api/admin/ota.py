@@ -15,6 +15,8 @@ from views.base import BackStageHandler
 from models.cooperate_hotel import CooperateHotelModel
 from models.ota_channel import OtaChannelModel
 
+from utils.ota import (get_all_ota, change_ota)
+
 from config import API
 
 
@@ -36,13 +38,21 @@ class OtaHotelModifyAPIHandler(BackStageHandler):
     @need_backstage_admin(json=True)
     def put(self, hotel_id):
         args = self.get_json_arguments()
-        ota_ids = get_and_valid_arguments(args, 'ota_ids')
+        ota_ids, = get_and_valid_arguments(args, 'ota_ids')
 
-    def post_ota(self, ota_ids):
-        url =  API['STOCK']
+        if len(ota_ids) > 1 and 0 in ota_ids:
+            raise JsonException(1001, 'wrong ota ids')
 
-
-
+        ota_channel = OtaChannelModel.set_ota_ids(self.db, hotel_id, ota_ids, commit=False)
+        r = yield change_ota(hotel_id, ota_ids)
+        if not r:
+            self.db.rollback()
+            raise JsonException(1000, 'fail')
+        else:
+            self.db.commit()
+            self.finish_json(result=dict(
+                ota_channel=ota_channel.todict(),
+                ))
 
 class OtaHotelsAPIHandler(BackStageHandler):
 
@@ -76,6 +86,7 @@ class OtaHotelsAPIHandler(BackStageHandler):
             for ota_channel in ota_channels:
                 if hotel['id'] == ota_channel.hotel_id:
                     hotel['ota_ids'] = ota_channel.get_ota_ids()
+                    break
             else:
                 hotel['ota_ids'] = [0]
 
