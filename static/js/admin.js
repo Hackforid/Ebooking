@@ -6,7 +6,7 @@ adminApp.controller('merchantCtrl', ['$scope', '$http', '$modal', function($scop
 	$scope.merchants = [];
 
 
-	function loadMerchants() {
+	function loadMerchants() { 
 		var url = "/api/admin/merchant/all";
 		$http.get(url)
 			.success(function(resp) {
