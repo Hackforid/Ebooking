@@ -62,7 +62,7 @@
                         </button>
                     </td>
                     <td>
-                        <button ng-if="hotel.is_online==1" class="btn btn-default" type="button" ng-click="modifyStatus()">其他渠道</button>
+                        <button ng-if="hotel.is_online==1" class="btn btn-default" type="button" ng-click="modifyStatus(hotel)">其他渠道</button>
                     </td>
                 </tr>
             </table>
@@ -71,10 +71,14 @@
             <div class="modal-body">
                 <p>{{priceErrMessage}}</p>
             </div>
+            <div class="container">
+                <div class="col-lg-6" ng-repeat="ota in currentOtas">
+                    <input type="checkbox" ng-model="ota.checked" ng-checked="ota.checked">{{ota.description}}
+                </div>
+            </div>
             <div class="modal-footer">
-                <button id="addbutton" class="btn btn-primary" ng-click="checkSpecial()">增加</button>
-                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancelModify()">取消</button>
-                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">关闭</button>
+                <button id="addbutton" class="btn btn-primary" ng-click="onLineManage()">上线</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
             </div>
         </script>
         <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
