@@ -21,10 +21,10 @@ def generate_track_id(data):
 @gen.coroutine
 def get_all_ota():
     url = '{}/hotelReader2/ota/getList'.format(API['OTA'])
-    r = yield AsyncHTTPClient().fetch(url)
     try:
+        r = yield AsyncHTTPClient().fetch(url)
         resp = json_decode(r.body)
-    except:
+    except Exception, e:
         raise gen.Return([])
     if resp['errcode'] == 0:
         raise gen.Return(resp['result'])

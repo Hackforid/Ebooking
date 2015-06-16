@@ -54,6 +54,60 @@ class OtaHotelModifyAPIHandler(BackStageHandler):
                 ota_channel=ota_channel.todict(),
                 ))
 
+class OtaHotelOnlineAPIHandler(BackStageHandler):
+
+    @gen.coroutine
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    def put(self, ota_id, hotel_id, is_online):
+        ota_id = int(ota_id)
+        is_online = int(is_online)
+
+        ota_ids = yield self.get_otas()
+        new_ota_ids = [0]
+        if not ota_ids:
+            raise JsonException(1000, 'get ota fail')
+
+        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, hotel_id)
+        if not ota_channel:
+            if is_online == 0:
+                new_ota_ids = [id for id in ota_ids if id != ota_id]
+            else:
+                new_ota_ids = [0]
+        else:
+            if is_online == 0:
+                if ota_id in ota_channel.get_ota_ids():
+                    new_ota_ids = [id for id in ota_channel.get_ota_ids() if id != ota_id]
+                else:
+                    new_ota_ids = ota_channel.get_ota_ids()
+            else:
+                if ota_id not in ota_channel.get_ota_ids():
+                    new_ota_ids = ota_channel.get_ota_ids().append(ota_id)
+                else:
+                    new_ota_ids = ota_channel.get_ota_ids()
+
+        ota_channel = OtaChannelModel.set_ota_ids(self.db, hotel_id, new_ota_ids, commit=False)
+
+        r = yield change_ota(hotel_id, ota_ids)
+        if not r:
+            self.db.rollback()
+            raise JsonException(1000, 'fail')
+        else:
+            self.db.commit()
+            self.finish_json(result=dict(
+                ota_channel=ota_channel.todict(),
+                ))
+
+
+    @gen.coroutine
+    def get_otas(self):
+        otas = yield get_all_ota()
+        ota_ids = [ota['id'] for ota in otas]
+        raise gen.Return(ota_ids)
+
+
+
+
 class OtaHotelsAPIHandler(BackStageHandler):
 
     @gen.coroutine
