@@ -2,6 +2,7 @@
 
 import time
 import urllib
+import json
 
 from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
@@ -33,7 +34,7 @@ def get_all_ota():
 @gen.coroutine
 def change_ota(hotel_id, ota_ids):
     Log.info("change ota>>hotel {}>>ota {}".format(hotel_id, ota_ids))
-    url =  API['STOCK'] + '/switch_ota'
+    url =  API['STOCK'] + '/stock/switch_ota'
     track_id = generate_track_id(hotel_id)
     ota_ids_str = '|'.join([str(id) for id in ota_ids])
     data = {
@@ -51,7 +52,7 @@ def change_ota(hotel_id, ota_ids):
     try:
         r = yield AsyncHTTPClient().fetch(url, method='POST', body=body)
         Log.info("change ota>>hotel {}>>ota {}:resp {}".format(hotel_id, ota_ids, r.body))
-        resp = json_decode(body)
+        resp = json.loads(r.body)
     except Exception, e:
         Log.exception(e)
         raise gen.Return(False)

@@ -40,6 +40,9 @@ class OtaHotelModifyAPIHandler(BackStageHandler):
         args = self.get_json_arguments()
         ota_ids, = get_and_valid_arguments(args, 'ota_ids')
 
+        if len(ota_ids) > 1 and 0 in ota_ids:
+            raise JsonException(1001, 'wrong ota ids')
+
         ota_channel = OtaChannelModel.set_ota_ids(self.db, hotel_id, ota_ids, commit=False)
         r = yield change_ota(hotel_id, ota_ids)
         if not r:
