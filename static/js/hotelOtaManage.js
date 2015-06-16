@@ -12,7 +12,7 @@
 			});
 		};
 	});
-	adminHotelsApp.controller('adminHotelsCtrl', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+	adminHotelsApp.controller('adminHotelsCtrl', ['$scope', '$http', '$rootScope', '$modal', function($scope, $http, $rootScope, $modal) {
 
 		$scope.citys = [];
 		$scope.hotels = [];
@@ -69,15 +69,19 @@
 
 		$scope.modifyStatus = function(hotel) {
 			console.log(hotel);
-			var currentOtaIds = [];
+			var currentOtaIds = angular.copy($scope.otas);
 			var currentHotelOtaIds = hotel.ota_ids;
+
+
 			if ((currentHotelOtaIds.length == 1) && (currentHotelOtaIds[0] == 0)) {
-				currentOtaIds = angular.copy($scope.otas);
+				for (var i = 0; i < currentOtaIds.length; i++) {
+					currentOtaIds[i]['checked'] = true;
+				};
 			} else {
 				for (var i = 0; i < currentHotelOtaIds.length; i++) {
-					for (var j = 0; j < $scope.otas.length; j++) {
-						if ($scope.otas[j].id == currentHotelOtaIds[i]) {
-							currentOtaIds.push($scope.otas[j]);
+					for (var j = 0; j < currentOtaIds.length; j++) {
+						if (currentOtaIds[j].id == currentHotelOtaIds[i]) {
+							currentOtaIds[j]['checked'] = true;
 						}
 					};
 				};
@@ -117,7 +121,7 @@
 			if (newValue == oldValue) {
 				return;
 			}
-			$scope.searchResult();
+			$rootScope.searchResult();
 		});
 		$scope.$watch('citysName.selected', function(newValue, oldValue) {
 			if (newValue == oldValue) {
@@ -170,6 +174,20 @@
 				.error(function() {});
 		}
 
+		$scope.checkOtaLineStatus = function(hotel) {
+			var currentOtaIds = hotel.ota_ids;
+			if ((currentOtaIds.length == 1) && (currentOtaIds[0] == 0)) {
+				return 1;
+			} else {
+				for (var i = 0; i < currentOtaIds.length; i++) {
+					if (ota_id == currentOtaIds[i]) {
+						return 1;
+					}
+				};
+				return 0;
+			}
+		}
+
 		function getAllMerchant() {
 			var url = "/api/admin/merchant/all";
 			$http.get(url)
@@ -182,7 +200,7 @@
 							$scope.searchMerchant = $scope.allMerchants[0].id;
 						}
 						$scope.urlCheck();
-						$scope.searchResult();
+						$rootScope.searchResult();
 					} else {
 						console.log(resp.errmsg);
 					}
@@ -234,12 +252,12 @@
 			$("#searchCity").val("");
 			$scope.searchStar = "";
 			$scope.finalUrl = "/api/admin/ota/" + ota_id + "/hotels/";
-			$scope.searchResult();
+			$rootScope.searchResult();
 		}
 
 		$scope.urlCheck = function urlCheck() {
 			$scope.searchCity = $("#searchCity").val();
-			var url = "/api/admin/ota/" + ota_id + "/hotels/?ota_id=" + ota_id;
+			var url = "/api/admin/ota/" + ota_id + "/hotels/?1=1";
 			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 				url = url + "&hotel_name=" + $scope.searchName;
 			}
@@ -249,9 +267,9 @@
 			}
 			if ($scope.checkedItem[0] == false) {
 				if ($scope.checkedItem[1] == true) {
-					url = url + "&is_online=1";
+					url = url + "&status=1";
 				} else if ($scope.checkedItem[2] == true) {
-					url = url + "&is_online=0";
+					url = url + "&status=0";
 				}
 			}
 			if ($.trim($scope.searchCity) != "" && $scope.searchCity != undefined) {
@@ -274,24 +292,15 @@
 			console.log($scope.finalUrl);
 		}
 
-		$scope.searchResult = function searchResult() {
+		$rootScope.searchResult = function searchResult() {
 			$http.get($scope.finalUrl)
 				.success(function(resp) {
 					if (resp.errcode == 0) {
 						console.log(resp);
 						$scope.hotels = resp.result.hotels;
-					} else {
-						console.log("酒店列表读取失败");
-					}
+					} else {}
 				})
-				.error(function() {
-					console.log("酒店列表读取失败");
-				});
-		}
-
-		$scope.getStatus = function(status) {
-			var textStatus = (status == 1 ? "上线" : "下线");
-			return textStatus;
+				.error(function() {});
 		}
 
 		function init() {
@@ -300,6 +309,20 @@
 			getAllMerchant();
 		}
 		init();
+		$scope.singleHotelOnline=function(hotel_id,is_online){
+			var url="/api/admin/ota/"+ota_id+"/hotel/"+hotel_id+"/online/"+is_online;
+			console.log(url);
+
+			$http.put(url, {})
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						
+					} else {}
+				})
+				.error(function() {});
+		}
+
 		$scope.getCityName = function(cityId) {
 			for (var i = 0; i < $scope.citys.length; i++) {
 				var city = $scope.citys[i];
@@ -324,17 +347,31 @@
 		}
 	}])
 
-	adminHotelsApp.controller('onLineStatus', function($scope, $http, $modalInstance, otas, hotelId) {
+	adminHotelsApp.controller('onLineStatus', function($scope, $http, $rootScope, $modalInstance, otas, hotelId) {
 
 		$scope.currentOtas = angular.copy(otas);
+		$scope.allOtaStatus = {
+			status: false
+		};
 
-		function init() {
-			for (var i = 0; i < $scope.currentOtas.length; i++) {
-				$scope.currentOtas[i]["checked"] = true;
-			};
-			console.log($scope.currentOtas);
+		$scope.allOtaSelect = function() {
+			var currentStatus = $scope.allOtaStatus.status;
+			if (currentStatus == false) {
+
+				for (var i = 0; i < $scope.currentOtas.length; i++) {
+					$scope.currentOtas[i]['checked'] = true;
+				};
+			} else if (currentStatus == true) {
+				for (var i = 0; i < $scope.currentOtas.length; i++) {
+					$scope.currentOtas[i]['checked'] = false;
+				};
+
+			}
+
 		}
-		init();
+
+		console.log($scope.currentOtas);
+
 
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
@@ -355,11 +392,14 @@
 			var params = {
 				"ota_ids": selectedOtas
 			};
-			$http.post(url, params)
+			console.log(url);
+			console.log(params);
+			$http.put(url, params)
 				.success(function(resp) {
 					console.log(resp);
 					if (resp.errcode == 0) {
-
+						$modalInstance.dismiss('cancel');
+						$rootScope.searchResult();
 					} else {}
 				})
 				.error(function() {});
