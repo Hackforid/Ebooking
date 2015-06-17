@@ -53,6 +53,9 @@ adminApp.controller('merchantCtrl', ['$scope', '$http', '$modal', function($scop
 	$scope.merchantContractManage = function(merchantId){
 		window.location.href = ("/admin/merchant/" + merchantId + "/contract/");
 	}
+	$scope.reactOta=function(){
+		window.location.href = ("/admin/ota");
+	}
 
 	$scope.getMerchantTypeName = function(type) {
 		switch(type) {

@@ -122,7 +122,7 @@
 			modalInstance.result.then(function() {}, function() {});
 		}
 
-		$scope.confirmStatus = function(hotelId, status) {
+		$scope.confirmStatus = function(hotelId, status, onlineOta) {
 			var modalInstance = $modal.open({
 				templateUrl: 'confirmLineManage.html',
 				controller: 'confirmLineManage',
@@ -139,6 +139,9 @@
 					},
 					currentOtaName: function() {
 						return $scope.currentOtaName;
+					},
+					onlineOta: function() {
+						return onlineOta;
 					}
 				}
 			});
@@ -405,14 +408,19 @@
 		}
 	});
 
-	adminHotelsApp.controller('confirmLineManage', function($scope, $http, $rootScope, $modalInstance, status, hotelId, otaId, currentOtaName) {
+	adminHotelsApp.controller('confirmLineManage', function($scope, $http, $rootScope, $modalInstance, status, hotelId, otaId, currentOtaName, onlineOta) {
 		$scope.currentName = currentOtaName;
 		$scope.currentStatus = status;
+		$scope.errorMessage = "";
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		};
 		$scope.singleHotelOnline = function() {
 			var finalStatus = ($scope.currentStatus == 0) ? 1 : 0;
+			if ((onlineOta.length == 1) && (onlineOta[0] != 0) && (finalStatus == 0)) {
+				$scope.errorMessage = "该酒店仅在当前渠道上线,所有渠道下线请移步至poi管理后台";
+				return;
+			}
 			var url = "/api/admin/ota/" + otaId + "/hotel/" + hotelId + "/online/" + finalStatus;
 			console.log(url);
 			$http.put(url, {})

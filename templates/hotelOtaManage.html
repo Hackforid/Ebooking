@@ -67,9 +67,9 @@
                     <td ng-bind="getCityName(hotel.city_id)"></td>
                     <td ng-bind="getHotelStar(hotel.star)"></td>
                     <td ng-init="isShow=checkOtaLineStatus(hotel)" ng-clock>
-                        <button ng-if="!isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,0)">下线
+                        <button ng-if="!isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,0,hotel.ota_ids)">下线
                         </button>
-                        <button ng-if="isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,1)">上线
+                        <button ng-if="isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,1,hotel.ota_ids)">上线
                         </button>
                     </td>
                     <td>
@@ -100,6 +100,7 @@
 
         <script type="text/ng-template" id="confirmLineManage.html">
             <div class="modal-body">
+                <p style="text-align: center;color:red">{{errorMessage}}</p>
                 <p style="text-align: center;">是否确认在
                     <span style="font-weight: bold;">{{currentName}}</span>
                     <span style="font-weight: bold;" ng-if="!currentStatus">上线</span>
