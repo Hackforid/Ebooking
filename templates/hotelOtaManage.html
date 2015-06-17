@@ -41,7 +41,7 @@
                     <button class="btn btn-default" type="button" ng-click="conditionReset()">重置</button>
                 </span>
             </div>
-            <table class="table">
+            <table class="table" ng-clock>
                 <tr>
                     <th>酒店名称</th>
                     <th>城市</th>
@@ -49,11 +49,11 @@
                     <th ng-bind="currentOtaName"></th>
                     <th>操作</th>
                 </tr>
-                <tr ng-repeat="hotel in hotels">
+                <tr ng-repeat="hotel in hotels" ng-clock>
                     <td ng-bind="hotel.name"></td>
-                    <td>{{hotel.city}}</td>
+                    <td ng-bind="getCityName(hotel.city_id)"></td>
                     <td ng-bind="getHotelStar(hotel.star)"></td>
-                    <td ng-init="isShow=checkOtaLineStatus(hotel)">{{isShow}}
+                    <td ng-init="isShow=checkOtaLineStatus(hotel)" ng-clock>
                         <button ng-if="isShow" class="btn btn-default" type="button" ng-click="singleHotelOnline(hotel.id,0)">下线
                         </button>
                         <button ng-if="!isShow" class="btn btn-default" type="button" ng-click="singleHotelOnline(hotel.id,1)">上线
@@ -67,7 +67,7 @@
         </div>
         <script type="text/ng-template" id="onlinestatus.html">
             <div class="modal-body">
-                <p>{{priceErrMessage}}</p>
+                <p style="text-align: center;color:red;">{{otaErrMessage}}</p>
             </div>
             <div class="container">
                 <div class="col-lg-6">

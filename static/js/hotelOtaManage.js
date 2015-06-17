@@ -94,9 +94,9 @@
 				}
 			});
 			modalInstance.result.then(function() {
-				console.log('close');
+				
 			}, function() {
-				console.log('dismiss');
+			
 			});
 		}
 
@@ -168,7 +168,6 @@
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.allMerchants = resp.result.merchants;
-						console.log($scope.allMerchants);
 						if ($scope.allMerchants.length > 0) {
 							$scope.searchMerchant = $scope.allMerchants[0].id;
 						}
@@ -179,14 +178,6 @@
 					}
 				})
 				.error(function() {});
-		}
-
-		$scope.getStatus = function(s) {
-			if (s == "1") {
-				return "正常";
-			} else if (s == "0") {
-				return "暂停";
-			}
 		}
 
 		$scope.getHotelStar = function(m) {
@@ -219,30 +210,32 @@
 				.error(function() {});
 		}
 		$scope.conditionReset = function conditionReset() {
-			$scope.searchDistrict = "";
-			$scope.changeDistrictName = {};
+			$scope.checkedItem = [false, false, false];
 			$scope.searchName = "";
 			$("#searchCity").val("");
-			$scope.searchStar = "";
-			$scope.finalUrl = "/api/admin/ota/" + ota_id + "/hotels/";
-			$rootScope.searchResult();
+			$scope.searchStar = 0;
+			$scope.urlCheck();
 		}
 
 		$scope.urlCheck = function urlCheck() {
 			$scope.searchCity = $("#searchCity").val();
 			var url = "/api/admin/ota/" + ota_id + "/hotels/?";
-			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
-				url = url + "&hotel_name=" + $scope.searchName;
-			}
-			if ($.trim($scope.searchMerchant) != "" && $scope.searchMerchant != undefined) {
-				url = url + "merchant_id=" + $scope.searchMerchant;
-			}
 			if ($scope.checkedItem[0] == false) {
 				if ($scope.checkedItem[1] == true) {
-					url = url + "&status=1";
+					url = url + "status=1";
 				} else if ($scope.checkedItem[2] == true) {
-					url = url + "&status=0";
+					url = url + "status=2";
+				} else {
+					url = url + "status=0";
 				}
+			} else {
+				url = url + "status=0";
+			}
+			if ($.trim($scope.searchMerchant) != "" && $scope.searchMerchant != undefined) {
+				url = url + "&merchant_id=" + $scope.searchMerchant;
+			}
+			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
+				url = url + "&hotel_name=" + $scope.searchName;
 			}
 			if ($.trim($scope.searchCity) != "" && $scope.searchCity != undefined) {
 				var cityId = getCityId($scope.searchCity);
@@ -317,6 +310,7 @@
 		$scope.allOtaStatus = {
 			status: false
 		};
+		$scope.otaErrMessage;
 		$scope.allOtaSelect = function() {
 			var currentStatus = $scope.allOtaStatus.status;
 			if (currentStatus == false) {
@@ -344,7 +338,10 @@
 			if (selectedOtas.length == $scope.currentOtas.length) {
 				selectedOtas = [0];
 			}
-			console.log(selectedOtas);
+			if (selectedOtas.length == 0) {
+				$scope.otaErrMessage = "所有渠道下线请移步至poi管理后台";
+				return;
+			}
 			var params = {
 				"ota_ids": selectedOtas
 			};
