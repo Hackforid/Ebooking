@@ -155,7 +155,7 @@ class OtaHotelsAPIHandler(BackStageHandler):
 
         r = []
         for hotel in hotels:
-            if ota_id in hotel['ota'] or 0 in hotel['ota']:
+            if ota_id in hotel['ota_ids'] or 0 in hotel['ota_ids']:
                 if status == 1:
                     r.append(hotel)
             else:

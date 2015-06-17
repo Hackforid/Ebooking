@@ -10,6 +10,7 @@
 		$scope.weekShow = false;
 		$scope.weekSelectShow = true;
 		$scope.currentSelectItem = [];
+		$scope.merchantName;
 		
 		$scope.hotelInfo = {
 			"merchant_id": merchantID,
@@ -41,6 +42,7 @@
 						console.log(resp);
 						
 						var contractHotel = resp.result.contract_merchant;
+						$scope.merchantName = resp.result.merchant.name;
 						if (isEmptyObject(contractHotel)) {
 							console.log("zeng");
 							$scope.payTypeContract = false;
@@ -152,6 +154,7 @@
 							$scope.currentSaveFlag = 0;
 							$scope.errMessage = "保存成功";
 							$timeout(function(){$scope.errMessage = "";},2000);
+							window.location.href = ("/admin?anchor=" + merchantID);
 						}
 					})
 					.error(function() {
@@ -166,6 +169,7 @@
 						if (resp.errcode == 0) {
 							$scope.errMessage = "保存成功";
 							$timeout(function(){$scope.errMessage = "";},2000);
+							window.location.href = ("/admin?anchor=" + merchantID);
 						}
 					}).error(function() {
 						console.log('network error');

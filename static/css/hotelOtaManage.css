@@ -1,0 +1,97 @@
+ [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+ng\:form {
+  display: block;
+}
+body,html {
+  height: 100%;
+  width: 100%;
+}
+
+table.table th {
+  text-align: center;
+}
+table.table td {
+  text-align: center;
+}
+
+.wrapper {
+  padding-left: 90px;
+  padding-right: 90px;
+  width: 100%;
+  margin-top:43px;
+}
+/* .changeinput{
+  display:inline;
+  width:130px;
+  height:25px;
+}
+.changeselect{
+  display:inline;
+  width:125px;
+  height:25px;
+  position:relative;
+  top:3px;
+} */
+.searchbutton button{
+   min-width: 64px;
+}
+.changecheckbox{
+  margin-left:7px!important;
+  margin-top:12px!important;
+}
+.wrapper .search {
+  margin: 20px;
+  border: 1px solid #E8ECF0;
+  border-radius: 4px;
+  height: 70px;
+  height:auto;
+  width:100%;
+  margin-left:0px;
+  margin-right:0px;
+  background:white;
+  position:relative;
+  padding-top:20px;
+  padding-bottom: 20px;
+  min-width: 1153px;
+}
+.wrapper .search input{}
+.wrapper label {
+  padding-left: 63px;
+  height: 30px;
+}
+.input-s {
+  width: 100px;
+  height: 26px;
+  line-height: 22px;
+  text-indent: 2px;
+}
+.wrapper .search .searchbutton input {
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 30px }
+ .searchbutton {
+  position:absolute;
+bottom: 5px;
+  right:5px;}
+.wrapper .allhotel {
+  width: 100%;
+  overflow: hidden;
+  height: auto;
+  padding-left: 30px;
+}
+.wrapper .allhotel table tr {
+  text-align: center;
+  height: 40px;
+}
+.wrapper .allhotel table th {
+  background: #5594D2;
+  text-align: center;
+  color: white;
+}
+input[type="button"].btn-bai {
+  border: 1px solid #ccc;
+  color: #333;
+  background: #FFF url(../image/btn-bg.png) repeat-x 0 -56px;
+}
