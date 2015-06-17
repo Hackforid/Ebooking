@@ -1,5 +1,5 @@
 (function() {
-	var adminHotelsApp = angular.module('adminHotelsApp', ['ui.bootstrap']);
+	var adminHotelsApp = angular.module('adminHotelsApp', ['ui.bootstrap', 'ngSanitize', 'ui.select']);
 	adminHotelsApp.directive('ngEnter', function() {
 		return function(scope, element, attrs) {
 			element.bind("keydown keypress", function(event) {
@@ -12,7 +12,33 @@
 			});
 		};
 	});
-	adminHotelsApp.controller('adminHotelsCtrl', ['$scope', '$http', '$rootScope', '$modal', function($scope, $http, $rootScope, $modal) {
+	adminHotelsApp.filter('propsFilter', function() {
+		return function(items, props) {
+			var out = [];
+			if (angular.isArray(items)) {
+				items.forEach(function(item) {
+					var itemMatches = false;
+					var keys = Object.keys(props);
+					for (var i = 0; i < keys.length; i++) {
+						var prop = keys[i];
+						var text = props[prop].toLowerCase();
+						if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+							itemMatches = true;
+							break;
+						}
+					}
+					if (itemMatches) {
+						out.push(item);
+					}
+				});
+			} else {
+				out = items;
+			}
+			return out;
+		};
+	});
+
+	adminHotelsApp.controller('adminHotelsCtrl', ['$scope', '$http', '$rootScope', '$modal', '$timeout', function($scope, $http, $rootScope, $modal, $timeout) {
 
 		$scope.citys = [];
 		$scope.hotels = [];
@@ -20,7 +46,7 @@
 		$scope.searchName = "";
 		$scope.searchCity = "";
 		$scope.searchStar = 0;
-		$scope.searchMerchant = "";
+		$scope.searchMerchant = [];
 		$scope.currentOtaName = "";
 		$scope.finalUrl;
 		$scope.currentHotel;
@@ -93,11 +119,33 @@
 					}
 				}
 			});
-			modalInstance.result.then(function() {
-				
-			}, function() {
-			
+			modalInstance.result.then(function() {}, function() {});
+		}
+
+		$scope.confirmStatus = function(hotelId, status, onlineOta) {
+			var modalInstance = $modal.open({
+				templateUrl: 'confirmLineManage.html',
+				controller: 'confirmLineManage',
+				size: 'sm',
+				resolve: {
+					status: function() {
+						return status;
+					},
+					hotelId: function() {
+						return (hotelId);
+					},
+					otaId: function() {
+						return ota_id;
+					},
+					currentOtaName: function() {
+						return $scope.currentOtaName;
+					},
+					onlineOta: function() {
+						return onlineOta;
+					}
+				}
 			});
+			modalInstance.result.then(function() {}, function() {});
 		}
 
 		function isChinese(cityInput) {
@@ -168,9 +216,10 @@
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.allMerchants = resp.result.merchants;
-						if ($scope.allMerchants.length > 0) {
-							$scope.searchMerchant = $scope.allMerchants[0].id;
-						}
+
+						$scope.searchMerchant = resp.result.merchants;
+						$scope.searchMerchant['selected'] = $scope.searchMerchant[0];
+
 						$scope.urlCheck();
 						$rootScope.searchResult();
 					} else {
@@ -231,8 +280,8 @@
 			} else {
 				url = url + "status=0";
 			}
-			if ($.trim($scope.searchMerchant) != "" && $scope.searchMerchant != undefined) {
-				url = url + "&merchant_id=" + $scope.searchMerchant;
+			if ($.trim($scope.searchMerchant.selected.id) != "" && $scope.searchMerchant.selected.id != undefined) {
+				url = url + "&merchant_id=" + $scope.searchMerchant.selected.id;
 			}
 			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 				url = url + "&hotel_name=" + $scope.searchName;
@@ -358,4 +407,33 @@
 				.error(function() {});
 		}
 	});
+
+	adminHotelsApp.controller('confirmLineManage', function($scope, $http, $rootScope, $modalInstance, status, hotelId, otaId, currentOtaName, onlineOta) {
+		$scope.currentName = currentOtaName;
+		$scope.currentStatus = status;
+		$scope.errorMessage = "";
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		};
+		$scope.singleHotelOnline = function() {
+			var finalStatus = ($scope.currentStatus == 0) ? 1 : 0;
+			if ((onlineOta.length == 1) && (onlineOta[0] != 0) && (finalStatus == 0)) {
+				$scope.errorMessage = "该酒店仅在当前渠道上线,所有渠道下线请移步至poi管理后台";
+				return;
+			}
+			var url = "/api/admin/ota/" + otaId + "/hotel/" + hotelId + "/online/" + finalStatus;
+			console.log(url);
+			$http.put(url, {})
+				.success(function(resp) {
+					console.log(resp);
+					if (resp.errcode == 0) {
+						$rootScope.searchResult();
+						$modalInstance.dismiss('cancel');
+					} else {}
+				})
+				.error(function() {});
+		}
+
+	});
+
 })()
