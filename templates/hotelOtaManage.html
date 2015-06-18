@@ -64,7 +64,7 @@
                 </tr>
                 <tr ng-repeat="hotel in hotels" ng-clock>
                     <td ng-bind="hotel.name"></td>
-                    <td ng-bind="getCityName(hotel.city_id)"></td>
+                    <td ng-bind="hotel.city.name"></td>
                     <td ng-bind="getHotelStar(hotel.star)"></td>
                     <td ng-init="isShow=checkOtaLineStatus(hotel)" ng-clock>
                         <button ng-if="!isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,0,hotel.ota_ids)">下线
