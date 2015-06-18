@@ -57,17 +57,12 @@ class OtaHotelModifyAPIHandler(BackStageHandler):
     @gen.coroutine
     def valid_ota_ids(self, ota_ids):
         all_ota_ids = yield self.get_otas()
-        if not ota_ids:
-            raise JsonException(1001, 'illeage ota ids')
-        if len(ota_ids) > 1 and 0 in ota_ids:
+        if 0 in ota_ids:
             raise JsonException(1001, 'illeage ota ids')
 
         for id in ota_ids:
-            if id != 0 and id not in all_ota_ids:
+            if id not in all_ota_ids:
                 raise JsonException(1001, 'illeage ota ids')
-
-        if set(ota_ids) == set(all_ota_ids):
-            ota_ids = [0]
 
     @gen.coroutine
     def get_otas(self):
@@ -86,16 +81,18 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
         is_online = int(is_online)
 
         ota_ids = yield self.get_otas()
-        new_ota_ids = [0]
+        if ota_id not in ota_ids:
+            raise JsonException(1001, 'illeage ota ids')
+        new_ota_ids = []
         if not ota_ids:
             raise JsonException(1000, 'get ota fail')
 
         ota_channel = OtaChannelModel.get_by_hotel_id(self.db, hotel_id)
-        if not ota_channel or (ota_channel and 0 in ota_channel.get_ota_ids()):
+        if not ota_channel:
             if is_online == 0:
-                new_ota_ids = [id for id in ota_ids if id != ota_id]
+                new_ota_ids = []
             else:
-                new_ota_ids = [0]
+                new_ota_ids = [ota_id]
         else:
             if is_online == 0:
                 if ota_id in ota_channel.get_ota_ids():
@@ -108,11 +105,6 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
                     new_ota_ids.append(ota_id)
                 else:
                     new_ota_ids = ota_channel.get_ota_ids()
-
-        if 0 in new_ota_ids:
-            new_ota_ids = [0]
-        if set(new_ota_ids) == set(ota_ids):
-            new_ota_ids = [0]
 
         ota_channel = OtaChannelModel.set_ota_ids(self.db, hotel_id, new_ota_ids, commit=False)
 
@@ -132,8 +124,6 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
         otas = yield get_all_ota()
         ota_ids = [ota['id'] for ota in otas]
         raise gen.Return(ota_ids)
-
-
 
 
 class OtaHotelsAPIHandler(BackStageHandler):
@@ -169,7 +159,7 @@ class OtaHotelsAPIHandler(BackStageHandler):
                     hotel['ota_ids'] = ota_channel.get_ota_ids()
                     break
             else:
-                hotel['ota_ids'] = [0]
+                hotel['ota_ids'] = []
 
 
     def filter_by_ota_id(self, ota_id, hotels, status):
@@ -178,7 +168,7 @@ class OtaHotelsAPIHandler(BackStageHandler):
 
         r = []
         for hotel in hotels:
-            if ota_id in hotel['ota_ids'] or 0 in hotel['ota_ids']:
+            if ota_id in hotel['ota_ids']:
                 if status == 1:
                     r.append(hotel)
             else:

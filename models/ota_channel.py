@@ -32,7 +32,7 @@ class OtaChannelModel(Base):
 
     @classmethod
     def set_ota_ids(cls, session, hotel_id, ota_ids, commit=True):
-        ids = ','.join([str(id) for id in ota_ids])
+        ids = ','.join([str(id) for id in ota_ids if id])
         ota_channel = cls.get_by_hotel_id(session, hotel_id)
         if not ota_channel:
             ota_channel = OtaChannelModel(hotel_id=hotel_id, ota_ids=ids)
@@ -48,7 +48,7 @@ class OtaChannelModel(Base):
 
     def get_ota_ids(self):
         ota_ids = self.ota_ids.split(',')
-        return [int(id) for id in ota_ids]
+        return [int(id) for id in ota_ids if id]
 
 
     def todict(self):
