@@ -381,8 +381,10 @@ class PushRatePlanTask(SqlAlchemyTask):
     def generate_roomrate_datas(self, merchant_id, roomrate):
         from models.ota_channel import OtaChannelModel
         ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
-        ota_ids = ota_channel.get_ota_ids() if ota_channel else [0]
+        if not ota_channel:
+            return []
 
+        ota_ids = ota_channel.get_ota_ids()
         roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
 
         datas = []
@@ -390,6 +392,11 @@ class PushRatePlanTask(SqlAlchemyTask):
             data = roomrate_data.copy()
             data['ota_id'] = ota_id
             datas.append(data)
+
+        data0 = roomrate.copy()
+        data0['ota_id'] = 0
+        data0['is_valid'] = 0
+        datas.append(data0)
 
         return datas
 
