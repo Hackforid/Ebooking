@@ -93,19 +93,13 @@
 		$scope.modifyStatus = function(hotel) {
 			var currentOtaIds = angular.copy($scope.otas);
 			var currentHotelOtaIds = hotel.ota_ids;
-			/*if ((currentHotelOtaIds.length == 1) && (currentHotelOtaIds[0] == 0)) {
-				for (var i = 0; i < currentOtaIds.length; i++) {
-					currentOtaIds[i]['checked'] = true;
+			for (var i = 0; i < currentHotelOtaIds.length; i++) {
+				for (var j = 0; j < currentOtaIds.length; j++) {
+					if (currentOtaIds[j].id == currentHotelOtaIds[i]) {
+						currentOtaIds[j]['checked'] = true;
+					}
 				};
-			} else {*/
-				for (var i = 0; i < currentHotelOtaIds.length; i++) {
-					for (var j = 0; j < currentOtaIds.length; j++) {
-						if (currentOtaIds[j].id == currentHotelOtaIds[i]) {
-							currentOtaIds[j]['checked'] = true;
-						}
-					};
-				};
-			/*}*/
+			};
 			var modalInstance = $modal.open({
 				templateUrl: 'onlinestatus.html',
 				controller: 'onLineStatus',
@@ -197,16 +191,12 @@
 
 		$scope.checkOtaLineStatus = function(hotel) {
 			var currentOtaIds = hotel.ota_ids;
-			/*if ((currentOtaIds.length == 1) && (currentOtaIds[0] == 0)) {
-				return 1;
-			} else {*/
-				for (var i = 0; i < currentOtaIds.length; i++) {
-					if (ota_id == currentOtaIds[i]) {
-						return 1;
-					}
-				};
-				return 0;
-			/*}*/
+			for (var i = 0; i < currentOtaIds.length; i++) {
+				if (ota_id == currentOtaIds[i]) {
+					return 1;
+				}
+			};
+			return 0;
 		}
 
 		function getAllMerchant() {
@@ -384,13 +374,6 @@
 					selectedOtas.push($scope.currentOtas[i].id);
 				}
 			};
-			/*if (selectedOtas.length == $scope.currentOtas.length) {
-				selectedOtas = [0];
-			}*/
-			/*if (selectedOtas.length == 0) {
-				$scope.otaErrMessage = "所有渠道下线请移步至poi管理后台";
-				return;
-			}*/
 			var params = {
 				"ota_ids": selectedOtas
 			};
