@@ -400,10 +400,6 @@
 		};
 		$scope.singleHotelOnline = function() {
 			var finalStatus = ($scope.currentStatus == 0) ? 1 : 0;
-			/*if ((onlineOta.length == 1) && (onlineOta[0] == otaId) && (finalStatus == 0)) {
-				$scope.errorMessage = "该酒店仅在当前渠道上线,所有渠道下线请移步至poi管理后台";
-				return;
-			}*/
 			var url = "/api/admin/ota/" + otaId + "/hotel/" + hotelId + "/online/" + finalStatus;
 			console.log(url);
 			$http.put(url, {})
