@@ -25,9 +25,9 @@
                     <div class="col-lg-8">
                         <!-- <select class="form-control changeselect" ng-model="searchMerchant" ng-options="merchant.id as merchant.name for merchant in allMerchants"></select> -->
                          <ui-select ng-model="searchMerchant.selected" theme="select2" ng-disabled="disabled" style="min-width: 300px;width:100%;max-width: 758px;">
-                            <ui-select-match placeholder="Select a person in the list or search his name/age...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-match placeholder="选择商户">{{$select.selected.id+':'+$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="merchant in searchMerchant | propsFilter: {name: $select.search, id: $select.search}">
-                            <div ng-bind-html="merchant.name | highlight: $select.search"></div>
+                            <div ng-bind-html="(merchant.id+':'+merchant.name) | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
                     </div>
@@ -54,7 +54,7 @@
                     <button class="btn btn-default" type="button" ng-click="conditionReset()">重置</button>
                 </span>
             </div>
-            <table class="table" ng-clock>
+            <table class="table" style="margin-left:13px;" ng-clock>
                 <tr>
                     <th>酒店名称</th>
                     <th>城市</th>
@@ -63,7 +63,7 @@
                     <th>操作</th>
                 </tr>
                 <tr ng-repeat="hotel in hotels" ng-clock>
-                    <td ng-bind="hotel.name"></td>
+                    <td ng-bind="hotel.id+':'+hotel.name"></td>
                     <td ng-bind="hotel.city.name"></td>
                     <td ng-bind="getHotelStar(hotel.star)"></td>
                     <td ng-init="isShow=checkOtaLineStatus(hotel)" ng-clock>
