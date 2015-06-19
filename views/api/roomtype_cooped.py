@@ -222,7 +222,7 @@ class RoomTypeOnlineAPIHandler(BtwBaseHandler):
             raise JsonException(errmsg='roomtype not found', errcode=2002)
 
         roomtype.is_online = is_online
-
+        self.db.flush()
 
         r = yield InventoryAsyncPusher(self.db).push_by_roomtype(roomtype)
         if r:
@@ -246,6 +246,7 @@ class RoomTypeByMerchantOnlineAPIHandler(BtwBaseHandler):
             raise JsonException(errmsg='wrong arg is_online', errcode=2001)
 
         CooperateRoomTypeModel.set_online_by_merchant(self.db, self.merchant.id, is_online, commit=False)
+        self.db.flush()
 
         r = yield InventoryAsyncPusher(self.db).push_inventory_by_merchant(self.merchant.id)
         if r:

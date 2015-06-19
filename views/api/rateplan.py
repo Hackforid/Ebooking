@@ -223,6 +223,7 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
             rateplan.stay_days = stay_days
 
 
+        self.db.flush()
         rateplan_pusher = RatePlanPusher(self.db)
         roomrate_pusher = RoomRatePusher(self.db)
         try:

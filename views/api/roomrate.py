@@ -76,6 +76,7 @@ class RoomRateAPIHandler(BtwBaseHandler):
         roomrate = RoomRateModel.set_price(self.db, roomrate_id, price, start_date, end_date, weekdays, commit=False)
         if not roomrate:
             raise JsonException(1001, 'roomrate not found')
+        self.db.flush()
         push_r = yield RoomRatePusher(self.db).push_roomrate(merchant_id, roomrate)
         if push_r:
             self.db.commit()
