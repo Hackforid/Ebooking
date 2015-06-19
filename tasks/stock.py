@@ -282,9 +282,9 @@ class PushRatePlanTask(SqlAlchemyTask):
     def post_roomrate(self, merchant_id, roomrate):
         if not IS_PUSH_TO_STOCK:
             return
-        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
+        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
         self.log.info(data)
 
         url = API['STOCK'] + '/stock/update_room_rate?is_async=false'

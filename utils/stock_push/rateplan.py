@@ -151,9 +151,9 @@ class RoomRatePusher(Pusher):
 
     @gen.coroutine
     def post_roomrate(self, merchant_id, roomrate):
-        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
+        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
         Log.info("<<push roomrate {}>>: {}".format(roomrate.id, data))
 
         if not IS_PUSH_TO_STOCK:
