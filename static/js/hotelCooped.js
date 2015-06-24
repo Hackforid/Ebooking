@@ -54,6 +54,7 @@
 		$scope.finalUrl;
 		$scope.paginationId = "pageNumber";
 		$scope.messageBox;
+		$scope.ifloading = false;
 
 
 
@@ -259,7 +260,7 @@
 		}
 
 		$scope.roomCloseConfirm = function() {
-
+			$scope.ifloading = true;
 			var url = "/api/merchant/roomtype/online";
 			log.log(url);
 			log.log({
@@ -286,7 +287,7 @@
 								$scope.hotels[i]['online_roomtype_count'] = $scope.hotels[i]['roomtype_count'];
 							};
 						}
-
+						$scope.ifloading = false;
 					} else {
 						log.log(resp.errmsg);
 					}
