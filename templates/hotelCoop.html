@@ -9,7 +9,13 @@
     ng-app="hotelCoopedApp" ng-controller="hotelCoopedContentCtrl"
     ><div class="p15">
 
-
+<!--loading-->
+            <div class="messageDiv" ng-show="ifloading" style="z-index:999999" ng-cloak> 
+                <div class="messageBlack">
+                    <img style="width: 90px;height: 90px;position: absolute;left: 50%;top: 50%;
+                     margin-top: -50px;margin-left: -50px;" src="${static_url('image/load1.gif')}"/>
+                </div>
+            </div>
 
  <!--删除提示-->     
             <div class="messageDiv"  ng-show="confirmCancel" ng-cloak> 
