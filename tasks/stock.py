@@ -200,7 +200,10 @@ class PushRatePlanTask(SqlAlchemyTask):
                     merchant_roomrates.append((rateplan.merchant_id, roomrate))
                     break
 
-        roomrate_datas = [self.generate_roomrate_data(merchant_roomrate[0], merchant_roomrate[1]) for merchant_roomrate in merchant_roomrates] 
+        roomrate_datas = []
+        for merchant_roomrate in merchant_roomrates:
+            roomrate_datas.extend(self.generate_roomrate_datas(merchant_roomrate[0], merchant_roomrate[1]))
+
         roomrate_data_list = [roomrate_datas[i: i+self.MAX_PUSH_NUM] for i in range(0, len(roomrate_datas), self.MAX_PUSH_NUM)]
         for roomrate_data in roomrate_data_list:
             self.post_roomrates(roomrate_data)
@@ -282,9 +285,9 @@ class PushRatePlanTask(SqlAlchemyTask):
     def post_roomrate(self, merchant_id, roomrate):
         if not IS_PUSH_TO_STOCK:
             return
-        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
+        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
         self.log.info(data)
 
         url = API['STOCK'] + '/stock/update_room_rate?is_async=false'
@@ -359,16 +362,9 @@ class PushRatePlanTask(SqlAlchemyTask):
         data['hotel_id'] = str(roomrate.hotel_id)
         data['room_type_id'] = str(roomrate.roomtype_id)
         data['rate_plan_id'] = str(roomrate.rate_plan_id)
-
-        if merchant_id in SPEC_STOCK_PUSH:
-            data['ota_id'] = SPEC_STOCK_PUSH[merchant_id]
-        else:
-            data['ota_id'] = 0
-
         data['instant_confirm'] = '|'.join([str(0) for i in xrange(90)])
         meal_num = roomrate.get_meal()
         data['meals'] = '|'.join([str(meal_num) for i in xrange(90)])
-        
         data['start_date'] = datetime.date.today() 
         data['end_date'] = data['start_date'] + datetime.timedelta(days=89) 
 
@@ -380,20 +376,20 @@ class PushRatePlanTask(SqlAlchemyTask):
 
     def generate_roomrate_datas(self, merchant_id, roomrate):
         from models.ota_channel import OtaChannelModel
-        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
-        if not ota_channel:
-            return []
-
-        ota_ids = ota_channel.get_ota_ids()
-        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
 
         datas = []
-        for ota_id in ota_ids:
-            data = roomrate_data.copy()
-            data['ota_id'] = ota_id
-            datas.append(data)
+        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
 
-        data0 = roomrate.copy()
+        ota_channel = OtaChannelModel.get_by_hotel_id(self.session, roomrate.hotel_id)
+        if ota_channel:
+            ota_ids = ota_channel.get_ota_ids()
+            for ota_id in ota_ids:
+                data = roomrate_data.copy()
+                data['ota_id'] = ota_id
+                data['is_valid'] = 1
+                datas.append(data)
+
+        data0 = roomrate_data.copy()
         data0['ota_id'] = 0
         data0['is_valid'] = 0
         datas.append(data0)

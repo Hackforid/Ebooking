@@ -35,8 +35,8 @@ class OtaListAPIHandler(BackStageHandler):
 class OtaHotelModifyAPIHandler(BackStageHandler):
 
     @gen.coroutine
-    @auth_backstage_login(json=True)
-    @need_backstage_admin(json=True)
+    #@auth_backstage_login(json=True)
+    #@need_backstage_admin(json=True)
     def put(self, hotel_id):
         Log.info(self.request.body)
         args = self.get_json_arguments()

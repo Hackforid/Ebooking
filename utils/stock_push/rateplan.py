@@ -151,9 +151,9 @@ class RoomRatePusher(Pusher):
 
     @gen.coroutine
     def post_roomrate(self, merchant_id, roomrate):
-        roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
+        roomrate_datas = self.generate_roomrate_datas(merchant_id, roomrate)
         track_id = self.generate_track_id(roomrate.id)
-        data = {'track_id': track_id, 'data': json_encode({'list': [roomrate_data]})}
+        data = {'track_id': track_id, 'data': json_encode({'list': roomrate_datas})}
         Log.info("<<push roomrate {}>>: {}".format(roomrate.id, data))
 
         if not IS_PUSH_TO_STOCK:
@@ -175,12 +175,6 @@ class RoomRatePusher(Pusher):
         data['hotel_id'] = str(roomrate.hotel_id)
         data['room_type_id'] = str(roomrate.roomtype_id)
         data['rate_plan_id'] = str(roomrate.rate_plan_id)
-
-        if merchant_id in SPEC_STOCK_PUSH:
-            data['ota_id'] = SPEC_STOCK_PUSH[merchant_id]
-        else:
-            data['ota_id'] = 0
-
         data['instant_confirm'] = '|'.join([str(0) for i in xrange(90)])
         meal_num = roomrate.get_meal()
         data['meals'] = '|'.join([str(meal_num) for i in xrange(90)])
@@ -194,20 +188,19 @@ class RoomRatePusher(Pusher):
         return data
 
     def generate_roomrate_datas(self, merchant_id, roomrate):
-        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
-        if not ota_channel:
-            return []
-
-        ota_ids = ota_channel.get_ota_ids()
+        datas = []
         roomrate_data = self.generate_roomrate_data(merchant_id, roomrate)
 
-        datas = []
-        for ota_id in ota_ids:
-            data = roomrate_data.copy()
-            data['ota_id'] = ota_id
-            datas.append(data)
+        ota_channel = OtaChannelModel.get_by_hotel_id(self.db, roomrate.hotel_id)
+        if ota_channel:
+            ota_ids = ota_channel.get_ota_ids()
+            for ota_id in ota_ids:
+                data = roomrate_data.copy()
+                data['ota_id'] = ota_id
+                data['is_valid'] = 1
+                datas.append(data)
 
-        data0 = roomrate.copy()
+        data0 = roomrate_data.copy()
         data0['ota_id'] = 0
         data0['is_valid'] = 0
         datas.append(data0)
