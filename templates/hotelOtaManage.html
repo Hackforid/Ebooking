@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>商旅分销管理系统后台</title>
+        <script src="${static_url('js/angular.js')}"></script>
+         <link rel="stylesheet" type="text/css" href="${static_url('css/cityinput.css')}">   
+         <link rel="stylesheet" type="text/css" href="${static_url('css/hotelOtaManage.css')}">  
+        <script type="text/javascript">
+        var ota_id = ${ota_id};
+        </script>
+        <script src="${static_url('js/angular-sanitize.js')}"></script>
+        <script src="${static_url('js/select.js')}"></script>
+        <link rel="stylesheet" type="text/css" href="${static_url('css/select.css')}">  
+    </head>
+    <body ng-app="adminHotelsApp" ng-controller="adminHotelsCtrl">
+        <nav class="nav navbar-default navbar-fixed-top" role="navigation">
+            <div class="container" style="padding-top: 5px;padding-bottom: 5px;margin-left: 0px;">
+                当前渠道>{{currentOtaName}}
+            </div>
+        </nav>
+        <div class="wrapper">
+            <div class="container" style="position:relative;padding-bottom:50px;">
+                <div class="container">
+                    <div class="col-lg-8">
+                        <!-- <select class="form-control changeselect" ng-model="searchMerchant" ng-options="merchant.id as merchant.name for merchant in allMerchants"></select> -->
+                         <ui-select ng-model="searchMerchant.selected" theme="select2" ng-disabled="disabled" style="min-width: 300px;width:100%;max-width: 758px;">
+                            <ui-select-match placeholder="选择商户">{{$select.selected.id+':'+$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="merchant in searchMerchant | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="(merchant.id+':'+merchant.name) | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-lg-4"><select placeholder="星级" ng-enter="urlCheck()" name="" class="form-control changeselect" ng-model="searchStar">
+                        <option value="0">任意星级</option>
+                        <option value="1">一星级</option>
+                        <option value="2">二星级</option>
+                        <option value="3">三星级</option>
+                        <option value="4">四星级</option>
+                        <option value="5">五星级</option>
+                    </select></div>
+                </div>
+                <div class="container" style="padding-top:10px">
+                    <div class="col-lg-4"><input placeholder="酒店名称" type="text" ng-model="searchName" class="form-control changeinput"></div>
+                    <div class="col-lg-4"><input placeholder="城市" ng-enter="urlCheck()" type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control"></div>
+                    <div class="col-lg-4" style="height:34px">
+                        <input type="checkbox" ng-checked="checkedItem[0]" ng-model="checkedItem[0]" ng-click="checktest(0)"  class="changecheckbox"/>全部
+                        <input type="checkbox" ng-checked="checkedItem[1]" ng-model="checkedItem[1]" ng-click="checktest(1)" class="changecheckbox"/>上线
+                        <input type="checkbox" ng-checked="checkedItem[2]" ng-model="checkedItem[2]" ng-click="checktest(2)" class="changecheckbox"/>下线
+                    </div>
+                </div>
+                <span class="searchbutton">
+                    <button class="btn btn-default" type="button" ng-click="urlCheck()">查询</button>
+                    <button class="btn btn-default" type="button" ng-click="conditionReset()">重置</button>
+                </span>
+            </div>
+            <table class="table" style="margin-left:13px;" ng-clock>
+                <tr>
+                    <th>酒店名称</th>
+                    <th>城市</th>
+                    <th>星级</th>
+                    <th ng-bind="currentOtaName+'(当前状态)'"></th>
+                    <th>操作</th>
+                </tr>
+                <tr ng-repeat="hotel in hotels" ng-clock>
+                    <td ng-bind="hotel.id+':'+hotel.name"></td>
+                    <td ng-bind="hotel.city.name"></td>
+                    <td ng-bind="hotel.star"></td>
+                    <td ng-init="isShow=checkOtaLineStatus(hotel)" ng-clock>
+                        <button ng-if="!isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,0,hotel.ota_ids)">下线
+                        </button>
+                        <button ng-if="isShow" class="btn btn-link" type="button" ng-click="confirmStatus(hotel.id,1,hotel.ota_ids)">上线
+                        </button>
+                    </td>
+                    <td>
+                        <button ng-if="hotel.is_online==1" class="btn btn-default" type="button" ng-click="modifyStatus(hotel)">其他渠道</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script type="text/ng-template" id="onlinestatus.html">
+            <div class="modal-body">
+                <p style="text-align: center;color:red;">{{otaErrMessage}}</p>
+            </div>
+            <div class="container">
+                <div class="col-lg-6">
+                    <input type="checkbox" ng-model="allOtaStatus.status" ng-checked="allOtaStatus.status"  ng-click="allOtaSelect()">全选
+                </div>
+            </div>
+            <div class="container">
+                <div class="col-lg-6" ng-repeat="ota in currentOtas">
+                    <input type="checkbox" ng-model="ota.checked" ng-checked="ota.checked">{{ota.description}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addbutton" class="btn btn-primary" ng-click="onLineManage()">上线</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="confirmLineManage.html">
+            <div class="modal-body">
+                <p style="text-align: center;color:red">{{errorMessage}}</p>
+                <p style="text-align: center;">是否确认在
+                    <span style="font-weight: bold;">{{currentName}}</span>
+                    <span style="font-weight: bold;" ng-if="!currentStatus">上线</span>
+                    <span style="font-weight: bold;" ng-if="currentStatus">下线</span>？
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="addbutton" class="btn btn-primary" ng-click="singleHotelOnline()">确认</button>
+                <button class="btn btn-warning" data-dismiss="modal" ng-click="cancel()">取消</button>
+            </div>
+        </script>
+
+        <script src="${static_url('js/jquery-1.8.3.min.js')}"></script>
+        <script src="${static_url('js/hotelOtaManage.js')}"></script>
+        <script src="${static_url('js/md5.js')}"></script>  
+        <script src="${static_url('js/ui-bootstrap-tpls.js')}"></script>
+    </body>
+</html>

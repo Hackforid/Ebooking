@@ -110,6 +110,7 @@ class RoomRateModel(Base):
     def get_price_by_date(self, month, day):
         month_key = 'month{}'.format(month)
         month = getattr(self, month_key)
+        month = month if month else '-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1|-1'
         prices = month.split('|')
         return int(prices[day-1])
 
