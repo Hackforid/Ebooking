@@ -8,14 +8,6 @@ body,html {
   height: 100%;
   width: 100%;
 }
-
-table.table th {
-  text-align: center;
-}
-table.table td {
-  text-align: center;
-}
-
 .wrapper {
   padding-left: 90px;
   padding-right: 90px;
