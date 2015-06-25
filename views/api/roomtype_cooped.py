@@ -22,6 +22,7 @@ from tasks.poi import POIPushRoomTypeTask
 
 from tasks.stock import PushHotelTask, PushInventoryTask
 from utils.stock_push.inventory import InventoryAsyncPusher
+from utils.stock_push.hotel import HotelPusher
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -122,6 +123,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
         return cooped, will_coop
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def post(self, hotel_id):
@@ -132,11 +134,12 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         if not roomtype_ids:
             raise JsonException(errcode=2001, errmsg="need id")
 
-        coops = self.new_roomtype_coops(merchant_id, hotel_id, roomtype_ids)
+        coops = yield self.new_roomtype_coops(merchant_id, hotel_id, roomtype_ids)
         self.finish_json(result=dict(
             cooped_roomtypes=[coop.todict() for coop in coops],
             ))
 
+    @gen.coroutine
     def new_roomtype_coops(self, merchant_id, hotel_id, roomtype_ids):
         hotel = CooperateHotelModel.get_by_id(self.db, hotel_id)
         if not hotel:
@@ -157,13 +160,14 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
             InventoryModel.insert_in_months(self.db,
                     merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id, 13)
 
-        PushHotelTask().push_hotel.delay(hotel_id)
+        #PushHotelTask().push_hotel.delay(hotel_id)
+        yield HotelPusher().push_hotel(coop.id)
         
         for coop in coops:
             PushInventoryTask().push_inventory.delay(coop.id)
             POIPushRoomTypeTask().push_roomtype.delay(coop.id)
 
-        return coops
+        raise gen.Return(coops)
 
 
 
