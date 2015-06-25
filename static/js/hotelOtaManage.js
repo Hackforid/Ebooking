@@ -349,7 +349,7 @@
 		$scope.allOtaStatus = {
 			status: false
 		};
-		$scope.otaErrMessage;
+		$scope.otaErrMessage = "";
 		$scope.allOtaSelect = function() {
 			var currentStatus = $scope.allOtaStatus.status;
 			if (currentStatus == false) {
@@ -366,6 +366,7 @@
 			$modalInstance.dismiss('cancel');
 		};
 		$scope.onLineManage = function() {
+			$scope.otaErrMessage = "";
 			var url = "/api/admin/ota/hotel/" + hotelId + "/modify";
 			var params;
 			var selectedOtas = [];
@@ -385,9 +386,13 @@
 					if (resp.errcode == 0) {
 						$modalInstance.dismiss('cancel');
 						$rootScope.searchResult();
-					} else {}
+					} else {
+						$scope.otaErrMessage = "操作失败";
+					}
 				})
-				.error(function() {});
+				.error(function() {
+					$scope.otaErrMessage = "操作失败";
+				});
 		}
 	});
 
@@ -399,6 +404,7 @@
 			$modalInstance.dismiss('cancel');
 		};
 		$scope.singleHotelOnline = function() {
+			$scope.errorMessage = "";
 			var finalStatus = ($scope.currentStatus == 0) ? 1 : 0;
 			var url = "/api/admin/ota/" + otaId + "/hotel/" + hotelId + "/online/" + finalStatus;
 			console.log(url);
@@ -408,9 +414,13 @@
 					if (resp.errcode == 0) {
 						$rootScope.searchResult();
 						$modalInstance.dismiss('cancel');
-					} else {}
+					} else {
+						$scope.errorMessage = "操作失败";
+					}
 				})
-				.error(function() {});
+				.error(function() {
+					$scope.errorMessage = "操作失败";
+				});
 		}
 
 	});
