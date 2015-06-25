@@ -134,6 +134,35 @@ class RatePlanPusher(Pusher):
             return 0
         return 1 if rateplan.is_online == 1 and rateplan.is_delete == 0 else 0
 
+    @gen.coroutine
+    def update_rateplans_valid_status(self, rateplan_ids):
+        Log.info("<< push rateplans {} update rateplan valid>>".format(rateplan_ids))
+        if not IS_PUSH_TO_STOCK:
+            raise gen.Return(True)
+
+        rateplans = RatePlanModel.get_by_ids(self.db, rateplan_ids, with_delete=True)
+        rateplan_datas = [{"chain_id": CHAIN_ID, "hotel_id": rateplan.hotel_id, "rate_plan_id": rateplan.id, "is_valid": self.cal_rateplan_isvalid(rateplan)} for rateplan in rateplans]
+
+        track_id = self.generate_track_id(rateplan_ids)
+        data = {'list': rateplan_datas, 'type': 3}
+        params = {'track_id': track_id, 'data': json.dumps(data)}
+        body = urllib.urlencode(params)
+        url = API['STOCK'] + '/stock/update_state?is_async=false'
+
+        Log.info("<< push rateplan {} update rateplan valid request {}>>".format(rateplan_ids, params))
+        try:
+            r = yield AsyncHTTPClient().fetch(url, method='POST', body=body)
+            Log.info("<< push rateplan {} update rateplan valid response {}>>".format(rateplan_ids, r.body))
+            resp = json.loads(r.body)
+        except Exception, e:
+            Log.exception(e)
+            raise gen.Return(False)
+
+        if resp['errcode'] == 0:
+            raise gen.Return(True)
+        else:
+            raise gen.Return(False)
+
 class RoomRatePusher(Pusher):
 
     @gen.coroutine

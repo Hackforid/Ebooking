@@ -25,21 +25,39 @@ from constants import CHAIN_ID
 class HotelPusher(Pusher):
 
     @gen.coroutine
-    def push_hotel(self, hotel_id):
-        Log.info("<<push hotel {}>> start".format(hotel_id))
+    def push_hotels(self, hotels, is_strict=False):
+        if not hotels:
+            raise gen.Return(True)
+        hotel_datas = []
+        for hotel in hotels:
+            data = yield self.get_hotel_data(hotel)
+            if not data:
+                if is_strict:
+                    raise gen.Return(False)
+                else:
+                    continue
+            else:
+                hotel_datas.append(data)
+        r = yield self.post_hotels(hotel_datas)
+        raise gen.Return(r)
+
+    @gen.coroutine
+    def push_hotel_by_id(self, hotel_id):
+        Log.info("<<push hotel by id {}>>".format(hotel_id))
         hotel = CooperateHotelModel.get_by_id(self.db, hotel_id, with_delete=True)
         if not hotel:
             Log.info("<<push hotel {}>> error hotel not exist".format(hotel_id))
             raise gen.Return(False)
+        r = yield self.push_hotel(hotel)
+        raise gen.Return(r)
 
-        hotel_data = yield self.get_hotel_data(hotel)
-        if hotel_data:
-            r = yield self.post_hotel(hotel_data)
-            raise gen.Return(r)
-        else:
-            raise gen.Return(False)
-
-
+    @gen.coroutine
+    def push_hotel(self, hotel):
+        Log.info("<<push hotel {}>> start".format(hotel.id))
+        if not hotel:
+            raise gen.Return(True)
+        r = yield self.push_hotels([hotel], is_strict=True)
+        raise gen.Return(r)
 
     @gen.coroutine
     def get_hotel_data(self, hotel):
@@ -51,13 +69,13 @@ class HotelPusher(Pusher):
         hotel_data = self.generate_hotel_data(hotel, roomtypes, base_hotel, base_roomtypes)
         raise gen.Return(hotel_data)
 
-
     @gen.coroutine
-    def post_hotel(self, hotel_data):
-        track_id = self.generate_track_id(hotel_data['id'])
-        data = {'list': [hotel_data]}
+    def post_hotels(self, hotel_datas):
+        hotel_ids = [hotel_data['id'] for hotel_data in hotel_datas]
+        track_id = self.generate_track_id(id(hotel_ids))
+        data = {'list': hotel_datas}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        Log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
+        Log.info(u"<<push hotels {}>> push data {}".format(hotel_ids, params))
         url = API['STOCK'] + '/stock/update_hotel?is_async=false'
 
         body = urllib.urlencode(params)

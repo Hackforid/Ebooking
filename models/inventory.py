@@ -150,12 +150,15 @@ class InventoryModel(Base):
                 .all()
 
     @classmethod
-    def delete_by_roomtype_id(cls, session, roomtype_id):
+    def delete_by_roomtype_id(cls, session, roomtype_id, commit=True):
         session.query(InventoryModel)\
                 .filter(InventoryModel.roomtype_id == roomtype_id)\
                 .filter(InventoryModel.is_delete == 0)\
                 .update({'isDelete': 1})
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
 
 
     @classmethod
