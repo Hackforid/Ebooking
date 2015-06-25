@@ -8,7 +8,6 @@ from models.room_rate import RoomRateModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
 
-from tasks.stock import PushRatePlanTask, PushHotelTask
 from utils.stock_push.rateplan import RatePlanPusher
 from utils.stock_push.hotel import HotelPusher
 

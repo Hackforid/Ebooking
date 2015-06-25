@@ -15,7 +15,6 @@ from constants import PERMISSIONS
 
 from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
-from tasks.stock import PushHotelTask
 
 
 class HotelRoomBatchAPIHandler(BtwBaseHandler):
