@@ -9,7 +9,6 @@ from tools.auth import auth_login, auth_permission, no_monomer_hotel
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
-from exception.celery_exception import CeleryException
 
 from constants import PERMISSIONS
 
@@ -17,7 +16,6 @@ from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from tasks.stock import PushHotelTask
 from mixin.coop_mixin import CooperateMixin
-from utils.stock_push.hotel import HotelPusher
 
 
 class HotelCoopedAPIHandler(BtwBaseHandler):

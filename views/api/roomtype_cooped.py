@@ -18,7 +18,6 @@ from constants import PERMISSIONS
 from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
-from tasks.poi import POIPushRoomTypeTask
 
 from utils.stock_push.inventory import InventoryAsyncPusher
 from utils.stock_push.hotel import HotelPusher

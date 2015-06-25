@@ -12,6 +12,7 @@ from tasks.poi import POIPushHotelTask
 from models.cooperate_hotel import CooperateHotelModel
 from mixin.coop_mixin import CooperateMixin
 from utils.stock_push.hotel import HotelPusher
+from utils.stock_push.poi import POIHotelPusher
 
 class HotelCoopAPIHandler(BtwBaseHandler, CooperateMixin):
 
@@ -39,15 +40,14 @@ class HotelCoopAPIHandler(BtwBaseHandler, CooperateMixin):
             self.db.flush()
 
         r = yield HotelPusher(self.db).push_hotel(coop)
-        if r:
-            self.db.commit()
-        else:
-            self.db.rollback()
+        if not r:
             raise JsonException(2000, 'push hotel to stock fail')
 
-        #TODO
-        POIPushHotelTask().push_hotel.delay(coop.id)
+        r = yield POIHotelPusher(self.db).push_hotel(coop.id)
+        if not r:
+            raise JsonException(2000, 'push hotel to poi fail')
 
+        self.db.commit()
         raise gen.Return(coop)
 
 
