@@ -60,7 +60,7 @@ class CooperateRoomTypeModel(Base):
                 .filter(CooperateRoomTypeModel.hotel_id == hotel_id)
         if not with_delete:
             query = query.filter(CooperateRoomTypeModel.is_delete == 0)
-        return query.all() 
+        return query.all()
 
     @classmethod
     def get_by_hotel_ids(cls, session, hotel_ids, with_delete=False):
@@ -115,7 +115,7 @@ class CooperateRoomTypeModel(Base):
                 .all()
 
     @classmethod
-    def new_roomtype_coops(cls, session, merchant_id, hotel_id, base_hotel_id, base_roomtype_ids):
+    def new_roomtype_coops(cls, session, merchant_id, hotel_id, base_hotel_id, base_roomtype_ids, commit=True):
         coops = []
         try:
             for roomtype_id in base_roomtype_ids:
@@ -127,7 +127,10 @@ class CooperateRoomTypeModel(Base):
                 coops.append(coop)
 
             session.add_all(coops)
-            session.commit()
+            if commit:
+                session.commit()
+            else:
+                session.flush()
         except:
             print traceback.format_exc()
             session.rollback()

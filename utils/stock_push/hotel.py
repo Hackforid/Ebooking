@@ -57,7 +57,7 @@ class HotelPusher(Pusher):
         track_id = self.generate_track_id(hotel_data['id'])
         data = {'list': [hotel_data]}
         params = {'track_id': track_id, 'data': json.dumps(data)}
-        self.log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
+        Log.info(u"<<push hotel {}>> push data {}".format(hotel_data['id'], params))
         url = API['STOCK'] + '/stock/update_hotel?is_async=false'
 
         body = urllib.urlencode(params)
@@ -123,3 +123,7 @@ class HotelPusher(Pusher):
                     rooms.append(room)
                     break
         return rooms
+
+    def cal_hotel_is_valid(self, hotel):
+        return 1 if hotel.is_suspend == 0 and hotel.is_online == 1 and hotel.is_delete == 0 else 0
+
