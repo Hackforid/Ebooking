@@ -150,12 +150,15 @@ class InventoryModel(Base):
                 .all()
 
     @classmethod
-    def delete_by_roomtype_id(cls, session, roomtype_id):
+    def delete_by_roomtype_id(cls, session, roomtype_id, commit=True):
         session.query(InventoryModel)\
                 .filter(InventoryModel.roomtype_id == roomtype_id)\
                 .filter(InventoryModel.is_delete == 0)\
                 .update({'isDelete': 1})
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
 
 
     @classmethod
@@ -175,7 +178,7 @@ class InventoryModel(Base):
         return inventories
 
     @classmethod
-    def insert_in_months(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, months):
+    def insert_in_months(cls, session, merchant_id, hotel_id, roomtype_id, base_hotel_id, base_roomtype_id, months, commit=True):
         inventories = []
         dates= cls.get_months(months)
         for date in dates:
@@ -187,7 +190,10 @@ class InventoryModel(Base):
                 inventory = InventoryModel(merchant_id=merchant_id, hotel_id=hotel_id, roomtype_id=roomtype_id, month=_month, base_hotel_id=base_hotel_id, base_roomtype_id=base_roomtype_id)
                 inventories.append(inventory)
         session.add_all(inventories)
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
         return inventories
 
     @classmethod

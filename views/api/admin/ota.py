@@ -7,7 +7,7 @@ from tornado.escape import json_encode, json_decode, url_escape
 
 from exception.json_exception import JsonException
 
-from tools.auth import auth_backstage_login, need_backstage_admin
+from tools.auth import auth_backstage_login, need_backstage_admin, need_backstage_ota
 from tools.request_tools import get_and_valid_arguments
 from tools.url import add_get_params
 from tools.log import Log
@@ -26,6 +26,7 @@ class OtaListAPIHandler(BackStageHandler):
     @gen.coroutine
     @auth_backstage_login(json=True)
     @need_backstage_admin(json=True)
+    @need_backstage_ota(json=True)
     def get(self):
         url = '{}/hotelReader2/ota/getList'.format(API['OTA'])
         r = yield AsyncHTTPClient().fetch(url)
@@ -35,8 +36,9 @@ class OtaListAPIHandler(BackStageHandler):
 class OtaHotelModifyAPIHandler(BackStageHandler):
 
     @gen.coroutine
-    #@auth_backstage_login(json=True)
-    #@need_backstage_admin(json=True)
+    @auth_backstage_login(json=True)
+    @need_backstage_admin(json=True)
+    @need_backstage_ota(json=True)
     def put(self, hotel_id):
         Log.info(self.request.body)
         args = self.get_json_arguments()
@@ -76,6 +78,7 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
     @gen.coroutine
     @auth_backstage_login(json=True)
     @need_backstage_admin(json=True)
+    @need_backstage_ota(json=True)
     def put(self, ota_id, hotel_id, is_online):
         ota_id = int(ota_id)
         is_online = int(is_online)
@@ -131,6 +134,7 @@ class OtaHotelsAPIHandler(BackStageHandler):
     @gen.coroutine
     @auth_backstage_login(json=True)
     @need_backstage_admin(json=True)
+    @need_backstage_ota(json=True)
     def get(self, ota_id):
         ota_id = int(ota_id)
         hotel_name = self.get_query_argument('hotel_name', None)

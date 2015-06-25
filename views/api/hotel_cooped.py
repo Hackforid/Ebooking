@@ -9,7 +9,6 @@ from tools.auth import auth_login, auth_permission, no_monomer_hotel
 from tools.url import add_get_params
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
-from exception.celery_exception import CeleryException
 
 from constants import PERMISSIONS
 
@@ -130,6 +129,9 @@ class HotelCoopedAPIHandler(BtwBaseHandler):
             raise gen.Return([])
 
 class HotelCoopOnlineAPIHandler(BtwBaseHandler):
+    '''
+    需求变更 不再需要此API
+    '''
 
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.view_cooperated_hotel, json=True)
@@ -145,6 +147,7 @@ class HotelCoopOnlineAPIHandler(BtwBaseHandler):
             cooperate_hotel=hotel.todict()
             ))
 
+    @gen.coroutine
     def change_hotel_online_status(self, merchant_id, hotel_id, is_online):
         hotel = CooperateHotelModel.get_by_merchant_id_and_hotel_id(self.db, merchant_id, hotel_id)
         if not hotel:
@@ -158,6 +161,7 @@ class HotelCoopOnlineAPIHandler(BtwBaseHandler):
 
 class HotelCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
 
+    @gen.coroutine
     @auth_login(json=True)
     @no_monomer_hotel(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.choose_hotel, json=True)
@@ -166,9 +170,13 @@ class HotelCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
         if not hotel:
             raise JsonException(1000, u'hotel not found')
 
-        self.delete_hotel(hotel)
-
-        self.finish_json(result=dict(
-                hotel=hotel.todict()
+        r = yield self.delete_hotel(hotel)
+        if r:
+            self.db.commit()
+            self.finish_json(result=dict(
+                    hotel=hotel.todict()
+                )
             )
-        )
+        else:
+            self.db.rollback()
+            raise JsonException(2000, 'delete fail')

@@ -519,10 +519,10 @@ class PushInventoryTask(SqlAlchemyTask):
         return data
 
 
-
-
 @app.task(ignore_result=True, queue=QUEUE_STOCK_PUSH)
 def push_all_to_stock():
-    PushHotelTask().push_all_hotels.delay().get()
-    PushRatePlanTask().push_all_rateplan_cancelrule_roomrate.delay().get()
-    PushInventoryTask().push_all_inventories.delay().get()
+    chain = PushHotelTask().push_all_hotels.s() |PushRatePlanTask().push_all_rateplan_cancelrule_roomrate.s() | PushInventoryTask().push_all_inventories.s()
+    chain()
+    #PushHotelTask().push_all_hotels.delay().get()
+    #PushRatePlanTask().push_all_rateplan_cancelrule_roomrate.delay().get()
+    #PushInventoryTask().push_all_inventories.delay().get()

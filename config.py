@@ -43,6 +43,7 @@ BACKSTAGE_ENABLE = False
 
 BACKSTAGE_PERMISSIONS = {
         'admin': 63,
+        'ota': 85,
 }
 
 DEBUG = True

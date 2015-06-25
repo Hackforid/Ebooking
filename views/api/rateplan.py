@@ -11,7 +11,6 @@ from tools.log import Log
 from views.base import BtwBaseHandler
 from exception.json_exception import JsonException
 
-from tasks.stock import PushRatePlanTask
 
 from constants import PERMISSIONS
 
@@ -245,6 +244,7 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
 
         raise gen.Return((rateplan, roomrate))
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.pricing, json=True)
     def delete(self, hotel_id, roomtype_id, rateplan_id):
@@ -252,10 +252,13 @@ class RatePlanModifyAPIHandler(BtwBaseHandler, RatePlanValidMixin, CooperateMixi
         if not rateplan:
             raise JsonException(1001, 'rateplan not found')
 
-        # TODO: make delete sync
-        self.delete_rateplan(rateplan)
-
-        self.finish_json(result=dict(
-            rateplan=rateplan.todict(),
-            ))
+        r = yield self.delete_rateplan(rateplan)
+        if r:
+            self.db.commit()
+            self.finish_json(result=dict(
+                rateplan=rateplan.todict(),
+                ))
+        else:
+            self.db.rollback()
+            raise JsonException(2000, 'delete fail')
 

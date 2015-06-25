@@ -58,15 +58,18 @@ class CooperateHotelModel(Base):
         return query.first()
 
     @classmethod
-    def new_hotel_cooprate(cls, session, merchant_id, base_hotel_id):
+    def new_hotel_cooprate(cls, session, merchant_id, base_hotel_id, commit=True):
         coop = CooperateHotelModel(merchant_id=merchant_id, base_hotel_id=base_hotel_id)
         session.add(coop)
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
 
         return coop
 
     @classmethod
-    def new_hotel_cooprates(cls, session, merchant_id, base_hotel_ids):
+    def new_hotel_cooprates(cls, session, merchant_id, base_hotel_ids, commit=True):
         coops = []
         for base_hotel_id in base_hotel_ids:
             coop = cls.get_by_merchant_id_and_base_hotel_id(session, merchant_id, base_hotel_id)
@@ -74,7 +77,11 @@ class CooperateHotelModel(Base):
                 coop = CooperateHotelModel(merchant_id=merchant_id, base_hotel_id=base_hotel_id)
             coops.append(coop)
         session.add_all(coops)
-        session.commit()
+
+        if commit:
+            session.commit()
+        else:
+            session.flush()
 
         return coops
 

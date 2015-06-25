@@ -18,10 +18,10 @@ from constants import PERMISSIONS
 from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.inventory import InventoryModel
-from tasks.poi import POIPushRoomTypeTask
 
-from tasks.stock import PushHotelTask, PushInventoryTask
 from utils.stock_push.inventory import InventoryAsyncPusher
+from utils.stock_push.hotel import HotelPusher
+from utils.stock_push.poi import POIRoomTypePusher
 
 class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
@@ -122,6 +122,7 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
 
         return cooped, will_coop
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def post(self, hotel_id):
@@ -132,11 +133,12 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
         if not roomtype_ids:
             raise JsonException(errcode=2001, errmsg="need id")
 
-        coops = self.new_roomtype_coops(merchant_id, hotel_id, roomtype_ids)
+        coops = yield self.new_roomtype_coops(merchant_id, hotel_id, roomtype_ids)
         self.finish_json(result=dict(
             cooped_roomtypes=[coop.todict() for coop in coops],
             ))
 
+    @gen.coroutine
     def new_roomtype_coops(self, merchant_id, hotel_id, roomtype_ids):
         hotel = CooperateHotelModel.get_by_id(self.db, hotel_id)
         if not hotel:
@@ -151,19 +153,27 @@ class RoomTypeCoopedAPIHandler(BtwBaseHandler):
             raise JsonException(1000, 'room has cooped')
 
         coops = CooperateRoomTypeModel.new_roomtype_coops(self.db,
-                merchant_id, hotel.id,  hotel.base_hotel_id, roomtype_ids)
+                merchant_id, hotel.id,  hotel.base_hotel_id, roomtype_ids, commit=False)
 
         for coop in coops:
             InventoryModel.insert_in_months(self.db,
-                    merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id, 13)
+                    merchant_id, hotel_id, coop.id, hotel.base_hotel_id, coop.base_roomtype_id, 13, commit=False)
 
-        PushHotelTask().push_hotel.delay(hotel_id)
-        
+        r = yield HotelPusher(self.db).push_hotel_by_id(hotel_id)
+        if not r:
+            raise JsonException(3000, 'push hotel to stock fail')
+
         for coop in coops:
-            PushInventoryTask().push_inventory.delay(coop.id)
-            POIPushRoomTypeTask().push_roomtype.delay(coop.id)
+            r = yield InventoryAsyncPusher(self.db).push_by_roomtype(coop)
+            if not r:
+                raise JsonException(3001, 'push inventory to stock fail')
 
-        return coops
+            r = yield POIRoomTypePusher(self.db).push_roomtype(coop.id)
+            if not r:
+                raise JsonException(3001, 'push roomtype to poi fail')
+
+        self.db.commit()
+        raise gen.Return(coops)
 
 
 
@@ -195,6 +205,7 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
         self.db.commit()
         return coop
 
+    @gen.coroutine
     @auth_login(json=True)
     @auth_permission(PERMISSIONS.admin | PERMISSIONS.inventory, json=True)
     def delete(self, hotel_id, roomtype_id):
@@ -202,10 +213,14 @@ class RoomTypeCoopedModifyAPIHandler(BtwBaseHandler, CooperateMixin):
         if not room:
             raise JsonException(1001, 'roomtype not found')
 
-        self.delete_roomtype(room)
-
-        self.finish_json(result=dict(
-            roomtype=room.todict()))
+        r = yield self.delete_roomtype(room)
+        if r:
+            self.db.commit()
+            self.finish_json(result=dict(
+                roomtype=room.todict()))
+        else:
+            self.db.rollback()
+            raise JsonException(2000, 'delete fail')
 
 class RoomTypeOnlineAPIHandler(BtwBaseHandler):
 

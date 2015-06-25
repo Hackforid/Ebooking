@@ -96,3 +96,17 @@ def need_backstage_admin(json=False):
                     self.finish('permission denied')
         return _
     return _decorator
+
+def need_backstage_ota(json=False):
+    def _decorator(fn):
+        def _(self, *args, **kwargs):
+
+            if BACKSTAGE_PERMISSIONS['ota'] in self.backstage_user_permissions or not BACKSTAGE_ENABLE:
+                return fn(self, *args, **kwargs)
+            else:
+                if json:
+                    self.finish_json(errcode=401, errmsg="permission denied")
+                else:
+                    self.finish('permission denied')
+        return _
+    return _decorator
