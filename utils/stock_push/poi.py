@@ -6,9 +6,6 @@ import datetime
 
 from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
-from models.rate_plan import RatePlanModel
-from models.room_rate import RoomRateModel
-from models.ota_channel import OtaChannelModel
 from models.cooperate_hotel import CooperateHotelModel
 from models.cooperate_roomtype import CooperateRoomTypeModel
 from models.merchant import MerchantModel
