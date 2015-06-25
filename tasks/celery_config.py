@@ -30,6 +30,6 @@ CELERYBEAT_SCHEDULE = {
             },
         'push_all_to_stock': {
             'task': 'tasks.stock.push_all_to_stock',
-            'schedule': crontab(hour='*', minute=0),
+            'schedule': crontab(hour='*/3', minute=0),
             },
 }
