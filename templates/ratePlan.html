@@ -6,16 +6,50 @@
     >
     <!--导航条--> 
     <div class="notice" id="notice"><h2 ng-bind="'当前酒店：'+hotel.name"></h2></div>
-    <!--导航条end-->  
+    <!--导航条end--> 
 
+<!--loading-->
+            <div class="messageDiv" ng-show="ifloading" style="z-index:999999" ng-cloak> 
+                <div class="messageBlack">
+                    <img style="width: 90px;height: 90px;position: absolute;left: 50%;top: 50%;
+                     margin-top: -50px;margin-left: -50px;" src="${static_url('image/load1.gif')}"/>
+                </div>
+            </div> 
 
- <!--删除提示-->     
+<!--提示信息-->     
+            <div class="messageDiv" ng-show="errorHint" ng-cloak>
+               <div class="messageBlack"></div>
+               <div class="detail" style="height:150px;">
+                   <div class="head"><h1>提示信息</h1></div>
+                   <p id="closeDiv" class="close" href="#" ng-click="errorHint=false;">X</p>
+                   <div class="con">
+                      <p class="f16" style=" text-align:center;padding:30px 0;">操作失败，请稍后重试</p>
+                   </div>
+               </div> 
+            </div>
+<!--提示信息-->   
+
+<!--房型信息-->     
+            <div class="messageDiv" ng-show="roomTypeHint" ng-cloak>
+               <div class="messageBlack"></div>
+               <div class="detail" style="height:150px;">
+                   <div class="head"><h1>提示信息</h1></div>
+                   <p id="closeDiv" class="close" href="#" ng-click="roomTypeHint=false;">X</p>
+                   <div class="con">
+                      <p class="f16" style=" text-align:center;padding:30px 0;">暂无已合作的房型</p>
+                   </div>
+               </div> 
+            </div>
+<!--房型信息-->   
+
+<!--删除提示-->     
             <div class="messageDiv"  ng-show="confirmCancel" ng-cloak> 
                 <div class="messageBlack"></div>
                     <div class="detail">
                     <div class="head"><h1>提示</h1></div>
                     <div class="con">
                         <p class="f16" style=" text-align:center;padding:30px 0;">确认要删除吗？</p>
+                        <p ng-show="deletePlanErr" style="font-size:13px;margin-left:10px;color:red">操作失败，请稍后重试</p>
                         <p class="action" style=" text-align:center">
                         <input name="确认" type="button" value="确认"  ng-click="confirmOk()" class=""/>
                         <input name="取消" type="button" value="取消"  ng-click="confirmCancel=false;" class="btn-bai"/>
@@ -24,7 +58,7 @@
                 </div> 
             </div>  
 
- <!--删除提示-->
+<!--删除提示-->
 
   
 

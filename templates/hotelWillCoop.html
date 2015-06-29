@@ -11,6 +11,29 @@
         ng-app="hotelWillCoopApp"  ng-controller="hotelWillCoopContentCtrl"
         ><div class="p15">
 
+        	<!--提示信息-->     
+		    <div class="messageDiv" style="z-index:99999" ng-show="errorHint" ng-cloak>
+		       <div class="messageBlack"></div>
+		       <div class="detail" style="height:150px;">
+		           <div class="head"><h1>提示信息</h1></div>
+		           <p id="closeDiv" class="close" href="#" ng-click="errorHint=false;">X</p>
+		           <div class="con">
+		              <p class="f16" style=" text-align:center;padding:30px 0;">操作失败，请稍后重试</p>
+		           </div>
+		       </div> 
+		    </div>
+			<!--提示信息--> 
+
+			<!--loading-->
+            <div class="messageDiv" ng-show="ifloading" style="z-index:999999" ng-cloak> 
+                <div class="messageBlack">
+                    <img style="width: 90px;height: 90px;position: absolute;left: 50%;top: 50%;
+                     margin-top: -50px;margin-left: -50px;" src="${static_url('image/load1.gif')}"/>
+                </div>
+            </div>
+            <!--loading-->
+
+
        		<!--酒店弹窗浮层-->     
 			<div class="messageDiv" id="acceptDialog" style="display:none" >
  		 	 <div class="messageBlack"></div>
@@ -51,9 +74,6 @@
 								
 								</div> -->
 							
-								
-
-
 								<label><strong>星级：</strong><select ng-enter="urlCheck(1)" name="" class="input-s"  ng-model="searchStar">
 										<option value=""></option>
 										<option value="0">不限</option>
@@ -67,8 +87,6 @@
 								<label>
 									<input name="" type="button" value="搜索" ng-click="urlCheck(1)"/> <input name="" type="button" value="重置"  ng-click="conditionReset()" class="btn-bai btn-s" />
 								</label>
-
-
 						</div></div>
 				    </div>
                 </div>
@@ -89,15 +107,11 @@
 										<th width="8%">操作</th>
 								</tr></thead>
 							</table> 
-
-
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01" id="tablerow" ng-cloak>
 								<tr ng-repeat="hotel in hotels">
 									<td width="10%"><input ng-checked="checkStatus" name="checkBox" type="checkbox" value="" /></td>
                                     <td width="20%" ng-bind="hotel.name"></td>
-
                                     <td width="6%" ng-bind="getHotelStar(hotel.star)"></td>
-
                                     <td width="6%" ng-bind="getCityName(hotel.city_id)"></td>
                                  	<td width="8%" ng-bind="hotel.district_name"></td>
                                     <td width="20%" ng-bind="hotel.address"></td>
@@ -113,7 +127,7 @@
 
 							<!--页码-->
 							<div id="pageInfo" class="page" style="display:none">
-                                
+                 
 								<span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
 								
                                 <span><span ng-bind="'每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">

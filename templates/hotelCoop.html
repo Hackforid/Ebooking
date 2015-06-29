@@ -9,6 +9,20 @@
     ng-app="hotelCoopedApp" ng-controller="hotelCoopedContentCtrl"
     ><div class="p15">
 
+<!--提示信息-->     
+            <div class="messageDiv" style="z-index:99999" ng-show="errorHint" ng-cloak>
+               <div class="messageBlack"></div>
+               <div class="detail" style="height:150px;">
+                   <div class="head"><h1>提示信息</h1></div>
+                   <p id="closeDiv" class="close" href="#" ng-click="errorHint=false;">X</p>
+                   <div class="con">
+                      <p class="f16" style=" text-align:center;padding:30px 0;">操作失败，请稍后重试</p>
+                   </div>
+               </div> 
+            </div>
+<!--提示信息-->    
+
+
 <!--loading-->
             <div class="messageDiv" ng-show="ifloading" style="z-index:999999" ng-cloak> 
                 <div class="messageBlack">
@@ -23,8 +37,9 @@
                     <div class="detail">
                     <div class="head"><h1>提示</h1></div>
                     <div class="con">
-                        <p class="f16" style=" text-align:center;padding:30px 0;">确认要解除合作关系吗？</p>
-                        <p class="action" style=" text-align:center">
+                        <p class="f16" style=" text-align:center;padding:30px 0px 14px 0px;">确认要解除合作关系吗？</p>
+                        <p ng-show="deleteRoomErr" style="font-size:13px;margin-left:10px;color:red;margin-bottom:0px">操作失败，请稍后重试</p>
+                        <p class="action" style=" text-align:center;margin-bottom:0px">
                         <input name="确认" type="button" value="确认"  ng-click="confirmOk()" class=""/>
                         <input name="取消" type="button" value="取消"  ng-click="confirmCancel=false;" class="btn-bai"/>
                         </p>
@@ -39,7 +54,7 @@
  <!--修改房型提示-->     
             <div class="messageDiv"  ng-show="changeRoomOnline" ng-cloak> 
                 <div class="messageBlack"></div>
-                    <div class="detail hotel-detail" style="margin-left:-250px;width:500px;height:310px;">
+                    <div class="detail hotel-detail" style="margin-left:-250px;width:500px;height:310px;margin-top:-162px;">
                     <div class="head">
                         <h1>设置房态</h1>
                         <p id="closeDiv" class="close" href="#" ng-click="changeRoomOnline=false">X</p>
@@ -73,9 +88,10 @@
                     <div class="detail">
                     <div class="head"><h1>提示</h1></div>
                     <div class="con">
-                        <p ng-show="!currentIsOnline" class="f16" style=" text-align:center;padding:30px 0;">确认要关闭所有房型吗？</p>
-                        <p ng-show="currentIsOnline" class="f16" style=" text-align:center;padding:30px 0;">确认要打开所有房型吗？</p>
-                        <p class="action" style=" text-align:center">
+                        <p ng-show="!currentIsOnline" class="f16" style="text-align:center;padding:30px 0px 14px 0px;">确认要关闭所有房型吗？</p>
+                        <p ng-show="currentIsOnline" class="f16" style="text-align:center;padding:30px 0px 14px 0px;">确认要打开所有房型吗？</p>
+                        <p ng-show="confirmRoomErr" style="font-size:13px;margin-left:10px;color:red;margin-bottom:0px">操作失败，请稍后重试</p>
+                        <p class="action" style=" text-align:center;margin-bottom:0px">
                         <input name="确认" type="button" value="确认"  ng-click="roomCloseConfirm()" />
                         <input name="取消" type="button" value="取消"  ng-click="roomConfirmCancel=false;" class="btn-bai"/>
                         </p>
