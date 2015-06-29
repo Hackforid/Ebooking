@@ -89,7 +89,7 @@
             </div>
             <div class="container">
                 <div class="col-lg-6" ng-repeat="ota in currentOtas">
-                    <input type="checkbox" ng-model="ota.checked" ng-checked="ota.checked">{{ota.description}}
+                    <input type="checkbox" ng-model="ota.checked" ng-checked="ota.checked">{{ota.id+':'+ota.description}}
                 </div>
             </div>
             <div class="modal-footer">

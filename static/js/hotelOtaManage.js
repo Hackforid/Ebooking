@@ -345,11 +345,20 @@
 
 	adminHotelsApp.controller('onLineStatus', function($scope, $http, $rootScope, $modalInstance, otas, hotelId) {
 
-		$scope.currentOtas = angular.copy(otas);
+		$scope.allCurrentOtas = angular.copy(otas);
+		$scope.currentOtas = [];
 		$scope.allOtaStatus = {
 			status: false
 		};
 		$scope.otaErrMessage = "";
+		function init() {
+			for (var i = 0; i < $scope.allCurrentOtas.length; i++) {
+				if ($scope.allCurrentOtas[i]['isOnline'] == 1) {
+					$scope.currentOtas.push($scope.allCurrentOtas[i]);
+				}
+			};
+		}
+		init();
 		$scope.allOtaSelect = function() {
 			var currentStatus = $scope.allOtaStatus.status;
 			if (currentStatus == false) {
