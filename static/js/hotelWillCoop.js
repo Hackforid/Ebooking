@@ -38,7 +38,6 @@
 			$scope.directiveCtl = false;
 			$scope.finalUrl;
 			$scope.messageBox;
-			$scope.paginationId = "pageNumber";
 
 			$scope.checkStatus = false;
 			$scope.changeDistrictName = {};
@@ -52,6 +51,12 @@
 				}
 				return true;
 			}
+			$scope.$watch('finalUrl', function(newValue, oldValue) {
+				if (newValue == oldValue) {
+					return;
+				}
+				$scope.searchResult();
+			});
 
 			$scope.$watch('citysName.selected', function(newValue, oldValue) {
 				if (newValue == oldValue) {

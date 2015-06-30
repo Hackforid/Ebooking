@@ -55,11 +55,11 @@
 				<div class="search-div">
 					<div class="content">
 						<div class="divone"><div class="c">
-								<label><strong>酒店名称：</strong><input ng-enter="urlCheck(1)" name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+								<label><strong>酒店名称：</strong><input style="padding-left:5px;" ng-enter="urlCheck(1)" name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
 								<label ><strong>城市：</strong></label>
 
 								<label>
-  								<input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control" >
+  								<input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px;padding:0px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control" >
 								</label>
 
 								<label><strong>区域：</strong>
@@ -126,10 +126,8 @@
 							</div>
 
 							<!--页码-->
-							<div id="pageInfo" class="page" style="display:none">
-                 
-								<span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
-								
+							<div id="pageInfo" class="page" style="display:none">								
+								<span  id="pageNumber"  key='currentPage' itemkey='itemPerPage' itemcount='pageCount'  myclick='urlCheck(currentPage)' ng-if="directiveCtl" page-info></span>
                                 <span><span ng-bind="'每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">
 										<option value="10">10</option>
 										<option value="20">20</option>
