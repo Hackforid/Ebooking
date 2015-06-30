@@ -50,7 +50,6 @@
  <!--删除提示--> 
 
 
-
  <!--修改房型提示-->     
             <div class="messageDiv"  ng-show="changeRoomOnline" ng-cloak> 
                 <div class="messageBlack"></div>
@@ -69,9 +68,7 @@
 
                                         <input type="button" ng-show="!room.is_online" ng-click="currenRoomCloseConfirm($index,1)"  value="开房"/>
                                     </td>
-                                
                                 </tr>
-
                             </table>
                         </div>
                     </div>
@@ -79,8 +76,6 @@
             </div>  
 
  <!--修改房型提示-->  
-
-
 
  <!--关闭房型提示-->     
             <div class="messageDiv"  ng-show="roomConfirmCancel" ng-cloak> 
@@ -101,8 +96,6 @@
 
  <!--关闭房型提示-->      
 
-
-
          <!--酒店弹窗浮层-->     
             <div class="messageDiv" id="acceptDialog" style="display:none" >
                 <div class="messageBlack"></div>
@@ -119,24 +112,21 @@
 
         <!--已合作酒店开始-->  
         <div class="main-mod main-coop">
-
-
             <div class="search-div">
                 <div class="content">
                     <div class="divone"><div class="c">
-                            <label><strong>酒店名称：</strong><input ng-enter="urlCheck(1)" name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
+                            <label><strong>酒店名称：</strong><input style="padding-left:5px;" ng-enter="urlCheck(1)" name="" type="text" value="" class="input-t" ng-model="searchName"/></label>
                             <label><strong>城市：</strong></label>
                            
                             <label>
-                            <input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
+                            <input ng-enter="urlCheck(1)" style="height:25px;line-height:25px;margin-top: 1px;padding:0px"  type="text" ng-model="citysName.selected" id="searchCity" typeahead="city for city in citysName | filter:$viewValue | limitTo:8" class="form-control">
                             </label>
 
                             <label><strong>区域：</strong>
                                   <select ng-enter="urlCheck(1)" name="" class="input-s" 
-                                      ng-model="searchDistrict" ng-options="c.id as c.name for c in changeDistrictName">
+                                      ng-model="searchDistrict.value" ng-options="c.id as c.name for c in changeDistrictName">
                                    </select>
                             </label>
-
                             <label><strong>星级：</strong><select ng-enter="urlCheck(1)" name="" class="input-s" ng-model="searchStar" >
                                 <option value=""></option>
                                 <option value="0">不限</option>
@@ -144,15 +134,12 @@
                                 <option value="2">二星级</option>
                                 <option value="3">三星级</option>
                                 <option value="4">四星级</option>
-                                <option value="5">五星级</option>
-                                
+                                <option value="5">五星级</option>    
                             </select></label>
                             <label><input name="" type="button" value="搜索" ng-click="urlCheck(1)" />
                                 <input name="" ng-click="conditionReset()" type="button" value="重置" class="btn-bai btn-s" /></label>
-
                             <input style="width:122px;" type="button" value="一键打开所有房型" ng-click="allRoomClose(1);" />
                             <input style="width:122px;" type="button" value="一键关闭所有房型" ng-click="allRoomClose(0);" />
-
                     </div></div>
 
                 </div>
@@ -186,21 +173,15 @@
                                     <a style="text-decoration: underline;cursor: pointer;" ng-click="roomStatusClick()" ng-mouseenter="loadRoomTypes(hotel.id,$index)" ng-bind="(hotel['online_roomtype_count'])+'/'+(hotel['roomtype_count'])">
                                     </a>
                                 </td> 
-
                                 <td class="action" width="13%"><input name="" type="button" value="维护库存" class="btn-s btn-bai" ng-click="redictToInventoryPage(hotel)" /></td>
-
                                 <td width="7%"><a ng-click="cancelBtn($index)" href="#" style="color:#0073B7;text-decoration: underline;">解除合作</a></td>
-
-
                             </tr>
-
                         </table>
                         <!--页码-->
                         <div id="pageInfo" class="page" style="display:none">
+                           <span  id="pageNumber"  key='currentPage' itemkey='itemPerPage' itemcount='pageCount'  myclick='urlCheck(currentPage)' ng-if="directiveCtl" page-info></span>
 
-                           <span  id="pageNumber"  ng-if="directiveCtl" page-info></span>
-                                
-                            <span><span ng-bind="'每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">                                                                                                      
+                            <span><span ng-bind="'每页'+itemPerPage+'条，每页显示条数：'"></span><select name="" class="input-s"  ng-model="itemPerPage">                  
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -208,19 +189,10 @@
                             </select></span>
                         </div>
                         <!--页码end-->     
-
-
-
-
                 </div></div>
             </div>
-
         </div>
         <!--已合作酒店结束-->  
-
-
-
-
 
           <!--百度地图-->     
 <div class="messageDiv" id="mapDetail" style="display:none;z-index:9999">
@@ -229,23 +201,15 @@
        <div class="head"><h1>百度地图</h1></div>
        <p id="closeDiv" class="close" href="#" ng-click="closeMapDetail()">X</p>
        <div id="mapShowDiv" class="con">
-          
-            
-          
        </div>
    </div> 
 </div>
  <!--百度地图-->  
       
-
-
-
-
-
         <!--酒店弹窗浮层-->     
 <div class="messageDiv" id="hotel-detail" style="display:none">
    <div class="messageBlack"></div>
-   <div class="detail hotel-detail" style="height:350px;">
+   <div class="detail hotel-detail" style="height:310px;margin-top:-150px">
        <div class="head"><h1>酒店信息</h1></div>
        <p id="closeDiv" class="close" href="#" ng-click="closeHotelDetail()">X</p>
        <div class="con">
@@ -254,7 +218,7 @@
               <label><strong>酒店名称：</strong><span ng-bind="currentHotel['name']"></span>
               <a href="javascript:void(0)" ng-click="mapshow()" class="a-orange">[ 百度地图 ]</a></label>            
               <label><strong>星　　级：</strong><span ng-bind="getHotelStar(currentHotel['star'])"></span></label>
-              <label><strong>预订要求：</strong><span ng-bind="checkBook(currentHotel['foreigner_checkin'],currentHotel['require_idcard'])"></span></label>
+              <!--<label><strong>预订要求：</strong><span ng-bind="checkBook(currentHotel['foreigner_checkin'],currentHotel['require_idcard'])"></span></label>-->
              <label><strong>酒店设施：</strong><span ng-repeat="fac in currentHotel['facilities']" ng-bind="fac+'   '"></span></label>
               <label><strong>省市县区：</strong><span ng-bind="currentHotel['district_name']"></span></label>
               <label><strong>商　　圈：</strong><span ng-bind="currentHotel['business_zone']['name']"></span></label>

@@ -57,7 +57,7 @@ input[type="button"]:hover,input[type="submit"]:hover,button:hover { background-
 .wrapper {}
 .login {}
 .login .header {height:94px; background:#F6F6F6;width:auto;}
-.login .header .w1200 {margin:0 auto;height:94px;width:auto; }
+.login .header .w1200 {margin:0 auto;height:94px;width:1000px; }
 
 .login .header .left {min-width:520px;}
 .login .header .left img { float:left;margin-top:20px;}
@@ -97,7 +97,7 @@ input[type="button"]:hover,input[type="submit"]:hover,button:hover { background-
 .main {}
 .login .main {}
 .login .main .index-focus {width:auto;height:460px; background:url(../image/bg-index.jpg) no-repeat center top;}
-.login .main .index-focus .mod-login {width:980px; position:relative;height:460px; margin:0 auto;}
+.login .main .index-focus .mod-login {width:1000px; position:relative;height:460px; margin:0 auto;}
 .login .main .index-focus .mod-login .c1 { position:absolute;right:0px;top:45px;background:#F6F6F6;width:420px;height:370px;
 filter:alpha(opacity=90);
 	-moz-opacity:0.9;
@@ -108,7 +108,7 @@ filter:alpha(opacity=90);
 .mod-login .head strong {font-family: "Microsoft YaHei"; font-size:20px; font-weight:normal;width:60px; text-align:center;border-top:6px solid #FFA700; display:block;padding:20px 0 25px 0;}
 
 .mod-login .login-label {width:70%;margin:0 auto;}
-.mod-login .login-label label {margin-bottom:15px; display:block; overflow:auto;min-height:40px;}
+.mod-login .login-label label {margin-bottom:15px; display:block; overflow:auto;min-height:40px;min-width: 300px}
 .mod-login .login-label label input[type="text"],.mod-login .login-label label input[type="password"] { font-family: "Microsoft YaHei";font-size:14px;width: 250px;height:38px; line-height:38px; float:left;border:1px solid #D4D4D4; text-indent:12px;}
 .mod-login .login-label div.ph span { text-indent:12px; line-height:40px!important; font-family: "Microsoft YaHei"; }
  

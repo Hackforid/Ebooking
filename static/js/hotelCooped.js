@@ -32,7 +32,7 @@
 
 
 
-	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http','log', function($scope, $http,log) {
+	hotelCoopApp.controller('hotelCoopedContentCtrl', ['$scope', '$http', '$location', '$q','log', function($scope, $http, $location, $q, log) {
 
 		$scope.citys = [];
 		$scope.hotels = [];
@@ -40,7 +40,7 @@
 
 		$scope.citysName = [];
 
-
+		$scope.searchDistrict = {value:""};
 		$scope.searchName = "";
 		$scope.searchStatus = "";
 		$scope.searchCity = "";
@@ -52,7 +52,6 @@
 		$scope.pageCount;
 		$scope.directiveCtl = false;
 		$scope.finalUrl;
-		$scope.paginationId = "pageNumber";
 		$scope.messageBox;
 		$scope.ifloading = true;
 
@@ -183,6 +182,7 @@
 		$scope.errorHint = false;
 		$scope.deleteRoomErr = false;
 		$scope.confirmRoomErr = false;
+		var deferred = $q.defer();
 
 		$scope.loadRoomTypes = function(currentHotelId, index) {
 			$scope.currentRoomtypes = {};
@@ -297,7 +297,7 @@
 			});
 
 			$scope.cityBlur = function() {
-				$scope.searchDistrict = "";
+				$scope.searchDistrict = {value:""};
 				/*空过滤*/
 				if($.trim($scope.citysName.selected) == ""){
 					$scope.changeDistrictName = {};
@@ -333,6 +333,12 @@
 								name: "不限"
 							};
 							$scope.changeDistrictName.unshift(unlimitedDistrict);
+							var urlParamDis = $location.search().district_id;
+							if(urlParamDis != undefined && urlParamDis != ""){
+								setTimeout(function () {
+									$scope.searchDistrict = {value:parseInt(urlParamDis)};
+								}, 0);							
+							}
 						} else {
 							log.log(resp.errmsg);
 						}
@@ -487,6 +493,7 @@
 						for (var i = 0; i < $scope.citys.length; i++) {
 							$scope.citysName.push($scope.citys[i]['name']);
 						};
+						deferred.resolve('success');
 					}
 				})
 				.error(function() {});
@@ -499,6 +506,10 @@
 			$scope.searchStatus = "";
 			$("#searchCity").val("");
 			$scope.searchStar = "";
+			var urlParam = {};
+			urlParam.start = 0;
+			urlParam.limit = $scope.itemPerPage;
+			$location.search(urlParam);
 			$scope.finalUrl = '/api/hotel/cooped/?start=0&limit=' + $scope.itemPerPage;
 			$scope.searchResult();
 		}
@@ -508,38 +519,70 @@
 			$("#acceptDialog").hide();
 		}
 
-		$scope.urlCheck = function urlCheck(a) {
+		$scope.getCityName = function(cityId) {
+			for (var i = 0; i < $scope.citys.length; i++) {
+				var city = $scope.citys[i];
+				if (city.id == cityId) {
+					return city.name;
+				}
+			}
+			return '';
+		}
 
+		$scope.urlCheck = function urlCheck(a, sta, cit) {
+			var urlParam = {};
 			$scope.currentPage = a;
 			$scope.searchCity = $("#searchCity").val();
 			var pageNum = ($scope.currentPage - 1) * ($scope.itemPerPage);
+			if((sta != undefined) && (sta!="")){
+				pageNum = sta;
+			}
+			if((cit != undefined) && (cit!="")){
+				$scope.searchCity = cit;
+				var name = $scope.getCityName(cit);
+				$scope.citysName.selected = name;
+			}
 			var url = '/api/hotel/cooped/?start=' + pageNum;
+			urlParam.start = pageNum;
 			if ($.trim($scope.searchName) != "" && $scope.searchName != undefined) {
 				url = url + "&name=" + $scope.searchName;
+				urlParam.name = $scope.searchName;
 			}
 			if ($.trim($scope.searchCity) != "" && $scope.searchCity != undefined) {
-				var cityId = getCityId($scope.searchCity);
+				var cityId;
+				if((cit != undefined) && (cit!="")){
+					cityId = cit;
+				}else{
+					cityId = getCityId($scope.searchCity);
+				}
 				if (cityId == false) {
 					$("#pageInfo").hide();
 					$scope.hotels = [];
 					cityId = "10000";
 				}
 				url = url + "&city_id=" + cityId;
+				urlParam.city_id = cityId;
 			}
 			if ($.trim($scope.searchStar) != "" && $scope.searchStar != undefined && $scope.searchStar != "0") {
 				url = url + "&star=" + $scope.searchStar;
+				urlParam.star = $scope.searchStar;
 			}
 			if ($.trim($scope.searchStatus) != "" && $scope.searchStatus != undefined && $scope.searchStatus != "2") {
 				url = url + "&is_online=" + $scope.searchStatus;
+				urlParam.is_online = $scope.searchStatus;
 			}
 			if ($.trim($scope.itemPerPage) != "" && $scope.itemPerPage != undefined) {
 				url = url + "&limit=" + $scope.itemPerPage;
+				urlParam.limit = $scope.itemPerPage;
 			}
-			if ($.trim($scope.searchDistrict) != "" && $scope.searchDistrict != undefined && $.trim($scope.searchDistrict) != -100) {
-					url = url + "&district_id=" + $scope.searchDistrict;
+			if ($.trim($scope.searchDistrict.value) != "" && $scope.searchDistrict.value != undefined && $.trim($scope.searchDistrict.value) != -100) {
+				url = url + "&district_id=" + $scope.searchDistrict.value;
+				urlParam.district_id = $scope.searchDistrict.value;
 			}
+			log.log(url);
 			$scope.finalUrl = encodeURI(url);
-			log.log($scope.finalUrl);
+			
+			$location.search(urlParam);
 		}
 
 		$scope.searchResult = function searchResult() {
@@ -574,20 +617,54 @@
 		function init() {
 			$(".menu2").find("dd").eq(0).addClass("active");
 			loadCitys();
-			$scope.urlCheck($scope.currentPage);
-			$scope.searchResult();
+			loadingUrlParam();
 		}
 		init();
-
-		$scope.getCityName = function(cityId) {
-			for (var i = 0; i < $scope.citys.length; i++) {
-				var city = $scope.citys[i];
-				if (city.id == cityId) {
-					return city.name;
+		function loadingUrlParam () {
+			deferred.promise.then(function success(data) {
+				var urlParam = $location.search();
+				if ((urlParam.name != "") && (urlParam.name != undefined)) {
+					$scope.searchName = urlParam.name;
+				} else {
+					$scope.searchName = "";
 				}
-			}
-			return '';
+				if ((urlParam.star != "") && (urlParam.star != undefined)) {
+					$scope.searchStar = urlParam.star;
+				} else {
+					$scope.searchStar = "";
+				}
+				if ((urlParam.is_online != "") && (urlParam.is_online != undefined)) {
+					$scope.searchStatus = urlParam.is_online;
+				} else {
+					$scope.searchStatus = "";
+				}
+				if ((urlParam.limit != "") && (urlParam.limit != undefined)) {
+					$scope.itemPerPage = urlParam.limit;
+				}
+				if ((urlParam.district_id != "") && (urlParam.district_id != undefined)) {
+					$scope.searchDistrict.value = parseInt(urlParam.district_id);
+				} else {
+					$scope.searchDistrict.value = "";
+				}
+				if ((urlParam.city_id != "") && (urlParam.city_id != undefined)) {} else {
+					$("#searchCity").val("");
+				}
+				$scope.currentPage = ((urlParam.start == 0) || (urlParam.start == undefined)) ? 1 : ((urlParam.start) / ($scope.itemPerPage) + 1);
+				$scope.urlCheck($scope.currentPage, urlParam.start, urlParam.city_id);
+				$scope.searchResult();
+			});
 		}
+		$scope.$watch(function() {
+			return $location.url();
+		}, function(newValue, oldValue) {
+			if (newValue == oldValue) {
+				return;
+			}
+			if ((oldValue == "") || (oldValue == undefined)) {
+				return;
+			}
+			loadingUrlParam();
+		});
 
 		function getCityId(cityName) {
 			for (var i = 0; i < $scope.citys.length; i++) {

@@ -1,85 +1,68 @@
-angular.module('myhotelApp.directives', []).directive('pageInfo', function() {
+angular.module('myhotelApp.directives', []).directive('pageInfo', function($parse) {
   return {
-
+    scope: {
+      currentPage: '=key',
+      itemPerPage: '=itemkey',
+      pageCount: '=itemcount',
+      myclick: '&'
+    },
     link: function(scope, element, attris) {
+      var urlCheck = $parse(scope.myclick);
 
       function setPage() {
-        //console.log("这里是setpage");       
-       /* console.log("bug");
-        console.log(scope.pageCount);*/
-
-        var count = 10000;   
-
-         if(scope.pageCount<scope.itemPerPage){
-              count=scope.currentPage;
+        var count = 10000;
+        if (scope.pageCount < scope.itemPerPage) {
+          count = scope.currentPage;
         }
-
-
         var pageindex = scope.currentPage;
         var linkList = [];
-       
         if (pageindex == 1) {
-          linkList[linkList.length] = "<span  href='#' class='disabled' >&lt; 上一页</span>";
+          linkList[linkList.length] = "<span  href='javascript:void(0)' class='disabled' >&lt; 上一页</span>";
         } else {
-          linkList[linkList.length] = "<a  href='#' >&lt; 上一页</a>";
+          linkList[linkList.length] = "<a  href='javascript:void(0)' >&lt; 上一页</a>";
         }
 
         function setPageList() {
-            if (pageindex == i) {
-              linkList[linkList.length] = "<a  href='#' class='current'>" + i + "</a>";
-            } else {
-              linkList[linkList.length] = "<a  href='#'>" + i + "</a>";
+          if (pageindex == i) {
+            linkList[linkList.length] = "<a  href='javascript:void(0)' class='current'>" + i + "</a>";
+          } else {
+            var tempi = (i-1);
+            if(tempi != count){
+               linkList[linkList.length] = "<a  href='javascript:void(0)'>" + i + "</a>";
             }
           }
-
-           
+        }
         if (count <= 3) {
           for (var i = 1; i <= count; i++) {
             setPageList();
           }
-        }
-       
-        else {                                     
+        } else {
           if (pageindex < 3) {
             for (var i = 1; i <= 3; i++) {
               setPageList();
             }
             linkList[linkList.length] = "<span>...</span>";
-          }  else { //当前页在中间部分
-            //linkList[linkList.length] = "";
+          } else {
             for (var i = pageindex - 1; i <= pageindex + 1; i++) {
               setPageList();
             }
             linkList[linkList.length] = "<span>...</span>";
           }
-        
-       
-           }
+        }
         if (pageindex == count) {
-          linkList[linkList.length] = "<span  href='#' class='disabled'>下一页  &gt;</span>";
+          linkList[linkList.length] = "<span  href='javascript:void(0)' class='disabled'>下一页  &gt;</span>";
         } else {
-          linkList[linkList.length] = "<a  href='#' >下一页  &gt;</a>";
+          linkList[linkList.length] = "<a  href='javascript:void(0)' >下一页  &gt;</a>";
         }
 
-        
-
-        $("#" + scope.paginationId).html(linkList.join(""));
-
-
-        /*if (pageindex == count) {
-         
-           var aLink = $("#" + scope.paginationId).find("a");
-           console.log(aLink);
-           $(aLink[(aLink.length-1)]).next("span").remove();
-           $(aLink[(aLink.length-1)]).remove();
-         
-        } */
-
-
+        $("#pageNumber").html(linkList.join(""));
 
         //事件点击
         var pageClick = function() {
-          var aLink = $("#" + scope.paginationId).find("a");
+          var aLink = $("#pageNumber").find("a");
+          if (aLink.length == 0) {
+            return;
+          }
           var initPage = pageindex; //初始的页码
           aLink[0].onclick = function() { //点击上一页
             if (initPage == 1) {
@@ -87,96 +70,62 @@ angular.module('myhotelApp.directives', []).directive('pageInfo', function() {
             }
             initPage--;
             scope.currentPage = initPage;
-
             scope.$apply(function() {
-              scope.urlCheck(initPage);
+              urlCheck({
+                currentPage: initPage
+              });
             });
-
-            setPage();
             return;
           }
           for (var i = 1; i < aLink.length - 1; i++) { //点击页码
             aLink[i].onclick = function() {
               initPage = parseInt(this.innerHTML);
-
               scope.currentPage = initPage;
-
-               //console.log("这里是当前页点击");
-
               scope.$apply(function() {
-                scope.urlCheck(initPage);
+                /*event.stopPropagation();
+                event.preventDefault();*/
+                urlCheck({
+                  currentPage: initPage
+                });
               });
-
-              setPage();
               return;
             }
           }
           aLink[aLink.length - 1].onclick = function() { //点击下一页
-
-             if(scope.pageCount<scope.itemPerPage){
+            if (scope.pageCount < scope.itemPerPage) {
               return;
-             }
-
-            
+            }
             initPage++;
             scope.currentPage = initPage;
-
             scope.$apply(function() {
-              scope.urlCheck(initPage);
+              urlCheck({
+                currentPage: initPage
+              });
             });
-            setPage();
             return;
           }
         }()
-
-
       }
-
-      setPage();
-
-      scope.$watch('itemPerPage', function() {
-        //console.log("这里是itemPerPage变化时候产生的watch");
+      scope.$watch('itemPerPage', function(newValue, oldValue) {
+        if (newValue == oldValue) {
+          return;
+        }
         scope.currentPage = 1;
-        scope.urlCheck(scope.currentPage);
+        urlCheck({
+          currentPage: scope.currentPage
+        });
         setPage();
-
       });
-
-      scope.$watch('finalUrl', function(newValue, oldValue) {
-        //console.log("这里是url变化时候产生的watch");
-        //console.log(scope.finalUrl);
-
-
-        if (newValue == oldValue) {
-         // setPage();
-          return;
-        }
-        scope.searchResult();
-
+      scope.$watch('currentPage', function(newValue, oldValue) {
+        setPage();
+        $(window).scrollTop(0);
       });
-
-
       scope.$watch('pageCount', function(newValue, oldValue) {
-      
-        //console.log(scope.finalUrl);
-
         if (newValue == oldValue) {
-       
           return;
         }
-
-        //console.log("这里产生的watch");
         setPage();
-
       });
-
-
-
-
-
-
-       
-
     }
   };
 })
