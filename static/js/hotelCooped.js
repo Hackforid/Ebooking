@@ -183,6 +183,7 @@
 		$scope.deleteRoomErr = false;
 		$scope.confirmRoomErr = false;
 		var deferred = $q.defer();
+		var def = $q.defer();
 
 		$scope.loadRoomTypes = function(currentHotelId, index) {
 			$scope.currentRoomtypes = {};
@@ -333,12 +334,7 @@
 								name: "不限"
 							};
 							$scope.changeDistrictName.unshift(unlimitedDistrict);
-							var urlParamDis = $location.search().district_id;
-							if(urlParamDis != undefined && urlParamDis != ""){
-								setTimeout(function () {
-									$scope.searchDistrict = {value:parseInt(urlParamDis)};
-								}, 0);							
-							}
+							def.resolve('success');							
 						} else {
 							log.log(resp.errmsg);
 						}
@@ -641,17 +637,27 @@
 				if ((urlParam.limit != "") && (urlParam.limit != undefined)) {
 					$scope.itemPerPage = urlParam.limit;
 				}
-				if ((urlParam.district_id != "") && (urlParam.district_id != undefined)) {
-					$scope.searchDistrict.value = parseInt(urlParam.district_id);
+				if ((urlParam.city_id != "") && (urlParam.city_id != undefined)) {
+					if ((urlParam.district_id != "") && (urlParam.district_id != undefined)) {
+						$scope.searchDistrict.value = parseInt(urlParam.district_id);
+					} else {
+						$scope.searchDistrict.value = "";
+					}
 				} else {
-					$scope.searchDistrict.value = "";
-				}
-				if ((urlParam.city_id != "") && (urlParam.city_id != undefined)) {} else {
 					$("#searchCity").val("");
+					$scope.searchDistrict.value = "";
 				}
 				$scope.currentPage = ((urlParam.start == 0) || (urlParam.start == undefined)) ? 1 : ((urlParam.start) / ($scope.itemPerPage) + 1);
 				$scope.urlCheck($scope.currentPage, urlParam.start, urlParam.city_id);
 				$scope.searchResult();
+				def.promise.then(function success(data) {
+					var urlParamDis = $location.search().district_id;
+					if (urlParamDis != undefined && urlParamDis != "") {
+						$scope.searchDistrict.value = parseInt(urlParamDis);
+					} else {
+						$scope.searchDistrict.value = "";
+					}
+				});
 			});
 		}
 		$scope.$watch(function() {
