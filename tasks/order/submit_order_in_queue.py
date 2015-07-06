@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-]
 
 import datetime
+import time
 
 from tasks.celery_app import app
 from tasks.base_task import OrderTask
@@ -12,11 +13,15 @@ from models.order_history import OrderHistoryModel
 from constants import QUEUE_ORDER
 from tools.log import Log
 from utils.stock_push.inventory import InventoryPusher
+from exception.json_exception import JsonException
 
 @app.task(base=OrderTask, bind=True, queue=QUEUE_ORDER)
 def start_order(self, order_id):
     session = self.session
     order = get_order(session, order_id)
+    if not order:
+        Log.info("query order {} is None".format(order_id))
+        return None
     if order.status != 0:
         return order
 

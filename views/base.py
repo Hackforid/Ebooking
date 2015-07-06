@@ -28,6 +28,10 @@ tcelery.setup_nonblocking_producer()
 
 class BtwBaseHandler(BaseHandler, CeleryTaskMixin, WechatMixin):
 
+    def _log(self):
+        if self.log_request:
+            super(BtwBaseHandler, self)._log()
+
     def initialize(self):
         super(BtwBaseHandler, self).initialize()
         self.db = self.application.DB_Session()
@@ -35,6 +39,7 @@ class BtwBaseHandler(BaseHandler, CeleryTaskMixin, WechatMixin):
         self.merchant = None
         self.is_jsonp = False
         self.callback_fun_name = ""
+        self.log_request = True
 
     @gen.coroutine
     def prepare(self):
