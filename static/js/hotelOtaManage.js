@@ -74,6 +74,15 @@
 			}
 		}
 
+		function checkId(otas) {
+			for (var i = 0; i < otas.length; i++) {
+				if (otas[i].id == 13) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		function loadAllOtas() {
 			var url = "/api/admin/ota/all";
 			$http.get(url)
@@ -81,6 +90,10 @@
 					console.log(resp);
 					if (resp.errcode == 0) {
 						$scope.otas = resp.result;
+						if(!checkId(resp.result)){
+							var appOta = {description: "APP特惠",id: 13,isOnline: 1};
+							$scope.otas.push(appOta);
+						}
 						for (var i = 0; i < $scope.otas.length; i++) {
 							if ($scope.otas[i].id == ota_id) {
 								$scope.currentOtaName = $scope.otas[i].description;
