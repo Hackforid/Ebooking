@@ -70,6 +70,7 @@ class OtaHotelModifyAPIHandler(BackStageHandler):
     def get_otas(self):
         otas = yield get_all_ota()
         ota_ids = [ota['id'] for ota in otas]
+        ota_ids.append(13)
         raise gen.Return(ota_ids)
 
 
@@ -126,6 +127,7 @@ class OtaHotelOnlineAPIHandler(BackStageHandler):
     def get_otas(self):
         otas = yield get_all_ota()
         ota_ids = [ota['id'] for ota in otas]
+        ota_ids.append(13)
         raise gen.Return(ota_ids)
 
 
