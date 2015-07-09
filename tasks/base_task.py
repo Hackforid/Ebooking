@@ -3,6 +3,7 @@
 import celery
 from celery.utils.log import get_task_logger
 from tasks.db import Session
+from tools.log import Log
 
 class SqlAlchemyTask(celery.Task):
 
@@ -11,10 +12,15 @@ class SqlAlchemyTask(celery.Task):
     _session = None
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
+        Log.info('after_return')
         Session.remove()
+        Log.info('remove session')
 
     def on_failure(self, exception, *args, **kwargs):
+        Log.info('on_failure')
         Session.rollback()
+        Session.remove()
+        Log.info('rollback and remove session')
 
     @property
     def session(self):
