@@ -353,7 +353,7 @@
 		$scope.otaErrMessage = "";
 		function init() {
 			for (var i = 0; i < $scope.allCurrentOtas.length; i++) {
-				if ($scope.allCurrentOtas[i]['isOnline'] == 1) {
+				if (($scope.allCurrentOtas[i]['isOnline'] == 1)||($scope.allCurrentOtas[i]['id'] == 13)) {
 					$scope.currentOtas.push($scope.allCurrentOtas[i]);
 				}
 			};
