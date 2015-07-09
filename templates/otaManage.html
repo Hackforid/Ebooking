@@ -21,7 +21,7 @@
                     <th>渠道名称</th>
                     <th>操作</th>
                 </tr>
-                <tr ng-repeat="ota in otas" ng-if="ota.isOnline==1">
+                <tr ng-repeat="ota in otas" ng-if="ota.isOnline==1 || ota.id==13">
                     <td ng-bind="ota.description"></td>
                     <td><button class="btn btn-default" type="button" ng-click="readict(ota.id)">产品管理</button></td>
                 </tr>
