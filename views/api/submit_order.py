@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import urllib
 
 from tornado.escape import json_encode, json_decode, url_escape
 from tornado import gen
+from tornado.httpclient import AsyncHTTPClient
 
 from views.base import BtwBaseHandler
 from tasks.order import cancel_order_in_queue as Cancel
@@ -22,6 +24,7 @@ from tools.log import Log
 from entity.order import SubmitOrder
 from tasks.order.submit_order_in_queue import start_order
 from tasks.sms import send_order_sms
+from config import API
 
 import tcelery
 tcelery.setup_nonblocking_producer()
@@ -46,12 +49,30 @@ class SubmitOrderAPIHandler(BtwBaseHandler):
                              result=dict(order_id=order.id,
                                          merchant=merchant.todict(), ))
         else:
+            yield self.call_weixin(order)
             self.finish_json(result=dict(order_id=order.id,
                                          btwOrderId=order.main_order_id,
                                          wait=0 if order.confirm_type ==
                                          OrderModel.CONFIRM_TYPE_AUTO or
                                          order.status == 300 else 1,
                                          merchant=merchant.todict(), ))
+
+    @gen.coroutine
+    def call_weixin(self, order):
+        if order.confirm_type == OrderModel.CONFIRM_TYPE_AUTO:
+            raise gen.Return()
+        url = API['WEIXIN'] + "/webchart/ebkOrderPush"
+        body = urllib.urlencode(order.todict())
+        try:
+            yield AsyncHTTPClient().fetch(url, method='POST', body=body)
+        except Exception, e:
+            Log.exception(e)
+
+        raise gen.Return()
+
+
+
+
 
     def format_order(self, order_json):
         Log.info(order_json)
@@ -211,6 +232,7 @@ class ReSubmitOrderAPIHandler(SubmitOrderAPIHandler):
                                          btwOrderId=order.main_order_id,
                                          merchant=merchant.todict(), ))
         else:
+            yield self.call_weixin(order)
             self.finish_json(result=dict(order_id=order.id,
                                          wait=0 if order.confirm_type ==
                                          OrderModel.CONFIRM_TYPE_AUTO or
