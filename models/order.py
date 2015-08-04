@@ -276,6 +276,7 @@ class OrderModel(Base):
     def todict(self):
         return ObjectDict(
                 id=self.id, main_order_id=self.main_order_id,
+                merchant_id=self.merchant_id,
                 hotel_id=self.hotel_id,
                 hotel_name=self.hotel_name,
                 roomtype_id=self.roomtype_id,
